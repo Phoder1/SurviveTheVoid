@@ -10,7 +10,7 @@ public class Crafting
 
         RecipeDict = new Dictionary<ResourceStruct, Recipe>();
     }
-    public ResourceStruct CraftResource(Recipe) { return ResourceStruct; }
-    public bool CanCraft(Recipe) { return true; }
+   // public ResourceStruct CraftResource(Recipe recipe) { return resourceStruct; }
+    public bool CanCraft(Recipe CraftRecipe) { return true; }
 
 }

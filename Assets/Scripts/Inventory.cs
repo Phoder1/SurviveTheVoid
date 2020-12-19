@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Inventory
 {
-    static List<ResourcesStruct> inventoryList;
+    static List<ResourceStruct> inventoryList;
     const int maxCapacityPerSlot = 40;
     const int maxCapacityOfItems = 25;
 
@@ -13,11 +13,11 @@ public class Inventory
     {
         if (inventoryList == null)
         {
-            inventoryList = new List<ResourcesStruct>();
+            inventoryList = new List<ResourceStruct>();
         }
     }
 
-    public static List<ResourcesStruct> GetInventory {get => inventoryList;}
+    public static List<ResourceStruct> GetInventory {get => inventoryList;}
 
     public static void AddToInventory(ResourceStruct item)
     {
