@@ -26,15 +26,6 @@ namespace Assets.TimeEvents
                 TimeManager._instance.RemoveEvent(this);
             }
         }
-
-        /*public override bool Equals(object obj) {
-            if( obj is TimeEvent timeEventObj) {
-                return base.Equals(obj) && eventID == timeEventObj.eventID && triggeringTile == timeEventObj.triggeringTile;
-            }else {
-                return false;
-            }
-            
-        }*/
     }
 
     public class ToothPasteEvent : TimeEvent
