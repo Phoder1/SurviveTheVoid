@@ -9,8 +9,6 @@ namespace Assets.TimeEvents
 {
     public abstract class TimeEvent
     {
-        private static int eventCount = 0;
-        private readonly int eventID;
         public readonly float triggerTime;
         protected Tiles.TileAbst triggeringTile;
         protected readonly Vector2Int eventPosition;
@@ -20,8 +18,6 @@ namespace Assets.TimeEvents
         public TimeEvent(float triggerTime, Vector2Int eventPosition) {
             this.triggerTime = triggerTime;
             this.eventPosition = eventPosition;
-            eventCount++;
-            eventID = eventCount;
         }
 
         public abstract void Trigger();
