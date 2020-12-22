@@ -78,7 +78,7 @@ public class GridManager : MonoBehaviour
         if(lastViewMin == Vector2Int.zero && lastViewMax == Vector2Int.zero) {
             Debug.Log("Min: " + min + ", Max: " + max);
             Debug.Log("Generating...");
-            for (int loopX = min.x; loopX < max.x; loopX += chunkSize) {
+            for (int loopX = min.x; loopX < max.x; loopX += chunkSize) {                          
                 for (int loopY = min.y; loopY < max.y; loopY += chunkSize) {
                     Vector2Int currentPos = new Vector2Int(loopX, loopY);
                     if (!TryGetChunk(currentPos, out Chunk chunk)) {
