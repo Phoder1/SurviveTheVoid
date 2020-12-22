@@ -14,8 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Tiles/TilesSO
   moonTile:
     tileBase: {fileID: 11400000, guid: a4e89a1eaa06df848801e7fe73ed99cc, type: 2}
+    isSolid: 1
   toothPasteTile:
     tileBase: {fileID: 11400000, guid: 398649c56acc0e04292649cdc47fea34, type: 2}
+    isSolid: 1
     eventDelay: 3
   circusTile:
     tileBase: {fileID: 11400000, guid: e584e969837d499428b8918b322105c6, type: 2}
+    isSolid: 1

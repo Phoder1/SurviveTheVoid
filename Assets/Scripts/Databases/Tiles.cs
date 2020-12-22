@@ -39,6 +39,7 @@ public class Tiles : MonoBehaviour
     {
         public TileBase tileBase;
         protected TimeEvent eventInstance;
+        public bool isSolid;
         public virtual void Init(Vector2Int _position) { }
 
         public virtual void Remove() {
