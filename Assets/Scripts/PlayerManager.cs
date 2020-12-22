@@ -77,13 +77,13 @@ public class PlayerManager : MonoBehaviour
         //states//
         switch (inputManager.state)
         {
-            case InputManager.InputState.A_pressed:
+            case InputManager.InputState.BuildMode:
                 ButtonA();
                 break;
-            case InputManager.InputState.B_Pressed:
+            case InputManager.InputState.EditMode:
                 ButtonB();
                 break;
-            case InputManager.InputState.attack:
+            case InputManager.InputState.FightMode:
 
                 break;
         }
