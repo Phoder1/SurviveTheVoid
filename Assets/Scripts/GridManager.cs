@@ -47,6 +47,7 @@ public class GridManager : MonoBehaviour
 
 
     private const int chunkSize = 16;
+    private const int collisionSensetivity = 6;
     private int seed;
     public static GridManager _instance;
     private void Awake() {
@@ -180,9 +181,30 @@ public class GridManager : MonoBehaviour
     public Vector3 GridToWorldPosition(Vector2Int gridPosition) => grid.CellToWorld((Vector3Int)gridPosition);
     
     public Vector2Int WorldToGridPosition(Vector3 worldPosition) => (Vector2Int)grid.WorldToCell(worldPosition);
+<<<<<<< Updated upstream
     public bool IsTileWalkable(Vector2 worldPosition) {
         Tiles.TileAbst floorTile = GetTile(WorldToGridPosition(worldPosition));
         return floorTile != null || floorTile.isSolid;
+=======
+    public bool IsTileWalkable(Vector2 worldPosition, Vector2 movementVector)
+    {
+        bool moveLegal = true;
+        Tiles.TileAbst floorTile = GetTile(WorldToGridPosition(worldPosition + movementVector.normalized * offSet));
+        moveLegal &= floorTile != null;
+        Quaternion rotationLeft = Quaternion.Euler(0, 0, 90f / collisionSensetivity);
+        Quaternion rotationRight = Quaternion.Euler(0, 0, 90f / collisionSensetivity);
+        Vector2 leftMovementVector = movementVector.normalized * offSet;
+        Vector2 rightMovementVector = movementVector.normalized * offSet;
+        for (int i = 0; i < collisionSensetivity && moveLegal; i++) {
+            leftMovementVector = rotationLeft * leftMovementVector;
+            floorTile = GetTile(WorldToGridPosition(worldPosition + leftMovementVector));
+            moveLegal &= floorTile != null;
+            rightMovementVector = rotationRight * rightMovementVector;
+            floorTile = GetTile(WorldToGridPosition(worldPosition + rightMovementVector));
+            moveLegal &= floorTile != null;
+        }
+        return moveLegal;
+>>>>>>> Stashed changes
     }
     public Tiles.TileAbst GetTile(Vector2Int gridPosition) {
         if (TryGetChunk(GridToChunkCoordinates(gridPosition), out Chunk chunk)) {
@@ -250,12 +272,14 @@ public class GridManager : MonoBehaviour
                     WasEdited |= countsAsEdit;
 
                     _instance.floor.SetTile((Vector3Int)gridPosition, tile.tileBase);
+                    _instance.floor.SetTile((Vector3Int)gridPosition, tile.mainTileBase);
                     chunkArr[chunkPosition.x, chunkPosition.y] = tile;
                     tile.Init(gridPosition);
                 }
                 else if(tile != chunkArr[chunkPosition.x, chunkPosition.y]) {
                     chunkArr[chunkPosition.x, chunkPosition.y].Remove();
                     _instance.floor.SetTile((Vector3Int)gridPosition, tile.tileBase);
+                    _instance.floor.SetTile((Vector3Int)gridPosition, tile.mainTileBase);
                     chunkArr[chunkPosition.x, chunkPosition.y] = tile;
                     tile.Init(gridPosition);
 
@@ -270,8 +294,14 @@ public class GridManager : MonoBehaviour
             for (int loopX = 0; loopX < chunkSize; loopX++) {
                 for (int loopY = 0; loopY < chunkSize; loopY++) {
                     float perlinNoise = Mathf.PerlinNoise((float)(loopX + seed + chunkStartPos.x) / noiseResolution, (float)(loopY + seed + chunkStartPos.y) / noiseResolution);
+<<<<<<< Updated upstream
                     if (perlinNoise > islandsThreshold) {
                         SetTile(ChunkToGridPosition(new Vector2Int(loopX, loopY)), new Tiles.ToothPaste(), false);
+=======
+                    if (perlinNoise > islandsThreshold)
+                    {
+                        SetTile(ChunkToGridPosition(new Vector2Int(loopX, loopY)), new Tiles.ObsidianTile(), false);
+>>>>>>> Stashed changes
                     }
                 }
 

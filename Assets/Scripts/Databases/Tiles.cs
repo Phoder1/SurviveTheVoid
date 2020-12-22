@@ -30,6 +30,7 @@ public class Tiles : MonoBehaviour
         public MoonTile moonTile;
         public ToothPaste toothPasteTile;
         public CircusTile circusTile;
+        public ObsidianTile obsidianTile;
     }
 
 
@@ -38,6 +39,9 @@ public class Tiles : MonoBehaviour
     public abstract class TileAbst
     {
         public TileBase tileBase;
+        [HideInInspector]
+        public TileBase mainTileBase;
+        public TileVariations[] tileBaseVariations;
         protected TimeEvent eventInstance;
         public bool isSolid;
         public virtual void Init(Vector2Int _position) { }
@@ -50,6 +54,29 @@ public class Tiles : MonoBehaviour
         public virtual void OnPressInteraction() { }
         public virtual void LongPressUpdate() { }
 
+        public virtual TileBase PickTileBase() {
+            float weightSum = 0;
+            foreach (TileVariations tile in tileBaseVariations) {
+                weightSum += tile.chanceWeight;
+            }
+            float roll = UnityEngine.Random.Range(0f, weightSum);
+            foreach (TileVariations tile in tileBaseVariations) {
+                roll -= tile.chanceWeight;
+                if(roll < 0) {
+                    return tile.tileBase;
+                }
+            }
+            Debug.LogError("Roll out of bounds!");
+            return tileBaseVariations[0].tileBase;
+
+            }
+        [Serializable]
+        public struct TileVariations
+        {
+            public TileBase tileBase;
+            public float chanceWeight;
+        }
+
     }
     [Serializable]
     public class MoonTile : TileAbst
@@ -58,6 +85,7 @@ public class Tiles : MonoBehaviour
             if (_instance != null) {
                 MoonTile SO = _instance.tiles.moonTile;
                 tileBase = SO.tileBase;
+                mainTileBase = SO.PickTileBase();
             }
         }
     }
@@ -68,6 +96,7 @@ public class Tiles : MonoBehaviour
             if(_instance != null) {
                 CircusTile SO = _instance.tiles.circusTile;
                 tileBase = SO.tileBase;
+                mainTileBase = SO.PickTileBase();
             }
             
         }
@@ -82,6 +111,7 @@ public class Tiles : MonoBehaviour
             if (_instance != null) {
                 ToothPaste SO = _instance.tiles.toothPasteTile;
                 tileBase = SO.tileBase;
+                mainTileBase = SO.PickTileBase();
                 eventDelay = SO.eventDelay;
                 replacementTile = new CircusTile();
             }
@@ -90,6 +120,17 @@ public class Tiles : MonoBehaviour
         public override void Init(Vector2Int position) {
             eventInstance = new ToothPasteEvent(this, Time.time + eventDelay, position);
             TimeManager._instance.AddEvent(eventInstance);
+        }
+    }
+    [Serializable]
+    public class ObsidianTile : TileAbst
+    {
+        public ObsidianTile() {
+            if (_instance != null) {
+                ObsidianTile SO = _instance.tiles.obsidianTile;
+                mainTileBase = SO.PickTileBase();
+            }
+
         }
     }
 
