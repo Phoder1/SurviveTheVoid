@@ -227,12 +227,6 @@ public class GridManager : MonoBehaviour
     public Vector3 GridToWorldPosition(Vector2Int gridPosition) => grid.CellToWorld((Vector3Int)gridPosition);
 
     public Vector2Int WorldToGridPosition(Vector3 worldPosition) => (Vector2Int)grid.WorldToCell(worldPosition);
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-    public bool IsTileWalkable(Vector2 worldPosition) {
-        Tiles.TileAbst floorTile = GetTile(WorldToGridPosition(worldPosition));
-        return floorTile != null || floorTile.isSolid;
-=======
     public bool IsTileWalkable(Vector2 worldPosition, Vector2 movementVector)
     {
         bool moveLegal = true;
@@ -251,15 +245,6 @@ public class GridManager : MonoBehaviour
             moveLegal &= floorTile != null;
         }
         return moveLegal;
->>>>>>> Stashed changes
-=======
-    public bool IsTileWalkable(Vector2 worldPosition, Vector2 movementVector)
-    {
-        Vector2 tryout = movementVector.normalized * offSet;
-        Debug.Log(tryout + "!!!!!!!!!");
-        Tiles.TileAbst floorTile = GetTile(WorldToGridPosition(worldPosition + tryout));
-        return floorTile != null;
->>>>>>> master
     }
     public Tiles.TileAbst GetTile(Vector2Int gridPosition)
     {
@@ -360,29 +345,17 @@ public class GridManager : MonoBehaviour
         }
         internal Vector2Int GridToChunkPosition(Vector2Int gridPosition) => gridPosition - chunkStartPos;
         internal Vector2Int ChunkToGridPosition(Vector2Int chunkPosition) => chunkPosition + chunkStartPos;
-        internal void GenerateIslands(int seed, float noiseResolution, float islandsThreshold)
-        {
-            for (int loopX = 0; loopX < chunkSize; loopX++)
-            {
-                for (int loopY = 0; loopY < chunkSize; loopY++)
-                {
+        internal void GenerateIslands(int seed, float noiseResolution, float islandsThreshold) {
+            for (int loopX = 0; loopX < chunkSize; loopX++) {
+                for (int loopY = 0; loopY < chunkSize; loopY++) {
                     float perlinNoise = Mathf.PerlinNoise((float)(loopX + seed + chunkStartPos.x) / noiseResolution, (float)(loopY + seed + chunkStartPos.y) / noiseResolution);
-<<<<<<< HEAD
-<<<<<<< Updated upstream
                     if (perlinNoise > islandsThreshold) {
-=======
-                    if (perlinNoise > islandsThreshold)
-                    {
->>>>>>> master
-                        SetTile(ChunkToGridPosition(new Vector2Int(loopX, loopY)), new Tiles.ToothPaste(), false);
-=======
-                    if (perlinNoise > islandsThreshold)
-                    {
-                        SetTile(ChunkToGridPosition(new Vector2Int(loopX, loopY)), new Tiles.ObsidianTile(), false);
->>>>>>> Stashed changes
+                        if (perlinNoise > islandsThreshold) {
+                            SetTile(ChunkToGridPosition(new Vector2Int(loopX, loopY)), new Tiles.ObsidianTile(), false);
+                        }
                     }
-                }
 
+                }
             }
         }
         public void MarkOutOfView()
