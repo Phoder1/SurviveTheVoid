@@ -1,21 +1,37 @@
 ﻿using System;
 using UnityEngine;
-
-public class UImanager : MonoBehaviour
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+public class UImanager : MonoBehaviour 
 {
-    public UImanager _instance;
+    public static UImanager _instance;
+    InputManager _inputManager;
+    public VirtualButton[] _buttons;
+
     private void Awake() {
-        if (_instance == null) {
+        if (_instance != null) {
             Destroy(gameObject);
-            DontDestroyOnLoad(gameObject);
+           
         }
         else {
+         
             _instance = this;
+            DontDestroyOnLoad(gameObject);
         }
     }
+    void Start()
+    {
+        _inputManager = InputManager._instance;
+    }
+    private void Update()
+    {
+        _inputManager.ButtonCheck(_buttons);
+    }
+    
 
 
 }
+
 
 public static class Settings
 {
