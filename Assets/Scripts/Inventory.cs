@@ -60,14 +60,21 @@ public class Inventory
             }
         }
 
-        // if i dont have it in the inventory or its not stackable
-        if (!isItemInList || item.resource.maxStackSize == 1)
+        // if i dont have it in the inventory
+        if (!isItemInList)
         {
             inventoryList.Add(item);
             return;
         }
 
-        remainer = 0;
+
+        // if its stackable
+        if (item.resource.maxStackSize == 1) {
+            inventoryList.Add(item);
+            return;
+        }
+
+            remainer = 0;
 
         // add to all existing slots the items amount
         foreach (var itemIsList in inventoryList)
