@@ -845,6 +845,8 @@ MonoBehaviour:
   noiseResolution: 30
   islandsThreshold: 0.65
   islandsAreaSize: 500
+  loadDistance: 1
+  offSet: 0.3
 --- !u!114 &1090312030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1592,6 +1594,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a526a7dfbaf78b468386abf267f4174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraComp: {fileID: 519420031}
 --- !u!1 &2110502521
 GameObject:
   m_ObjectHideFlags: 0

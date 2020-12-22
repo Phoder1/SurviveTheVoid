@@ -6,14 +6,14 @@ public class InputManager : MonoBehaviour
     public static InputManager _instance;
     PlayerManager _playerManager;
     UImanager _uiManager;
-    List<InputState> activeInputsLis = new List<InputState>();
+   
     public bool a_Button,b_Button;
    
     
 
     //indicates building modes, destruction mode, etc'
     
-    public enum InputState { A_pressed, B_Pressed, attack };
+    public enum InputState { BuildMode, EditMode, FightMode };
     
     public InputState state;
     
