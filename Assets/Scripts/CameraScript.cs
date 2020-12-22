@@ -19,7 +19,7 @@ public class CameraScript : MonoBehaviour
     // Start is called before the first frame update
     void Start() {
         Init();
-        gridManager.UpdateView(UpdateWorldView());
+        UpdateView();
     }
     private void Init() {
         cameraComp = GetComponent<Camera>();
@@ -59,14 +59,14 @@ public class CameraScript : MonoBehaviour
         }
 
         if (viewChanged) {
-            gridManager.UpdateView(UpdateWorldView());
+            UpdateView();
         }
     }
 
-    private Rect UpdateWorldView() {
+    private void UpdateView() {
         Vector3 camPosition = (Vector2)transform.position ;
         camPosition -= (Vector3)cameraRealSize/2;
         worldView = new Rect(camPosition, cameraRealSize);
-        return worldView;
+        gridManager.UpdateView( worldView );
     }
 }

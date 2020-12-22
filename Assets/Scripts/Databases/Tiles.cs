@@ -30,8 +30,10 @@ public class Tiles : MonoBehaviour
         public MoonTile moonTile;
         public ToothPaste toothPasteTile;
         public CircusTile circusTile;
-
     }
+
+
+
     [Serializable]
     public abstract class TileAbst
     {
@@ -46,6 +48,7 @@ public class Tiles : MonoBehaviour
         }
         public virtual void OnPressInteraction() { }
         public virtual void LongPressUpdate() { }
+
     }
     [Serializable]
     public class MoonTile : TileAbst

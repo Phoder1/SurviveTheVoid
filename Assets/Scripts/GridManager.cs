@@ -9,7 +9,7 @@ public class GridManager : MonoBehaviour
     #region Debug
 
 
-    private void OnDrawGizmos() {
+    /*private void OnDrawGizmos() {
         foreach (Chunk chunk in chunksDict.Values) {
             Vector2Int minCorner = chunk.chunkStartPos;
             Vector2Int maxCorner = minCorner + Vector2Int.one * 16;
@@ -23,7 +23,7 @@ public class GridManager : MonoBehaviour
             Gizmos.DrawLine(leftCorner, topCorner);
             Gizmos.DrawLine(rightCorner, topCorner);
         }
-    }
+    }*/
     #endregion
 
     [SerializeField]
@@ -63,6 +63,9 @@ public class GridManager : MonoBehaviour
     private void Start() {
         Init();
     }
+    private void Init() {
+
+    }
 
     public void UpdateView(Rect view) {
 
@@ -71,7 +74,7 @@ public class GridManager : MonoBehaviour
         Vector2Int topLeft = WorldToGridPosition(new Vector2(Mathf.Min(view.min.x, view.max.x), Mathf.Max(view.min.y, view.max.y)));
         Vector2Int bottomRight = WorldToGridPosition(new Vector2(Mathf.Max(view.min.x, view.max.x), Mathf.Min(view.min.y, view.max.y)));
         Vector2Int min = GridToChunkCoordinates(new Vector2Int(bottomLeft.x, bottomRight.y)) - Vector2Int.one * chunkSize * loadDistance;
-        Vector2Int max = GridToChunkCoordinates(new Vector2Int(topRight.x, topLeft.y)) + Vector2Int.one * chunkSize * (loadDistance+1);
+        Vector2Int max = GridToChunkCoordinates(new Vector2Int(topRight.x, topLeft.y)) + Vector2Int.one * chunkSize * loadDistance;
         if(lastViewMin == Vector2Int.zero && lastViewMax == Vector2Int.zero) {
             Debug.Log("Min: " + min + ", Max: " + max);
             Debug.Log("Generating...");
@@ -175,9 +178,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private void Init() {
-        
-    }
+
 
     public Vector3 GridToWorldPosition(Vector2Int gridPosition) => grid.CellToWorld((Vector3Int)gridPosition);
     
