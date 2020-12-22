@@ -183,9 +183,9 @@ public class GridManager : MonoBehaviour
     public Vector3 GridToWorldPosition(Vector2Int gridPosition) => grid.CellToWorld((Vector3Int)gridPosition);
     
     public Vector2Int WorldToGridPosition(Vector3 worldPosition) => (Vector2Int)grid.WorldToCell(worldPosition);
-    public bool IsTileFree(Vector2 worldPosition) {
+    public bool IsTileWalkable(Vector2 worldPosition) {
         Tiles.TileAbst floorTile = GetTile(WorldToGridPosition(worldPosition));
-        return floorTile == null || floorTile.isSolid;
+        return floorTile != null || floorTile.isSolid;
     }
     public Tiles.TileAbst GetTile(Vector2Int gridPosition) {
         if (TryGetChunk(GridToChunkCoordinates(gridPosition), out Chunk chunk)) {
