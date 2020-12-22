@@ -177,9 +177,6 @@ public class GridManager : MonoBehaviour
             }
         }
     }
-
-
-
     public Vector3 GridToWorldPosition(Vector2Int gridPosition) => grid.CellToWorld((Vector3Int)gridPosition);
     
     public Vector2Int WorldToGridPosition(Vector3 worldPosition) => (Vector2Int)grid.WorldToCell(worldPosition);
