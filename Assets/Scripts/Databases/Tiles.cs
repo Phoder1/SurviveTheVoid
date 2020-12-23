@@ -1,7 +1,7 @@
-﻿using UnityEngine;
+﻿using Assets.TimeEvents;
 using System;
+using UnityEngine;
 using UnityEngine.Tilemaps;
-using Assets.TimeEvents;
 
 public class Tiles : MonoBehaviour
 {
@@ -38,7 +38,6 @@ public class Tiles : MonoBehaviour
     [Serializable]
     public abstract class TileAbst
     {
-        public TileBase tileBase;
         [HideInInspector]
         public TileBase mainTileBase;
         public TileVariations[] tileBaseVariations;
@@ -55,6 +54,12 @@ public class Tiles : MonoBehaviour
         public virtual void LongPressUpdate() { }
 
         public virtual TileBase PickTileBase() {
+            if (tileBaseVariations.Length == 1) {
+                return tileBaseVariations[0].tileBase;
+            }
+            if (tileBaseVariations.Length == 0) {
+                return null;
+            }
             float weightSum = 0;
             foreach (TileVariations tile in tileBaseVariations) {
                 weightSum += tile.chanceWeight;
@@ -62,14 +67,14 @@ public class Tiles : MonoBehaviour
             float roll = UnityEngine.Random.Range(0f, weightSum);
             foreach (TileVariations tile in tileBaseVariations) {
                 roll -= tile.chanceWeight;
-                if(roll < 0) {
+                if (roll < 0) {
                     return tile.tileBase;
                 }
             }
             Debug.LogError("Roll out of bounds!");
             return tileBaseVariations[0].tileBase;
 
-            }
+        }
         [Serializable]
         public struct TileVariations
         {
@@ -84,7 +89,6 @@ public class Tiles : MonoBehaviour
         public MoonTile() {
             if (_instance != null) {
                 MoonTile SO = _instance.tiles.moonTile;
-                tileBase = SO.tileBase;
                 mainTileBase = SO.PickTileBase();
             }
         }
@@ -93,12 +97,11 @@ public class Tiles : MonoBehaviour
     public class CircusTile : TileAbst
     {
         public CircusTile() {
-            if(_instance != null) {
+            if (_instance != null) {
                 CircusTile SO = _instance.tiles.circusTile;
-                tileBase = SO.tileBase;
                 mainTileBase = SO.PickTileBase();
             }
-            
+
         }
     }
     [Serializable]
@@ -110,7 +113,6 @@ public class Tiles : MonoBehaviour
         public ToothPaste() {
             if (_instance != null) {
                 ToothPaste SO = _instance.tiles.toothPasteTile;
-                tileBase = SO.tileBase;
                 mainTileBase = SO.PickTileBase();
                 eventDelay = SO.eventDelay;
                 replacementTile = new CircusTile();

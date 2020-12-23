@@ -325,7 +325,6 @@ public class GridManager : MonoBehaviour
                     tileCount++;
                     WasEdited |= countsAsEdit;
 
-                    _instance.floor.SetTile((Vector3Int)gridPosition, tile.tileBase);
                     _instance.floor.SetTile((Vector3Int)gridPosition, tile.mainTileBase);
                     chunkArr[chunkPosition.x, chunkPosition.y] = tile;
                     tile.Init(gridPosition);
@@ -333,7 +332,6 @@ public class GridManager : MonoBehaviour
                 else if (tile != chunkArr[chunkPosition.x, chunkPosition.y])
                 {
                     chunkArr[chunkPosition.x, chunkPosition.y].Remove();
-                    _instance.floor.SetTile((Vector3Int)gridPosition, tile.tileBase);
                     _instance.floor.SetTile((Vector3Int)gridPosition, tile.mainTileBase);
                     chunkArr[chunkPosition.x, chunkPosition.y] = tile;
                     tile.Init(gridPosition);
