@@ -228,9 +228,9 @@ public class GridManager : MonoBehaviour
     public Vector2Int WorldToGridPosition(Vector3 worldPosition) => (Vector2Int)grid.WorldToCell(worldPosition);
     public bool IsTileWalkable(Vector2 worldPosition, Vector2 movementVector)
     {
-        Vector2 tryout = movementVector.normalized * offSet;
-        Debug.Log(tryout + "!!!!!!!!!");
-        Tiles.TileAbst floorTile = GetTile(WorldToGridPosition(worldPosition + tryout));
+        Vector2 headingDirection = movementVector.normalized * offSet;
+        
+        Tiles.TileAbst floorTile = GetTile(WorldToGridPosition(worldPosition + headingDirection));
         return floorTile != null;
     }
     public Tiles.TileAbst GetTile(Vector2Int gridPosition)

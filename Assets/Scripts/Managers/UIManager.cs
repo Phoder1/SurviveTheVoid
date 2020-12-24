@@ -2,14 +2,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-public class UImanager : MonoBehaviour 
+public class UIManager : MonoBehaviour 
 {
-    public static UImanager _instance;
+    public static UIManager _instance;
     InputManager _inputManager;
     public VirtualButton[] _buttons;
-
-    //UI Canvases
-    public GameObject[] _canvases;
+    public VirtualJoystick vJ;
 
     private void Awake() {
         if (_instance != null) {
@@ -25,21 +23,13 @@ public class UImanager : MonoBehaviour
     void Start()
     {
         _inputManager = InputManager._instance;
-
-        for(int i=1; i<_canvases.Length; i++)
-		{
-            _canvases[i].SetActive(false);
-		}
     }
     private void Update()
     {
         _inputManager.ButtonCheck(_buttons);
-
-
-
-
-
+        _inputManager.OnClicked("sdas",vJ);
     }
+    
     
 
 
