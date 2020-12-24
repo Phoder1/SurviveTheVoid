@@ -2,11 +2,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-public class UImanager : MonoBehaviour 
+public class UIManager : MonoBehaviour 
 {
-    public static UImanager _instance;
+    public static UIManager _instance;
     InputManager _inputManager;
     public VirtualButton[] _buttons;
+    public VirtualJoystick vJ;
 
     private void Awake() {
         if (_instance != null) {
@@ -26,7 +27,9 @@ public class UImanager : MonoBehaviour
     private void Update()
     {
         _inputManager.ButtonCheck(_buttons);
+        _inputManager.OnClicked("sdas",vJ);
     }
+    
     
 
 

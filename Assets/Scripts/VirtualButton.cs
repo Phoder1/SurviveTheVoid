@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 
 public class VirtualButton : MonoBehaviour ,IPointerDownHandler,IPointerUpHandler
 {
+    
+
     internal bool IsPressed;
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -13,6 +15,8 @@ public class VirtualButton : MonoBehaviour ,IPointerDownHandler,IPointerUpHandle
        
         
     }
+
+  
 
     public void OnPointerUp(PointerEventData eventData)
     {

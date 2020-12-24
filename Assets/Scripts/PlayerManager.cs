@@ -5,12 +5,13 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager _instance;
-    InputManager inputManager;
+    InputManager _inputManager;
+    UIManager _uiManager;
     Vector2 movementVector;
     GridManager _GridManager;
     Vector2 currentPos;
     Vector2 nextPos;
-    [SerializeField] private Camera cameraComp;
+    [SerializeField] internal Camera cameraComp;
 
     Vector2 cameraRealSize => new Vector2(cameraComp.orthographicSize * 2 * cameraComp.aspect, cameraComp.orthographicSize * 2);
 
@@ -39,13 +40,14 @@ public class PlayerManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        inputManager = InputManager._instance;
+        _inputManager = InputManager._instance;
         _GridManager = GridManager._instance;
+        _uiManager = UIManager._instance;
 
         UpdateView();
 
 
-
+        
 
 
 
@@ -55,11 +57,11 @@ public class PlayerManager : MonoBehaviour
     void Update()
     {
 
-
+        
         //bools//
 
-        movementVector = inputManager.GetAxis("Horizontal", "Vertical");
-        movementVector = movementVector * 5 * Time.deltaTime;
+        movementVector = _inputManager.GetAxis();
+        movementVector = movementVector * 5*Time.deltaTime;
         currentPos = (Vector2)transform.position; //new Vector2(transform.position.x, transform.position.y);
         nextPos = currentPos + movementVector;
 
@@ -69,13 +71,13 @@ public class PlayerManager : MonoBehaviour
             UpdateView();
 
         }
-        if (inputManager.a_Button) { ButtonA(); }
-        if (inputManager.b_Button) { ButtonB(); }
+        if (_inputManager.a_Button) { ButtonA(); }
+        if (_inputManager.b_Button) { ButtonB(); }
 
 
 
         //states//
-        switch (inputManager.state)
+        switch (_inputManager.state)
         {
             case InputManager.InputState.BuildMode:
                 ButtonA();
