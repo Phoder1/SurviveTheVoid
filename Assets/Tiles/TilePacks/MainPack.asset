@@ -13,49 +13,31 @@ MonoBehaviour:
   m_Name: MainPack
   m_EditorClassIdentifier: Assembly-CSharp::Tiles/TilesSO
   floorVariationNoise:
-    seed: -96
-    resolution: 4.25
+    seed: -78680
+    resolution: 0
     boolThreshold: 0
   buildingsVariationNoise:
-    seed: 5407
-    resolution: 4.25
+    seed: 13570
+    resolution: 0
     boolThreshold: 0
   moonTile:
     mainTileBase: {fileID: 0}
-    tileBaseVariations:
-    - tileBase: {fileID: 11400000, guid: a4e89a1eaa06df848801e7fe73ed99cc, type: 2}
-      chanceWeight: 0
+    tileBaseVariations: []
     interactionType: 0
-    isSolid: 1
+    isSolid: 0
   toothPasteTile:
     mainTileBase: {fileID: 0}
-    tileBaseVariations:
-    - tileBase: {fileID: 11400000, guid: 398649c56acc0e04292649cdc47fea34, type: 2}
-      chanceWeight: 0
+    tileBaseVariations: []
     interactionType: 0
-    isSolid: 1
-    eventDelay: 3
+    isSolid: 0
+    eventDelay: 0
   circusTile:
     mainTileBase: {fileID: 0}
-    tileBaseVariations:
-    - tileBase: {fileID: 11400000, guid: e584e969837d499428b8918b322105c6, type: 2}
-      chanceWeight: 0
+    tileBaseVariations: []
     interactionType: 0
-    isSolid: 1
+    isSolid: 0
   obsidianTile:
     mainTileBase: {fileID: 0}
-    tileBaseVariations:
-    - tileBase: {fileID: 11400000, guid: faef53d56436e864ea1a18de28b77a72, type: 2}
-      chanceWeight: 10
-    - tileBase: {fileID: 11400000, guid: 219d62620bc6bb24699fab44e6dc3e20, type: 2}
-      chanceWeight: 10
-    - tileBase: {fileID: 11400000, guid: b72ce4ba890b4124f87281566c2f6a43, type: 2}
-      chanceWeight: 10
-    - tileBase: {fileID: 11400000, guid: a7e99a34b28464e4580908bf6a03904b, type: 2}
-      chanceWeight: 10
-    - tileBase: {fileID: 11400000, guid: 5059c39ad0c8cc244b22240a46e1bc82, type: 2}
-      chanceWeight: 1
-    - tileBase: {fileID: 11400000, guid: 4eaa76a72e19986499792cf2cc022228, type: 2}
-      chanceWeight: 1
-    interactionType: 6
-    isSolid: 1
+    tileBaseVariations: []
+    interactionType: 0
+    isSolid: 0

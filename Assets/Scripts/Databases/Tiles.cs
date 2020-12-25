@@ -1,5 +1,6 @@
 ﻿using Assets.TimeEvents;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 #region Notes!
@@ -169,6 +170,41 @@ public abstract class TileAbst
         public float chanceWeight;
     }
 
+}
+public struct TileHit
+{
+    public readonly Vector2Int gridPosition;
+    public readonly TileAbst tile;
+
+    public TileHit(TileAbst tile,   Vector2Int gridPosition) {
+        this.tile = tile;
+        this.gridPosition = gridPosition;
+    }
+
+    public static TileHit None => new TileHit(null, Vector2Int.zero);
+
+    public static bool operator ==(TileHit lhs, TileHit rhs) {
+        return lhs.Equals(rhs);
+    }
+    public static bool operator !=(TileHit lhs, TileHit rhs) {
+        return !lhs.Equals(rhs);
+    }
+
+    public override bool Equals(object obj) {
+        return (obj is TileHit hit &&
+               EqualityComparer<Vector2Int?>.Default.Equals(gridPosition, hit.gridPosition) &&
+               EqualityComparer<TileAbst>.Default.Equals(tile, hit.tile));
+    }
+    public bool Equals(TileHit other) {
+        return tile == other.tile && gridPosition == other.gridPosition;
+    }
+
+    public override int GetHashCode() {
+        int hashCode = 1814505039;
+        hashCode = hashCode * -1521134295 + gridPosition.GetHashCode();
+        hashCode = hashCode * -1521134295 + EqualityComparer<TileAbst>.Default.GetHashCode(tile);
+        return hashCode;
+    }
 }
 
 #endregion

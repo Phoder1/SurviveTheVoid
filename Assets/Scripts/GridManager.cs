@@ -14,10 +14,10 @@ public class GridManager : MonoBehaviour
         foreach (Chunk chunk in chunksDict.Values) {
             Vector2Int minCorner = chunk.chunkStartPos;
             Vector2Int maxCorner = minCorner + Vector2Int.one * chunkSize;
-            Vector3 leftCorner = GridToWorldPosition(Vector2Int.RoundToInt(new Vector2(minCorner.x, maxCorner.y)));
-            Vector3 rightCorner = GridToWorldPosition(Vector2Int.RoundToInt(new Vector2(maxCorner.x, minCorner.y)));
-            Vector3 topCorner = GridToWorldPosition(maxCorner);
-            Vector3 bottomCorner = GridToWorldPosition(minCorner);
+            Vector3 leftCorner = GridToWorldPosition(Vector2Int.RoundToInt(new Vector2(minCorner.x, maxCorner.y)), BuildingLayer.Floor);
+            Vector3 rightCorner = GridToWorldPosition(Vector2Int.RoundToInt(new Vector2(maxCorner.x, minCorner.y)), BuildingLayer.Floor);
+            Vector3 topCorner = GridToWorldPosition(maxCorner, BuildingLayer.Floor);
+            Vector3 bottomCorner = GridToWorldPosition(minCorner, BuildingLayer.Floor);
             //Debug.Log("Origin: Min:" + chunkStartCorner + ", Max:" + maxCorner + ", Real: Bottom:" + bottomCorner + ", Top:" + topCorner + "Left:" + leftCorner + ", Right:" + rightCorner);
             Gizmos.DrawLine(bottomCorner, leftCorner);
             Gizmos.DrawLine(bottomCorner, rightCorner);
@@ -186,11 +186,11 @@ public class GridManager : MonoBehaviour
         }
     }
     public Vector3 GridToWorldPosition(Vector2Int gridPosition, BuildingLayer buildingLayer) => grid.CellToWorld((Vector3Int)gridPosition) + Vector3.up * (buildingLayer == BuildingLayer.Buildings ? buildingLayerPositionOffset : 0f);
-    public Vector2Int WorldToGridPosition(Vector3 worldPosition, BuildingLayer buildingLayer) 
+    public Vector2Int WorldToGridPosition(Vector3 worldPosition, BuildingLayer buildingLayer)
         => (Vector2Int)GetTilemap(buildingLayer).WorldToCell(worldPosition - Vector3.up * (buildingLayer == BuildingLayer.Buildings ? buildingLayerPositionOffset : 0f));
     public bool IsTileWalkable(Vector2 worldPosition, Vector2 movementVector) {
         bool moveLegal = true;
-        TileAbst floorTile = GetTile(WorldToGridPosition(worldPosition + movementVector.normalized * offSet, BuildingLayer.Floor), BuildingLayer.Floor);
+        TileAbst floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + movementVector.normalized * offSet, BuildingLayer.Floor), BuildingLayer.Floor);
         moveLegal &= floorTile != null;
         Quaternion rotationLeft = Quaternion.Euler(0, 0, 90f / collisionSensetivity);
         Quaternion rotationRight = Quaternion.Euler(0, 0, 90f / collisionSensetivity);
@@ -198,48 +198,75 @@ public class GridManager : MonoBehaviour
         Vector2 rightMovementVector = movementVector.normalized * offSet;
         for (int i = 0; i < collisionSensetivity && moveLegal; i++) {
             leftMovementVector = rotationLeft * leftMovementVector;
-            floorTile = GetTile(WorldToGridPosition(worldPosition + leftMovementVector, BuildingLayer.Floor), BuildingLayer.Floor);
+            floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + leftMovementVector, BuildingLayer.Floor), BuildingLayer.Floor);
             moveLegal &= floorTile != null;
             rightMovementVector = rotationRight * rightMovementVector;
-            floorTile = GetTile(WorldToGridPosition(worldPosition + rightMovementVector, BuildingLayer.Floor), BuildingLayer.Floor);
+            floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + rightMovementVector, BuildingLayer.Floor), BuildingLayer.Floor);
             moveLegal &= floorTile != null;
         }
         return moveLegal;
     }
-    public TileAbst GetTile(Vector2Int gridPosition, BuildingLayer buildingLayer) {
+    public TileAbst GetTileFromGrid(Vector2Int gridPosition, BuildingLayer buildingLayer) {
         if (TryGetChunk(GridToChunkCoordinates(gridPosition), out Chunk chunk)) {
-            return chunk.GetTile(gridPosition, buildingLayer);
+            TileAbst tile = chunk.GetTile(gridPosition, buildingLayer);
+            Debug.Log(tile);
+            return tile;
         }
         else {
             return null;
         }
     }
-    //Need to implement sides detection
     /// <summary>
     /// Gets the tile on the at a certain position.
     /// Input grid position for an exact position on the grid
     /// and world position if you want to also check for tiles sides.
     /// </summary>
-    /// <param name="worldPosition"></param>
+    /// <param name="clickPosition"></param>
     /// Position in world space in vector2
     /// <returns></returns>
-    public TileAbst GetTile(Vector2 worldPosition, BuildingLayer buildingLayer) {
-        Vector2Int gridPosition = WorldToGridPosition(worldPosition, buildingLayer);
-        Vector2 tileWorldPosition = GridToWorldPosition(gridPosition, buildingLayer); 
+    public TileHit GetHitFromClickPosition(Vector2 clickPosition, BuildingLayer buildingLayer) {
+        Vector2Int gridPosition = WorldToGridPosition(clickPosition, buildingLayer);
+        TileHit hit;
         if (TryGetChunk(GridToChunkCoordinates(gridPosition), out Chunk chunk)) {
-            return chunk.GetTile(gridPosition, buildingLayer);
+            hit = new TileHit(chunk.GetTile(gridPosition, buildingLayer), gridPosition);
+            if (hit.tile != null) {
+                return hit;
+            }
+            else {
+                Vector2 tileWorldPosition = GridToWorldPosition(gridPosition, buildingLayer);
+                Vector2 localPosition = clickPosition - tileWorldPosition;
+                Debug.Log("Position: " + localPosition);
+                if (localPosition.y < 0.2f && Mathf.Abs(localPosition.x) < 0.1f) {
+                    return hit;
+                }
+                Debug.Log("checking diagonal!");
+                Vector2Int checkPosition = gridPosition + (localPosition.x < 0 ? Vector2Int.up : Vector2Int.right);
+                hit = new TileHit(GetTileFromGrid(checkPosition, buildingLayer), checkPosition);
+                if (hit.tile != null) {
+                    return hit;
+                }
+                else if (Vector2.Distance(localPosition, new Vector2(0, 0.45f)) <=0.24f) {
+                    Debug.Log("checking ahead!");
+                    checkPosition = gridPosition + Vector2Int.one;
+                    hit = new TileHit(GetTileFromGrid(checkPosition, buildingLayer), checkPosition);
+                    if (hit.tile != null) {
+                        return hit;
+                    }
+                }
+
+            }
+
         }
-        else {
-            return null;
-        }
+        return TileHit.None;
+
     }
-    public void SetTile(TileAbst tile, Vector2Int gridPosition,  BuildingLayer buildingLayer, bool playerAction = true) {
+    public void SetTile(TileAbst tile, Vector2Int gridPosition, BuildingLayer buildingLayer, bool playerAction = true) {
         Vector2Int chunkPos = GridToChunkCoordinates(gridPosition);
         if (TryGetChunk(chunkPos, out Chunk chunk)) {
-            chunk.SetTile(tile, gridPosition,  buildingLayer, playerAction);
+            chunk.SetTile(tile, gridPosition, buildingLayer, playerAction);
         }
         else if (tile != null) {
-            CreateChunk(chunkPos).SetTile(tile, gridPosition,  buildingLayer, playerAction);
+            CreateChunk(chunkPos).SetTile(tile, gridPosition, buildingLayer, playerAction);
         }
     }
 
@@ -281,18 +308,18 @@ public class GridManager : MonoBehaviour
 
         }
 
-        internal void SetTile(TileAbst tile, Vector2Int gridPosition,  BuildingLayer buildingLayer, bool countsAsEdit = true) {
+        internal void SetTile(TileAbst tile, Vector2Int gridPosition, BuildingLayer buildingLayer, bool countsAsEdit = true) {
             switch (buildingLayer) {
                 case BuildingLayer.Floor:
-                    SetTileByRef(tile, gridPosition,   buildingLayer, countsAsEdit, ref floorArr, ref _instance.floor);
+                    SetTileByRef(tile, gridPosition, buildingLayer, countsAsEdit, ref floorArr, ref _instance.floor);
                     break;
                 case BuildingLayer.Buildings:
-                    SetTileByRef(tile, gridPosition,   buildingLayer, countsAsEdit, ref buildingsArr, ref _instance.buildings);
+                    SetTileByRef(tile, gridPosition, buildingLayer, countsAsEdit, ref buildingsArr, ref _instance.buildings);
                     break;
             }
 
         }
-        private void SetTileByRef(TileAbst tile, Vector2Int gridPosition,   BuildingLayer buildingLayer, bool countsAsEdit, ref TileAbst[,] tileArr, ref Tilemap tilemap) {
+        private void SetTileByRef(TileAbst tile, Vector2Int gridPosition, BuildingLayer buildingLayer, bool countsAsEdit, ref TileAbst[,] tileArr, ref Tilemap tilemap) {
             Vector2Int chunkPosition = GridToChunkPosition(gridPosition);
             bool tileExists = tileArr != null && tileArr[chunkPosition.x, chunkPosition.y] != null;
             if (tile != null || tileExists) {
@@ -339,7 +366,7 @@ public class GridManager : MonoBehaviour
                 for (int loopY = 0; loopY < chunkSize; loopY++) {
                     Vector2Int gridPosition = new Vector2Int(loopX, loopY) + chunkStartPos;
                     if (noise.CheckThreshold(gridPosition)) {
-                        SetTile(new Tiles.ObsidianTile(), ChunkToGridPosition( new Vector2Int(loopX, loopY)),  BuildingLayer.Floor, false);
+                        SetTile(new Tiles.ObsidianTile(), ChunkToGridPosition(new Vector2Int(loopX, loopY)), BuildingLayer.Floor, false);
                     }
                 }
             }
@@ -348,7 +375,7 @@ public class GridManager : MonoBehaviour
             if (!WasEdited) {
                 for (int loopX = 0; loopX < chunkSize; loopX++) {
                     for (int loopY = 0; loopY < chunkSize; loopY++) {
-                        SetTile(null, ChunkToGridPosition(new Vector2Int(loopX, loopY)),  BuildingLayer.Floor, false);
+                        SetTile(null, ChunkToGridPosition(new Vector2Int(loopX, loopY)), BuildingLayer.Floor, false);
                     }
                 }
                 chunksDict.Remove(chunkStartPos);

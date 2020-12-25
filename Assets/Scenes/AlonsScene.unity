@@ -945,7 +945,7 @@ MonoBehaviour:
     resolution: 30
     boolThreshold: 0.65
   loadDistance: 0
-  offSet: 0
+  offSet: 1
 --- !u!114 &1090312030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1147,18 +1147,18 @@ Tilemap:
       e11: 0
       e12: 0
       e13: NaN
-      e20: -0.0006154934
+      e20: 0.000000103716275
       e21: 0
-      e22: -0.08593607
+      e22: 0.000008071773
       e23: -1.1895078e+21
-      e30: 7.33e-43
+      e30: 8.72e-43
       e31: 0
-      e32: 7.33e-43
+      e32: 8.72e-43
       e33: 4.5904e-41
   m_TileColorArray:
   - m_RefCount: 0
-    m_Data: {r: 0.0000000017787123, g: 0.0000000017787123, b: 0.0000000017787123,
-      a: 0.0000000017787123}
+    m_Data: {r: -0.0000000022732607, g: -0.0000000022732607, b: -0.0000000022732607,
+      a: -0.0000000022732607}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}

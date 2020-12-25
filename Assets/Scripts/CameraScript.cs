@@ -57,16 +57,19 @@ public class CameraScript : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.LeftControl)) {
             BuildingLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? BuildingLayer.Buildings : BuildingLayer.Floor;
-            Debug.Log(gridManager.GetTile(MouseGridPosition(layer), layer));
+            Debug.Log(gridManager.GetTileFromGrid(MouseGridPosition(layer), layer));
         }
         else if (Input.GetKeyDown(KeyCode.Mouse2)) {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mousePos.z = 0;
             BuildingLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? BuildingLayer.Buildings : BuildingLayer.Floor;
-            Debug.Log("Mouse2: " + Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            Vector2Int gridPosition = MouseGridPosition(layer);
-            TileAbst tile = gridManager.GetTile(gridPosition, layer);
-            if(tile != null && tile.interactionType == ToolInteraction.Any) {
+            TileHit hit = gridManager.GetHitFromClickPosition(mousePos, layer);
+
+            Debug.Log(hit.tile);
+            if (hit.tile != null && hit.gridPosition != null
+                && hit.tile.interactionType == ToolInteraction.Any) {
                 Debug.Log("Color change");
-                tile.GatherInteraction(gridPosition, layer);
+                hit.tile.GatherInteraction((Vector2Int)hit.gridPosition, layer);
             }
         }
 
