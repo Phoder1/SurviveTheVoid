@@ -14,11 +14,6 @@ public class TimeManager : MonoBehaviour {
         }
         timedEventsList = new LinkedList<TimeEvent>();
     }
-    // Start is called before the first frame update
-    void Start() { 
-        Debug.Log("Current time: " + Time.deltaTime);
-        
-    }
 
     // Update is called once per frame
     void Update() {

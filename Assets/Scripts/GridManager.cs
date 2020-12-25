@@ -1,18 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public enum BuildingLayers { Floor, Buildings }
+public enum BuildingLayer { Floor, Buildings }
 public class GridManager : MonoBehaviour
 {
     //Debug Chunks (Disable when not needed, very heavy on performance):
     #region Debug
 
 
-    /*private void OnDrawGizmos() {
+    private void OnDrawGizmos() {
         foreach (Chunk chunk in chunksDict.Values) {
             Vector2Int minCorner = chunk.chunkStartPos;
-            Vector2Int maxCorner = minCorner + Vector2Int.one * 16;
+            Vector2Int maxCorner = minCorner + Vector2Int.one * chunkSize;
             Vector3 leftCorner = GridToWorldPosition(Vector2Int.RoundToInt(new Vector2(minCorner.x, maxCorner.y)));
             Vector3 rightCorner = GridToWorldPosition(Vector2Int.RoundToInt(new Vector2(maxCorner.x, minCorner.y)));
             Vector3 topCorner = GridToWorldPosition(maxCorner);
@@ -23,7 +24,7 @@ public class GridManager : MonoBehaviour
             Gizmos.DrawLine(leftCorner, topCorner);
             Gizmos.DrawLine(rightCorner, topCorner);
         }
-    }*/
+    }
     #endregion
 
     [SerializeField]
@@ -32,13 +33,18 @@ public class GridManager : MonoBehaviour
     private Tilemap floor;
     [SerializeField]
     private Tilemap buildings;
+    public Tilemap GetTilemap(BuildingLayer buildingLayer) {
+        switch (buildingLayer) {
+            case BuildingLayer.Floor:
+                return floor;
+            case BuildingLayer.Buildings:
+                return buildings;
+            default:
+                return null;
+        }
+    }
     [SerializeField]
-    float noiseResolution;
-    [Range(0f, 1f)]
-    [SerializeField]
-    float islandsThreshold;
-    [SerializeField]
-    int islandsAreaSize;
+    private Noise islandsNoise;
     [SerializeField]
     int loadDistance;
     [SerializeField]
@@ -50,110 +56,83 @@ public class GridManager : MonoBehaviour
 
     private const int chunkSize = 16;
     private const int collisionSensetivity = 6;
-    private int seed;
+    private const float buildingLayerPositionOffset = 0.5f;
     public static GridManager _instance;
-    private void Awake()
-    {
-        if (_instance != null)
-        {
+
+    private void Awake() {
+        if (_instance != null) {
             Destroy(gameObject);
         }
-        else
-        {
+        else {
             _instance = this;
         }
-        seed = Random.Range(-10000, 10000);
+        islandsNoise.GenerateSeed();
     }
-
-
-    private void Start()
-    {
+    private void Start() {
         Init();
     }
-    private void Init()
-    {
+    private void Init() {
 
     }
 
-    public void UpdateView(Rect view)
-    {
+    public void UpdateView(Rect view) {
 
-        Vector2Int bottomLeft = WorldToGridPosition(new Vector2(Mathf.Min(view.min.x, view.max.x), Mathf.Min(view.min.y, view.max.y)));
-        Vector2Int topRight = WorldToGridPosition(new Vector2(Mathf.Max(view.min.x, view.max.x), Mathf.Max(view.min.y, view.max.y)));
-        Vector2Int topLeft = WorldToGridPosition(new Vector2(Mathf.Min(view.min.x, view.max.x), Mathf.Max(view.min.y, view.max.y)));
-        Vector2Int bottomRight = WorldToGridPosition(new Vector2(Mathf.Max(view.min.x, view.max.x), Mathf.Min(view.min.y, view.max.y)));
-        Vector2Int min = GridToChunkCoordinates(new Vector2Int(bottomLeft.x, bottomRight.y)) - Vector2Int.one * chunkSize * loadDistance;
-        Vector2Int max = GridToChunkCoordinates(new Vector2Int(topRight.x, topLeft.y)) + Vector2Int.one * chunkSize * loadDistance;
-        if (lastViewMin == Vector2Int.zero && lastViewMax == Vector2Int.zero)
-        {
-            Debug.Log("Min: " + min + ", Max: " + max);
-            Debug.Log("Generating...");
-            for (int loopX = min.x; loopX < max.x; loopX += chunkSize)
-            {
-                for (int loopY = min.y; loopY < max.y; loopY += chunkSize)
-                {
+        Vector2Int bottomLeft = WorldToGridPosition(new Vector2(Mathf.Min(view.min.x, view.max.x), Mathf.Min(view.min.y, view.max.y)), BuildingLayer.Floor);
+        Vector2Int topRight = WorldToGridPosition(new Vector2(Mathf.Max(view.min.x, view.max.x), Mathf.Max(view.min.y, view.max.y)), BuildingLayer.Floor);
+        Vector2Int topLeft = WorldToGridPosition(new Vector2(Mathf.Min(view.min.x, view.max.x), Mathf.Max(view.min.y, view.max.y)), BuildingLayer.Floor);
+        Vector2Int bottomRight = WorldToGridPosition(new Vector2(Mathf.Max(view.min.x, view.max.x), Mathf.Min(view.min.y, view.max.y)), BuildingLayer.Floor);
+        Vector2Int min = new Vector2Int(bottomLeft.x, bottomRight.y) - Vector2Int.one * chunkSize * loadDistance;
+        Vector2Int max = new Vector2Int(topRight.x, topLeft.y) + Vector2Int.one * chunkSize * (loadDistance + 1);
+        min = GridToChunkCoordinates(min);
+        max = GridToChunkCoordinates(max);
+        if (lastViewMin == Vector2Int.zero && lastViewMax == Vector2Int.zero) {
+            for (int loopX = min.x; loopX < max.x; loopX += chunkSize) {
+                for (int loopY = min.y; loopY < max.y; loopY += chunkSize) {
                     Vector2Int currentPos = new Vector2Int(loopX, loopY);
-                    if (!TryGetChunk(currentPos, out Chunk chunk))
-                    {
-                        CreateChunk(currentPos).GenerateIslands(seed, noiseResolution, islandsThreshold);
+                    if (!TryGetChunk(currentPos, out Chunk chunk)) {
+                        CreateChunk(currentPos).GenerateIslands();
                     }
                 }
             }
             lastViewMin = min;
             lastViewMax = max;
         }
-        else
-        {
-            if (min != lastViewMin)
-            {
+        else {
+            if (min != lastViewMin) {
                 //Remove islands
-                if (min.x > lastViewMin.x || min.y > lastViewMin.y)
-                {
-                    for (int loopX = lastViewMin.x; loopX <= min.x; loopX += chunkSize)
-                    {
-                        for (int loopY = lastViewMin.y; loopY <= max.y; loopY += chunkSize)
-                        {
+                if (min.x > lastViewMin.x || min.y > lastViewMin.y) {
+                    for (int loopX = lastViewMin.x; loopX < min.x; loopX += chunkSize) {
+                        for (int loopY = lastViewMin.y; loopY <= max.y; loopY += chunkSize) {
                             Vector2Int currentPos = new Vector2Int(loopX, loopY);
-                            if (TryGetChunk(currentPos, out Chunk chunk))
-                            {
+                            if (TryGetChunk(currentPos, out Chunk chunk)) {
                                 chunk.MarkOutOfView();
                             }
                         }
                     }
-                    for (int loopX = lastViewMin.x; loopX <= max.x; loopX += chunkSize)
-                    {
-                        for (int loopY = lastViewMin.y; loopY <= min.y; loopY += chunkSize)
-                        {
+                    for (int loopX = lastViewMin.x; loopX <= max.x; loopX += chunkSize) {
+                        for (int loopY = lastViewMin.y; loopY < min.y; loopY += chunkSize) {
                             Vector2Int currentPos = new Vector2Int(loopX, loopY);
-                            if (TryGetChunk(currentPos, out Chunk chunk))
-                            {
+                            if (TryGetChunk(currentPos, out Chunk chunk)) {
                                 chunk.MarkOutOfView();
                             }
                         }
                     }
                 }
                 //Create new islands
-                if (min.x < lastViewMin.x || min.y < lastViewMin.y)
-                {
-                    for (int loopX = min.x; loopX < lastViewMin.x; loopX += chunkSize)
-                    {
-                        for (int loopY = min.y; loopY < max.y; loopY += chunkSize)
-                        {
+                if (min.x < lastViewMin.x || min.y < lastViewMin.y) {
+                    for (int loopX = min.x; loopX < lastViewMin.x; loopX += chunkSize) {
+                        for (int loopY = min.y; loopY < max.y; loopY += chunkSize) {
                             Vector2Int currentPos = new Vector2Int(loopX, loopY);
-                            if (!TryGetChunk(currentPos, out Chunk chunk))
-                            {
-                                CreateChunk(currentPos).GenerateIslands(seed, noiseResolution, islandsThreshold);
+                            if (!TryGetChunk(currentPos, out Chunk chunk)) {
+                                CreateChunk(currentPos).GenerateIslands();
                             }
                         }
                     }
-                    for (int loopX = min.x; loopX < max.x; loopX += chunkSize)
-                    {
-                        for (int loopY = min.y; loopY < lastViewMax.y; loopY += chunkSize)
-                        {
+                    for (int loopX = min.x; loopX < max.x; loopX += chunkSize) {
+                        for (int loopY = min.y; loopY < lastViewMax.y; loopY += chunkSize) {
                             Vector2Int currentPos = new Vector2Int(loopX, loopY);
-                            if (!TryGetChunk(currentPos, out Chunk chunk))
-                            {
-                                CreateChunk(currentPos).GenerateIslands(seed, noiseResolution, islandsThreshold);
+                            if (!TryGetChunk(currentPos, out Chunk chunk)) {
+                                CreateChunk(currentPos).GenerateIslands();
                             }
                         }
                     }
@@ -161,29 +140,21 @@ public class GridManager : MonoBehaviour
                 //Save view change
                 lastViewMin = min;
             }
-            if (max != lastViewMax)
-            {
+            if (max != lastViewMax) {
                 //Remove islands
-                if (max.x < lastViewMax.x || max.y < lastViewMax.y)
-                {
-                    for (int loopX = min.x; loopX <= lastViewMax.x; loopX += chunkSize)
-                    {
-                        for (int loopY = max.y; loopY <= lastViewMax.y; loopY += chunkSize)
-                        {
+                if (max.x < lastViewMax.x || max.y < lastViewMax.y) {
+                    for (int loopX = min.x; loopX <= lastViewMax.x; loopX += chunkSize) {
+                        for (int loopY = max.y; loopY <= lastViewMax.y; loopY += chunkSize) {
                             Vector2Int currentPos = new Vector2Int(loopX, loopY);
-                            if (TryGetChunk(currentPos, out Chunk chunk))
-                            {
+                            if (TryGetChunk(currentPos, out Chunk chunk)) {
                                 chunk.MarkOutOfView();
                             }
                         }
                     }
-                    for (int loopX = max.x; loopX <= lastViewMax.x; loopX += chunkSize)
-                    {
-                        for (int loopY = min.y; loopY <= lastViewMax.y; loopY += chunkSize)
-                        {
+                    for (int loopX = max.x; loopX <= lastViewMax.x; loopX += chunkSize) {
+                        for (int loopY = min.y; loopY <= lastViewMax.y; loopY += chunkSize) {
                             Vector2Int currentPos = new Vector2Int(loopX, loopY);
-                            if (TryGetChunk(currentPos, out Chunk chunk))
-                            {
+                            if (TryGetChunk(currentPos, out Chunk chunk)) {
                                 chunk.MarkOutOfView();
                             }
                         }
@@ -191,27 +162,20 @@ public class GridManager : MonoBehaviour
                 }
 
                 //Create new islands
-                if (max.x > lastViewMax.x || max.y > lastViewMax.y)
-                {
-                    for (int loopX = min.x; loopX < max.x; loopX += chunkSize)
-                    {
-                        for (int loopY = lastViewMax.y; loopY < max.y; loopY += chunkSize)
-                        {
+                if (max.x > lastViewMax.x || max.y > lastViewMax.y) {
+                    for (int loopX = min.x; loopX < max.x; loopX += chunkSize) {
+                        for (int loopY = lastViewMax.y; loopY < max.y; loopY += chunkSize) {
                             Vector2Int currentPos = new Vector2Int(loopX, loopY);
-                            if (!TryGetChunk(currentPos, out Chunk chunk))
-                            {
-                                CreateChunk(currentPos).GenerateIslands(seed, noiseResolution, islandsThreshold);
+                            if (!TryGetChunk(currentPos, out Chunk chunk)) {
+                                CreateChunk(currentPos).GenerateIslands();
                             }
                         }
                     }
-                    for (int loopX = lastViewMax.x; loopX < max.x; loopX += chunkSize)
-                    {
-                        for (int loopY = min.y; loopY < max.y; loopY += chunkSize)
-                        {
+                    for (int loopX = lastViewMax.x; loopX < max.x; loopX += chunkSize) {
+                        for (int loopY = min.y; loopY < max.y; loopY += chunkSize) {
                             Vector2Int currentPos = new Vector2Int(loopX, loopY);
-                            if (!TryGetChunk(currentPos, out Chunk chunk))
-                            {
-                                CreateChunk(currentPos).GenerateIslands(seed, noiseResolution, islandsThreshold);
+                            if (!TryGetChunk(currentPos, out Chunk chunk)) {
+                                CreateChunk(currentPos).GenerateIslands();
                             }
                         }
                     }
@@ -221,16 +185,12 @@ public class GridManager : MonoBehaviour
             }
         }
     }
-
-
-
-    public Vector3 GridToWorldPosition(Vector2Int gridPosition) => grid.CellToWorld((Vector3Int)gridPosition);
-
-    public Vector2Int WorldToGridPosition(Vector3 worldPosition) => (Vector2Int)grid.WorldToCell(worldPosition);
-    public bool IsTileWalkable(Vector2 worldPosition, Vector2 movementVector)
-    {
+    public Vector3 GridToWorldPosition(Vector2Int gridPosition, BuildingLayer buildingLayer) => grid.CellToWorld((Vector3Int)gridPosition) + Vector3.up * (buildingLayer == BuildingLayer.Buildings ? buildingLayerPositionOffset : 0f);
+    public Vector2Int WorldToGridPosition(Vector3 worldPosition, BuildingLayer buildingLayer) 
+        => (Vector2Int)GetTilemap(buildingLayer).WorldToCell(worldPosition - Vector3.up * (buildingLayer == BuildingLayer.Buildings ? buildingLayerPositionOffset : 0f));
+    public bool IsTileWalkable(Vector2 worldPosition, Vector2 movementVector) {
         bool moveLegal = true;
-        Tiles.TileAbst floorTile = GetTile(WorldToGridPosition(worldPosition + movementVector.normalized * offSet));
+        TileAbst floorTile = GetTile(WorldToGridPosition(worldPosition + movementVector.normalized * offSet, BuildingLayer.Floor), BuildingLayer.Floor);
         moveLegal &= floorTile != null;
         Quaternion rotationLeft = Quaternion.Euler(0, 0, 90f / collisionSensetivity);
         Quaternion rotationRight = Quaternion.Euler(0, 0, 90f / collisionSensetivity);
@@ -238,35 +198,48 @@ public class GridManager : MonoBehaviour
         Vector2 rightMovementVector = movementVector.normalized * offSet;
         for (int i = 0; i < collisionSensetivity && moveLegal; i++) {
             leftMovementVector = rotationLeft * leftMovementVector;
-            floorTile = GetTile(WorldToGridPosition(worldPosition + leftMovementVector));
+            floorTile = GetTile(WorldToGridPosition(worldPosition + leftMovementVector, BuildingLayer.Floor), BuildingLayer.Floor);
             moveLegal &= floorTile != null;
             rightMovementVector = rotationRight * rightMovementVector;
-            floorTile = GetTile(WorldToGridPosition(worldPosition + rightMovementVector));
+            floorTile = GetTile(WorldToGridPosition(worldPosition + rightMovementVector, BuildingLayer.Floor), BuildingLayer.Floor);
             moveLegal &= floorTile != null;
         }
         return moveLegal;
     }
-    public Tiles.TileAbst GetTile(Vector2Int gridPosition)
-    {
-        if (TryGetChunk(GridToChunkCoordinates(gridPosition), out Chunk chunk))
-        {
-            return chunk.GetTile(gridPosition);
+    public TileAbst GetTile(Vector2Int gridPosition, BuildingLayer buildingLayer) {
+        if (TryGetChunk(GridToChunkCoordinates(gridPosition), out Chunk chunk)) {
+            return chunk.GetTile(gridPosition, buildingLayer);
         }
-        else
-        {
+        else {
             return null;
         }
     }
-    public void SetTile(Vector2Int gridPosition, Tiles.TileAbst tile, bool playerAction = true)
-    {
-        Vector2Int chunkPos = GridToChunkCoordinates(gridPosition);
-        if (TryGetChunk(chunkPos, out Chunk chunk))
-        {
-            chunk.SetTile(gridPosition, tile, playerAction);
+    //Need to implement sides detection
+    /// <summary>
+    /// Gets the tile on the at a certain position.
+    /// Input grid position for an exact position on the grid
+    /// and world position if you want to also check for tiles sides.
+    /// </summary>
+    /// <param name="worldPosition"></param>
+    /// Position in world space in vector2
+    /// <returns></returns>
+    public TileAbst GetTile(Vector2 worldPosition, BuildingLayer buildingLayer) {
+        Vector2Int gridPosition = WorldToGridPosition(worldPosition, buildingLayer);
+        Vector2 tileWorldPosition = GridToWorldPosition(gridPosition, buildingLayer); 
+        if (TryGetChunk(GridToChunkCoordinates(gridPosition), out Chunk chunk)) {
+            return chunk.GetTile(gridPosition, buildingLayer);
         }
-        else if (tile != null)
-        {
-            CreateChunk(chunkPos).SetTile(gridPosition, tile, playerAction);
+        else {
+            return null;
+        }
+    }
+    public void SetTile(TileAbst tile, Vector2Int gridPosition,  BuildingLayer buildingLayer, bool playerAction = true) {
+        Vector2Int chunkPos = GridToChunkCoordinates(gridPosition);
+        if (TryGetChunk(chunkPos, out Chunk chunk)) {
+            chunk.SetTile(tile, gridPosition,  buildingLayer, playerAction);
+        }
+        else if (tile != null) {
+            CreateChunk(chunkPos).SetTile(tile, gridPosition,  buildingLayer, playerAction);
         }
     }
 
@@ -276,8 +249,7 @@ public class GridManager : MonoBehaviour
     => new Vector2Int(Mathf.FloorToInt((float)gridPosition.x / chunkSize) * chunkSize, Mathf.FloorToInt((float)gridPosition.y / chunkSize) * chunkSize);
     private bool TryGetChunk(Vector2Int chunkCoordinates, out Chunk chunk)
         => chunksDict.TryGetValue(chunkCoordinates, out chunk);
-    private Chunk CreateChunk(Vector2Int chunkPosition)
-    {
+    private Chunk CreateChunk(Vector2Int chunkPosition) {
         Chunk chunk = new Chunk(chunkPosition);
         chunksDict.Add(chunkPosition, chunk);
         return chunk;
@@ -287,54 +259,72 @@ public class GridManager : MonoBehaviour
     //Chunk
     internal class Chunk
     {
-        private Tiles.TileAbst[,] chunkArr = null;
+        private TileAbst[,] floorArr = null;
+        private TileAbst[,] buildingsArr = null;
+
+
         internal readonly Vector2Int chunkStartPos;
         private int tileCount = 0;
         private bool WasEdited = false;
-        public Chunk(Vector2Int StartPos)
-        {
+        public Chunk(Vector2Int StartPos) {
             chunkStartPos = StartPos;
         }
-        public Tiles.TileAbst GetTile(Vector2Int gridPosition) => chunkArr?[gridPosition.x - chunkStartPos.x, gridPosition.y - chunkStartPos.y];
-        internal void SetTile(Vector2Int gridPosition, Tiles.TileAbst tile, bool countsAsEdit = true)
-        {
+        public TileAbst GetTile(Vector2Int gridPosition, BuildingLayer buildingLayer) {
+            switch (buildingLayer) {
+                case BuildingLayer.Floor:
+                    return floorArr?[gridPosition.x - chunkStartPos.x, gridPosition.y - chunkStartPos.y];
+                case BuildingLayer.Buildings:
+                    return buildingsArr?[gridPosition.x - chunkStartPos.x, gridPosition.y - chunkStartPos.y];
+                default:
+                    throw new NotImplementedException();
+            }
+
+        }
+
+        internal void SetTile(TileAbst tile, Vector2Int gridPosition,  BuildingLayer buildingLayer, bool countsAsEdit = true) {
+            switch (buildingLayer) {
+                case BuildingLayer.Floor:
+                    SetTileByRef(tile, gridPosition,   buildingLayer, countsAsEdit, ref floorArr, ref _instance.floor);
+                    break;
+                case BuildingLayer.Buildings:
+                    SetTileByRef(tile, gridPosition,   buildingLayer, countsAsEdit, ref buildingsArr, ref _instance.buildings);
+                    break;
+            }
+
+        }
+        private void SetTileByRef(TileAbst tile, Vector2Int gridPosition,   BuildingLayer buildingLayer, bool countsAsEdit, ref TileAbst[,] tileArr, ref Tilemap tilemap) {
             Vector2Int chunkPosition = GridToChunkPosition(gridPosition);
-            bool tileExists = chunkArr != null && chunkArr[chunkPosition.x, chunkPosition.y] != null;
-            if (tile != null || tileExists)
-            {
-                if (chunkArr == null)
-                {
-                    chunkArr = new Tiles.TileAbst[chunkSize, chunkSize];
+            bool tileExists = tileArr != null && tileArr[chunkPosition.x, chunkPosition.y] != null;
+            if (tile != null || tileExists) {
+                if (tileArr == null) {
+                    tileArr = new TileAbst[chunkSize, chunkSize];
                 }
-                if (tileExists && tile == null)
-                {
-                    chunkArr[chunkPosition.x, chunkPosition.y].Remove();
-                    _instance.floor.SetTile((Vector3Int)gridPosition, null);
-                    chunkArr[chunkPosition.x, chunkPosition.y] = null;
+                if (tileExists && tile == null) {
+                    tileArr[chunkPosition.x, chunkPosition.y].Remove();
+                    tilemap.SetTile((Vector3Int)gridPosition, null);
+                    tileArr[chunkPosition.x, chunkPosition.y] = null;
 
                     tileCount--;
                     WasEdited |= countsAsEdit;
-                    if (tileCount == 0)
-                    {
-                        chunkArr = null;
+                    if (tileCount == 0) {
+                        tileArr = null;
                     }
 
                 }
-                else if (!tileExists && tile != null)
-                {
+                else if (!tileExists && tile != null) {
                     tileCount++;
                     WasEdited |= countsAsEdit;
-
-                    _instance.floor.SetTile((Vector3Int)gridPosition, tile.mainTileBase);
-                    chunkArr[chunkPosition.x, chunkPosition.y] = tile;
-                    tile.Init(gridPosition);
+                    tile.ImportVariables(gridPosition, buildingLayer);
+                    tilemap.SetTile((Vector3Int)gridPosition, tile.mainTileBase);
+                    tileArr[chunkPosition.x, chunkPosition.y] = tile;
+                    tile.Init(gridPosition, buildingLayer);
                 }
-                else if (tile != chunkArr[chunkPosition.x, chunkPosition.y])
-                {
-                    chunkArr[chunkPosition.x, chunkPosition.y].Remove();
-                    _instance.floor.SetTile((Vector3Int)gridPosition, tile.mainTileBase);
-                    chunkArr[chunkPosition.x, chunkPosition.y] = tile;
-                    tile.Init(gridPosition);
+                else if (tile != tileArr[chunkPosition.x, chunkPosition.y]) {
+                    tileArr[chunkPosition.x, chunkPosition.y].Remove();
+                    tile.ImportVariables(gridPosition, buildingLayer);
+                    tilemap.SetTile((Vector3Int)gridPosition, tile.mainTileBase);
+                    tileArr[chunkPosition.x, chunkPosition.y] = tile;
+                    tile.Init(gridPosition, buildingLayer);
 
                     WasEdited |= countsAsEdit;
                 }
@@ -343,32 +333,51 @@ public class GridManager : MonoBehaviour
         }
         internal Vector2Int GridToChunkPosition(Vector2Int gridPosition) => gridPosition - chunkStartPos;
         internal Vector2Int ChunkToGridPosition(Vector2Int chunkPosition) => chunkPosition + chunkStartPos;
-        internal void GenerateIslands(int seed, float noiseResolution, float islandsThreshold) {
+        internal void GenerateIslands() {
+            Noise noise = _instance.islandsNoise;
             for (int loopX = 0; loopX < chunkSize; loopX++) {
                 for (int loopY = 0; loopY < chunkSize; loopY++) {
-                    float perlinNoise = Mathf.PerlinNoise((float)(loopX + seed + chunkStartPos.x) / noiseResolution, (float)(loopY + seed + chunkStartPos.y) / noiseResolution);
-                    if (perlinNoise > islandsThreshold) {
-                        if (perlinNoise > islandsThreshold) {
-                            SetTile(ChunkToGridPosition(new Vector2Int(loopX, loopY)), new Tiles.ObsidianTile(), false);
-                        }
+                    Vector2Int gridPosition = new Vector2Int(loopX, loopY) + chunkStartPos;
+                    if (noise.CheckThreshold(gridPosition)) {
+                        SetTile(new Tiles.ObsidianTile(), ChunkToGridPosition( new Vector2Int(loopX, loopY)),  BuildingLayer.Floor, false);
                     }
-
                 }
             }
         }
-        public void MarkOutOfView()
-        {
-            if (!WasEdited)
-            {
-                for (int loopX = 0; loopX < chunkSize; loopX++)
-                {
-                    for (int loopY = 0; loopY < chunkSize; loopY++)
-                    {
-                        SetTile(ChunkToGridPosition(new Vector2Int(loopX, loopY)), null, false);
+        public void MarkOutOfView() {
+            if (!WasEdited) {
+                for (int loopX = 0; loopX < chunkSize; loopX++) {
+                    for (int loopY = 0; loopY < chunkSize; loopY++) {
+                        SetTile(null, ChunkToGridPosition(new Vector2Int(loopX, loopY)),  BuildingLayer.Floor, false);
                     }
                 }
                 chunksDict.Remove(chunkStartPos);
             }
         }
+    }
+}
+[Serializable]
+public class Noise
+{
+    const int maxSeedValue = 100000;
+    [Header("Leave seed at 0 for random value")]
+    public int seed = 0;
+    [Range(2f, 50f)]
+    public float resolution;
+    [Range(0f, 0.99f)]
+    public float boolThreshold;
+    public void GenerateSeed() {
+        while (seed == 0) {
+            seed = UnityEngine.Random.Range(-maxSeedValue, maxSeedValue);
+            Debug.Log("Generating Seed");
+        }
+    }
+    public float GetNoiseAtPosition(Vector2 position)
+       => Mathf.PerlinNoise((position.x + seed) / resolution, (position.y + seed) / resolution);
+    public bool CheckThreshold(Vector2 position) => GetNoiseAtPosition(position) > boolThreshold;
+    public float GetRandomValue(Vector2 position) {
+        //Vector2Int newPosition = Vector2Int.RoundToInt(position);
+        UnityEngine.Random.InitState(Mathf.RoundToInt(GetNoiseAtPosition(position) * seed));
+        return UnityEngine.Random.value;
     }
 }

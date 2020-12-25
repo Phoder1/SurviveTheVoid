@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
@@ -27,46 +25,64 @@ public class CameraScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         viewChanged = false;
         movement = new Vector2(
-            Input.GetKey(KeyCode.D)?1:0 - (Input.GetKey(KeyCode.A)?1:0),
-            Input.GetKey(KeyCode.W)?1:0 - (Input.GetKey(KeyCode.S)?1:0)
+            Input.GetKey(KeyCode.D) ? 1 : 0 - (Input.GetKey(KeyCode.A) ? 1 : 0),
+            Input.GetKey(KeyCode.W) ? 1 : 0 - (Input.GetKey(KeyCode.S) ? 1 : 0)
             );
         movement *= moveSpeed;
-        if(movement != Vector2.zero) {
+        if (movement != Vector2.zero) {
             transform.position += (Vector3)movement;
             viewChanged = true;
         }
 
         scrollMovement = scrollSpeed * -Input.GetAxis("Mouse ScrollWheel");
-        if(scrollMovement != 0) {
+        if (scrollMovement != 0) {
             cameraComp.orthographicSize += scrollMovement;
             viewChanged = true;
         }
 
         if (Input.GetKey(KeyCode.Mouse0)) {
-                Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                mousePos.z = 0;
-                GridManager._instance.SetTile(gridManager.WorldToGridPosition(mousePos), new Tiles.ToothPaste());
-            
+            BuildingLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? BuildingLayer.Buildings : BuildingLayer.Floor;
+            Vector2Int gridPosition = MouseGridPosition(BuildingLayer.Floor);
+            gridManager.SetTile(new Tiles.ObsidianTile(), gridPosition,  layer);
+
         }
         else if (Input.GetKey(KeyCode.Mouse1)) {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mousePos.z = 0;
-            GridManager._instance.SetTile(gridManager.WorldToGridPosition(mousePos), null);
+            BuildingLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? BuildingLayer.Buildings : BuildingLayer.Floor;
+            Vector2Int gridPosition = MouseGridPosition(layer);
+            gridManager.SetTile(null, gridPosition,  layer);
+
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftControl)) {
+            BuildingLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? BuildingLayer.Buildings : BuildingLayer.Floor;
+            Debug.Log(gridManager.GetTile(MouseGridPosition(layer), layer));
+        }
+        else if (Input.GetKeyDown(KeyCode.Mouse2)) {
+            BuildingLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? BuildingLayer.Buildings : BuildingLayer.Floor;
+            Debug.Log("Mouse2: " + Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            Vector2Int gridPosition = MouseGridPosition(layer);
+            TileAbst tile = gridManager.GetTile(gridPosition, layer);
+            if(tile != null && tile.interactionType == ToolInteraction.Any) {
+                Debug.Log("Color change");
+                tile.GatherInteraction(gridPosition, layer);
+            }
         }
 
         if (viewChanged) {
             UpdateView();
         }
     }
-
+    private Vector2Int MouseGridPosition(BuildingLayer buildingLayer) {
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePos.z = 0;
+        return gridManager.WorldToGridPosition(mousePos, buildingLayer);
+    }
     private void UpdateView() {
-        Vector3 camPosition = (Vector2)transform.position ;
-        camPosition -= (Vector3)cameraRealSize/2;
+        Vector3 camPosition = (Vector2)transform.position;
+        camPosition -= (Vector3)cameraRealSize / 2;
         worldView = new Rect(camPosition, cameraRealSize);
-        gridManager.UpdateView( worldView );
+        gridManager.UpdateView(worldView);
     }
 }
