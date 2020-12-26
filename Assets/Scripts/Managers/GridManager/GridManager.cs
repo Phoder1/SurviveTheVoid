@@ -4,8 +4,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public enum BuildingLayer { Floor, Buildings }
-public class GridManager : MonoBehaviour
-{
+public class GridManager : MonoBehaviour {
     //Debug Chunks (Disable when not needed, very heavy on performance):
     #region Debug
 
@@ -215,6 +214,8 @@ public class GridManager : MonoBehaviour
             return null;
         }
     }
+    public TileAbst GetTileFromWorld(Vector2 worldPosition, BuildingLayer buildingLayer) => GetTileFromGrid(WorldToGridPosition(worldPosition, buildingLayer), buildingLayer);
+
     /// <summary>
     /// Gets the tile on the at a certain position.
     /// Input grid position for an exact position on the grid

@@ -41,6 +41,7 @@ public abstract class TileAbst
     public TileBase mainTileBase;
     public TileVariations[] tileBaseVariations;
     public ToolInteraction interactionType;
+    public bool isActiveInteraction;
     protected TimeEvent eventInstance;
     public bool isSolid;
     public virtual void Init(Vector2Int _position, BuildingLayer buildingLayer) { }
