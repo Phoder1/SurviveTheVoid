@@ -185,20 +185,6 @@ public class GridManager : MonoBehaviour
             }
         }
     }
-<<<<<<< HEAD:Assets/Scripts/Managers/GridManager.cs
-
-
-
-    public Vector3 GridToWorldPosition(Vector2Int gridPosition) => grid.CellToWorld((Vector3Int)gridPosition);
-
-    public Vector2Int WorldToGridPosition(Vector3 worldPosition) => (Vector2Int)grid.WorldToCell(worldPosition);
-    public bool IsTileWalkable(Vector2 worldPosition, Vector2 movementVector)
-    {
-        Vector2 headingDirection = movementVector.normalized * offSet;
-        
-        Tiles.TileAbst floorTile = GetTile(WorldToGridPosition(worldPosition + headingDirection));
-        return floorTile != null;
-=======
     public Vector3 GridToWorldPosition(Vector2Int gridPosition, BuildingLayer buildingLayer) => grid.CellToWorld((Vector3Int)gridPosition) + Vector3.up * (buildingLayer == BuildingLayer.Buildings ? buildingLayerPositionOffset : 0f);
     public Vector2Int WorldToGridPosition(Vector3 worldPosition, BuildingLayer buildingLayer)
         => (Vector2Int)GetTilemap(buildingLayer).WorldToCell(worldPosition - Vector3.up * (buildingLayer == BuildingLayer.Buildings ? buildingLayerPositionOffset : 0f));
@@ -219,7 +205,6 @@ public class GridManager : MonoBehaviour
             moveLegal &= floorTile != null;
         }
         return moveLegal;
->>>>>>> AlonBranch:Assets/Scripts/GridManager.cs
     }
     public TileAbst GetTileFromGrid(Vector2Int gridPosition, BuildingLayer buildingLayer) {
         if (TryGetChunk(GridToChunkCoordinates(gridPosition), out Chunk chunk)) {
