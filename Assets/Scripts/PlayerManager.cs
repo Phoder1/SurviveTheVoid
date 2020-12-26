@@ -7,21 +7,16 @@ public class PlayerManager : MonoBehaviour
     public static PlayerManager _instance;
     InputManager _inputManager;
     UIManager _uiManager;
-    Vector2 movementVector;
+    PlayerStateMachine _playerStateMachine;
     GridManager _GridManager;
-    Vector2 currentPos;
-    Vector2 nextPos;
+
+    internal StateBase myState;
     [SerializeField] internal Camera cameraComp;
 
     Vector2 cameraRealSize => new Vector2(cameraComp.orthographicSize * 2 * cameraComp.aspect, cameraComp.orthographicSize * 2);
-
-
-
-
-
-
-
-
+    Vector2 movementVector;
+    Vector2 currentPos;
+    Vector2 nextPos;
 
 
     private void Awake()
@@ -43,23 +38,18 @@ public class PlayerManager : MonoBehaviour
         _inputManager = InputManager._instance;
         _GridManager = GridManager._instance;
         _uiManager = UIManager._instance;
+        _playerStateMachine = GetComponent<PlayerStateMachine>();
+        ChangeMode(InputManager.InputState.DefaultMode);
+         
 
         UpdateView();
-
-
-        
-
-
 
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        
-        //bools//
-
+   
         movementVector = _inputManager.GetAxis();
         movementVector = movementVector * 5*Time.deltaTime;
         currentPos = (Vector2)transform.position; //new Vector2(transform.position.x, transform.position.y);
@@ -74,40 +64,38 @@ public class PlayerManager : MonoBehaviour
         if (_inputManager.a_Button) { ButtonA(); }
         if (_inputManager.b_Button) { ButtonB(); }
 
-
-
-        //states//
-        switch (_inputManager.state)
-        {
-            case InputManager.InputState.BuildMode:
-                ButtonA();
-                break;
-            case InputManager.InputState.EditMode:
-                ButtonB();
-                break;
-            case InputManager.InputState.FightMode:
-
-                break;
-        }
-
-
     }
 
     public void ButtonA()
     {
-        Debug.Log("ButtonA pressed");
-
+        
+        myState.ButtonA();
     }
     public void ButtonB()
     {
-        Debug.Log("ButtonB pressed");
+        
+        myState.ButtonB();
     }
+
+
     private void UpdateView()
     {
         Vector3 camPosition = (Vector2)transform.position;
         camPosition -= (Vector3)cameraRealSize / 2;
         Rect worldView = new Rect(camPosition, cameraRealSize);
         _GridManager.UpdateView(worldView);
+    }
+
+    public void ChangeMode(InputManager.InputState newState)
+    {
+        myState = _playerStateMachine.SwichState(newState);   
+        
+        myState.OnUpdate();
+    }
+    
+    public void check()
+    {
+        Debug.Log("check");
     }
 }
 
