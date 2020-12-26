@@ -6,6 +6,6 @@ public class StateBase : ScriptableObject
 {
     public virtual void OnUpdate()
     {
-        Debug.Log("BaseLine");
+
     }
 }

@@ -7,7 +7,7 @@ public class IdleState : StateBase
     public int yotamosmamos;
     public override void OnUpdate()
     {
-        Debug.Log("Idle");
+
         base.OnUpdate();
 
     }
