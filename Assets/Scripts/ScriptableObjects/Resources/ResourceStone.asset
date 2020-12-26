@@ -9,8 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: New Resource Pack
-  m_EditorClassIdentifier: Assembly-CSharp::ItemPackSO
-  resources:
-  - {fileID: 11400000, guid: eceba57f53dffb34a885be3b8900c198, type: 2}
+  m_Script: {fileID: 11500000, guid: 587b921edc753cd4e956c9bf36faa58d, type: 3}
+  m_Name: ResourceStone
+  m_EditorClassIdentifier: Assembly-CSharp::ItemSO
+  maxStackSize: 20
+  description: Stone age BABY!
+  resourceEnum: 8
+  sprite: {fileID: 0}
