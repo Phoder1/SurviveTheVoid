@@ -31,77 +31,9 @@ public class Tiles : MonoBehaviour
 
     #region Tiles import assets scriptable object
     public TilesSO tiles;
-    [CreateAssetMenu(menuName = "Tiles Pack")]
-    public class TilesSO : ScriptableObject
-    {
-        public Noise floorVariationNoise;
-        public Noise buildingsVariationNoise;
-        public MoonTile moonTile;
-        public ToothPaste toothPasteTile;
-        public CircusTile circusTile;
-        public ObsidianTile obsidianTile;
-    }
+
     #endregion
-    #region Actual Tiles
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    [Serializable]
-    public class MoonTile : TileAbst
-    {
 
-        public override void ImportVariables(Vector2Int gridPosition, BuildingLayer buildingLayer) {
-            MoonTile SO = _instance.tiles.moonTile;
-            mainTileBase = SO.PickTileBase(gridPosition, buildingLayer);
-            interactionType = SO.interactionType;
-        }
-    }
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    [Serializable]
-    public class CircusTile : TileAbst
-    {
-        public override void ImportVariables(Vector2Int gridPosition, BuildingLayer buildingLayer) {
-            CircusTile SO = _instance.tiles.circusTile;
-            mainTileBase = SO.PickTileBase(gridPosition, buildingLayer);
-            interactionType = SO.interactionType;
-        }
-    }
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    [Serializable]
-    public class ToothPaste : TileAbst
-    {
-        public TileAbst replacementTile;
-        public int eventDelay;
-
-        public override void ImportVariables(Vector2Int gridPosition, BuildingLayer buildingLayer) {
-            ToothPaste SO = _instance.tiles.toothPasteTile;
-            mainTileBase = SO.PickTileBase(gridPosition, buildingLayer);
-            eventDelay = SO.eventDelay;
-            interactionType = SO.interactionType;
-            replacementTile = new CircusTile();
-        }
-
-        public override void Init(Vector2Int position, BuildingLayer buildingLayer) {
-            eventInstance = new ToothPasteEvent(this, Time.time + eventDelay, position);
-            TimeManager._instance.AddEvent(eventInstance);
-        }
-    }
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    [Serializable]
-    public class ObsidianTile : TileAbst
-    {
-        public override void GatherInteraction(Vector2Int gridPosition, BuildingLayer buildingLayer) {
-            Tilemap tilemap = GridManager._instance.GetTilemap(buildingLayer);
-            tilemap.RemoveTileFlags((Vector3Int)gridPosition, TileFlags.LockColor);
-            tilemap.SetColor((Vector3Int)gridPosition, new Color(0.9f,0.9f,1f,0.7f));
-
-        }
-
-        public override void ImportVariables(Vector2Int gridPosition, BuildingLayer buildingLayer) {
-            ObsidianTile SO = _instance.tiles.obsidianTile;
-            mainTileBase = SO.PickTileBase(gridPosition, buildingLayer);
-            interactionType = SO.interactionType;
-        }
-    }
-    #endregion
 }
 #region General tile abstract class and enum
 public enum ToolInteraction { None, Axe, Pickaxe, Hoe, Shovel, Hammer, Any }
@@ -208,7 +140,66 @@ public struct TileHit
 }
 
 #endregion
+#region Actual Tiles
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[Serializable]
+public class MoonTile : TileAbst
+{
 
+    public override void ImportVariables(Vector2Int gridPosition, BuildingLayer buildingLayer) {
+        MoonTile SO = Tiles._instance.tiles.moonTile;
+        mainTileBase = SO.PickTileBase(gridPosition, buildingLayer);
+        interactionType = SO.interactionType;
+    }
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[Serializable]
+public class CircusTile : TileAbst
+{
+    public override void ImportVariables(Vector2Int gridPosition, BuildingLayer buildingLayer) {
+        CircusTile SO = Tiles._instance.tiles.circusTile;
+        mainTileBase = SO.PickTileBase(gridPosition, buildingLayer);
+        interactionType = SO.interactionType;
+    }
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[Serializable]
+public class ToothPaste : TileAbst
+{
+    public TileAbst replacementTile;
+    public int eventDelay;
+
+    public override void ImportVariables(Vector2Int gridPosition, BuildingLayer buildingLayer) {
+        ToothPaste SO = Tiles._instance.tiles.toothPasteTile;
+        mainTileBase = SO.PickTileBase(gridPosition, buildingLayer);
+        eventDelay = SO.eventDelay;
+        interactionType = SO.interactionType;
+        replacementTile = new CircusTile();
+    }
+
+    public override void Init(Vector2Int position, BuildingLayer buildingLayer) {
+        eventInstance = new ToothPasteEvent(this, Time.time + eventDelay, position);
+        TimeManager._instance.AddEvent(eventInstance);
+    }
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[Serializable]
+public class ObsidianTile : TileAbst
+{
+    public override void GatherInteraction(Vector2Int gridPosition, BuildingLayer buildingLayer) {
+        Tilemap tilemap = GridManager._instance.GetTilemap(buildingLayer);
+        tilemap.RemoveTileFlags((Vector3Int)gridPosition, TileFlags.LockColor);
+        tilemap.SetColor((Vector3Int)gridPosition, new Color(0.9f, 0.9f, 1f, 0.7f));
+
+    }
+
+    public override void ImportVariables(Vector2Int gridPosition, BuildingLayer buildingLayer) {
+        ObsidianTile SO = Tiles._instance.tiles.obsidianTile;
+        mainTileBase = SO.PickTileBase(gridPosition, buildingLayer);
+        interactionType = SO.interactionType;
+    }
+}
+#endregion
 
 
 
