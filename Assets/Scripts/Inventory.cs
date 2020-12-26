@@ -15,8 +15,6 @@ public static class Inventory
     static int nextAddOnAmountForInventory = 5;
 
 
-
-
     public static ItemSlot[] GetInventory { get => inventoryList; }
     public static void  MakeInventoryBigger(int _newSize) {
         if (_newSize< maxCapacityOfItemsInList)
