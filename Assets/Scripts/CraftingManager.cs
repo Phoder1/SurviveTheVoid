@@ -25,22 +25,23 @@ public class CraftingManager : MonoBehaviour
     private void Start() {
 
         Init();
-        AddToInventory(1);
+        AddToInventoryX(1);
 
     }
     private void Update() {
         if (Input.GetKeyDown(KeyCode.A)) {
-            AddToInventory(2);
+            AddToInventoryX(2);
         }
         else if (Input.GetKeyDown(KeyCode.D)) {
-            AddToInventory(-2);
+            AddToInventoryX(-2);
         }
     }
 
-    private static void AddToInventory(int amount) {
+    private static void AddToInventoryX(int amount) {
         //Inventory inventory = Inventory._GetInstance;
-        CraftingManager craftingManager = CraftingManager._instance;
-        ItemSlot itemSlot = new ItemSlot(craftingManager.items.resources[0], amount);
+    
+        ItemSlot itemSlot = new ItemSlot(_instance.items.resources[0], amount);
+        Debug.Log("!");
         if (amount > 0) {
             Inventory.AddToInventory(itemSlot);
         }

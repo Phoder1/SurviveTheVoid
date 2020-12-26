@@ -1,43 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public static class Inventory
 {
     static List<ItemSlot> inventoryList = new List<ItemSlot>();
-    static List<ItemSlot> itemFoundList = new List<ItemSlot>();
-    const int maxCapacityOfItems = 25;
+    const int maxCapacityOfItemsInList = 25;
     static bool isItemInList;
     static int remainer;
-
-    //private static Inventory _instance;
-    //public static Inventory _GetInstance {
-    //    get {
-    //        if (_instance == null) {
-    //            _instance = new Inventory();
-    //        }
-    //        return _instance;
-    //    }
-    //}
-    //Inventory()
-    //{
-    //    if (inventoryList == null)
-    //    {
-    //        inventoryList ;
-    //        itemFoundList ;
-    //    }
-    //}
-
     public static List<ItemSlot> GetInventory { get => inventoryList; }
 
-    public static bool CheckIfENnughSpaceInSlot(ItemSlot item) {
+    public static bool CheckIfEnoughSpaceInSlot(ItemSlot item) {
         if (item == null)
             return false;
+
         remainer = 0;
         isItemInList = false;
 
         // check if the list is full and if there's items of the same kind that can be stocked
-        if (inventoryList.Count >= maxCapacityOfItems) {
+        if (inventoryList.Count >= maxCapacityOfItemsInList) {
             for (int i = 0; i < inventoryList.Count; i++) {
                 if (item.resource.resourceEnum == inventoryList[i].resource.resourceEnum) {
                     remainer += inventoryList[i].resource.maxStackSize - inventoryList[i].amount;
@@ -50,77 +32,79 @@ public static class Inventory
                 isItemInList = false;
             }
         }
+        else
+        {
+            isItemInList =  true;
+        }
+
+
+
+
         return isItemInList;
+    }
+
+
+    static void AddAmountOfItem(ItemSlot item)
+    {
+
+
+        if (item == null ||item.amount <= 0 )
+            return;
+        
+
+
+        for (int i = 0; i < inventoryList.Count; i++)
+        {
+            if (inventoryList[i].resource.resourceEnum == item.resource.resourceEnum)
+            {
+                if (inventoryList[i].amount == inventoryList[i].resource.maxStackSize)
+                    continue;
+
+                if (item.amount + inventoryList[i].amount > inventoryList[i].resource.maxStackSize)
+                {
+                    item.amount = Mathf.Abs(inventoryList[i].resource.maxStackSize - (inventoryList[i].amount + item.amount));
+                    inventoryList[i].amount = inventoryList[i].resource.maxStackSize;
+                    AddAmountOfItem(item);
+                    break;
+                }
+                else if (item.amount + inventoryList[i].amount == inventoryList[i].resource.maxStackSize)
+                {
+                    inventoryList[i].amount = inventoryList[i].resource.maxStackSize;
+                    break;
+                }
+                else
+                {
+                    if (CheckIfEnoughSpaceInSlot(item))
+                    {
+                        inventoryList.Add(item);
+                        break;
+                    }
+                }
+
+
+            }
+        }
+
     }
 
     public static void AddToInventory(ItemSlot item)
     {
         if (item == null)
             return;
-
-
-
-     
-
         // if i dont have it in the inventory
-        if (!CheckIfENnughSpaceInSlot(item))
+        if (!CheckIfEnoughSpaceInSlot(item))
         {
-            inventoryList.Add(item);
+            AddAmountOfItem(item);
             return;
         }
-
-
-        // if its unstackable
-        if (item.resource.maxStackSize == 1) {
-            inventoryList.Add(item);
-            return;
-        }
-
-            remainer = 0;
-
-        // add to all existing slots the items amount
-        for (int i = 0; i < inventoryList.Count; i++)
-        {
-
-
-
-            if (inventoryList[i].resource.resourceEnum != item.resource.resourceEnum)
-                continue;
-
-
-                if (inventoryList[i].amount == inventoryList[i].resource.maxStackSize)
-                    continue;
-
-
-                if (inventoryList[i].amount + item.amount > inventoryList[i].resource.maxStackSize)
-                {
-                    remainer = inventoryList[i].amount + item.amount - inventoryList[i].resource.maxStackSize;
-
-
-
-                    inventoryList[i].amount += (item.amount - remainer);
-
-                    item.amount = remainer;
-
-                }
-                else
-                    inventoryList[i].amount += item.amount;
-
-            
-            if (remainer > 0)
-            {
-                inventoryList.Add(item);
-
-            }
-
-
-        }
-
-        // after adding to all the previous slots if there is more then add another slot to inventory
-        
     }
+
+    
     public static void RemoveObjectFromInventory(ItemSlot item)
     {
+        if (item == null || item.amount <= 0)
+            return;
+        
         // if item is not stackable
         if (item.resource.maxStackSize == 1)
         {
@@ -129,89 +113,42 @@ public static class Inventory
         }
 
 
-
-        // if item is istackable
-
-        itemFoundList.Clear();
-        int totalAmount = 0; 
-
-        for (int i = 0; i < inventoryList.Count; i++)
+        int amountIHave = GetAmountOfItem(item);
+        if (item.amount > amountIHave)
         {
-            if (inventoryList[i].resource.resourceEnum == item.resource.resourceEnum) // found the item in the inventory
-            {
-                itemFoundList.Add(inventoryList[i]);
-                totalAmount += inventoryList[i].amount;
-            }
-        }
-
-        // check if the plyaer has enough amount in the inventory
-        if (totalAmount < item.amount)
-        {
-            Debug.Log("The player dont have enough amount for this item to be removed\n remove failed");
+            Debug.Log("You are trying To Remove : " + item.amount + " and I Have Only This Amount : " + amountIHave);
             return;
         }
 
 
-        if (itemFoundList.Count == 1)
+        // if item is istackable
+
+        remainer = 0;
+        for (int i = 0; i < inventoryList.Count; i++)
         {
-            // there is only one item of this kind
-
-            if (totalAmount > item.amount)
-            {
-                itemFoundList[0].amount -= item.amount;
-            }
-            else if (totalAmount == item.amount)
-            {
-                itemFoundList[0].amount = 0;
-            }
-
-        }
-        else
-        {
-            // there is more of this item 
-            itemFoundList.OrderByDescending(itemForSorting => itemForSorting.amount);
-
-
-            remainer = item.amount;
-            
-            for (int i = 0; i < itemFoundList.Count; i++)
+            if (inventoryList[i].resource.resourceEnum == item.resource.resourceEnum)
             {
 
-                if (remainer <= 0)
-                    break;
-                
-
-                if (itemFoundList[i].amount <= remainer)
+                if (item.amount - inventoryList[i].amount > 0)
                 {
-                    itemFoundList[i].amount = 0;
-                    remainer = Mathf.Abs(remainer - itemFoundList[i].amount);
-                    continue;
+                    item.amount =  item.amount - inventoryList[i].amount ;
+                    inventoryList.Remove(inventoryList[i]); 
+                    RemoveObjectFromInventory(item);
+                    return;
                 }
-                else {
-                    itemFoundList[i].amount -= remainer;
+                else if (item.amount + inventoryList[i].amount == inventoryList[i].resource.maxStackSize)
+                {
+                    inventoryList.Remove(inventoryList[i]);
+                    break;
                 }
-
-
+                else
+                {
+                    inventoryList[i].amount -= item.amount;
+                }
 
 
             }
-
         }
-
-
-
-        // remove empty fields
-        for (int  i = 0;  i < inventoryList.Count;  i++)
-        {
-            if (inventoryList[i].amount <= 0)
-            {
-                inventoryList.Remove(inventoryList[i]);
-            }
-        }
-
-        
-        Debug.Log("Finished Removing");
-
     }
 
     public static bool CheckInventoryForItem(ItemSlot item) {
@@ -234,6 +171,60 @@ public static class Inventory
         }
 
         return isItemInList;
+    }
+
+    public static bool CheckEnoughItemsForRecipe(RecipeSO recipe)
+    {
+        bool haveAllIngridients = true;
+
+
+        foreach (var item in recipe.ResourcesCost)
+        {
+            haveAllIngridients = haveAllIngridients && HaveEnoughOfItemFromInventory(item);
+        }
+
+        if (haveAllIngridients)
+        {
+            for (int i = 0; i < recipe.ResourcesCost.Length; i++)
+            {
+                RemoveObjectFromInventory(recipe.ResourcesCost[i]);
+            }
+        }
+        else
+            Debug.Log("Cant Craft Not Enough resources");
+        
+
+
+        return haveAllIngridients;
+    }
+
+    static bool HaveEnoughOfItemFromInventory(ItemSlot item) {
+        remainer = 0;
+        for (int i = 0; i < inventoryList.Count; i++)
+        {
+            if (inventoryList[i].resource.resourceEnum == item.resource.resourceEnum)
+            {
+                remainer += inventoryList[i].amount;
+                if (remainer>= item.amount)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static int GetAmountOfItem(ItemSlot item) {
+        remainer = 0;
+        for (int i = 0; i < inventoryList.Count; i++)
+        {
+            if (item.resource.resourceEnum == inventoryList[i].resource.resourceEnum)
+            {
+                remainer += inventoryList[i].amount;
+            }
+        }
+        return remainer;
+    
     }
 
 
