@@ -13,6 +13,7 @@ using UnityEngine.Tilemaps;
 #endregion
 public class Tiles : MonoBehaviour
 {
+    public TilesSO tiles;
     public static Tiles _instance;
     private void Awake() {
         if (_instance != null) {
@@ -29,10 +30,6 @@ public class Tiles : MonoBehaviour
         tiles.buildingsVariationNoise.GenerateSeed();
     }
 
-    #region Tiles import assets scriptable object
-    public TilesSO tiles;
-
-    #endregion
 
 }
 #region General tile abstract class and enum
@@ -44,6 +41,7 @@ public abstract class TileAbst
     public TileBase mainTileBase;
     public TileVariations[] tileBaseVariations;
     public ToolInteraction interactionType;
+    public bool isActiveInteraction;
     protected TimeEvent eventInstance;
     public bool isSolid;
     public virtual void Init(Vector2Int _position, BuildingLayer buildingLayer) { }
