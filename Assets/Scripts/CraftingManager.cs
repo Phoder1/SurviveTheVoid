@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class CraftingManager : MonoBehaviour
 {
+    public ItemPackSO items;
     public Transform sectionHolder;
     private Section[] sections;
     private Section selectedSection;
@@ -24,7 +25,32 @@ public class CraftingManager : MonoBehaviour
     private void Start() {
 
         Init();
+        AddToInventory(1);
+
     }
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.A)) {
+            AddToInventory(2);
+        }
+        else if (Input.GetKeyDown(KeyCode.D)) {
+            AddToInventory(-2);
+        }
+    }
+
+    private static void AddToInventory(int amount) {
+        //Inventory inventory = Inventory._GetInstance;
+        CraftingManager craftingManager = CraftingManager._instance;
+        ItemSlot itemSlot = new ItemSlot(craftingManager.items.resources[0], amount);
+        if (amount > 0) {
+            Inventory.AddToInventory(itemSlot);
+        }
+        else {
+            Inventory.RemoveObjectFromInventory(itemSlot);
+        }
+
+        Inventory.PrintInventory();
+    }
+
 
     private void Init() {
         //AddRecipeToList();
