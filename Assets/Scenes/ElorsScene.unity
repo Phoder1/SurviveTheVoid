@@ -880,14 +880,14 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1069633179}
-        m_MethodName: OnClickSelectedSection
-        m_Mode: 3
+        m_MethodName: SelectSection
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 4
+          m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Tools
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &112914915
@@ -1244,14 +1244,14 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1069633179}
-        m_MethodName: OnClickSelectedSection
-        m_Mode: 3
+        m_MethodName: SelectSection
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 2
+          m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Plants
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &152869601
@@ -3476,49 +3476,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 397711311}
   m_CullTransparentMesh: 0
---- !u!1 &405063865
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 405063867}
-  - component: {fileID: 405063866}
-  m_Layer: 0
-  m_Name: PlayerObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &405063866
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 405063865}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef0f05b9eeab93747aedb0eac6e049de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &405063867
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 405063865}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 195.61774, y: 94.00438, z: -55.78125}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &409308890
 GameObject:
   m_ObjectHideFlags: 0
@@ -3869,7 +3826,7 @@ GameObject:
   - component: {fileID: 462505686}
   - component: {fileID: 462505685}
   m_Layer: 5
-  m_Name: Section1
+  m_Name: Blocks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4542,14 +4499,14 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1069633179}
-        m_MethodName: OnClickSelectedSection
-        m_Mode: 3
+        m_MethodName: SelectSection
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
+          m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Weapons
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &548625693
@@ -5675,14 +5632,14 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1069633179}
-        m_MethodName: OnClickSelectedSection
-        m_Mode: 3
+        m_MethodName: SelectSection
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
+          m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Decorations
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &642515799
@@ -9552,7 +9509,7 @@ GameObject:
   - component: {fileID: 1049706228}
   - component: {fileID: 1049706227}
   m_Layer: 5
-  m_Name: Section3
+  m_Name: Plants
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9664,7 +9621,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 10.400024, y: 95.399994}
+  m_AnchoredPosition: {x: 8.811035, y: 95.400024}
   m_SizeDelta: {x: -237.52893, y: -245.85577}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1069633177
@@ -9716,107 +9673,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe095fa55f62a664e84975cfe980188d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SelectedSection: 0
-  sectionsObjects:
-  - {fileID: 462505683}
-  - {fileID: 2066228413}
-  - {fileID: 1049706225}
-  - {fileID: 1740502906}
-  - {fileID: 1947002405}
-  - {fileID: 1480494089}
-  RecipeSlotText:
-  - {fileID: 369206640}
-  - {fileID: 1942531985}
-  - {fileID: 266010578}
-  - {fileID: 1955962638}
-  - {fileID: 645319011}
-  - {fileID: 419392786}
-  - {fileID: 1225415151}
-  - {fileID: 628016136}
-  - {fileID: 149523526}
-  - {fileID: 1277538309}
-  - {fileID: 1794046972}
-  - {fileID: 1493032683}
-  Player: {fileID: 405063866}
-  Sections:
-    SectionOneSlots:
-    - {fileID: 1798952954}
-    - {fileID: 552057526}
-    - {fileID: 1335988617}
-    - {fileID: 981891152}
-    - {fileID: 1906231354}
-    - {fileID: 746206169}
-    - {fileID: 752177185}
-    - {fileID: 1572329088}
-    - {fileID: 1476622557}
-    - {fileID: 1032431786}
-    - {fileID: 409308890}
-    - {fileID: 1407846933}
-    SectionTwoSlots:
-    - {fileID: 2023771440}
-    - {fileID: 1591203299}
-    - {fileID: 637416687}
-    - {fileID: 282112869}
-    - {fileID: 111809164}
-    - {fileID: 1938536977}
-    - {fileID: 837537364}
-    - {fileID: 582927694}
-    - {fileID: 1755669036}
-    - {fileID: 473864618}
-    - {fileID: 1760669640}
-    - {fileID: 1598863260}
-    SectionThreeSlots:
-    - {fileID: 1904883707}
-    - {fileID: 934413187}
-    - {fileID: 1707466725}
-    - {fileID: 959390953}
-    - {fileID: 1519038132}
-    - {fileID: 978080482}
-    - {fileID: 383791953}
-    - {fileID: 1590227338}
-    - {fileID: 1200243435}
-    - {fileID: 683404695}
-    - {fileID: 99390542}
-    - {fileID: 1727226437}
-    SectionFourSlots:
-    - {fileID: 1332893422}
-    - {fileID: 1869808635}
-    - {fileID: 30945562}
-    - {fileID: 33116293}
-    - {fileID: 519657528}
-    - {fileID: 1994589786}
-    - {fileID: 629782749}
-    - {fileID: 2144173690}
-    - {fileID: 1072172714}
-    - {fileID: 753602636}
-    - {fileID: 1662514017}
-    - {fileID: 1315845102}
-    SectionFiveSlots:
-    - {fileID: 570963416}
-    - {fileID: 358117214}
-    - {fileID: 430616168}
-    - {fileID: 178915512}
-    - {fileID: 2113537345}
-    - {fileID: 843149382}
-    - {fileID: 304233621}
-    - {fileID: 1678878537}
-    - {fileID: 1789182118}
-    - {fileID: 1184216001}
-    - {fileID: 762860556}
-    - {fileID: 867548370}
-    SectionSixSlots:
-    - {fileID: 668792329}
-    - {fileID: 741590999}
-    - {fileID: 327527832}
-    - {fileID: 860488411}
-    - {fileID: 1872810374}
-    - {fileID: 1132538593}
-    - {fileID: 1661587913}
-    - {fileID: 2134330159}
-    - {fileID: 842636755}
-    - {fileID: 1169347624}
-    - {fileID: 719270938}
-    - {fileID: 2068049307}
+  sectionHolder: {fileID: 616589673}
   RecipeMaterialSlots:
   - {fileID: 1390706821}
   - {fileID: 1867927222}
@@ -9824,7 +9681,6 @@ MonoBehaviour:
   - {fileID: 699518952}
   - {fileID: 1318176404}
   - {fileID: 1700442655}
-  sectionHolder: {fileID: 616589672}
 --- !u!1 &1072172714
 GameObject:
   m_ObjectHideFlags: 0
@@ -11014,14 +10870,14 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1069633179}
-        m_MethodName: OnClickSelectedSection
-        m_Mode: 3
+        m_MethodName: SelectSection
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Blocks
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1200430501
@@ -12986,14 +12842,14 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1069633179}
-        m_MethodName: OnClickSelectedSection
-        m_Mode: 3
+        m_MethodName: SelectSection
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 5
+          m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Food
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1430685917
@@ -13175,7 +13031,7 @@ GameObject:
   - component: {fileID: 1480494092}
   - component: {fileID: 1480494091}
   m_Layer: 5
-  m_Name: Section6
+  m_Name: Food
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15614,7 +15470,7 @@ GameObject:
   - component: {fileID: 1740502909}
   - component: {fileID: 1740502908}
   m_Layer: 5
-  m_Name: Section4
+  m_Name: Weapons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17258,7 +17114,7 @@ GameObject:
   - component: {fileID: 1947002408}
   - component: {fileID: 1947002407}
   m_Layer: 5
-  m_Name: Section5
+  m_Name: Tools
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17840,7 +17696,7 @@ GameObject:
   - component: {fileID: 2066228416}
   - component: {fileID: 2066228415}
   m_Layer: 5
-  m_Name: Section2
+  m_Name: Decorations
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18477,7 +18333,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Nature
+  m_Text: Plants
 --- !u!222 &2120099030
 CanvasRenderer:
   m_ObjectHideFlags: 0
