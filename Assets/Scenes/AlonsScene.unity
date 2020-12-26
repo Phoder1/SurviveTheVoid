@@ -602,7 +602,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scrollSpeed: 1
-  moveSpeed: 1
+  moveSpeed: 0.5
 --- !u!81 &849385205
 AudioListener:
   m_ObjectHideFlags: 0
@@ -940,10 +940,12 @@ MonoBehaviour:
   grid: {fileID: 1584882287}
   floor: {fileID: 1208442058}
   buildings: {fileID: 1380187965}
-  noiseResolution: 30
-  islandsThreshold: 0.65
-  islandsAreaSize: 500
-  loadDistance: 1
+  islandsNoise:
+    seed: 0
+    resolution: 30
+    boolThreshold: 0.65
+  loadDistance: 0
+  offSet: 1
 --- !u!114 &1090312030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -956,7 +958,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ea582247f68c324eae88564892c7400, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tiles: {fileID: 11400000, guid: 2b087913ac7c7aa4fbaaf8b4ddf77b75, type: 2}
+  tiles: {fileID: 11400000, guid: 314373a9409a69d4ba9e09b43d0a193f, type: 2}
 --- !u!1 &1140459362
 GameObject:
   m_ObjectHideFlags: 0
@@ -1145,22 +1147,23 @@ Tilemap:
       e11: 0
       e12: 0
       e13: NaN
-      e20: -1.8726128e-26
+      e20: 0.000000103716275
       e21: 0
-      e22: -1.2541286e-26
-      e23: -2.4968494e+32
-      e30: 6.03e-43
+      e22: 0.000008071773
+      e23: -1.1895078e+21
+      e30: 8.72e-43
       e31: 0
-      e32: 6.03e-43
+      e32: 8.72e-43
       e33: 4.5904e-41
   m_TileColorArray:
   - m_RefCount: 0
-    m_Data: {r: -14.40683, g: -14.40683, b: -14.40683, a: -14.40683}
+    m_Data: {r: -0.0000000022732607, g: -0.0000000022732607, b: -0.0000000022732607,
+      a: -0.0000000022732607}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Origin: {x: 0, y: -18, z: 0}
-  m_Size: {x: 22, y: 18, z: 1}
+  m_Origin: {x: -28, y: -82, z: 0}
+  m_Size: {x: 158, y: 82, z: 1}
   m_TileAnchor: {x: 0, y: 0, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
@@ -1283,29 +1286,32 @@ Tilemap:
   - m_RefCount: 0
     m_Data:
       e00: NaN
-      e01: -1.4313092e-25
-      e02: -1.4313092e-25
+      e01: 0
+      e02: 0
       e03: NaN
       e10: NaN
-      e11: 6.03e-43
-      e12: 6.03e-43
+      e11: 0
+      e12: 0
       e13: NaN
-      e20: -2.0883572e+31
-      e21: -1.9309887e+18
-      e22: -2.5689186e-38
-      e23: -4.4081942e-26
-      e30: 4.5904e-41
-      e31: 6.01e-43
-      e32: 4.5907e-41
-      e33: 6.03e-43
+      e20: -0.0006154934
+      e21: 0
+      e22: -0.08593607
+      e23: -1.1895078e+21
+      e30: 7.33e-43
+      e31: 0
+      e32: 7.33e-43
+      e33: 4.5904e-41
   m_TileColorArray:
   - m_RefCount: 0
-    m_Data: {r: -11.105225, g: -11.105225, b: -11.105225, a: -11.105225}
+    m_Data: {r: 0.0000000016111628, g: 0.0000000016111628, b: 0.0000000016111628,
+      a: 0.0000000016111628}
+  - m_RefCount: 0
+    m_Data: {r: 0, g: 0, b: 0, a: 0}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Origin: {x: 0, y: -15, z: 0}
-  m_Size: {x: 21, y: 15, z: 1}
+  m_Origin: {x: -24, y: -24, z: 0}
+  m_Size: {x: 45, y: 24, z: 1}
   m_TileAnchor: {x: 0, y: 0, z: 1.4155558}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
@@ -1542,7 +1548,7 @@ Grid:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1584882286}
   m_Enabled: 1
-  m_CellSize: {x: 1, y: 0.70710677, z: 1}
+  m_CellSize: {x: 1, y: 0.7071068, z: 1}
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 3
   m_CellSwizzle: 0
@@ -1691,6 +1697,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a526a7dfbaf78b468386abf267f4174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraComp: {fileID: 0}
 --- !u!1 &2110502521
 GameObject:
   m_ObjectHideFlags: 0

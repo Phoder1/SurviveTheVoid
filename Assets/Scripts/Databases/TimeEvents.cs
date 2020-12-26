@@ -10,7 +10,7 @@ namespace Assets.TimeEvents
     public abstract class TimeEvent
     {
         public readonly float triggerTime;
-        protected Tiles.TileAbst triggeringTile;
+        protected TileAbst triggeringTile;
         protected readonly Vector2Int eventPosition;
         protected bool eventTriggered = false;
 
@@ -38,7 +38,7 @@ namespace Assets.TimeEvents
 
         public override void Trigger() {
             eventTriggered = true;
-            GridManager._instance.SetTile(eventPosition, triggeringTile.replacementTile, false);
+            GridManager._instance.SetTile(triggeringTile.replacementTile, eventPosition, BuildingLayer.Floor, false);
             
         }
     }
