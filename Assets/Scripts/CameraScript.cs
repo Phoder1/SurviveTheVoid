@@ -46,7 +46,7 @@ public class CameraScript : MonoBehaviour
         if (Input.GetKey(KeyCode.Mouse0)) {
             BuildingLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? BuildingLayer.Buildings : BuildingLayer.Floor;
             Vector2Int gridPosition = MouseGridPosition(BuildingLayer.Floor);
-            gridManager.SetTile(new Tiles.ObsidianTile(), gridPosition,  layer);
+            gridManager.SetTile(new ObsidianTile(), gridPosition,  layer);
 
         }
         else if (Input.GetKey(KeyCode.Mouse1)) {
