@@ -5,7 +5,7 @@ public enum SectionEnum
 {
     Blocks,
     Furnitures,
-    Nature,
+    Plants,
     Weapons,
     Tools,
     Food
@@ -18,7 +18,7 @@ public class RecipeSO : ScriptableObject
     public ItemSlot Resource;
     public int tier;
     public SectionEnum section;
-
+    public bool isUnlocked;
   
 
 }
