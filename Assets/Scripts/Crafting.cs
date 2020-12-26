@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +9,10 @@ using UnityEngine.UI;
 
 public class Crafting : MonoBehaviour
 {
+
+
+
+
     Dictionary<ResourceStruct, Recipe> RecipeDict;
 
 
@@ -16,7 +21,7 @@ public class Crafting : MonoBehaviour
     public Text[] RecipeSlotText;
     List<Recipe> recipeList = new List<Recipe>();
     int selectedRecipe;
-    //int CurTier;
+    int curTier;
     public PlayerCrafting Player;
     public SectionManager Sections;
     public GameObject[] RecipeMaterialSlots;
@@ -32,9 +37,6 @@ public class Crafting : MonoBehaviour
 
     private void Start()
     {
-        
-
-
 
         AddRecipeToDic();
 
@@ -65,22 +67,32 @@ public class Crafting : MonoBehaviour
 
     void CheckIfUnlocked()
     {
-        //for (int i = 0; i < recipeList.Count; i++)
-        //{
-        //    if (recipeList[i].tier <= CurTier)
-        //    {
-        //        Debug.Log(recipeList[i].outCome.resource.resourceEnum.ToString() + " Testing If you can craft it:  True, Your Tier is: " + CurTier + " and this recipe needs atleast tier: " + recipeList[i].tier + " "+ i);
-        //        RecipeSlot[i].GetComponent<Button>().interactable = true;
-        //    }
-        //    else
-        //    {
-        //        Debug.Log(recipeList[i].outCome.resource.resourceEnum.ToString() + " Testing If you can craft it:  false, Your Tier is: " + CurTier + " and this recipe needs atleast tier: " + recipeList[i].tier + " " + i);
-        //        RecipeSlot[i].GetComponent<Button>().interactable = false;
-        //        ;
-        //    }
-
-        //}
-        
+        for (int i = 0; i < recipeList.Count; i++)
+        {
+            switch (recipeList[i].outCome.resource.resourceEnum)
+            {
+                case ResourceType.Flower:
+                    break;
+                case ResourceType.OakLog:
+                    break;
+                case ResourceType.CraftingTable:
+                    break;
+                case ResourceType.WoodenStick:
+                    break;
+                case ResourceType.WoodenSword:
+                    break;
+                case ResourceType.WoodenHoe:
+                    break;
+                case ResourceType.Apple:
+                    break;
+                case ResourceType.WoodWall:
+                    break;
+                case ResourceType.Stone:
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     void UpdateSlotInformation()

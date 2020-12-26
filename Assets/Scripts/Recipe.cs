@@ -40,8 +40,9 @@ public class Recipe
     public static Recipe WoodWall => new Recipe(new ResourceSlot[2] { new ResourceSlot(ResourceStruct.OakLog, 2), new ResourceSlot(ResourceStruct.WoodenStick, 1) }, new ResourceSlot(ResourceStruct.WoodWall, 1), 1, sectionTypes.Blocks);
     public static Recipe StoneWall => new Recipe(new ResourceSlot[2] { new ResourceSlot(ResourceStruct.Stone, 2), new ResourceSlot(ResourceStruct.WoodenStick, 1) }, new ResourceSlot(ResourceStruct.Stone, 1), 1, sectionTypes.Blocks);
     //Decorations
-    public static Recipe Flower => new Recipe(new ResourceSlot[1] { new ResourceSlot(ResourceStruct.Flower, 5) }, new ResourceSlot(ResourceStruct.Flower, 5), 0, sectionTypes.Decorations);
+
     //Nature
+    public static Recipe Flower => new Recipe(new ResourceSlot[1] { new ResourceSlot(ResourceStruct.Flower, 5) }, new ResourceSlot(ResourceStruct.Flower, 5), 0, sectionTypes.Nature);
     //Weapons
     public static Recipe WoodenSword => new Recipe(new ResourceSlot[2] { new ResourceSlot(ResourceStruct.OakLog, 2), new ResourceSlot(ResourceStruct.WoodenStick, 1) }, new ResourceSlot(ResourceStruct.WoodenSword, 1), 1, sectionTypes.Weapons);
     //Tools
