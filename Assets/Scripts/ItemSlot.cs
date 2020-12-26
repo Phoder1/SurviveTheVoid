@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-
+[Serializable]
 public class ItemSlot
 {
     public ItemSO resource;
