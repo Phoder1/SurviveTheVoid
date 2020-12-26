@@ -6,8 +6,8 @@ public class NoiseSO : ScriptableObject
     const int maxSeedValue = 100000;
     [Header("Leave seed at 0 for random value")]
     public int seed = 0;
-    [Range(2f, 50f)]
-    public float resolution;
+    [Range(3f, 50f)]
+    public float resolution = 3;
     [Range(0f, 0.99f)]
     public float boolThreshold;
     public void GenerateSeed() {

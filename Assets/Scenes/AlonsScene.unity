@@ -940,10 +940,7 @@ MonoBehaviour:
   grid: {fileID: 1584882287}
   floor: {fileID: 1208442058}
   buildings: {fileID: 1380187965}
-  islandsNoise:
-    seed: 0
-    resolution: 30
-    boolThreshold: 0.65
+  islandsNoise: {fileID: 11400000, guid: 604f74a421b34d449845862dcfa468dd, type: 2}
   loadDistance: 0
   offSet: 1
 --- !u!114 &1090312030
