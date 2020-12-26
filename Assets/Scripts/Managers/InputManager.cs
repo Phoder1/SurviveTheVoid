@@ -5,15 +5,15 @@ public class InputManager : MonoBehaviour
 {
     public static InputManager _instance;
     PlayerManager _playerManager;
-    UImanager _uiManager;
-    List<InputState> activeInputsLis = new List<InputState>();
+    UIManager _uiManager;
+   
     public bool a_Button,b_Button;
    
     
 
     //indicates building modes, destruction mode, etc'
     
-    public enum InputState { A_pressed, B_Pressed, attack };
+    public enum InputState { BuildMode, EditMode, FightMode };
     
     public InputState state;
     
@@ -34,7 +34,7 @@ public class InputManager : MonoBehaviour
     {
         
         _playerManager = PlayerManager._instance;
-        _uiManager = UImanager._instance;
+        _uiManager = UIManager._instance;
         
     }
 
@@ -42,19 +42,37 @@ public class InputManager : MonoBehaviour
     void Update()
     {
 
- 
 
 
+        
     }
   
     
-    public void OnClicked(string Button)
+    public void OnClicked(string Button,VirtualJoystick vJ)
     {
-        if (Input.touchCount > 0)
-        {
-        }
-
+        Touch[] touch = new Touch[5];
+        //if (Input.touchCount > 0)
+        //{ 
+            for (int i = 0; i < Input.touchCount; i++)
+            {
+                touch[i]= Input.GetTouch(i);
+                if (touch[i].position == new Vector2(vJ.gameObject.transform.position.x, vJ.gameObject.transform.position.y) || new Vector2(Input.mousePosition.x, Input.mousePosition.y) == new Vector2(vJ.gameObject.transform.position.x, vJ.gameObject.transform.position.y))
+                {
+                   
+                   
+                }
+               
+            }
+     
         
+         
+
+
+
+
+
+
+
     }
     public void ButtonCheck(VirtualButton[] ButtonPressed)
     {
@@ -63,16 +81,17 @@ public class InputManager : MonoBehaviour
 
 
     }
-    public Vector2 GetAxis(string requestedAxis1,string requestedAxis2)
+    public Vector2 GetAxis()
     {
+        
 
       //ControllersCheck that returns Vector2 
-        Vector2 moveDirection= new Vector2(Input.GetAxis(requestedAxis1),Input.GetAxis(requestedAxis2))*Time.deltaTime;
+        Vector2 moveDirection= _uiManager.vJ.inpudDir;
 
 
 
 
-        return moveDirection.normalized;
+        return moveDirection;
     } 
     
     
