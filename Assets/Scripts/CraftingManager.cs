@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.XR;
 
 public class CraftingManager : MonoBehaviour
 {
@@ -25,11 +26,60 @@ public class CraftingManager : MonoBehaviour
     private void Start() {
 
         Init();
-
+       
     }
-  
 
-  
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            ItemSlot itemSlot = new ItemSlot(_instance.items.resources[0], 2);
+            AddToInventory(itemSlot,2);
+        }
+        else if (Input.GetKeyDown(KeyCode.Z))
+        {
+            ItemSlot itemSlot = new ItemSlot(_instance.items.resources[0], -2);
+            AddToInventory(itemSlot ,- 2);
+
+        }
+        else if (Input.GetKeyDown(KeyCode.C))
+        {
+            ItemSlot itemSlot = new ItemSlot(_instance.items.resources[1], 1);
+            AddToInventory(itemSlot, 2);
+        }
+        else if (Input.GetKeyDown(KeyCode.V))
+        {
+            ItemSlot itemSlot = new ItemSlot(_instance.items.resources[1], -1);
+            AddToInventory(itemSlot, -2);
+        }
+        else if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Inventory.PrintInventory();
+        }
+        
+        
+    }
+    private static void AddToInventory(ItemSlot item , int amount)
+    {
+        //Inventory inventory = Inventory._GetInstance;
+     
+       
+
+        if (amount > 0)
+        {
+            Debug.Log("Add");
+            Inventory.AddToInventory(item);
+        }
+        else
+        {
+            Debug.Log("Remove");
+            Inventory.RemoveObjectFromInventory(item);
+        }
+
+      
+    }
+
+
 
 
     private void Init() {
