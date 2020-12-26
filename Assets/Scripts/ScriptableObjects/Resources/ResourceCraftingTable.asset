@@ -10,6 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
-  m_Name: New Resource Pack
-  m_EditorClassIdentifier: Assembly-CSharp::ItemPackSO
-  resources: []
+  m_Name: ResourceCraftingTable
+  m_EditorClassIdentifier: Assembly-CSharp::ItemSO
+  maxStackSize: 20
+  description: Work you lazy ass.
+  resourceEnum: 2
+  sprite: {fileID: 0}

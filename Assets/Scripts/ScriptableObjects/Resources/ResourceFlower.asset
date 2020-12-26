@@ -10,6 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
-  m_Name: New Resource Pack
-  m_EditorClassIdentifier: Assembly-CSharp::ItemPackSO
-  resources: []
+  m_Name: ResourceFlower
+  m_EditorClassIdentifier: Assembly-CSharp::ItemSO
+  maxStackSize: 20
+  description: Just a flower so you won't feel lonely
+  resourceEnum: 0
+  sprite: {fileID: 0}
