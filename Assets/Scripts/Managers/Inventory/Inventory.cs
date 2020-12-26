@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public static class Inventory
 {
@@ -33,7 +30,7 @@ public static class Inventory
         checkForItem = false;
 
         counter = 0;
-        if (item.amount <= item.resource.maxStackSize)
+        if (item.amount <= item.item.maxStackSize)
         {
             counter = 1;
         }
@@ -41,9 +38,9 @@ public static class Inventory
         {
 
 
-            counter = item.amount / item.resource.maxStackSize;
+            counter = item.amount / item.item.maxStackSize;
 
-            if (item.amount % item.resource.maxStackSize > 0 && item.amount > item.resource.maxStackSize)
+            if (item.amount % item.item.maxStackSize > 0 && item.amount > item.item.maxStackSize)
             {
                 counter += 1;
             }
@@ -65,9 +62,9 @@ public static class Inventory
         {
             for (int i = 0; i < inventoryList.Length; i++)
             {
-                if (item.resource.resourceEnum == inventoryList[i].resource.resourceEnum)
+                if (item.item.itemEnum == inventoryList[i].item.itemEnum)
                 {
-                    counter += inventoryList[i].resource.maxStackSize;
+                    counter += inventoryList[i].item.maxStackSize;
                 }
             }
 
@@ -88,7 +85,7 @@ public static class Inventory
         if (item == null || item.amount <= 0)
             return;
 
-        if (item.resource.maxStackSize == 1)
+        if (item.item.maxStackSize == 1)
         {
             if (item.amount <= GetAmountOfItem(null))
             {
@@ -122,24 +119,24 @@ public static class Inventory
             if (inventoryList[i]== null)
                 continue;
             
-            if (inventoryList[i].resource.resourceEnum == item.resource.resourceEnum)
+            if (inventoryList[i].item.itemEnum == item.item.itemEnum)
             {
-                if (inventoryList[i].amount == inventoryList[i].resource.maxStackSize)
+                if (inventoryList[i].amount == inventoryList[i].item.maxStackSize)
                     continue;
 
-                if (item.amount + inventoryList[i].amount > inventoryList[i].resource.maxStackSize)
+                if (item.amount + inventoryList[i].amount > inventoryList[i].item.maxStackSize)
                 {
-                    item.amount = Mathf.Abs(inventoryList[i].resource.maxStackSize - (inventoryList[i].amount + item.amount));
-                    inventoryList[i].amount = inventoryList[i].resource.maxStackSize;
+                    item.amount = Mathf.Abs(inventoryList[i].item.maxStackSize - (inventoryList[i].amount + item.amount));
+                    inventoryList[i].amount = inventoryList[i].item.maxStackSize;
                     AddAmountOfItem(item);
                     break;
                 }
-                else if (item.amount + inventoryList[i].amount == inventoryList[i].resource.maxStackSize)
+                else if (item.amount + inventoryList[i].amount == inventoryList[i].item.maxStackSize)
                 {
-                    inventoryList[i].amount = inventoryList[i].resource.maxStackSize;
+                    inventoryList[i].amount = inventoryList[i].item.maxStackSize;
                     return;
                 }
-                else if (item.amount + inventoryList[i].amount < inventoryList[i].resource.maxStackSize)
+                else if (item.amount + inventoryList[i].amount < inventoryList[i].item.maxStackSize)
                 {
                     inventoryList[i].amount += item.amount;
                     return;
@@ -176,13 +173,13 @@ public static class Inventory
             return;
 
         // if item is not stackable
-        if (item.resource.maxStackSize == 1)
+        if (item.item.maxStackSize == 1)
         {
             for (int x = 0; x < item.amount; x++)
             {
                 for (int i = inventoryList.Length-1; i >= 0 ; i--)
                 {
-                    if (inventoryList[i] != null && inventoryList[i].resource.resourceEnum == item.resource.resourceEnum)
+                    if (inventoryList[i] != null && inventoryList[i].item.itemEnum == item.item.itemEnum)
                     {
                         inventoryList[i] = null;
                         break;
@@ -210,7 +207,7 @@ public static class Inventory
             if ( inventoryList[i] == null)
                 continue;
             
-            if (inventoryList[i].resource.resourceEnum == item.resource.resourceEnum)
+            if (inventoryList[i].item.itemEnum == item.item.itemEnum)
             {
 
                 if (item.amount - inventoryList[i].amount > 0)
@@ -249,7 +246,7 @@ public static class Inventory
                 break;
 
             }
-            else if (item.resource.resourceEnum == inventoryList[i].resource.resourceEnum)
+            else if (item.item.itemEnum == inventoryList[i].item.itemEnum)
             {
                 checkForItem = true;
                 break;
@@ -264,7 +261,7 @@ public static class Inventory
         bool haveAllIngridients = true;
 
 
-        foreach (var item in recipe.ResourcesCost)
+        foreach (var item in recipe.itemCostArr)
         {
             haveAllIngridients = haveAllIngridients && HaveEnoughOfItemFromInventory(item);
             if (!haveAllIngridients)
@@ -276,11 +273,11 @@ public static class Inventory
 
         if (haveAllIngridients)
         {
-            for (int i = 0; i < recipe.ResourcesCost.Length; i++)
+            for (int i = 0; i < recipe.itemCostArr.Length; i++)
             {
-                RemoveObjectFromInventory(recipe.ResourcesCost[i]);
+                RemoveObjectFromInventory(recipe.itemCostArr[i]);
             }
-            AddToInventory(recipe.Resource);
+            AddToInventory(recipe.outcomeItem);
         }
         else
             Debug.Log("Cant Craft Not Enough resources");
@@ -294,7 +291,7 @@ public static class Inventory
         counter = 0;
         for (int i = 0; i < inventoryList.Length; i++)
         {
-            if (inventoryList[i].resource.resourceEnum == item.resource.resourceEnum)
+            if (inventoryList[i].item.itemEnum == item.item.itemEnum)
             {
                 counter += inventoryList[i].amount;
                 if (counter>= item.amount)
@@ -317,7 +314,7 @@ public static class Inventory
             }
             else if (item != null && inventoryList[i] != null)
             {
-                if (item.resource.resourceEnum == inventoryList[i].resource.resourceEnum)
+                if (item.item.itemEnum == inventoryList[i].item.itemEnum)
                 {
                     counter += inventoryList[i].amount;
                 }
@@ -337,7 +334,7 @@ public static class Inventory
                     return i;
             }
             else
-            if (inventoryList[i] != null && item.resource.resourceEnum == inventoryList[i].resource.resourceEnum)
+            if (inventoryList[i] != null && item.item.itemEnum == inventoryList[i].item.itemEnum)
             {
                 return i;
             }
@@ -356,8 +353,20 @@ public static class Inventory
                 Debug.Log("Inventory list in spot " + i + "is Null");
             }
             else
-            Debug.Log("Inventory list in spot "+i+" with the amount : " + inventoryList[i].amount + " of type: " + inventoryList[i].resource.resourceEnum);
+            Debug.Log("Inventory list in spot "+i+" with the amount : " + inventoryList[i].amount + " of type: " + inventoryList[i].item.itemEnum);
         }
     
+    }
+}
+
+[Serializable]
+public class ItemSlot
+{
+    public ItemSO item;
+    public int amount;
+
+    public ItemSlot(ItemSO item, int amount) {
+        this.item = item;
+        this.amount = amount;
     }
 }

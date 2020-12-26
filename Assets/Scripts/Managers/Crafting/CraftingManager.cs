@@ -162,13 +162,13 @@ public class CraftingManager : MonoBehaviour
     }
     public void ShowRecipe(RecipeSO recipe)
     {
-        int matsAmount = recipe.ResourcesCost.Length;
+        int matsAmount = recipe.itemCostArr.Length;
         for (int i = 0; i < RecipeMaterialSlots.Length; i++)
         {
             if (i < matsAmount)
             {
                 RecipeMaterialSlots[i].gameObject.SetActive(true);
-                RecipeMaterialSlots[i].GetComponentInChildren<Text>().text = recipe.ResourcesCost[i].resource.resourceEnum.ToString();
+                RecipeMaterialSlots[i].GetComponentInChildren<Text>().text = recipe.itemCostArr[i].item.itemEnum.ToString();
             }
             else
             {
@@ -184,15 +184,15 @@ public class CraftingManager : MonoBehaviour
     {
         if (SelectedRecipe != null)
         {
-            for (int i = 0; i < SelectedRecipe.ResourcesCost.Length; i++)
+            for (int i = 0; i < SelectedRecipe.itemCostArr.Length; i++)
             {
-                if (Inventory.CheckInventoryForItem(SelectedRecipe.ResourcesCost[i]))
+                if (Inventory.CheckInventoryForItem(SelectedRecipe.itemCostArr[i]))
                 {
-                    Debug.Log("You have enough: " + SelectedRecipe.ResourcesCost[i].resource.resourceEnum.ToString());
+                    Debug.Log("You have enough: " + SelectedRecipe.itemCostArr[i].item.itemEnum.ToString());
                 }
                 else
                 {
-                    Debug.Log("You don't have enough: " + SelectedRecipe.ResourcesCost[i].resource.resourceEnum.ToString());
+                    Debug.Log("You don't have enough: " + SelectedRecipe.itemCostArr[i].item.itemEnum.ToString());
                 }
             }
         }
@@ -303,7 +303,7 @@ public class Section
         for (int i = 0; i < recipeList.Count; i++)
         {
 
-            sectionSlots[i].GetComponentInChildren<Text>().text = recipeList[i].Resource.resource.resourceEnum.ToString();
+            sectionSlots[i].GetComponentInChildren<Text>().text = recipeList[i].outcomeItem.item.itemEnum.ToString();
             CheckIflockedRecipe(recipeList[i]);
         }
         for (int i = 0; i < sectionSlots.Length; i++)

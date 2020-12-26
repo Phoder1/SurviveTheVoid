@@ -14,8 +14,8 @@ public enum SectionEnum
 [CreateAssetMenu(fileName = "New Recipe", menuName = "Crafting/" + "Recipe")]
 public class RecipeSO : ScriptableObject
 {
-    public ItemSlot[] ResourcesCost;
-    public ItemSlot Resource;
+    public ItemSlot[] itemCostArr;
+    public ItemSlot outcomeItem;
     public int tier;
     public SectionEnum section;
     public bool isUnlocked;
