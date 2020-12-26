@@ -43,7 +43,7 @@ public partial class GridManager : MonoBehaviour, IGridManager
         }
     }
     [SerializeField]
-    private Noise islandsNoise;
+    private NoiseSO islandsNoise;
     [SerializeField]
     int loadDistance;
     [SerializeField]

@@ -1,8 +1,7 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-[Serializable]
-public class Noise
+[CreateAssetMenu(fileName = "New Noise",menuName = "Noise")]
+public class NoiseSO : ScriptableObject
 {
     const int maxSeedValue = 100000;
     [Header("Leave seed at 0 for random value")]

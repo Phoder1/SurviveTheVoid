@@ -81,7 +81,7 @@ public partial class GridManager
         internal Vector2Int GridToChunkPosition(Vector2Int gridPosition) => gridPosition - chunkStartPos;
         internal Vector2Int ChunkToGridPosition(Vector2Int chunkPosition) => chunkPosition + chunkStartPos;
         internal void GenerateIslands() {
-            Noise noise = _instance.islandsNoise;
+            NoiseSO noise = _instance.islandsNoise;
             for (int loopX = 0; loopX < chunkSize; loopX++) {
                 for (int loopY = 0; loopY < chunkSize; loopY++) {
                     Vector2Int gridPosition = new Vector2Int(loopX, loopY) + chunkStartPos;

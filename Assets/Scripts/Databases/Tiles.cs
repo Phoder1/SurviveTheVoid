@@ -53,7 +53,7 @@ public abstract class TileAbst
     public abstract void ImportVariables(Vector2Int gridPosition, BuildingLayer buildingLayer);
     public virtual void GatherInteraction(Vector2Int gridPosition, BuildingLayer buildingLayer) { }
     public virtual void LongPressUpdate() { }
-    public virtual TileBase PickTileBase(Vector2Int gridPosition, Noise noise) {
+    public virtual TileBase PickTileBase(Vector2Int gridPosition, NoiseSO noise) {
         //Check for variations
         if (tileBaseVariations.Length == 1) {
             return tileBaseVariations[0].tileBase;
