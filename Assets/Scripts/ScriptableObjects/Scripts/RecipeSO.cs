@@ -4,7 +4,7 @@ using UnityEngine;
 public enum SectionEnum
 {
     Blocks,
-    Decorations,
+    Furnitures,
     Nature,
     Weapons,
     Tools,
