@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -46,12 +47,12 @@ public class PlayerManager : MonoBehaviour
 
         UpdateView();
 
-
         
 
 
 
     }
+
 
     // Update is called once per frame
     void Update()
@@ -95,12 +96,12 @@ public class PlayerManager : MonoBehaviour
 
     public void ButtonA()
     {
-        Debug.Log("ButtonA pressed");
+
 
     }
     public void ButtonB()
     {
-        Debug.Log("ButtonB pressed");
+
     }
     private void UpdateView()
     {

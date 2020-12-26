@@ -26,14 +26,14 @@ public enum sectionTypes
 }
 
 [CreateAssetMenu(fileName = "New Resource Pack",menuName = "Crafting/" + "Resource Pack")]
-public class ResourcesPackSO : ScriptableObject
+public class ItemPackSO : ScriptableObject
 {
-    public ResourceSO[] resources;
+    public ItemSO[] resources;
 
 }
 
 [CreateAssetMenu(fileName = "New Resource", menuName = "Crafting/" + "Resource")]
-public class ResourceSO : ScriptableObject
+public class ItemSO : ScriptableObject
 {
     public int maxStackSize;
     public string description;
@@ -41,10 +41,15 @@ public class ResourceSO : ScriptableObject
     public Sprite sprite;
 }
 [Serializable]
-public struct ResourceSlot
+public class ItemSlot
 {
-    public ResourceSO resource;
+    public ItemSO resource;
     public int amount;
+
+    public ItemSlot(ItemSO resource, int amount) {
+        this.resource = resource;
+        this.amount = amount;
+    }
 }
 
 [CreateAssetMenu(fileName = "New Recipe Pack", menuName = "Crafting/" + "Recipe Pack")]
@@ -56,8 +61,8 @@ public class RecipePackSO : ScriptableObject
 [CreateAssetMenu(fileName = "New Recipe", menuName = "Crafting/" + "Recipe")]
 public class RecipeSO : ScriptableObject
 {
-    public ResourceSlot[] ResourcesCost;
-    public ResourceSlot Resource;
+    public ItemSlot[] ResourcesCost;
+    public ItemSlot Resource;
     public int tier;
     public sectionTypes sectionType;
 }

@@ -16,7 +16,7 @@ public class PlayerStateMachine : MonoBehaviour
     }
     public void Update()
     {
-            Debug.Log("bug");
+
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
