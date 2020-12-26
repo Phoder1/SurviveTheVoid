@@ -209,7 +209,6 @@ public class GridManager : MonoBehaviour
     public TileAbst GetTileFromGrid(Vector2Int gridPosition, BuildingLayer buildingLayer) {
         if (TryGetChunk(GridToChunkCoordinates(gridPosition), out Chunk chunk)) {
             TileAbst tile = chunk.GetTile(gridPosition, buildingLayer);
-            Debug.Log(tile);
             return tile;
         }
         else {
@@ -235,18 +234,15 @@ public class GridManager : MonoBehaviour
             else {
                 Vector2 tileWorldPosition = GridToWorldPosition(gridPosition, buildingLayer);
                 Vector2 localPosition = clickPosition - tileWorldPosition;
-                Debug.Log("Position: " + localPosition);
                 if (localPosition.y < 0.2f && Mathf.Abs(localPosition.x) < 0.1f) {
                     return hit;
                 }
-                Debug.Log("checking diagonal!");
                 Vector2Int checkPosition = gridPosition + (localPosition.x < 0 ? Vector2Int.up : Vector2Int.right);
                 hit = new TileHit(GetTileFromGrid(checkPosition, buildingLayer), checkPosition);
                 if (hit.tile != null) {
                     return hit;
                 }
                 else if (Vector2.Distance(localPosition, new Vector2(0, 0.45f)) <=0.24f) {
-                    Debug.Log("checking ahead!");
                     checkPosition = gridPosition + Vector2Int.one;
                     hit = new TileHit(GetTileFromGrid(checkPosition, buildingLayer), checkPosition);
                     if (hit.tile != null) {
