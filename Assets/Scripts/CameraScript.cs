@@ -31,13 +31,13 @@ public class CameraScript : MonoBehaviour
             Input.GetKey(KeyCode.D) ? 1 : 0 - (Input.GetKey(KeyCode.A) ? 1 : 0),
             Input.GetKey(KeyCode.W) ? 1 : 0 - (Input.GetKey(KeyCode.S) ? 1 : 0)
             );
-        movement *= moveSpeed;
+        movement *= moveSpeed * Time.deltaTime;
         if (movement != Vector2.zero) {
             transform.position += (Vector3)movement;
             viewChanged = true;
         }
 
-        scrollMovement = scrollSpeed * -Input.GetAxis("Mouse ScrollWheel");
+        scrollMovement = Time.deltaTime *  scrollSpeed * -Input.GetAxis("Mouse ScrollWheel");
         if (scrollMovement != 0) {
             cameraComp.orthographicSize += scrollMovement;
             viewChanged = true;

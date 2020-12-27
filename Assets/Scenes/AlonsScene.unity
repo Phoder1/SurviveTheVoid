@@ -601,8 +601,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e67f4dee8a21e3d4fa634a90fe341bed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scrollSpeed: 1
-  moveSpeed: 0.5
+  scrollSpeed: 100
+  moveSpeed: 50
 --- !u!81 &849385205
 AudioListener:
   m_ObjectHideFlags: 0
@@ -941,8 +941,8 @@ MonoBehaviour:
   floor: {fileID: 1208442058}
   buildings: {fileID: 1380187965}
   islandsNoise: {fileID: 11400000, guid: 604f74a421b34d449845862dcfa468dd, type: 2}
-  loadDistance: 0
-  offSet: 1
+  loadDistance: 1
+  offSet: 0
 --- !u!114 &1090312030
 MonoBehaviour:
   m_ObjectHideFlags: 0
