@@ -1,20 +1,50 @@
 ﻿using System;
 using UnityEngine;
 
-public static class Inventory
+public class Inventory : IInventory
 {
-  //  static List<ItemSlot> inventoryList = new List<ItemSlot>();
-    static int maxCapacityOfItemsInList = 25;
-    static bool checkForItem;
-    static int counter;
+    private static Inventory _instance;
+    int maxCapacityOfItemsInList = 25;
+    bool checkForItem;
+    int counter;
 
-    static ItemSlot[] inventoryList = new ItemSlot[maxCapacityOfItemsInList];
-    static int nextAddOnAmountForInventory = 5;
+    ItemSlot[] inventoryList;
+    int nextAddOnAmountForInventory = 5;
 
 
-    public static ItemSlot[] GetInventory { get => inventoryList; }
-    public static void  MakeInventoryBigger(int _newSize) {
-        if (_newSize< maxCapacityOfItemsInList)
+    public ItemSlot[] GetInventory { get => inventoryList; }
+
+
+
+
+
+    Inventory()
+    {
+        if (_instance == null)
+        {
+            _instance = new Inventory();
+            inventoryList = new ItemSlot[maxCapacityOfItemsInList];
+        }
+    }
+
+    public Inventory GetInstance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = new Inventory();
+            }
+
+            return _instance;
+        }
+    }
+
+
+
+    public void MakeInventoryBigger(int _newSize)
+    {
+        if (_newSize < maxCapacityOfItemsInList)
             return;
         maxCapacityOfItemsInList += _newSize;
         ItemSlot[] newInventoryList = new ItemSlot[maxCapacityOfItemsInList];
@@ -23,7 +53,7 @@ public static class Inventory
         inventoryList = newInventoryList;
     }
 
-    public static bool CheckIfEnoughSpaceInInventory(ItemSlot item) {
+    public bool CheckIfEnoughSpaceInInventory(ItemSlot item) {
         if (item == null)
             return false;
 
@@ -57,7 +87,7 @@ public static class Inventory
 
 
         counter = 0;
-        
+
         if (!checkForItem)
         {
             for (int i = 0; i < inventoryList.Length; i++)
@@ -78,7 +108,7 @@ public static class Inventory
     }
 
 
-    static void AddAmountOfItem(ItemSlot item)
+    void AddAmountOfItem(ItemSlot item)
     {
 
 
@@ -95,16 +125,16 @@ public static class Inventory
                     if (inventoryList[i] == null)
                     {
                         counter++;
-                    inventoryList[i] = item;
+                        inventoryList[i] = item;
                         inventoryList[i].amount = 1;
                     }
 
 
-                    if (counter>= item.amount)
+                    if (counter >= item.amount)
                     {
                         return;
                     }
-                 
+
                 }
 
             }
@@ -116,9 +146,9 @@ public static class Inventory
 
         for (int i = 0; i < inventoryList.Length; i++)
         {
-            if (inventoryList[i]== null)
+            if (inventoryList[i] == null)
                 continue;
-            
+
             if (inventoryList[i].item.itemEnum == item.item.itemEnum)
             {
                 if (inventoryList[i].amount == inventoryList[i].item.maxStackSize)
@@ -148,7 +178,7 @@ public static class Inventory
 
     }
 
-    public static void AddToInventory(ItemSlot item)
+    public void AddToInventory(ItemSlot item)
     {
         if (item == null)
             return;
@@ -160,15 +190,13 @@ public static class Inventory
         }
         Debug.Log("Cant Add The Item");
     }
-
-    
-    public static void RemoveObjectFromInventory(ItemSlot item)
+    public void RemoveObjectFromInventory(ItemSlot item)
     {
-        if (item.amount <0)
+        if (item.amount < 0)
             item.amount *= -1;
-        
 
-        
+
+
         if (item == null || item.amount <= 0)
             return;
 
@@ -177,7 +205,7 @@ public static class Inventory
         {
             for (int x = 0; x < item.amount; x++)
             {
-                for (int i = inventoryList.Length-1; i >= 0 ; i--)
+                for (int i = inventoryList.Length - 1; i >= 0; i--)
                 {
                     if (inventoryList[i] != null && inventoryList[i].item.itemEnum == item.item.itemEnum)
                     {
@@ -202,18 +230,18 @@ public static class Inventory
         // if item is istackable
 
         counter = 0;
-        for (int i = inventoryList.Length-1; i >= 0; i--)
+        for (int i = inventoryList.Length - 1; i >= 0; i--)
         {
-            if ( inventoryList[i] == null)
+            if (inventoryList[i] == null)
                 continue;
-            
+
             if (inventoryList[i].item.itemEnum == item.item.itemEnum)
             {
 
                 if (item.amount - inventoryList[i].amount > 0)
                 {
-                    item.amount =  item.amount - inventoryList[i].amount ;
-                    inventoryList[i] = null; 
+                    item.amount = item.amount - inventoryList[i].amount;
+                    inventoryList[i] = null;
                     RemoveObjectFromInventory(item);
                     return;
                 }
@@ -233,7 +261,7 @@ public static class Inventory
         }
     }
 
-    public static bool CheckInventoryForItem(ItemSlot item)
+    public bool CheckInventoryForItem(ItemSlot item)
     {
 
         checkForItem = false;
@@ -256,7 +284,7 @@ public static class Inventory
         return checkForItem;
     }
 
-    public static bool CheckEnoughItemsForRecipe(RecipeSO recipe)
+    public bool CheckEnoughItemsForRecipe(RecipeSO recipe)
     {
         bool haveAllIngridients = true;
 
@@ -281,20 +309,21 @@ public static class Inventory
         }
         else
             Debug.Log("Cant Craft Not Enough resources");
-        
+
 
 
         return haveAllIngridients;
     }
 
-    static bool HaveEnoughOfItemFromInventory(ItemSlot item) {
+    bool HaveEnoughOfItemFromInventory(ItemSlot item)
+    {
         counter = 0;
         for (int i = 0; i < inventoryList.Length; i++)
         {
             if (inventoryList[i].item.itemEnum == item.item.itemEnum)
             {
                 counter += inventoryList[i].amount;
-                if (counter>= item.amount)
+                if (counter >= item.amount)
                 {
                     return true;
                 }
@@ -303,7 +332,8 @@ public static class Inventory
         return false;
     }
 
-    public static int GetAmountOfItem(ItemSlot item) {
+    public int GetAmountOfItem(ItemSlot item)
+    {
         counter = 0;
         for (int i = 0; i < inventoryList.Length; i++)
         {
@@ -321,9 +351,9 @@ public static class Inventory
             }
         }
         return counter;
-    
+
     }
-    public static int GetItemIndexInArray(ItemSlot item)
+    public int GetItemIndexInArray(ItemSlot item)
     {
 
         for (int i = 0; i < inventoryList.Length; i++)
@@ -345,19 +375,50 @@ public static class Inventory
     }
 
 
-    public static void PrintInventory() {
+    public void PrintInventory()
+    {
 
-        for (int i = 0; i < inventoryList.Length; i++) {
+        for (int i = 0; i < inventoryList.Length; i++)
+        {
             if (inventoryList[i] == null)
             {
                 Debug.Log("Inventory list in spot " + i + "is Null");
             }
             else
-            Debug.Log("Inventory list in spot "+i+" with the amount : " + inventoryList[i].amount + " of type: " + inventoryList[i].item.itemEnum);
+                Debug.Log("Inventory list in spot " + i + " with the amount : " + inventoryList[i].amount + " of type: " + inventoryList[i].item.itemEnum);
         }
-    
+
     }
 }
+public interface IInventory
+{
+    Inventory GetInstance { get; }
+    ItemSlot[] GetInventory { get; }
+
+    void AddToInventory(ItemSlot item);
+    bool CheckEnoughItemsForRecipe(RecipeSO recipe);
+    bool CheckIfEnoughSpaceInInventory(ItemSlot item);
+    bool CheckInventoryForItem(ItemSlot item);
+    int GetAmountOfItem(ItemSlot item);
+    int GetItemIndexInArray(ItemSlot item);
+    void MakeInventoryBigger(int _newSize);
+    void PrintInventory();
+    void RemoveObjectFromInventory(ItemSlot item);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 [Serializable]
 public class ItemSlot
