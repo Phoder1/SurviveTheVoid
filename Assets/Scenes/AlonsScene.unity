@@ -940,7 +940,10 @@ MonoBehaviour:
   grid: {fileID: 1584882287}
   floor: {fileID: 1208442058}
   buildings: {fileID: 1380187965}
-  islandsNoise: {seed: 0, resolution: 30, boolThreshold: 0.65}
+  islandsNoise:
+    fileID: 11400000
+    guid: 604f74a421b34d449845862dcfa468dd
+    type: 2
   loadDistance: 0
   offSet: 1
 --- !u!114 &1090312030
@@ -955,7 +958,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ea582247f68c324eae88564892c7400, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tiles: {fileID: 11400000, guid: 314373a9409a69d4ba9e09b43d0a193f, type: 2}
+  tiles: {fileID: 11400000, guid: c26b20c4d1e44e04c99336e14bd337fe, type: 2}
 --- !u!1 &1140459362
 GameObject:
   m_ObjectHideFlags: 0
@@ -1742,3 +1745,4 @@ MonoBehaviour:
   _buttons:
   - {fileID: 57414110}
   - {fileID: 1560055877}
+  vJ: {fileID: 0}

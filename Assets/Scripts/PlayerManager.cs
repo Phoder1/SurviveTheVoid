@@ -5,22 +5,18 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager _instance;
-    InputManager inputManager;
-    Vector2 movementVector;
+    InputManager _inputManager;
+    UIManager _uiManager;
+    PlayerStateMachine _playerStateMachine;
     GridManager _GridManager;
-    Vector2 currentPos;
-    Vector2 nextPos;
-    [SerializeField] private Camera cameraComp;
+
+    internal StateBase myState;
+    [SerializeField] internal Camera cameraComp;
 
     Vector2 cameraRealSize => new Vector2(cameraComp.orthographicSize * 2 * cameraComp.aspect, cameraComp.orthographicSize * 2);
-
-
-
-
-
-
-
-
+    Vector2 movementVector;
+    Vector2 currentPos;
+    Vector2 nextPos;
 
 
     private void Awake()
@@ -39,27 +35,23 @@ public class PlayerManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        inputManager = InputManager._instance;
+        _inputManager = InputManager._instance;
         _GridManager = GridManager._instance;
+        _uiManager = UIManager._instance;
+        _playerStateMachine = GetComponent<PlayerStateMachine>();
+        ChangeMode(InputManager.InputState.DefaultMode);
+         
 
         UpdateView();
-
-
-
-
-
 
     }
 
     // Update is called once per frame
     void Update()
     {
-
-
-        //bools//
-
-        movementVector = inputManager.GetAxis("Horizontal", "Vertical");
-        movementVector = movementVector * 5 * Time.deltaTime;
+   
+        movementVector = _inputManager.GetAxis();
+        movementVector = movementVector * 5*Time.deltaTime;
         currentPos = (Vector2)transform.position; //new Vector2(transform.position.x, transform.position.y);
         nextPos = currentPos + movementVector;
 
@@ -69,43 +61,41 @@ public class PlayerManager : MonoBehaviour
             UpdateView();
 
         }
-        if (inputManager.a_Button) { ButtonA(); }
-        if (inputManager.b_Button) { ButtonB(); }
-
-
-
-        //states//
-        switch (inputManager.state)
-        {
-            case InputManager.InputState.BuildMode:
-                ButtonA();
-                break;
-            case InputManager.InputState.EditMode:
-                ButtonB();
-                break;
-            case InputManager.InputState.FightMode:
-
-                break;
-        }
-
+        if (_inputManager.a_Button) { ButtonA(); }
+        if (_inputManager.b_Button) { ButtonB(); }
 
     }
 
     public void ButtonA()
     {
-        Debug.Log("ButtonA pressed");
-
+        
+        myState.ButtonA();
     }
     public void ButtonB()
     {
-        Debug.Log("ButtonB pressed");
+        
+        myState.ButtonB();
     }
+
+
     private void UpdateView()
     {
         Vector3 camPosition = (Vector2)transform.position;
         camPosition -= (Vector3)cameraRealSize / 2;
         Rect worldView = new Rect(camPosition, cameraRealSize);
         _GridManager.UpdateView(worldView);
+    }
+
+    public void ChangeMode(InputManager.InputState newState)
+    {
+        myState = _playerStateMachine.SwichState(newState);   
+        
+        myState.OnUpdate();
+    }
+    
+    public void check()
+    {
+        Debug.Log("check");
     }
 }
 
