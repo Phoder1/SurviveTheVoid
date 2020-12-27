@@ -30,9 +30,9 @@ namespace Assets.TimeEvents
 
     public class ToothPasteEvent : TimeEvent
     {
-        protected new Tiles.ToothPaste triggeringTile;
+        protected new ToothPaste triggeringTile;
 
-        public ToothPasteEvent(Tiles.ToothPaste triggeringTile, float triggerTime, Vector2Int eventPosition) : base(triggerTime, eventPosition) {
+        public ToothPasteEvent(ToothPaste triggeringTile, float triggerTime, Vector2Int eventPosition) : base(triggerTime, eventPosition) {
             this.triggeringTile = triggeringTile;
         }
 

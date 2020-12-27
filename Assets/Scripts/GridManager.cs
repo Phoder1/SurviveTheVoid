@@ -366,7 +366,7 @@ public class GridManager : MonoBehaviour
                 for (int loopY = 0; loopY < chunkSize; loopY++) {
                     Vector2Int gridPosition = new Vector2Int(loopX, loopY) + chunkStartPos;
                     if (noise.CheckThreshold(gridPosition)) {
-                        SetTile(new Tiles.ObsidianTile(), ChunkToGridPosition(new Vector2Int(loopX, loopY)), BuildingLayer.Floor, false);
+                        SetTile(new ObsidianTile(), ChunkToGridPosition(new Vector2Int(loopX, loopY)), BuildingLayer.Floor, false);
                     }
                 }
             }

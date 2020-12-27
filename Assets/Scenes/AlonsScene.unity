@@ -940,10 +940,7 @@ MonoBehaviour:
   grid: {fileID: 1584882287}
   floor: {fileID: 1208442058}
   buildings: {fileID: 1380187965}
-  islandsNoise:
-    seed: 0
-    resolution: 30
-    boolThreshold: 0.65
+  islandsNoise: {seed: 0, resolution: 30, boolThreshold: 0.65}
   loadDistance: 0
   offSet: 1
 --- !u!114 &1090312030
@@ -1147,18 +1144,18 @@ Tilemap:
       e11: 0
       e12: 0
       e13: NaN
-      e20: 0.000000103716275
+      e20: -0.0012763888
       e21: 0
-      e22: 0.000008071773
-      e23: -1.1895078e+21
-      e30: 8.72e-43
+      e22: -0.05357039
+      e23: -0.000007746618
+      e30: 5.5e-43
       e31: 0
-      e32: 8.72e-43
-      e33: 4.5904e-41
+      e32: 5.5e-43
+      e33: 4.5905e-41
   m_TileColorArray:
   - m_RefCount: 0
-    m_Data: {r: -0.0000000022732607, g: -0.0000000022732607, b: -0.0000000022732607,
-      a: -0.0000000022732607}
+    m_Data: {r: 0.0000000019194388, g: 0.0000000019194388, b: 0.0000000019194388,
+      a: 0.0000000019194388}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
