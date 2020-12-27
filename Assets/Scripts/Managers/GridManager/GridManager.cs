@@ -81,7 +81,7 @@ public partial class GridManager : MonoBehaviour, IGridManager
         Vector2Int topLeft = WorldToGridPosition(new Vector2(Mathf.Min(view.min.x, view.max.x), Mathf.Max(view.min.y, view.max.y)), BuildingLayer.Floor);
         Vector2Int bottomRight = WorldToGridPosition(new Vector2(Mathf.Max(view.min.x, view.max.x), Mathf.Min(view.min.y, view.max.y)), BuildingLayer.Floor);
         Vector2Int min = new Vector2Int(bottomLeft.x, bottomRight.y) - Vector2Int.one * chunkSize * loadDistance;
-        Vector2Int max = new Vector2Int(topRight.x, topLeft.y) + Vector2Int.one * chunkSize * ( loadDistance + 1 );
+        Vector2Int max = new Vector2Int(topRight.x, topLeft.y) + Vector2Int.one * chunkSize * (loadDistance + 1);
         min = GridToChunkCoordinates(min);
         max = GridToChunkCoordinates(max);
         if (lastViewMin == Vector2Int.zero && lastViewMax == Vector2Int.zero) {
@@ -97,43 +97,37 @@ public partial class GridManager : MonoBehaviour, IGridManager
             lastViewMax = max;
         }
         else {
-            if (min != lastViewMin) {
-                //Remove islands
-                if (min.x > lastViewMin.x || min.y > lastViewMin.y) {
+            //Create new islands
 
-                    RemoveTiles(lastViewMin, new Vector2Int(min.x, max.y));
-                    RemoveTiles(lastViewMin, new Vector2Int(max.x,min.y));
-                }
+            if (min.x < lastViewMin.x || min.y < lastViewMin.y) {
 
-                //Create new islands
-
-                if (min.x < lastViewMin.x || min.y < lastViewMin.y) {
-
-                    CreateTiles(min, new Vector2Int(lastViewMin.x, lastViewMax.y));
-                    CreateTiles(min, new Vector2Int(lastViewMax.x,lastViewMin.y));
-                }
+                CreateTiles(min, new Vector2Int(lastViewMin.x, max.y));
+                CreateTiles(min, new Vector2Int(max.x, lastViewMin.y));
                 //Save view change
                 lastViewMin = min;
             }
-            if (max != lastViewMax) {
-                //Remove islands
-                if (max.x < lastViewMax.x || max.y < lastViewMax.y) {
-                    RemoveTiles(new Vector2Int(min.x, max.y), lastViewMax);
-                    RemoveTiles(new Vector2Int(max.x, min.y), lastViewMax);
-                }
 
-                //Create new islands
-                
-                if (max.x > lastViewMax.x || max.y > lastViewMax.y) {
-                    CreateTiles(new Vector2Int(lastViewMin.x, lastViewMax.y), max);
-                    CreateTiles(new Vector2Int(lastViewMax.x, lastViewMin.y), max);
-                }
+            if (max.x > lastViewMax.x || max.y > lastViewMax.y) {
+                CreateTiles(new Vector2Int(min.x, lastViewMax.y), max);
+                CreateTiles(new Vector2Int(lastViewMax.x, min.y), max);
+                //Save view change
+                lastViewMax = max;
+            }
+            //Remove islands
+            if (min.x > lastViewMin.x || min.y > lastViewMin.y) {
+
+                RemoveTiles(lastViewMin, new Vector2Int(min.x, max.y+1));
+                RemoveTiles(lastViewMin, new Vector2Int(max.x+1, min.y));
+                //Save view change
+                lastViewMin = min;
+            }
+            if (max.x < lastViewMax.x || max.y < lastViewMax.y) {
+                RemoveTiles(new Vector2Int(min.x, max.y), lastViewMax + Vector2Int.one);
+                RemoveTiles(new Vector2Int(max.x, min.y), lastViewMax + Vector2Int.one);
                 //Save view change
                 lastViewMax = max;
             }
         }
-
-
         void CreateTiles(Vector2Int from, Vector2Int to) {
             for (int loopX = from.x; loopX < to.x; loopX += chunkSize) {
                 for (int loopY = from.y; loopY < to.y; loopY += chunkSize) {
