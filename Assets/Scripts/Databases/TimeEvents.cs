@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.TilesData;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace Assets.TimeEvents
     public abstract class TimeEvent
     {
         public readonly float triggerTime;
-        protected TileAbst triggeringTile;
+        protected GenericTile triggeringTile;
         protected readonly Vector2Int eventPosition;
         protected bool eventTriggered = false;
 

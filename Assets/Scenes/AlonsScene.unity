@@ -903,7 +903,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1090312028}
   - component: {fileID: 1090312029}
-  - component: {fileID: 1090312030}
   m_Layer: 0
   m_Name: GridManager
   m_TagString: Untagged
@@ -943,19 +942,7 @@ MonoBehaviour:
   islandsNoise: {fileID: 11400000, guid: 604f74a421b34d449845862dcfa468dd, type: 2}
   loadDistance: 1
   offSet: 0
---- !u!114 &1090312030
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1090312027}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ea582247f68c324eae88564892c7400, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tiles: {fileID: 11400000, guid: c26b20c4d1e44e04c99336e14bd337fe, type: 2}
+  tilesPack: {fileID: 11400000, guid: c26b20c4d1e44e04c99336e14bd337fe, type: 2}
 --- !u!1 &1140459362
 GameObject:
   m_ObjectHideFlags: 0
