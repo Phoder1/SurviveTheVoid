@@ -24,6 +24,10 @@ public class Inventory : IInventory
         {
             _instance = new Inventory();
             inventoryList = new ItemSlot[maxCapacityOfItemsInList];
+
+
+
+
         }
     }
 
@@ -190,6 +194,8 @@ public class Inventory : IInventory
         }
         Debug.Log("Cant Add The Item");
     }
+
+
     public void RemoveObjectFromInventory(ItemSlot item)
     {
         if (item.amount < 0)
