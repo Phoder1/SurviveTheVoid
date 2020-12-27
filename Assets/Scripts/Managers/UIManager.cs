@@ -9,16 +9,16 @@ public class UIManager : MonoBehaviour
     public VirtualButton[] _buttons;
     public VirtualJoystick vJ;
 
-    // Canvases
-    public GameObject[] _canvases;
+    // UI elements
+    public GameObject[] _uiElements;
 
     private void Awake() {
-        if (_instance != null) {
-            Destroy(gameObject);
-           
+        if (_instance != null) 
+        {
+            Destroy(gameObject);    
         }
-        else {
-         
+        else 
+        {
             _instance = this;
             DontDestroyOnLoad(gameObject);
         }
@@ -27,11 +27,11 @@ public class UIManager : MonoBehaviour
     {
         _inputManager = InputManager._instance;
 
-        for(int i =0; i<_canvases.Length; i++)
+        for(int i =0; i<_uiElements.Length; i++)
 		{
             if(i != 1)
 			{
-                _canvases[i].SetActive(false);
+                _uiElements[i].SetActive(false);
 			}
 		}
     }
