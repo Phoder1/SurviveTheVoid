@@ -1,21 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class CraftingManager : MonoBehaviour
 {
     public ItemPackSO items;
-    public RecipePackSO Recipes;
+    public RecipePackSO recipes;
     public Transform sectionHolder;
     private Section[] sections;
     private Section selectedSection;
-    public GameObject[] RecipeMaterialSlots;
+    public GameObject[] recipeMaterialSlots;
     public static CraftingManager _instance;
-    List<RecipeSO> UnlockedRecipe = new List<RecipeSO>();
+    List<RecipeSO> unlockedRecipes = new List<RecipeSO>();
 
-    [HideInInspector]
-    public RecipeSO SelectedRecipe;
+    [FormerlySerializedAs("SelectedRecipe")] [HideInInspector]
+    public RecipeSO selectedRecipe;
+
+    private Inventory inventory;
 
 
 
@@ -44,6 +47,7 @@ public class CraftingManager : MonoBehaviour
 
     private void Init()
     {
+        inventory = Inventory.GetInstance;
 
         ImportSlots();
         AddRecipeToList();
@@ -91,7 +95,7 @@ public class CraftingManager : MonoBehaviour
             }
         }
 
-        Array.Sort(sections, (section1, section2) => section1.name.CompareTo(section2.name));
+        Array.Sort(sections, (section1, section2) => String.Compare(section1.name, section2.name, StringComparison.Ordinal));
 
     }
 
@@ -106,7 +110,7 @@ public class CraftingManager : MonoBehaviour
 
     void AddRecipeToList()
     {
-        foreach (RecipeSO recipe in Recipes.recipesArr)
+        foreach (RecipeSO recipe in recipes.recipesArr)
         {
             GetSection(recipe.section).UpdateRecipeList(recipe);
         }
@@ -146,14 +150,14 @@ public class CraftingManager : MonoBehaviour
                 {
                     if (selectedSection.name != sectionName)
                     {
-                        selectedSection.GetSetIsSelected = false;
-                        section.GetSetIsSelected = true;
+                        selectedSection.getSetIsSelected = false;
+                        section.getSetIsSelected = true;
                         selectedSection = section;
                     }
                 }
                 else
                 {
-                    section.GetSetIsSelected = true;
+                    section.getSetIsSelected = true;
                     selectedSection = section;
                 }
                 break;
@@ -163,16 +167,16 @@ public class CraftingManager : MonoBehaviour
     public void ShowRecipe(RecipeSO recipe)
     {
         int matsAmount = recipe.itemCostArr.Length;
-        for (int i = 0; i < RecipeMaterialSlots.Length; i++)
+        for (int i = 0; i < recipeMaterialSlots.Length; i++)
         {
             if (i < matsAmount)
             {
-                RecipeMaterialSlots[i].gameObject.SetActive(true);
-                RecipeMaterialSlots[i].GetComponentInChildren<Text>().text = recipe.itemCostArr[i].item.itemEnum.ToString();
+                recipeMaterialSlots[i].gameObject.SetActive(true);
+                recipeMaterialSlots[i].GetComponentInChildren<Text>().text = recipe.itemCostArr[i].item.itemEnum.ToString();
             }
             else
             {
-                RecipeMaterialSlots[i].gameObject.SetActive(false);
+                recipeMaterialSlots[i].gameObject.SetActive(false);
             }
 
         }
@@ -182,17 +186,17 @@ public class CraftingManager : MonoBehaviour
 
     public void OnClickCraftButton()
     {
-        if (SelectedRecipe != null)
+        if (selectedRecipe != null)
         {
-            for (int i = 0; i < SelectedRecipe.itemCostArr.Length; i++)
+            for (int i = 0; i < selectedRecipe.itemCostArr.Length; i++)
             {
-                if (Inventory.CheckInventoryForItem(SelectedRecipe.itemCostArr[i]))
+                if (inventory.CheckInventoryForItem(selectedRecipe.itemCostArr[i]))
                 {
-                    Debug.Log("You have enough: " + SelectedRecipe.itemCostArr[i].item.itemEnum.ToString());
+                    Debug.Log("You have enough: " + selectedRecipe.itemCostArr[i].item.itemEnum.ToString());
                 }
                 else
                 {
-                    Debug.Log("You don't have enough: " + SelectedRecipe.itemCostArr[i].item.itemEnum.ToString());
+                    Debug.Log("You don't have enough: " + selectedRecipe.itemCostArr[i].item.itemEnum.ToString());
                 }
             }
         }
@@ -208,7 +212,7 @@ public class CraftingManager : MonoBehaviour
 
 
 
-    public bool CanCraft(RecipeSO CraftRecipe) { return true; }
+    public bool CanCraft(RecipeSO craftRecipe) { return true; }
 
 }
 [Serializable]
@@ -228,7 +232,7 @@ public class Section
         recipeList = new List<RecipeSO>();
     }
 
-    public bool GetSetIsSelected
+    public bool getSetIsSelected
     {
         get => isSelected;
         set
@@ -289,12 +293,12 @@ public class Section
 
             if (recipeList.Count > 0)
             {
-                CraftingManager._instance.SelectedRecipe = recipeList[slotNum];
+                CraftingManager._instance.selectedRecipe = recipeList[slotNum];
                 CraftingManager._instance.ShowRecipe(recipeList[slotNum]);
             }
             else
             {
-                CraftingManager._instance.SelectedRecipe = null;
+                CraftingManager._instance.selectedRecipe = null;
             }
         }
     }

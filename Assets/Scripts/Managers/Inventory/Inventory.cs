@@ -4,13 +4,24 @@ using UnityEngine;
 public class Inventory : IInventory
 {
     private static Inventory _instance;
+    Inventory IInventory.GetInstance => GetInstance;
+    public static Inventory GetInstance {
+        get {
+            if (_instance == null) {
+                _instance = new Inventory();
+            }
+
+            return _instance;
+        }
+    }
     int maxCapacityOfItemsInList = 25;
     bool checkForItem;
     int counter;
 
     ItemSlot[] inventoryList;
-    int nextAddOnAmountForInventory = 5;
+    private int nextAddOnAmountForInventory = 5;
 
+    
 
     public ItemSlot[] GetInventory { get => inventoryList; }
 
@@ -31,18 +42,7 @@ public class Inventory : IInventory
         }
     }
 
-    public Inventory GetInstance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = new Inventory();
-            }
 
-            return _instance;
-        }
-    }
 
 
 
@@ -398,7 +398,7 @@ public class Inventory : IInventory
 }
 public interface IInventory
 {
-    Inventory GetInstance { get; }
+    public Inventory GetInstance { get; }
     ItemSlot[] GetInventory { get; }
 
     void AddToInventory(ItemSlot item);
