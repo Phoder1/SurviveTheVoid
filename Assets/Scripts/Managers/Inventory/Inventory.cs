@@ -398,7 +398,7 @@ public class Inventory : IInventory
 }
 public interface IInventory
 {
-    public Inventory GetInstance { get; }
+    Inventory GetInstance { get; }
     ItemSlot[] GetInventory { get; }
 
     void AddToInventory(ItemSlot item);

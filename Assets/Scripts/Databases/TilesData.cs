@@ -7,31 +7,32 @@ using UnityEngine.Tilemaps;
 namespace Assets.TilesData
 {
     public enum ToolInteractionEnum { None, Axe, Pickaxe, Hoe, Shovel, Hammer, Any }
-    public readonly struct TileHit
+    #region Tile hit
+    public readonly struct TileHitStruct
     {
         public readonly Vector2Int gridPosition;
         public readonly GenericTile tile;
 
-        public TileHit(GenericTile tile, Vector2Int gridPosition) {
+        public TileHitStruct(GenericTile tile, Vector2Int gridPosition) {
             this.tile = tile;
             this.gridPosition = gridPosition;
         }
 
-        public static TileHit None => new TileHit(null, Vector2Int.zero);
+        public static TileHitStruct none => new TileHitStruct(null, Vector2Int.zero);
 
-        public static bool operator ==(TileHit lhs, TileHit rhs) {
+        public static bool operator ==(TileHitStruct lhs, TileHitStruct rhs) {
             return lhs.Equals(rhs);
         }
-        public static bool operator !=(TileHit lhs, TileHit rhs) {
+        public static bool operator !=(TileHitStruct lhs, TileHitStruct rhs) {
             return !lhs.Equals(rhs);
         }
 
         public override bool Equals(object obj) {
-            return (obj is TileHit hit &&
+            return (obj is TileHitStruct hit &&
                     EqualityComparer<Vector2Int?>.Default.Equals(gridPosition, hit.gridPosition) &&
                     EqualityComparer<GenericTile>.Default.Equals(tile, hit.tile));
         }
-        public bool Equals(TileHit other) {
+        public bool Equals(TileHitStruct other) {
             return tile == other.tile && gridPosition == other.gridPosition;
         }
 
@@ -42,6 +43,9 @@ namespace Assets.TilesData
             return hashCode;
         }
     }
+    #endregion
+    #region Actual Tiles
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     [Serializable]
     public class GenericTile
     {
@@ -73,7 +77,7 @@ namespace Assets.TilesData
             public float chanceWeight;
         }
     }
-    #region Actual Tiles
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     [Serializable]
     public class ToothPaste : GenericTile
     {

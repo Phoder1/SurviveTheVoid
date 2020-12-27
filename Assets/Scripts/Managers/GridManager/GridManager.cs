@@ -204,11 +204,11 @@ public partial class GridManager : MonoBehaviour, IGridManager
     /// <param name="clickPosition"></param>
     /// Position in world space in vector2
     /// <returns></returns>
-    public TileHit GetHitFromClickPosition(Vector2 clickPosition, BuildingLayer buildingLayer) {
+    public TileHitStruct GetHitFromClickPosition(Vector2 clickPosition, BuildingLayer buildingLayer) {
         Vector2Int gridPosition = WorldToGridPosition(clickPosition, buildingLayer);
-        TileHit hit;
+        TileHitStruct hit;
         if (TryGetChunk(GridToChunkCoordinates(gridPosition), out Chunk chunk)) {
-            hit = new TileHit(chunk.GetTile(gridPosition, buildingLayer), gridPosition);
+            hit = new TileHitStruct(chunk.GetTile(gridPosition, buildingLayer), gridPosition);
             if (hit.tile != null) {
                 return hit;
             }
@@ -219,13 +219,13 @@ public partial class GridManager : MonoBehaviour, IGridManager
                     return hit;
                 }
                 Vector2Int checkPosition = gridPosition + (localPosition.x < 0 ? Vector2Int.up : Vector2Int.right);
-                hit = new TileHit(GetTileFromGrid(checkPosition, buildingLayer), checkPosition);
+                hit = new TileHitStruct(GetTileFromGrid(checkPosition, buildingLayer), checkPosition);
                 if (hit.tile != null) {
                     return hit;
                 }
                 else if (Vector2.Distance(localPosition, new Vector2(0, 0.45f)) <= 0.24f) {
                     checkPosition = gridPosition + Vector2Int.one;
-                    hit = new TileHit(GetTileFromGrid(checkPosition, buildingLayer), checkPosition);
+                    hit = new TileHitStruct(GetTileFromGrid(checkPosition, buildingLayer), checkPosition);
                     if (hit.tile != null) {
                         return hit;
                     }
@@ -234,7 +234,7 @@ public partial class GridManager : MonoBehaviour, IGridManager
             }
 
         }
-        return TileHit.None;
+        return TileHitStruct.none;
 
     }
     public void SetTile(GenericTile tile, Vector2Int gridPosition, BuildingLayer buildingLayer, bool playerAction = true) {

@@ -68,7 +68,7 @@ public class CameraScript : MonoBehaviour
             Vector3 mousePos = camera1.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = 0;
             BuildingLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? BuildingLayer.Buildings : BuildingLayer.Floor;
-            TileHit hit = gridManager.GetHitFromClickPosition(mousePos, layer);
+            TileHitStruct hit = gridManager.GetHitFromClickPosition(mousePos, layer);
 
             Debug.Log(hit.tile);
             if (hit.tile != null
