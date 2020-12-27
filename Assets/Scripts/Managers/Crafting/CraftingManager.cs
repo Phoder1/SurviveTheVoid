@@ -40,7 +40,37 @@ public class CraftingManager : MonoBehaviour
         Init();
 
     }
+    private void Update()
+    {
 
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            inventory.AddToInventory(new ItemSlot(items.itemsArr[3], 1));
+            ShowRecipe(selectedRecipe);
+        }
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            inventory.AddToInventory(new ItemSlot(items.itemsArr[4], 1));
+            ShowRecipe(selectedRecipe);
+        }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            inventory.RemoveItemFromInventory(new ItemSlot(items.itemsArr[3], 1));
+            ShowRecipe(selectedRecipe);
+        }
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            inventory.RemoveItemFromInventory(new ItemSlot(items.itemsArr[4], 1));
+            ShowRecipe(selectedRecipe);
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            inventory.PrintInventory();
+        }
+
+
+
+    }
 
 
 
@@ -171,8 +201,15 @@ public class CraftingManager : MonoBehaviour
         {
             if (i < matsAmount)
             {
-                recipeMaterialSlots[i].gameObject.SetActive(true);
-                recipeMaterialSlots[i].GetComponentInChildren<Text>().text = recipe.itemCostArr[i].item.itemEnum.ToString();
+                if (!recipeMaterialSlots[i].gameObject.activeInHierarchy)
+                {
+                    recipeMaterialSlots[i].gameObject.SetActive(true);
+                }
+                Text materialNameText = recipeMaterialSlots[i].transform.GetChild(0).GetComponent<Text>();
+                materialNameText.text = recipe.itemCostArr[i].item.itemEnum.ToString();
+                Text materialCostText = recipeMaterialSlots[i].transform.GetChild(1).GetComponent<Text>();
+                materialCostText.text = inventory.GetAmountOfItem(recipe.itemCostArr[i]).ToString() + " / " + recipe.itemCostArr[i].amount;
+               
             }
             else
             {
@@ -186,23 +223,13 @@ public class CraftingManager : MonoBehaviour
 
     public void OnClickCraftButton()
     {
-        if (selectedRecipe != null)
+        if (!inventory.CheckEnoughItemsForRecipe(selectedRecipe))
         {
-            for (int i = 0; i < selectedRecipe.itemCostArr.Length; i++)
-            {
-                if (inventory.CheckInventoryForItem(selectedRecipe.itemCostArr[i]))
-                {
-                    Debug.Log("You have enough: " + selectedRecipe.itemCostArr[i].item.itemEnum.ToString());
-                }
-                else
-                {
-                    Debug.Log("You don't have enough: " + selectedRecipe.itemCostArr[i].item.itemEnum.ToString());
-                }
-            }
+            Debug.Log("Not Enough Materials");
         }
         else
         {
-            Debug.Log("No recipe is selected.");
+            ShowRecipe(selectedRecipe);
         }
 
     }
@@ -224,7 +251,6 @@ public class Section
     private int selectedSlot = 0;
     public List<RecipeSO> recipeList;
     private bool isSelected;
-
     public Section(string name, GameObject section)
     {
         this.name = name;
@@ -308,6 +334,11 @@ public class Section
         {
 
             sectionSlots[i].GetComponentInChildren<Text>().text = recipeList[i].outcomeItem.item.itemEnum.ToString();
+
+
+
+
+
             CheckIflockedRecipe(recipeList[i]);
         }
         for (int i = 0; i < sectionSlots.Length; i++)
