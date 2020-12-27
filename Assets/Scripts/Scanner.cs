@@ -145,7 +145,7 @@ namespace Assets.Scan
         /// The tile to check, return true to take the tile into account.
         /// </param>
         /// <returns></returns>
-        internal bool CheckTile(GenericTile tile);
+        bool CheckTile(GenericTile tile);
     }
 }
 
