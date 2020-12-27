@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0385232e857e8e446aa3c8cacfcbfb44, type: 3}
   m_Name: RecipeWoodenHoe
   m_EditorClassIdentifier: 
-  ResourcesCost:
-  - resource: {fileID: 11400000, guid: 6317b6bed700609419a7ffe65ff2b6d9, type: 2}
-    amount: 3
-  - resource: {fileID: 11400000, guid: 628e0d79b7c898a4fb43629a7bbe139f, type: 2}
+  itemCostArr:
+  - item: {fileID: 11400000, guid: 6317b6bed700609419a7ffe65ff2b6d9, type: 2}
     amount: 2
-  Resource:
-    resource: {fileID: 11400000, guid: e284635c31d594e489f9dbcf20606aad, type: 2}
+  - item: {fileID: 11400000, guid: 628e0d79b7c898a4fb43629a7bbe139f, type: 2}
+    amount: 1
+  outcomeItem:
+    item: {fileID: 11400000, guid: e284635c31d594e489f9dbcf20606aad, type: 2}
     amount: 1
   tier: 0
   section: 4

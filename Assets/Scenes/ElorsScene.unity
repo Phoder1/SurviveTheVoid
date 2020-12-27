@@ -2736,7 +2736,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 23
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -6543,7 +6543,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 23
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -9753,16 +9753,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   items: {fileID: 11400000, guid: 4b62af5c9133e2043922ff279ce80e39, type: 2}
-  Recipes: {fileID: 11400000, guid: 0e290e14c38a82045b8652dd627c51c9, type: 2}
+  recipes: {fileID: 11400000, guid: 0e290e14c38a82045b8652dd627c51c9, type: 2}
   sectionHolder: {fileID: 616589673}
-  RecipeMaterialSlots:
+  recipeMaterialSlots:
   - {fileID: 1390706821}
   - {fileID: 1867927222}
   - {fileID: 673537813}
   - {fileID: 699518952}
   - {fileID: 1318176404}
   - {fileID: 1700442655}
-  SelectedRecipe: {fileID: 0}
+  selectedRecipe: {fileID: 0}
 --- !u!1 &1072172714
 GameObject:
   m_ObjectHideFlags: 0
@@ -10229,7 +10229,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 23
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -10723,7 +10723,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 23
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -13379,7 +13379,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 23
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -18174,7 +18174,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 23
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
