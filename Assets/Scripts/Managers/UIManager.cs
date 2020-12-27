@@ -26,6 +26,14 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         _inputManager = InputManager._instance;
+
+        for(int i =0; i<_canvases.Length; i++)
+		{
+            if(i != 1)
+			{
+                _canvases[i].SetActive(false);
+			}
+		}
     }
 
     private void Update()
