@@ -14,10 +14,10 @@ public partial class GridManager : MonoBehaviour, IGridManager
         foreach (Chunk chunk in chunksDict.Values) {
             Vector2Int minCorner = chunk.chunkStartPos;
             Vector2Int maxCorner = minCorner + Vector2Int.one * CHUNK_SIZE;
-            Vector3 leftCorner = GridToWorldPosition(Vector2Int.RoundToInt(new Vector2(minCorner.x, maxCorner.y)), TileMapLayer.Floor);
-            Vector3 rightCorner = GridToWorldPosition(Vector2Int.RoundToInt(new Vector2(maxCorner.x, minCorner.y)), TileMapLayer.Floor);
-            Vector3 topCorner = GridToWorldPosition(maxCorner, TileMapLayer.Floor);
-            Vector3 bottomCorner = GridToWorldPosition(minCorner, TileMapLayer.Floor);
+            Vector3 leftCorner = GridToWorldPosition(Vector2Int.RoundToInt(new Vector2(minCorner.x, maxCorner.y)), TileMapLayer.Floor,true);
+            Vector3 rightCorner = GridToWorldPosition(Vector2Int.RoundToInt(new Vector2(maxCorner.x, minCorner.y)), TileMapLayer.Floor, true);
+            Vector3 topCorner = GridToWorldPosition(maxCorner, TileMapLayer.Floor, true);
+            Vector3 bottomCorner = GridToWorldPosition(minCorner, TileMapLayer.Floor, true);
             //Debug.Log("Origin: Min:" + chunkStartCorner + ", Max:" + maxCorner + ", Real: Bottom:" + bottomCorner + ", Top:" + topCorner + "Left:" + leftCorner + ", Right:" + rightCorner);
             Gizmos.DrawLine(bottomCorner, leftCorner);
             Gizmos.DrawLine(bottomCorner, rightCorner);
@@ -55,6 +55,7 @@ public partial class GridManager : MonoBehaviour, IGridManager
     private const int CHUNK_SIZE = 16;
     private const int COLLISION_SENSITIVITY = 6;
     private const float BUILDING_LAYER_POSITION_OFFSET = 0.5f;
+    private const float TOP_FACE_HEIGHT = 0.7f;
 
 
     public static GridManager _instance;
@@ -161,8 +162,12 @@ public partial class GridManager : MonoBehaviour, IGridManager
             }
         }
     }
-    public Vector3 GridToWorldPosition(Vector2Int gridPosition, TileMapLayer buildingLayer)
-        => grid.CellToWorld((Vector3Int)gridPosition) + Vector3.up * (buildingLayer == TileMapLayer.Buildings ? BUILDING_LAYER_POSITION_OFFSET : 0f);
+    public Vector3 GridToWorldPosition(Vector2Int gridPosition, TileMapLayer buildingLayer, bool getCenter)
+    {
+        Vector3 position = GetTilemap(buildingLayer).CellToWorld((Vector3Int)gridPosition);
+        position += Vector3.up * ((buildingLayer == TileMapLayer.Buildings ? BUILDING_LAYER_POSITION_OFFSET : 0f) + (getCenter ? TOP_FACE_HEIGHT / 2 : 0f));
+        return position;
+    }
     public Vector2Int WorldToGridPosition(Vector3 worldPosition, TileMapLayer buildingLayer)
         => (Vector2Int)GetTilemap(buildingLayer).WorldToCell(worldPosition - Vector3.up * (buildingLayer == TileMapLayer.Buildings ? BUILDING_LAYER_POSITION_OFFSET : 0f));
     public bool IsTileWalkable(Vector2 worldPosition, Vector2 movementVector) {
@@ -209,7 +214,7 @@ public partial class GridManager : MonoBehaviour, IGridManager
                 return hit;
             }
             else {
-                Vector2 tileWorldPosition = GridToWorldPosition(gridPosition, buildingLayer);
+                Vector2 tileWorldPosition = GridToWorldPosition(gridPosition, buildingLayer, false);
                 Vector2 localPosition = clickPosition - tileWorldPosition;
                 if (localPosition.y < 0.2f && Mathf.Abs(localPosition.x) < 0.1f) {
                     return hit;

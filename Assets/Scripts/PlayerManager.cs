@@ -106,7 +106,7 @@ public class PlayerManager : MonoBehaviour
 
     public void ButtonA()
     {
-        Debug.Log(_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer));
+        Debug.Log(_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer,true));
        // transform.Translate(transform.position-_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer));
         myState.ButtonA();
     }
