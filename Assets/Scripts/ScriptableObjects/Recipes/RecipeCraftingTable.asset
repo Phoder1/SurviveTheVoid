@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0385232e857e8e446aa3c8cacfcbfb44, type: 3}
+  m_Name: RecipeCraftingTable
+  m_EditorClassIdentifier: 
+  ItemCostArr:
+  - item: {fileID: 11400000, guid: 6317b6bed700609419a7ffe65ff2b6d9, type: 2}
+    amount: 2
+  - item: {fileID: 11400000, guid: 628e0d79b7c898a4fb43629a7bbe139f, type: 2}
+    amount: 1
+  outcomeItem:
+    item: {fileID: 11400000, guid: eceba57f53dffb34a885be3b8900c198, type: 2}
+    amount: 1
+  tier: 0
+  section: 1
+  isUnlocked: 1

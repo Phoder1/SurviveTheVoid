@@ -11,13 +11,9 @@ public class InputManager : MonoBehaviour
    
     
 
-    //indicates building modes, destruction mode, etc'
-    
-    public enum InputState { BuildMode, EditMode, FightMode };
-    
-    public InputState state;
-    
 
+    public enum InputState { DefaultMode, BuildMode, FightMode };
+    public InputState state;
 
     private void Awake() {
         if (_instance != null) {
@@ -42,9 +38,23 @@ public class InputManager : MonoBehaviour
     void Update()
     {
 
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            state = InputState.DefaultMode;
+            _playerManager.ChangeMode(state);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            state = InputState.BuildMode;
+            _playerManager.ChangeMode(state);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            state = InputState.FightMode;
+            _playerManager.ChangeMode(state);
+        }
 
 
-        
     }
   
     
@@ -52,27 +62,19 @@ public class InputManager : MonoBehaviour
     {
         Touch[] touch = new Touch[5];
         //if (Input.touchCount > 0)
-        //{ 
+        {
             for (int i = 0; i < Input.touchCount; i++)
             {
-                touch[i]= Input.GetTouch(i);
+                touch[i] = Input.GetTouch(i);
                 if (touch[i].position == new Vector2(vJ.gameObject.transform.position.x, vJ.gameObject.transform.position.y) || new Vector2(Input.mousePosition.x, Input.mousePosition.y) == new Vector2(vJ.gameObject.transform.position.x, vJ.gameObject.transform.position.y))
                 {
-                   
-                   
+
+
                 }
-               
+
             }
-     
+        }  
         
-         
-
-
-
-
-
-
-
     }
     public void ButtonCheck(VirtualButton[] ButtonPressed)
     {
@@ -83,14 +85,9 @@ public class InputManager : MonoBehaviour
     }
     public Vector2 GetAxis()
     {
-        
-
+       
       //ControllersCheck that returns Vector2 
         Vector2 moveDirection= _uiManager.vJ.inpudDir;
-
-
-
-
         return moveDirection;
     } 
     

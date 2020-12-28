@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.TilesData;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace Assets.TimeEvents
     public abstract class TimeEvent
     {
         public readonly float triggerTime;
-        protected Tiles.TileAbst triggeringTile;
+        protected GenericTile triggeringTile;
         protected readonly Vector2Int eventPosition;
         protected bool eventTriggered = false;
 
@@ -30,15 +31,15 @@ namespace Assets.TimeEvents
 
     public class ToothPasteEvent : TimeEvent
     {
-        protected new Tiles.ToothPaste triggeringTile;
+        protected new ToothPaste triggeringTile;
 
-        public ToothPasteEvent(Tiles.ToothPaste triggeringTile, float triggerTime, Vector2Int eventPosition) : base(triggerTime, eventPosition) {
+        public ToothPasteEvent(ToothPaste triggeringTile, float triggerTime, Vector2Int eventPosition) : base(triggerTime, eventPosition) {
             this.triggeringTile = triggeringTile;
         }
 
         public override void Trigger() {
             eventTriggered = true;
-            GridManager._instance.SetTile(eventPosition, triggeringTile.replacementTile, false);
+            GridManager._instance.SetTile(triggeringTile.replacementTile, eventPosition, BuildingLayer.Floor, false);
             
         }
     }
