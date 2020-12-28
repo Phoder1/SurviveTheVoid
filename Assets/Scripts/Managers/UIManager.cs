@@ -30,7 +30,7 @@ public class UIManager : MonoBehaviour
 
         for (int i = 0; i < _uiElements.Length; i++)
         {
-            if (i != 1)
+            if (i > 2)
             {
                 _uiElements[i].SetActive(false);
             }
