@@ -4,7 +4,9 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class CraftingManager : MonoBehaviour
+
+
+public class CraftingManager : MonoBehaviour, ICraftingManager
 {
     public ItemPackSO items;
     public RecipePackSO recipes;
@@ -14,8 +16,15 @@ public class CraftingManager : MonoBehaviour
     public GameObject[] recipeMaterialSlots;
     public static CraftingManager _instance;
     List<RecipeSO> unlockedRecipes = new List<RecipeSO>();
+    
+    public Text CraftText;
 
-    [FormerlySerializedAs("SelectedRecipe")] [HideInInspector]
+    // true = craft button, false = unlock button;
+    public bool IsOnCrafing;
+
+
+    [FormerlySerializedAs("SelectedRecipe")]
+    [HideInInspector]
     public RecipeSO selectedRecipe;
 
     private Inventory inventory;
@@ -67,7 +76,10 @@ public class CraftingManager : MonoBehaviour
         {
             inventory.PrintInventory();
         }
-
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            UnlockRecipe(recipes.getrecipesArr[4]);
+        }
 
 
     }
@@ -164,7 +176,7 @@ public class CraftingManager : MonoBehaviour
 
 
 
- 
+
     public void SelectRecipe(int recipe)
     {
         selectedSection.SelectSlot(recipe);
@@ -209,7 +221,7 @@ public class CraftingManager : MonoBehaviour
                 materialNameText.text = recipe.getitemCostArr[i].item.getItemEnum.ToString();
                 Text materialCostText = recipeMaterialSlots[i].transform.GetChild(1).GetComponent<Text>();
                 materialCostText.text = inventory.GetAmountOfItem(recipe.getitemCostArr[i]).ToString() + " / " + recipe.getitemCostArr[i].amount;
-               
+
             }
             else
             {
@@ -223,19 +235,26 @@ public class CraftingManager : MonoBehaviour
 
     public void AttemptToCraft()
     {
-        if (!inventory.CheckEnoughItemsForRecipe(selectedRecipe))
+        if (IsOnCrafing)
         {
-            Debug.Log("Not Enough Materials");
+            if (!inventory.CheckEnoughItemsForRecipe(selectedRecipe))
+            {
+                Debug.Log("Not Enough Materials");
+            }
+            else
+            {
+                ShowRecipe(selectedRecipe);
+            }
         }
         else
         {
-            ShowRecipe(selectedRecipe);
+            UnlockRecipe(selectedRecipe);
+            
         }
-
     }
 
-    void UnlockRecipe(RecipeSO _recipe) => GetSection(_recipe.getSection).UnlockRecipe(_recipe);
-    
+    public void UnlockRecipe(RecipeSO _recipe) => GetSection(_recipe.getSection).UnlockRecipe(_recipe);
+
 
 
 
@@ -243,16 +262,38 @@ public class CraftingManager : MonoBehaviour
 
 }
 
-public interface ICrafting
+public interface ICraftingManager
 {
-    CraftingManager GetInstance { get; }
-
-
-
-
-
+    void AttemptToCraft();
+    bool CanCraft(RecipeSO craftRecipe);
+    void SelectRecipe(int recipe);
+    void SelectSection(string sectionName);
+    void ShowRecipe(RecipeSO recipe);
+    void UnlockRecipe(RecipeSO _recipe);
 }
 
+
+/*public interface ICrafting
+{
+    void ImportSlots();
+    void AddRecipeToList();
+    void UpdateInformation();
+
+    Section GetSection(SectionEnum _section);
+
+    void SelectRecipe(int recipe);
+
+    public void SelectSection(string sectionName);
+
+    void ShowRecipe(RecipeSO recipe);
+
+    void AttemptToCraft();
+
+    void UnlockRecipe(RecipeSO _recipe);
+
+    bool CanCraft(RecipeSO craftRecipe);
+}
+*/
 
 [Serializable]
 public class Section
@@ -288,11 +329,21 @@ public class Section
 
     void CheckIflockedRecipe(RecipeSO _recipe)
     {
+        int recipeIndex = recipeList.IndexOf(_recipe);
         if (!_recipe.getisUnlocked)
         {
-            int Test = recipeList.IndexOf(_recipe);
-            sectionSlots[Test].color = Color.black;
+            
+            sectionSlots[recipeIndex].color = Color.black;
 
+        }
+        else if (selectedSlot == recipeList.IndexOf(_recipe))
+        {
+            //sectionSlots[recipeIndex].color = Color.yellow;
+            SelectSlot(recipeIndex);
+        }
+        else
+        {
+            sectionSlots[recipeIndex].color = Color.white;
         }
     }
 
@@ -304,7 +355,7 @@ public class Section
         {
             if (recipe == _recipe)
             {
-
+                CheckIflockedRecipe(recipe);
             }
         }
 
@@ -325,21 +376,42 @@ public class Section
     {
         if (recipeList[slotNum].getisUnlocked)
         {
+            CraftingManager._instance.IsOnCrafing = true;
             sectionSlots[selectedSlot].color = Color.white;
             selectedSlot = slotNum;
             sectionSlots[selectedSlot].color = Color.yellow;
+            CraftingManager._instance.CraftText.text = "Craft";
 
-            if (recipeList.Count > 0)
-            {
-                CraftingManager._instance.selectedRecipe = recipeList[slotNum];
-                CraftingManager._instance.ShowRecipe(recipeList[slotNum]);
-            }
-            else
-            {
-                CraftingManager._instance.selectedRecipe = null;
-            }
+            updateSelectedRecipe(slotNum);
+        }
+        else
+        {
+            CraftingManager._instance.IsOnCrafing = false;
+            sectionSlots[selectedSlot].color = Color.white;
+            selectedSlot = slotNum;
+            sectionSlots[selectedSlot].color = Color.magenta;
+            CraftingManager._instance.CraftText.text = "Unlock";
+
+            updateSelectedRecipe(slotNum);
+
         }
     }
+    void updateSelectedRecipe(int slotNum)
+    {
+        if (recipeList.Count > 0)
+        {
+            CraftingManager._instance.selectedRecipe = recipeList[slotNum];
+            CraftingManager._instance.ShowRecipe(recipeList[slotNum]);
+        }
+        else
+        {
+            CraftingManager._instance.selectedRecipe = null;
+        }
+    }
+
+
+
+
     public void UpdateInformation()
     {
         for (int i = 0; i < recipeList.Count; i++)
