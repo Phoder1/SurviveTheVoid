@@ -161,7 +161,8 @@ public partial class GridManager : MonoBehaviour, IGridManager
             }
         }
     }
-    public Vector3 GridToWorldPosition(Vector2Int gridPosition, TileMapLayer buildingLayer) => grid.CellToWorld((Vector3Int)gridPosition) + Vector3.up * (buildingLayer == TileMapLayer.Buildings ? BUILDING_LAYER_POSITION_OFFSET : 0f);
+    public Vector3 GridToWorldPosition(Vector2Int gridPosition, TileMapLayer buildingLayer)
+        => grid.CellToWorld((Vector3Int)gridPosition) + Vector3.up * (buildingLayer == TileMapLayer.Buildings ? BUILDING_LAYER_POSITION_OFFSET : 0f);
     public Vector2Int WorldToGridPosition(Vector3 worldPosition, TileMapLayer buildingLayer)
         => (Vector2Int)GetTilemap(buildingLayer).WorldToCell(worldPosition - Vector3.up * (buildingLayer == TileMapLayer.Buildings ? BUILDING_LAYER_POSITION_OFFSET : 0f));
     public bool IsTileWalkable(Vector2 worldPosition, Vector2 movementVector) {

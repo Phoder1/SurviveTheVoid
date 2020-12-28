@@ -23,6 +23,8 @@ public class PlayerManager : MonoBehaviour
     private Vector2 nextPos;
     private Vector2Int lastPosOnGrid;
     private TileMapLayer buildingLayer;
+    private TileHitStruct closestTile;
+    private DirectionEnum movementDir;
 
 
 
@@ -48,7 +50,8 @@ public class PlayerManager : MonoBehaviour
         _inputManager = InputManager._instance;
         _GridManager = GridManager._instance;
         _uiManager = UIManager._instance;
-        lastPosOnGrid = new Vector2Int(int.MaxValue, int.MaxValue);
+        
+        
 
 
         _playerStateMachine = GetComponent<PlayerStateMachine>();
@@ -69,18 +72,24 @@ public class PlayerManager : MonoBehaviour
 
         if ((movementVector != Vector2.zero && _GridManager.IsTileWalkable(nextPos, movementVector)) || Input.GetKey(KeyCode.LeftShift))
         {
+            switch (_inputManager.GetAxis())
+            {
+                //case :
+                    //break;
+            }
             
             transform.Translate(movementVector);
             UpdateView();
             Vector2Int currentPosOnGrid = _GridManager.WorldToGridPosition(transform.position, buildingLayer);
 
-            if (lastPosOnGrid != currentPosOnGrid)
+            if (lastPosOnGrid != currentPosOnGrid && Vector2.Distance(currentPosOnGrid, closestTile.gridPosition) > Vector2.Distance(lastPosOnGrid, closestTile.gridPosition))
             {
-                
-                var closestTile = _scanner.Scan(currentPosOnGrid, DirectionEnum.Down, 5, buildingLayer, new GatheringScanChecker());
+                Debug.Log("checkTile");
+                closestTile = _scanner.Scan(currentPosOnGrid, DirectionEnum.Down, 5, buildingLayer, new GatheringScanChecker());
                 lastPosOnGrid = currentPosOnGrid;
                 if (closestTile.tile != null)
                 {
+                    
                     Debug.Log("dasdasd" + closestTile.gridPosition);
                     closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
                 }
@@ -97,7 +106,8 @@ public class PlayerManager : MonoBehaviour
 
     public void ButtonA()
     {
-        
+        Debug.Log(_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer));
+       // transform.Translate(transform.position-_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer));
         myState.ButtonA();
     }
     public void ButtonB()
