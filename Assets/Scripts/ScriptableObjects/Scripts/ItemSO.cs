@@ -24,6 +24,6 @@ public class ItemSO : ScriptableObject
 {
     public int maxStackSize;
     public string description;
-    public ResourceType resourceEnum;
+    public ResourceType itemEnum;
     public Sprite sprite;
 }

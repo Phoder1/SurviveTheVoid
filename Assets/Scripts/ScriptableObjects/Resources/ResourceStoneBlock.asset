@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 587b921edc753cd4e956c9bf36faa58d, type: 3}
   m_Name: ResourceStoneBlock
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
-  maxStackSize: 0
-  description: 
-  resourceEnum: 0
+  maxStackSize: 20
+  description: a heavier block
+  itemEnum: 8
   sprite: {fileID: 0}

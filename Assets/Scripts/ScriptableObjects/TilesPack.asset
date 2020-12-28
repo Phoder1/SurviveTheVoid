@@ -13,28 +13,31 @@ MonoBehaviour:
   m_Name: TilesPack
   m_EditorClassIdentifier: 
   floorVariationNoise:
-    seed: 0
-    resolution: 2
-    boolThreshold: 0
+    fileID: 11400000
+    guid: 913419f8ccf09224ea70f808c0fd2c5a
+    type: 2
   buildingsVariationNoise:
-    seed: 0
-    resolution: 2
-    boolThreshold: 0
+    fileID: 11400000
+    guid: 71f7a445616e52f4f86f845d05b52a83
+    type: 2
   moonTile:
     mainTileBase: {fileID: 0}
     tileBaseVariations: []
     interactionType: 0
+    isActiveInteraction: 0
     isSolid: 0
   toothPasteTile:
     mainTileBase: {fileID: 0}
     tileBaseVariations: []
     interactionType: 0
+    isActiveInteraction: 0
     isSolid: 0
     eventDelay: 0
   circusTile:
     mainTileBase: {fileID: 0}
     tileBaseVariations: []
     interactionType: 0
+    isActiveInteraction: 0
     isSolid: 0
   obsidianTile:
     mainTileBase: {fileID: 0}
@@ -52,4 +55,5 @@ MonoBehaviour:
     - tileBase: {fileID: 11400000, guid: 4eaa76a72e19986499792cf2cc022228, type: 2}
       chanceWeight: 1
     interactionType: 6
+    isActiveInteraction: 0
     isSolid: 1
