@@ -18,13 +18,13 @@ namespace Assets.Scan
             if (gridManager == null)
                 gridManager = GridManager._instance;
         }
-        public TileHitStruct Scan(Vector2Int gridStartPosition, DirectionEnum direction, int radius, BuildingLayer buildingLayer, IChecker checker) {
+        public TileHitStruct Scan(Vector2Int gridStartPosition, DirectionEnum _direction, int _radius, BuildingLayer _buildingLayer, IChecker _checker) {
 
             startPosition = gridStartPosition;
-            this.radius = radius;
-            this.buildingLayer = buildingLayer;
-            this.checker = checker;
-            this.direction = direction;
+            this.radius = _radius;
+            this.buildingLayer = _buildingLayer;
+            this.checker = _checker;
+            this.direction = _direction;
             for (int i = 1; i <= this.radius; i++)
             {
                 TileHitStruct tile = GetClosestTileInSquare(i);

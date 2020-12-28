@@ -43,23 +43,20 @@ public partial class GridManager : MonoBehaviour, IGridManager
                 return null;
         }
     }
-    [SerializeField]
-    private Noise islandsNoise;
-    [SerializeField]
-    int loadDistance;
-    [SerializeField]
-    float offSet;
+    [SerializeField] private Noise islandsNoise;
+    [SerializeField] private int loadDistance;
+    [SerializeField] private float offSet;
     public TilesSO tilesPack;
 
-    Vector2Int lastViewMin = Vector2Int.zero;
-    Vector2Int lastViewMax = Vector2Int.zero;
+    private Vector2Int lastViewMin = Vector2Int.zero;
+    private Vector2Int lastViewMax = Vector2Int.zero;
 
 
     private const int CHUNK_SIZE = 16;
-    private const int COLLISION_SENSETIVITY = 6;
+    private const int COLLISION_SENSITIVITY = 6;
     private const float BUILDING_LAYER_POSITION_OFFSET = 0.5f;
-    
-    
+
+
     public static GridManager _instance;
 
     private void Awake() {
@@ -147,7 +144,7 @@ public partial class GridManager : MonoBehaviour, IGridManager
             for (int loopX = from.x; loopX < to.x; loopX += CHUNK_SIZE) {
                 for (int loopY = from.y; loopY < to.y; loopY += CHUNK_SIZE) {
                     Vector2Int currentPos = new Vector2Int(loopX, loopY);
-                    if (!TryGetChunk(currentPos, out Chunk chunk)) {
+                    if (!TryGetChunk(currentPos, out _)) {
                         CreateChunk(currentPos).GenerateIslands();
                     }
                 }
@@ -171,11 +168,11 @@ public partial class GridManager : MonoBehaviour, IGridManager
         bool moveLegal = true;
         GenericTile floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + movementVector.normalized * offSet, BuildingLayer.Floor), BuildingLayer.Floor);
         moveLegal &= floorTile != null;
-        Quaternion rotationLeft = Quaternion.Euler(0, 0, 90f / COLLISION_SENSETIVITY);
-        Quaternion rotationRight = Quaternion.Euler(0, 0, 90f / COLLISION_SENSETIVITY);
+        Quaternion rotationLeft = Quaternion.Euler(0, 0, 90f / COLLISION_SENSITIVITY);
+        Quaternion rotationRight = Quaternion.Euler(0, 0, 90f / COLLISION_SENSITIVITY);
         Vector2 leftMovementVector = movementVector.normalized * offSet;
         Vector2 rightMovementVector = movementVector.normalized * offSet;
-        for (int i = 0; i < COLLISION_SENSETIVITY && moveLegal; i++) {
+        for (int i = 0; i < COLLISION_SENSITIVITY && moveLegal; i++) {
             leftMovementVector = rotationLeft * leftMovementVector;
             floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + leftMovementVector, BuildingLayer.Floor), BuildingLayer.Floor);
             moveLegal &= floorTile != null;
@@ -201,8 +198,6 @@ public partial class GridManager : MonoBehaviour, IGridManager
     /// Input grid position for an exact position on the grid
     /// and world position if you want to also check for tiles sides.
     /// </summary>
-    /// <param name="clickPosition"></param>
-    /// Position in world space in vector2
     /// <returns></returns>
     public TileHitStruct GetHitFromClickPosition(Vector2 clickPosition, BuildingLayer buildingLayer) {
         Vector2Int gridPosition = WorldToGridPosition(clickPosition, buildingLayer);
