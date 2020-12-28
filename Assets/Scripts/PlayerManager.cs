@@ -7,21 +7,22 @@ using Assets.TilesData;
 public class PlayerManager : MonoBehaviour 
 {
     public static PlayerManager _instance;
-    InputManager _inputManager;
-    UIManager _uiManager;
-    PlayerStateMachine _playerStateMachine;
-    GridManager _GridManager;
-    Scanner _scanner;
+    private InputManager _inputManager;
+    private UIManager _uiManager;
+    private PlayerStateMachine _playerStateMachine;
+    private GridManager _GridManager;
+    private Scanner _scanner;
 
     internal StateBase myState;
     [SerializeField] internal Camera cameraComp;
 
-    Vector2 cameraRealSize => new Vector2(cameraComp.orthographicSize * 2 * cameraComp.aspect, cameraComp.orthographicSize * 2);
-    Vector2 movementVector;
-    Vector2 currentPos;
-    Vector2 nextPos;
-    Vector2Int lastPosOnGrid;
-    TileMapLayer buildingLayer;
+    private Vector2 GetCameraRealSize => new Vector2(cameraComp.orthographicSize * 2 * cameraComp.aspect, cameraComp.orthographicSize * 2);
+
+    private Vector2 movementVector;
+    private Vector2 currentPos;
+    private Vector2 nextPos;
+    private Vector2Int lastPosOnGrid;
+    private TileMapLayer buildingLayer;
 
 
 
@@ -39,10 +40,10 @@ public class PlayerManager : MonoBehaviour
         }
     }
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
        
-        buildingLayer = TileMapLayer.Buildings;
+        buildingLayer = TileMapLayer.Floor;
         _scanner = new Scanner();
         _inputManager = InputManager._instance;
         _GridManager = GridManager._instance;
@@ -59,17 +60,11 @@ public class PlayerManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-      
-        
-
-
-        TileHitStruct closestTile;
-        
         movementVector = _inputManager.GetAxis();
-        movementVector = movementVector * 5*Time.deltaTime;
-        currentPos = (Vector2)transform.position; //new Vector2(transform.position.x, transform.position.y);
+        movementVector *= (5 * Time.deltaTime);
+        currentPos = transform.position; //new Vector2(transform.position.x, transform.position.y);
         nextPos = currentPos + movementVector;
 
         if ((movementVector != Vector2.zero && _GridManager.IsTileWalkable(nextPos, movementVector)) || Input.GetKey(KeyCode.LeftShift))
@@ -82,7 +77,7 @@ public class PlayerManager : MonoBehaviour
             if (lastPosOnGrid != currentPosOnGrid)
             {
                 
-                closestTile = _scanner.Scan(currentPosOnGrid, DirectionEnum.Down, 5, TileMapLayer.Floor, new GatheringScanChecker());
+                var closestTile = _scanner.Scan(currentPosOnGrid, DirectionEnum.Down, 5, buildingLayer, new GatheringScanChecker());
                 lastPosOnGrid = currentPosOnGrid;
                 if (closestTile.tile != null)
                 {
@@ -115,8 +110,8 @@ public class PlayerManager : MonoBehaviour
     private void UpdateView()
     {
         Vector3 camPosition = (Vector2)transform.position;
-        camPosition -= (Vector3)cameraRealSize / 2;
-        Rect worldView = new Rect(camPosition, cameraRealSize);
+        camPosition -= (Vector3)GetCameraRealSize / 2;
+        Rect worldView = new Rect(camPosition, GetCameraRealSize);
         _GridManager.UpdateView(worldView);
     }
 
