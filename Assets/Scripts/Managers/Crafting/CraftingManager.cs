@@ -397,7 +397,7 @@ public class Section
         {
 
             sectionSlots[i].GetComponentInChildren<Text>().text = recipeList[i].getoutcomeItem.item.getItemEnum.ToString();
-
+            sectionSlots[i].GetComponent<Image>().sprite = recipeList[i].getoutcomeItem.item.getsprite;
 
 
 
