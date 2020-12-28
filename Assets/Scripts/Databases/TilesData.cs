@@ -54,7 +54,7 @@ namespace Assets.TilesData
         public bool isActiveInteraction;
         protected TimeEvent eventInstance;
         public bool isSolid;
-        public virtual void Init(Vector2Int _position, BuildingLayer buildingLayer) { }
+        public virtual void Init(Vector2Int _position, TileMapLayer buildingLayer) { }
         private protected GenericTile() { }
 
         public virtual GenericTile Clone() {
@@ -67,7 +67,7 @@ namespace Assets.TilesData
             if (eventInstance != null)
                 eventInstance.Cancel();
         }
-        public virtual void GatherInteraction(Vector2Int gridPosition, BuildingLayer buildingLayer) { }
+        public virtual void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) { }
         public virtual void LongPressUpdate() { }
 
         [Serializable]
@@ -90,7 +90,7 @@ namespace Assets.TilesData
             return copy;
         }
 
-        public override void Init(Vector2Int position, BuildingLayer buildingLayer) {
+        public override void Init(Vector2Int position, TileMapLayer buildingLayer) {
             eventInstance = new ToothPasteEvent(this, Time.time + eventDelay, position);
             TimeManager._instance.AddEvent(eventInstance);
         }
@@ -100,7 +100,7 @@ namespace Assets.TilesData
     public class ObsidianTile : GenericTile
     {
         private ObsidianTile() { }
-        public override void GatherInteraction(Vector2Int gridPosition, BuildingLayer buildingLayer) {
+        public override void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
             Tilemap tilemap = GridManager._instance.GetTilemap(buildingLayer);
             tilemap.RemoveTileFlags((Vector3Int)gridPosition, TileFlags.LockColor);
             tilemap.SetColor((Vector3Int)gridPosition, new Color(0.9f, 0.9f, 1f, 0.7f));
