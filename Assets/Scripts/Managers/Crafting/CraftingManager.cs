@@ -164,8 +164,8 @@ public class CraftingManager : MonoBehaviour
 
 
 
-    //UI
-    public void OnClickSelectRecipe(int recipe)
+ 
+    public void SelectRecipe(int recipe)
     {
         selectedSection.SelectSlot(recipe);
     }
@@ -221,7 +221,7 @@ public class CraftingManager : MonoBehaviour
 
     // public ResourceStruct CraftResource(Recipe recipe) { return resourceStruct; }
 
-    public void OnClickCraftButton()
+    public void AttemptToCraft()
     {
         if (!inventory.CheckEnoughItemsForRecipe(selectedRecipe))
         {
