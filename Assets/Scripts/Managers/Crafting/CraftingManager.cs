@@ -242,6 +242,18 @@ public class CraftingManager : MonoBehaviour
     public bool CanCraft(RecipeSO craftRecipe) { return true; }
 
 }
+
+public interface ICrafting
+{
+    CraftingManager GetInstance { get; }
+
+
+
+
+
+}
+
+
 [Serializable]
 public class Section
 {
