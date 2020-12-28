@@ -1368,6 +1368,18 @@ Transform:
   m_Father: {fileID: 992670121}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1517632606 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6557583895078372265, guid: 60eff25f79fd9c642b8f10c335fd2ff2,
+    type: 3}
+  m_PrefabInstance: {fileID: 1748185688}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1529071762 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6557583894840020680, guid: 60eff25f79fd9c642b8f10c335fd2ff2,
@@ -2843,11 +2855,8 @@ MonoBehaviour:
   - {fileID: 2097132525}
   - {fileID: 688840922}
   vJ: {fileID: 1212365515}
-  _uiElements:
-  - {fileID: 1212365513}
-  - {fileID: 2097132523}
-  - {fileID: 688840920}
-  - {fileID: 1529071762}
+  _uiElements: [{fileID: 1212365513}, {fileID: 2097132523}, {fileID: 688840920}, {
+      fileID: 1529071762}]
 --- !u!114 &2110502524
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2870,4 +2879,6 @@ MonoBehaviour:
   - {fileID: 1121529857}
   - {fileID: 1642193292}
   - {fileID: 201510658}
+  CraftText: {fileID: 1517632606}
+  IsOnCrafing: 0
   selectedRecipe: {fileID: 0}
