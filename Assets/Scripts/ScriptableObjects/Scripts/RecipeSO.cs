@@ -14,12 +14,30 @@ public enum SectionEnum
 [CreateAssetMenu(fileName = "New Recipe", menuName = "Crafting/" + "Recipe")]
 public class RecipeSO : ScriptableObject
 {
-    public ItemSlot[] itemCostArr;
-    public ItemSlot outcomeItem;
-    public int tier;
-    public SectionEnum section;
-    public bool isUnlocked;
-  
 
+    [SerializeField]
+    private ItemSlot[] ItemCostArr;
+    public ItemSlot[] getitemCostArr {get => ItemCostArr; }
+
+    [SerializeField]
+    private ItemSlot outcomeItem;
+    public ItemSlot getoutcomeItem { get => outcomeItem; }
+
+    [SerializeField]
+    private int tier;
+    public int getTier { get => tier; }
+
+    [SerializeField]
+    private SectionEnum section;
+    public SectionEnum getSection { get => section; }
+
+    [SerializeField]
+    private bool isUnlocked;
+    public bool getisUnlocked { get => isUnlocked; }
+  
+    public void UpdateIfRecipeUnlocked(bool _unlocked)
+    {
+        isUnlocked = _unlocked;
+    }
 }
 
