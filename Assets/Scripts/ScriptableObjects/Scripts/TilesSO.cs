@@ -3,14 +3,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Tiles Pack")]
 public class TilesSO : ScriptableObject
 {
-    [SerializeField]
-    private GenericTile moonTile;
-    [SerializeField]
-    private ToothPaste toothPasteTile;
-    [SerializeField]
-    private GenericTile circusTile;
-    [SerializeField]
-    private ObsidianTile obsidianTile;
+    [SerializeField] private GenericTile moonTile;
+    [SerializeField] private ToothPaste toothPasteTile;
+    [SerializeField] private GenericTile circusTile;
+    [SerializeField] private ObsidianTile obsidianTile;
 
     public GenericTile getMoonTile => moonTile.Clone();
 
