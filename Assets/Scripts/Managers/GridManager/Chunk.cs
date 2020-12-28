@@ -80,7 +80,7 @@ public partial class GridManager
         internal Vector2Int GridToChunkPosition(Vector2Int gridPosition) => gridPosition - chunkStartPos;
         internal Vector2Int ChunkToGridPosition(Vector2Int chunkPosition) => chunkPosition + chunkStartPos;
         internal void GenerateIslands() {
-            NoiseSO noise = _instance.islandsNoise;
+            Noise noise = _instance.islandsNoise;
             GenericTile tile = _instance.tilesPack.getObsidianTile;
             for (int loopX = 0; loopX < CHUNK_SIZE; loopX++) {
                 for (int loopY = 0; loopY < CHUNK_SIZE; loopY++) {
