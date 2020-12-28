@@ -39,7 +39,7 @@ namespace Assets.TimeEvents
 
         public override void Trigger() {
             eventTriggered = true;
-            GridManager._instance.SetTile(triggeringTile.replacementTile, eventPosition, BuildingLayer.Floor, false);
+            GridManager._instance.SetTile(triggeringTile.replacementTile, eventPosition, TileMapLayer.Floor, false);
             
         }
     }

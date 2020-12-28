@@ -10,7 +10,7 @@ namespace Assets.Scan
         private readonly GridManager gridManager;
         private Vector2Int startPosition;
         private int radius;
-        private BuildingLayer buildingLayer;
+        private TileMapLayer buildingLayer;
         private IChecker checker;
         private DirectionEnum direction;
 
@@ -18,7 +18,7 @@ namespace Assets.Scan
             if (gridManager == null)
                 gridManager = GridManager._instance;
         }
-        public TileHitStruct Scan(Vector2Int gridStartPosition, DirectionEnum direction, int radius, BuildingLayer buildingLayer, IChecker checker) {
+        public TileHitStruct Scan(Vector2Int gridStartPosition, DirectionEnum direction, int radius, TileMapLayer buildingLayer, IChecker checker) {
 
             startPosition = gridStartPosition;
             this.radius = radius;
@@ -27,10 +27,10 @@ namespace Assets.Scan
             this.direction = direction;
             for (int i = 1; i <= this.radius; i++)
             {
-                TileHitStruct tile = GetClosestTileInSquare(i);
-                if (tile.tile != null)
+                TileHitStruct tileHit = GetClosestTileInSquare(i);
+                if (tileHit.tile != null)
                 {
-                    return tile;
+                    return tileHit;
                 }
             }
 

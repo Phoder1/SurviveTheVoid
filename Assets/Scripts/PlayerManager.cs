@@ -1,14 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scan;
+using Assets.TilesData;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : MonoBehaviour 
 {
     public static PlayerManager _instance;
     InputManager _inputManager;
     UIManager _uiManager;
     PlayerStateMachine _playerStateMachine;
     GridManager _GridManager;
+    Scanner _scanner;
 
     internal StateBase myState;
     [SerializeField] internal Camera cameraComp;
@@ -17,6 +20,9 @@ public class PlayerManager : MonoBehaviour
     Vector2 movementVector;
     Vector2 currentPos;
     Vector2 nextPos;
+    Vector2Int lastPosOnGrid;
+    TileMapLayer buildingLayer;
+
 
 
     private void Awake()
@@ -35,12 +41,18 @@ public class PlayerManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+       
+        buildingLayer = TileMapLayer.Buildings;
+        _scanner = new Scanner();
         _inputManager = InputManager._instance;
         _GridManager = GridManager._instance;
         _uiManager = UIManager._instance;
+        lastPosOnGrid = new Vector2Int(int.MaxValue, int.MaxValue);
+
+
         _playerStateMachine = GetComponent<PlayerStateMachine>();
         ChangeMode(InputManager.InputState.DefaultMode);
-         
+       
 
         UpdateView();
 
@@ -49,7 +61,12 @@ public class PlayerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-   
+      
+        
+
+
+        TileHitStruct closestTile;
+        
         movementVector = _inputManager.GetAxis();
         movementVector = movementVector * 5*Time.deltaTime;
         currentPos = (Vector2)transform.position; //new Vector2(transform.position.x, transform.position.y);
@@ -57,12 +74,29 @@ public class PlayerManager : MonoBehaviour
 
         if ((movementVector != Vector2.zero && _GridManager.IsTileWalkable(nextPos, movementVector)) || Input.GetKey(KeyCode.LeftShift))
         {
+            
             transform.Translate(movementVector);
             UpdateView();
+            Vector2Int currentPosOnGrid = _GridManager.WorldToGridPosition(transform.position, buildingLayer);
+
+            if (lastPosOnGrid != currentPosOnGrid)
+            {
+                
+                closestTile = _scanner.Scan(currentPosOnGrid, DirectionEnum.Down, 5, TileMapLayer.Floor, new GatheringScanChecker());
+                lastPosOnGrid = currentPosOnGrid;
+                if (closestTile.tile != null)
+                {
+                    Debug.Log("dasdasd" + closestTile.gridPosition);
+                    closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
+                }
+              
+            }
 
         }
+
         if (_inputManager.a_Button) { ButtonA(); }
         if (_inputManager.b_Button) { ButtonB(); }
+        
 
     }
 
@@ -95,8 +129,16 @@ public class PlayerManager : MonoBehaviour
     
     public void check()
     {
-        Debug.Log("check");
+        Debug.Log("check Buttons");
     }
+    public class GatheringScanChecker : IChecker
+    {
+        public bool CheckTile(GenericTile tile)
+        {
+            return !tile.isActiveInteraction;
+        }
+    }
+
 }
 
 
