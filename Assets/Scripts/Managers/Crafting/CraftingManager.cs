@@ -16,11 +16,9 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
     public GameObject[] recipeMaterialSlots;
     public static CraftingManager _instance;
     List<RecipeSO> unlockedRecipes = new List<RecipeSO>();
-    
+
     public Text CraftText;
 
-    // true = craft button, false = unlock button;
-    public bool IsOnCrafing;
 
 
     [FormerlySerializedAs("SelectedRecipe")]
@@ -235,24 +233,16 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
 
     public void AttemptToCraft()
     {
-        if (IsOnCrafing)
+        if (!inventory.CheckEnoughItemsForRecipe(selectedRecipe))
         {
-            if (!inventory.CheckEnoughItemsForRecipe(selectedRecipe))
-            {
-                Debug.Log("Not Enough Materials");
-            }
-            else
-            {
-                ShowRecipe(selectedRecipe);
-            }
+            Debug.Log("Not Enough Materials");
         }
         else
         {
-            UnlockRecipe(selectedRecipe);
-            
+            ShowRecipe(selectedRecipe);
         }
     }
-
+    
     public void UnlockRecipe(RecipeSO _recipe) => GetSection(_recipe.getSection).UnlockRecipe(_recipe);
 
 
@@ -332,17 +322,18 @@ public class Section
         int recipeIndex = recipeList.IndexOf(_recipe);
         if (!_recipe.getisUnlocked)
         {
-            
+
             sectionSlots[recipeIndex].color = Color.black;
 
         }
         else if (selectedSlot == recipeList.IndexOf(_recipe))
         {
-            //sectionSlots[recipeIndex].color = Color.yellow;
-            SelectSlot(recipeIndex);
+
+            sectionSlots[recipeIndex].color = Color.black;
         }
         else
         {
+
             sectionSlots[recipeIndex].color = Color.white;
         }
     }
@@ -376,25 +367,13 @@ public class Section
     {
         if (recipeList[slotNum].getisUnlocked)
         {
-            CraftingManager._instance.IsOnCrafing = true;
             sectionSlots[selectedSlot].color = Color.white;
             selectedSlot = slotNum;
             sectionSlots[selectedSlot].color = Color.yellow;
-            CraftingManager._instance.CraftText.text = "Craft";
 
             updateSelectedRecipe(slotNum);
         }
-        else
-        {
-            CraftingManager._instance.IsOnCrafing = false;
-            sectionSlots[selectedSlot].color = Color.white;
-            selectedSlot = slotNum;
-            sectionSlots[selectedSlot].color = Color.magenta;
-            CraftingManager._instance.CraftText.text = "Unlock";
 
-            updateSelectedRecipe(slotNum);
-
-        }
     }
     void updateSelectedRecipe(int slotNum)
     {
