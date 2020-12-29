@@ -20,7 +20,7 @@ public class Inventory
     int itemAmountCount;
 
     ItemSlot[] inventoryList;
-    private int nextAddOnAmountForInventory = 5;
+    //private int nextAddOnAmountForInventory = 5;
 
     
 
