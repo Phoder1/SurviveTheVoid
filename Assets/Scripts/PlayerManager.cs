@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scan;
+using Assets.TilesData;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -95,7 +97,14 @@ public class PlayerManager : MonoBehaviour
     
     public void check()
     {
-        Debug.Log("check");
+        Debug.Log("check Buttons");
+    }
+    public class GatheringScanChecker : IChecker
+    {
+        public bool CheckTile(TileAbst tile)
+        {
+            return !tile.isActiveInteraction;
+        }
     }
 }
 

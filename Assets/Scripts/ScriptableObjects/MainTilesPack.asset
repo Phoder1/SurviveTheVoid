@@ -30,6 +30,16 @@ MonoBehaviour:
     isSolid: 0
   obsidianTile:
     mainTileBase: {fileID: 11400000, guid: 76f1bac69f50ac04fa76204d7af8c1d8, type: 2}
+    interactionType: 2
+    isActiveInteraction: 0
+    isSolid: 1
+  TreeTile:
+    mainTileBase: {fileID: 11400000, guid: 4c4346b9a20c40c47bea99b56593e34f, type: 2}
     interactionType: 6
     isActiveInteraction: 0
     isSolid: 1
+    rewards:
+    - item: {fileID: 11400000, guid: bf41b966567b68f458a7ec6ed8c79b55, type: 2}
+      amount: 2
+    - item: {fileID: 11400000, guid: 6317b6bed700609419a7ffe65ff2b6d9, type: 2}
+      amount: 1

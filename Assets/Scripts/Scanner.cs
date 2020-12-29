@@ -10,7 +10,7 @@ namespace Assets.Scan
         private readonly GridManager gridManager;
         private Vector2Int startPosition;
         private int radius;
-        private BuildingLayer buildingLayer;
+        private TileMapLayer buildingLayer;
         private IChecker checker;
         private DirectionEnum direction;
 
@@ -18,7 +18,7 @@ namespace Assets.Scan
             if (gridManager == null)
                 gridManager = GridManager._instance;
         }
-        public TileHitStruct Scan(Vector2Int gridStartPosition, DirectionEnum direction, int radius, BuildingLayer buildingLayer, IChecker checker) {
+        public TileHitStruct Scan(Vector2Int gridStartPosition, DirectionEnum direction, int radius, TileMapLayer buildingLayer, IChecker checker) {
 
             startPosition = gridStartPosition;
             this.radius = radius;
@@ -64,22 +64,22 @@ namespace Assets.Scan
         {
             List<TileHitStruct> tiles = new List<TileHitStruct>();
             int numOfTiles = 8 * distanceFromCenter;
-            Vector2Int currentPosition;
+            Vector2Int relativeCheckPosition;
             switch (direction) {
                 case DirectionEnum.Up:
-                    currentPosition = new Vector2Int(0, 1);
+                    relativeCheckPosition = new Vector2Int(0, 1);
                     break;
                 case DirectionEnum.Down:
-                    currentPosition = new Vector2Int(0, -1);
+                    relativeCheckPosition = new Vector2Int(0, -1);
                     break;
                 case DirectionEnum.Left:
-                    currentPosition = new Vector2Int(-1, 0);
+                    relativeCheckPosition = new Vector2Int(-1, 0);
                     break;
                 case DirectionEnum.Right:
-                    currentPosition = new Vector2Int(1, 0);
+                    relativeCheckPosition = new Vector2Int(1, 0);
                     break;
                 default:
-                    currentPosition = new Vector2Int(0, 1);
+                    relativeCheckPosition = new Vector2Int(0, 1);
                     Debug.LogError("Added new not existing direction, this is not a 3d game...");
                     break;
             }
@@ -88,14 +88,14 @@ namespace Assets.Scan
 
                 //Check tile
 
-                GenericTile currentTile = gridManager.GetTileFromGrid(currentPosition, buildingLayer);
+                TileAbst currentTile = gridManager.GetTileFromGrid(relativeCheckPosition + startPosition , buildingLayer);
 
                 if (currentTile != null && checker.CheckTile(currentTile))
                 {
-                    tiles.Add(new TileHitStruct(currentTile, currentPosition));
+                    tiles.Add(new TileHitStruct(currentTile, relativeCheckPosition));
                 }
                 //Check if at corner
-                if (currentPosition.x == currentPosition.y) {
+                if (relativeCheckPosition.x == relativeCheckPosition.y) {
                     switch (currentDirection) {
                         case DirectionEnum.Up:
                             currentDirection = DirectionEnum.Right;
@@ -115,16 +115,16 @@ namespace Assets.Scan
                 //Update position
                 switch (currentDirection) {
                     case DirectionEnum.Up:
-                        currentPosition += new Vector2Int(1, 0);
+                        relativeCheckPosition += new Vector2Int(1, 0);
                         break;
                     case DirectionEnum.Down:
-                        currentPosition += new Vector2Int(-1, 0);
+                        relativeCheckPosition += new Vector2Int(-1, 0);
                         break;
                     case DirectionEnum.Left:
-                        currentPosition += new Vector2Int(0, 1);
+                        relativeCheckPosition += new Vector2Int(0, 1);
                         break;
                     case DirectionEnum.Right:
-                        currentPosition += new Vector2Int(0, -1);
+                        relativeCheckPosition += new Vector2Int(0, -1);
                         break;
                 }
             }
@@ -145,7 +145,7 @@ namespace Assets.Scan
         /// The tile to check, return true to take the tile into account.
         /// </param>
         /// <returns></returns>
-        internal bool CheckTile(GenericTile tile);
+        bool CheckTile(TileAbst tile);
     }
 }
 
