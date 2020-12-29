@@ -141,9 +141,11 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
             for (int j = 0; j < slotsTransform.Length; j++)
             {
                 sections[i].sectionSlotsList[j] = slotsTransform[j].GetComponent<Image>();
+                
             }
+            sections[i].scrollBar = scrolls[i];
         }
-
+     
         Array.Sort(sections, (section1, section2) => String.Compare(section1.name, section2.name, StringComparison.Ordinal));
 
     }
@@ -248,23 +250,23 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
             }
         }
 
-        for (int i = 0; i < scrolls.Length; i++)
-        {
-            if (scrolls[i].gameObject.name == sectionName + "ScrollBar")
-            {
-                if (!scrolls[i].activeInHierarchy)
-                {
-                    scrolls[i].SetActive(true);
-                }
-            }
-            else
-            {
-                if (scrolls[i].activeInHierarchy)
-                {
-                    scrolls[i].SetActive(false);
-                }
-            }
-        }
+        //for (int i = 0; i < scrolls.Length; i++)
+        //{
+        //    if (scrolls[i].gameObject.name == sectionName + "ScrollBar")
+        //    {
+        //        if (!scrolls[i].activeInHierarchy)
+        //        {
+        //            scrolls[i].SetActive(true);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (scrolls[i].activeInHierarchy)
+        //        {
+        //            scrolls[i].SetActive(false);
+        //        }
+        //    }
+        //}
 
 
     }
@@ -354,6 +356,7 @@ public class Section
 {
     public string name;
     public GameObject section;
+    public GameObject scrollBar;
     public List<Image> sectionSlotsList = new List<Image>();
     //public Image[] sectionSlots;
     private int selectedSlot = 0;
@@ -424,7 +427,9 @@ public class Section
         if (state == true)
         {
             SelectSlot(0);
+            
         }
+        scrollBar.SetActive(state);
         section.SetActive(state);
     }
 
