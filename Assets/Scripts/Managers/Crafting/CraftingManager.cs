@@ -98,18 +98,17 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
         SelectSection("Blocks");
 
     }
-    GameObject[] scrolls;
+
     private void ImportSlots()
     {
         sections = new Section[sectionHolder.childCount];
-        scrolls = new GameObject[ScrollsHolder.childCount];
         for (int i = 0; i < sectionHolder.childCount; i++)
         {
             Transform sectionTransform = sectionHolder.GetChild(i);
             sections[i] = new Section(sectionTransform.name, sectionTransform.gameObject);
             Transform[] slotsTransform = new Transform[sectionTransform.GetChild(0).childCount];
-            scrolls[i] = ScrollsHolder.GetChild(i).gameObject;
-
+;
+            sections[i].scrollBar = ScrollsHolder.GetChild(i).gameObject;
 
 
 
@@ -143,7 +142,7 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
                 sections[i].sectionSlotsList[j] = slotsTransform[j].GetComponent<Image>();
                 
             }
-            sections[i].scrollBar = scrolls[i];
+           
         }
      
         Array.Sort(sections, (section1, section2) => String.Compare(section1.name, section2.name, StringComparison.Ordinal));
