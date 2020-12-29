@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Assets.TilesData;
 
 public class CameraScript : MonoBehaviour
 {
@@ -10,22 +11,26 @@ public class CameraScript : MonoBehaviour
     private float scrollMovement;
     private Camera cameraComp;
     private GridManager gridManager;
-    Vector2 cameraRealSize => new Vector2(cameraComp.orthographicSize * 2 * cameraComp.aspect, cameraComp.orthographicSize * 2);
-    Rect worldView;
-    bool viewChanged;
+    private Vector2 cameraRealSize => new Vector2(cameraComp.orthographicSize * 2 * cameraComp.aspect, cameraComp.orthographicSize * 2);
+    private Rect worldView;
+    private bool viewChanged;
+    private Camera camera1;
+    private TilesSO tilesPack;
 
     // Start is called before the first frame update
-    void Start() {
+    private void Start() {
+        camera1 = Camera.main;
         Init();
         UpdateView();
     }
     private void Init() {
         cameraComp = GetComponent<Camera>();
         gridManager = GridManager._instance;
+        tilesPack = gridManager.tilesPack;
     }
 
     // Update is called once per frame
-    void Update() {
+    private void Update() {
         viewChanged = false;
         movement = new Vector2(
             Input.GetKey(KeyCode.D) ? 1 : 0 - (Input.GetKey(KeyCode.A) ? 1 : 0),
@@ -44,30 +49,30 @@ public class CameraScript : MonoBehaviour
         }
 
         if (Input.GetKey(KeyCode.Mouse0)) {
-            BuildingLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? BuildingLayer.Buildings : BuildingLayer.Floor;
-            Vector2Int gridPosition = MouseGridPosition(BuildingLayer.Floor);
-            gridManager.SetTile(new ObsidianTile(), gridPosition,  layer);
+            TileMapLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? TileMapLayer.Buildings : TileMapLayer.Floor;
+            Vector2Int gridPosition = MouseGridPosition(TileMapLayer.Floor);
+            gridManager.SetTile(tilesPack.getObsidianTile, gridPosition,  layer);
 
         }
         else if (Input.GetKey(KeyCode.Mouse1)) {
-            BuildingLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? BuildingLayer.Buildings : BuildingLayer.Floor;
+            TileMapLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? TileMapLayer.Buildings : TileMapLayer.Floor;
             Vector2Int gridPosition = MouseGridPosition(layer);
             gridManager.SetTile(null, gridPosition,  layer);
 
         }
         else if (Input.GetKeyDown(KeyCode.LeftControl)) {
-            BuildingLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? BuildingLayer.Buildings : BuildingLayer.Floor;
+            TileMapLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? TileMapLayer.Buildings : TileMapLayer.Floor;
             Debug.Log(gridManager.GetTileFromGrid(MouseGridPosition(layer), layer));
         }
         else if (Input.GetKeyDown(KeyCode.Mouse2)) {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mousePos = camera1.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = 0;
-            BuildingLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? BuildingLayer.Buildings : BuildingLayer.Floor;
-            TileHit hit = gridManager.GetHitFromClickPosition(mousePos, layer);
+            TileMapLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? TileMapLayer.Buildings : TileMapLayer.Floor;
+            TileHitStruct hit = gridManager.GetHitFromClickPosition(mousePos, layer);
 
             Debug.Log(hit.tile);
-            if (hit.tile != null && hit.gridPosition != null
-                && hit.tile.interactionType == ToolInteraction.Any) {
+            if (hit.tile != null
+                && hit.tile.interactionType == ToolInteractionEnum.Any) {
                 Debug.Log("Color change");
                 hit.tile.GatherInteraction((Vector2Int)hit.gridPosition, layer);
             }
@@ -77,8 +82,8 @@ public class CameraScript : MonoBehaviour
             UpdateView();
         }
     }
-    private Vector2Int MouseGridPosition(BuildingLayer buildingLayer) {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    private Vector2Int MouseGridPosition(TileMapLayer buildingLayer) {
+        Vector3 mousePos = camera1.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0;
         return gridManager.WorldToGridPosition(mousePos, buildingLayer);
     }

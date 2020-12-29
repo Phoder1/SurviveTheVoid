@@ -12,10 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e39574bea0a98d4e827d411f151fdc5, type: 3}
   m_Name: TilesPack
   m_EditorClassIdentifier: 
-  floorVariationNoise: {fileID: 11400000, guid: 913419f8ccf09224ea70f808c0fd2c5a,
-    type: 2}
-  buildingsVariationNoise: {fileID: 11400000, guid: 71f7a445616e52f4f86f845d05b52a83,
-    type: 2}
+  floorVariationNoise:
+    fileID: 11400000
+    guid: 913419f8ccf09224ea70f808c0fd2c5a
+    type: 2
+  buildingsVariationNoise:
+    fileID: 11400000
+    guid: 71f7a445616e52f4f86f845d05b52a83
+    type: 2
   moonTile:
     mainTileBase: {fileID: 0}
     tileBaseVariations: []

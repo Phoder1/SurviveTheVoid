@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0385232e857e8e446aa3c8cacfcbfb44, type: 3}
   m_Name: RecipeApple
   m_EditorClassIdentifier: 
-  ResourcesCost:
-  - resource: {fileID: 11400000, guid: 628e0d79b7c898a4fb43629a7bbe139f, type: 2}
+  ItemCostArr:
+  - item: {fileID: 11400000, guid: 628e0d79b7c898a4fb43629a7bbe139f, type: 2}
     amount: 3
-  Resource:
-    resource: {fileID: 11400000, guid: bf41b966567b68f458a7ec6ed8c79b55, type: 2}
+  outcomeItem:
+    item: {fileID: 11400000, guid: bf41b966567b68f458a7ec6ed8c79b55, type: 2}
     amount: 1
   tier: 0
   section: 5

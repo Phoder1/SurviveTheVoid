@@ -1,16 +1,28 @@
 ﻿using System;
 using UnityEngine;
 
-public class Inventory : IInventory
+public class Inventory 
 {
     private static Inventory _instance;
+    //Inventory IInventory.GetInstance => GetInstance;
+    public static Inventory GetInstance {
+        get {
+            if (_instance == null) {
+                _instance = new Inventory();
+            }
+
+            return _instance;
+        }
+    }
     int maxCapacityOfItemsInList = 25;
     bool checkForItem;
     int counter;
+    int itemAmountCount;
 
     ItemSlot[] inventoryList;
-    int nextAddOnAmountForInventory = 5;
+    private int nextAddOnAmountForInventory = 5;
 
+    
 
     public ItemSlot[] GetInventory { get => inventoryList; }
 
@@ -18,31 +30,12 @@ public class Inventory : IInventory
 
 
 
-    Inventory()
+    private Inventory()
     {
-        if (_instance == null)
-        {
-            _instance = new Inventory();
-            inventoryList = new ItemSlot[maxCapacityOfItemsInList];
-
-
-
-
-        }
+        inventoryList = new ItemSlot[maxCapacityOfItemsInList];
     }
 
-    public Inventory GetInstance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = new Inventory();
-            }
 
-            return _instance;
-        }
-    }
 
 
 
@@ -64,7 +57,7 @@ public class Inventory : IInventory
         checkForItem = false;
 
         counter = 0;
-        if (item.amount <= item.item.maxStackSize)
+        if (item.amount <= item.item.getmaxStackSize)
         {
             counter = 1;
         }
@@ -72,9 +65,9 @@ public class Inventory : IInventory
         {
 
 
-            counter = item.amount / item.item.maxStackSize;
+            counter = item.amount / item.item.getmaxStackSize;
 
-            if (item.amount % item.item.maxStackSize > 0 && item.amount > item.item.maxStackSize)
+            if (item.amount % item.item.getmaxStackSize > 0 && item.amount > item.item.getmaxStackSize)
             {
                 counter += 1;
             }
@@ -96,9 +89,9 @@ public class Inventory : IInventory
         {
             for (int i = 0; i < inventoryList.Length; i++)
             {
-                if (item.item.itemEnum == inventoryList[i].item.itemEnum)
+                if (item.item.getItemEnum == inventoryList[i].item.getItemEnum)
                 {
-                    counter += inventoryList[i].item.maxStackSize;
+                    counter += inventoryList[i].item.getmaxStackSize;
                 }
             }
 
@@ -119,7 +112,7 @@ public class Inventory : IInventory
         if (item == null || item.amount <= 0)
             return;
 
-        if (item.item.maxStackSize == 1)
+        if (item.item.getmaxStackSize == 1)
         {
             if (item.amount <= GetAmountOfItem(null))
             {
@@ -129,7 +122,8 @@ public class Inventory : IInventory
                     if (inventoryList[i] == null)
                     {
                         counter++;
-                        inventoryList[i] = item;
+                        
+                        inventoryList[i] = new ItemSlot(item.item, item.amount);
                         inventoryList[i].amount = 1;
                     }
 
@@ -146,39 +140,40 @@ public class Inventory : IInventory
 
 
 
-
+        int test = item.amount - itemAmountCount;
 
         for (int i = 0; i < inventoryList.Length; i++)
         {
             if (inventoryList[i] == null)
                 continue;
 
-            if (inventoryList[i].item.itemEnum == item.item.itemEnum)
+            if (inventoryList[i].item.getItemEnum == item.item.getItemEnum)
             {
-                if (inventoryList[i].amount == inventoryList[i].item.maxStackSize)
+                if (inventoryList[i].amount == inventoryList[i].item.getmaxStackSize)
                     continue;
 
-                if (item.amount + inventoryList[i].amount > inventoryList[i].item.maxStackSize)
+                if (test + inventoryList[i].amount > inventoryList[i].item.getmaxStackSize)
                 {
-                    item.amount = Mathf.Abs(inventoryList[i].item.maxStackSize - (inventoryList[i].amount + item.amount));
-                    inventoryList[i].amount = inventoryList[i].item.maxStackSize;
+
+                    test = Mathf.Abs(inventoryList[i].item.getmaxStackSize - (inventoryList[i].amount + test));
+                    inventoryList[i].amount = inventoryList[i].item.getmaxStackSize;
                     AddAmountOfItem(item);
                     break;
                 }
-                else if (item.amount + inventoryList[i].amount == inventoryList[i].item.maxStackSize)
+                else if (test + inventoryList[i].amount == inventoryList[i].item.getmaxStackSize)
                 {
-                    inventoryList[i].amount = inventoryList[i].item.maxStackSize;
+                    inventoryList[i].amount = inventoryList[i].item.getmaxStackSize;
                     return;
                 }
-                else if (item.amount + inventoryList[i].amount < inventoryList[i].item.maxStackSize)
+                else if (test + inventoryList[i].amount < inventoryList[i].item.getmaxStackSize)
                 {
-                    inventoryList[i].amount += item.amount;
+                    inventoryList[i].amount += test;
                     return;
                 }
             }
         }
 
-        inventoryList[GetItemIndexInArray(null)] = item;
+        inventoryList[GetItemIndexInArray(null)] = new ItemSlot(item.item, test); ;
 
     }
 
@@ -189,6 +184,7 @@ public class Inventory : IInventory
         // if i dont have it in the inventory
         if (CheckIfEnoughSpaceInInventory(item))
         {
+            itemAmountCount = 0;
             AddAmountOfItem(item);
             return;
         }
@@ -196,7 +192,7 @@ public class Inventory : IInventory
     }
 
 
-    public void RemoveObjectFromInventory(ItemSlot item)
+    private void RemoveObjectFromInventory(ItemSlot item)
     {
         if (item.amount < 0)
             item.amount *= -1;
@@ -207,13 +203,13 @@ public class Inventory : IInventory
             return;
 
         // if item is not stackable
-        if (item.item.maxStackSize == 1)
+        if (item.item.getmaxStackSize == 1)
         {
             for (int x = 0; x < item.amount; x++)
             {
                 for (int i = inventoryList.Length - 1; i >= 0; i--)
                 {
-                    if (inventoryList[i] != null && inventoryList[i].item.itemEnum == item.item.itemEnum)
+                    if (inventoryList[i] != null && inventoryList[i].item.getItemEnum == item.item.getItemEnum)
                     {
                         inventoryList[i] = null;
                         break;
@@ -241,30 +237,36 @@ public class Inventory : IInventory
             if (inventoryList[i] == null)
                 continue;
 
-            if (inventoryList[i].item.itemEnum == item.item.itemEnum)
+            if (inventoryList[i].item.getItemEnum == item.item.getItemEnum)
             {
 
-                if (item.amount - inventoryList[i].amount > 0)
+                if (itemAmountCount - inventoryList[i].amount > 0)
                 {
-                    item.amount = item.amount - inventoryList[i].amount;
+                    itemAmountCount = itemAmountCount - inventoryList[i].amount;
                     inventoryList[i] = null;
                     RemoveObjectFromInventory(item);
                     return;
                 }
-                else if (item.amount - inventoryList[i].amount == 0)
+                else if (itemAmountCount - inventoryList[i].amount == 0)
                 {
                     inventoryList[i] = null;
                     break;
                 }
                 else
                 {
-                    inventoryList[i].amount -= item.amount;
+                    inventoryList[i].amount -= itemAmountCount;
                     break;
                 }
 
 
             }
         }
+    }
+
+    public void RemoveItemFromInventory(ItemSlot item)
+    {
+        itemAmountCount = item.amount;
+        RemoveObjectFromInventory(item);
     }
 
     public bool CheckInventoryForItem(ItemSlot item)
@@ -280,7 +282,7 @@ public class Inventory : IInventory
                 break;
 
             }
-            else if (item.item.itemEnum == inventoryList[i].item.itemEnum)
+            else if (item.item.getItemEnum == inventoryList[i].item.getItemEnum)
             {
                 checkForItem = true;
                 break;
@@ -295,7 +297,7 @@ public class Inventory : IInventory
         bool haveAllIngridients = true;
 
 
-        foreach (var item in recipe.itemCostArr)
+        foreach (var item in recipe.getitemCostArr)
         {
             haveAllIngridients = haveAllIngridients && HaveEnoughOfItemFromInventory(item);
             if (!haveAllIngridients)
@@ -307,11 +309,11 @@ public class Inventory : IInventory
 
         if (haveAllIngridients)
         {
-            for (int i = 0; i < recipe.itemCostArr.Length; i++)
+            for (int i = 0; i < recipe.getitemCostArr.Length; i++)
             {
-                RemoveObjectFromInventory(recipe.itemCostArr[i]);
+                RemoveItemFromInventory(recipe.getitemCostArr[i]);
             }
-            AddToInventory(recipe.outcomeItem);
+            AddToInventory(recipe.getoutcomeItem);
         }
         else
             Debug.Log("Cant Craft Not Enough resources");
@@ -326,7 +328,16 @@ public class Inventory : IInventory
         counter = 0;
         for (int i = 0; i < inventoryList.Length; i++)
         {
-            if (inventoryList[i].item.itemEnum == item.item.itemEnum)
+            if(item == null && inventoryList[i] == null)
+            {
+                counter += 1;
+                continue;
+            }
+            if(inventoryList[i] == null)
+            {
+                continue;
+            }
+            if (inventoryList[i].item.getItemEnum == item.item.getItemEnum)
             {
                 counter += inventoryList[i].amount;
                 if (counter >= item.amount)
@@ -350,7 +361,7 @@ public class Inventory : IInventory
             }
             else if (item != null && inventoryList[i] != null)
             {
-                if (item.item.itemEnum == inventoryList[i].item.itemEnum)
+                if (item.item.getItemEnum == inventoryList[i].item.getItemEnum)
                 {
                     counter += inventoryList[i].amount;
                 }
@@ -370,7 +381,7 @@ public class Inventory : IInventory
                     return i;
             }
             else
-            if (inventoryList[i] != null && item.item.itemEnum == inventoryList[i].item.itemEnum)
+            if (inventoryList[i] != null && item.item.getItemEnum == inventoryList[i].item.getItemEnum)
             {
                 return i;
             }
@@ -391,7 +402,7 @@ public class Inventory : IInventory
                 Debug.Log("Inventory list in spot " + i + "is Null");
             }
             else
-                Debug.Log("Inventory list in spot " + i + " with the amount : " + inventoryList[i].amount + " of type: " + inventoryList[i].item.itemEnum);
+                Debug.Log("Inventory list in spot " + i + " with the amount : " + inventoryList[i].amount + " of type: " + inventoryList[i].item.getItemEnum);
         }
 
     }
