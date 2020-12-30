@@ -55,11 +55,8 @@ namespace Assets.TilesData
 
         public bool isSolid;
         public virtual void Init(Vector2Int _position, TileMapLayer buildingLayer) { }
-<<<<<<< HEAD
         private protected TileAbst() { }
-=======
-        private protected GenericTile() { }
->>>>>>> master
+
 
         public virtual TileAbst Clone() {
             TileAbst copy = (TileAbst)MemberwiseClone();

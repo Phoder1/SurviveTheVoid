@@ -17,12 +17,8 @@ namespace Assets.Scan
         public Scanner() {
             gridManager = GridManager._instance;
         }
-<<<<<<< HEAD
-        public TileHitStruct Scan(Vector2Int gridStartPosition, DirectionEnum direction, int radius, TileMapLayer buildingLayer, IChecker checker) {
-=======
-        public TileHitStruct Scan(Vector2Int gridStartPosition, DirectionEnum _direction, int _radius, TileMapLayer _buildingLayer, IChecker _checker) {
 
->>>>>>> master
+        public TileHitStruct Scan(Vector2Int gridStartPosition, DirectionEnum _direction, int _radius, TileMapLayer _buildingLayer, IChecker _checker) {
             startPosition = gridStartPosition;
             radius = _radius;
             buildingLayer = _buildingLayer;
@@ -63,21 +59,6 @@ namespace Assets.Scan
             Vector2Int relativeCheckPosition;
             switch (direction) {
                 case DirectionEnum.Up:
-<<<<<<< HEAD
-                    relativeCheckPosition = new Vector2Int(0, 1);
-                    break;
-                case DirectionEnum.Down:
-                    relativeCheckPosition = new Vector2Int(0, -1);
-                    break;
-                case DirectionEnum.Left:
-                    relativeCheckPosition = new Vector2Int(-1, 0);
-                    break;
-                case DirectionEnum.Right:
-                    relativeCheckPosition = new Vector2Int(1, 0);
-                    break;
-                default:
-                    relativeCheckPosition = new Vector2Int(0, 1);
-=======
                     relativeCheckPosition = new Vector2Int(0, 1) * distanceFromCenter;
                     break;
                 case DirectionEnum.Down:
@@ -91,7 +72,6 @@ namespace Assets.Scan
                     break;
                 default:
                     relativeCheckPosition = new Vector2Int(0, 1) * distanceFromCenter;
->>>>>>> master
                     Debug.LogError("Added new not existing direction, this is not a 3d game...");
                     break;
             }
@@ -101,8 +81,6 @@ namespace Assets.Scan
             DirectionEnum currentDirection = direction;
             for (int i = 0; i < numOfTiles; i++) {
                 //Check tile
-
-<<<<<<< HEAD
                 TileAbst currentTile = gridManager.GetTileFromGrid(relativeCheckPosition + startPosition , buildingLayer);
 
                 if (currentTile != null && checker.CheckTile(currentTile))
@@ -111,15 +89,6 @@ namespace Assets.Scan
                 }
                 //Check if at corner
                 if (relativeCheckPosition.x == relativeCheckPosition.y) {
-=======
-                GenericTile currentTile = gridManager.GetTileFromGrid(relativeCheckPosition + startPosition , buildingLayer);
-
-                if (currentTile != null && checker.CheckTile(currentTile)) {
-                    tiles.Add(new TileHitStruct(currentTile, relativeCheckPosition + startPosition));
-                }
-                //Check if at corner
-                if (Mathf.Abs(relativeCheckPosition.x) == Mathf.Abs(relativeCheckPosition.y)) {
->>>>>>> master
                     switch (currentDirection) {
                         case DirectionEnum.Up:
                             currentDirection = DirectionEnum.Right;
@@ -169,11 +138,7 @@ namespace Assets.Scan
         /// The tile to check, return true to take the tile into account.
         /// </param>
         /// <returns></returns>
-<<<<<<< HEAD
         bool CheckTile(TileAbst tile);
-=======
-        bool CheckTile(GenericTile tile);
->>>>>>> master
     }
 }
 

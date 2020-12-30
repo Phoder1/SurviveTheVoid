@@ -135,20 +135,10 @@ public class PlayerManager : MonoBehaviour
     public void check()
     {
         Debug.Log("check Buttons");
-<<<<<<< HEAD
     }
     public class GatheringScanChecker : IChecker
     {
         public bool CheckTile(TileAbst tile)
-        {
-            return !tile.isActiveInteraction;
-        }
-=======
->>>>>>> master
-    }
-    public class GatheringScanChecker : IChecker
-    {
-        public bool CheckTile(GenericTile tile)
         {
             return !tile.isActiveInteraction;
         }
