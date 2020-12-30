@@ -7,13 +7,14 @@ public class StartingPlatformSaver : MonoBehaviour
 {
     [SerializeField] private TilesPackSO tilesPack;
     object WriteReadLock = new object();
-    private string buildBasePath = Application.dataPath;
+    private string buildBasePath;
     private string DirectoryPath { get => buildBasePath + "/Saves/"; }
     StartingPlatform platform;
     //public enum SaveFile { Test, HomeworkData };
 
     private void Start() {
         platform = new StartingPlatform();
+        buildBasePath = Application.dataPath;
     }
     private string GetFilePath() { return DirectoryPath + "platform" + ".txt"; }
     internal string GetJson() { return JsonUtility.ToJson(platform, true); }

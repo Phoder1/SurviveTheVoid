@@ -94,7 +94,7 @@ public partial class GridManager
                             if (distance <= tiers[i].distance) {
     
                                 float overlap = (distance - tiers[i].overlapStart) / (tiers[i].distance - tiers[i].overlapStart);
-                                if (distance > tiers[i].overlapStart && easeInOutBounce(overlap) > (noiseValue - islandsNoise.threshold) / (1 - islandsNoise.threshold)) {
+                                if (distance > tiers[i].overlapStart && easeInOutBounce(overlap) > islandsNoise.GetRandomValue(gridPosition)) {
                                     tile = tiers[i].tile;
                                 }
                                 else {

@@ -91,7 +91,7 @@ public partial class GridManager : MonoBehaviour, IGridManager
     private void Init() {
         floorBlocksTiers = new TileTier[3] {
         new TileTier(_instance.tilesPack.GetMoonTile,0f,0f),
-        new TileTier(_instance.tilesPack.GetObsidianTile,1000f,500f),
+        new TileTier(_instance.tilesPack.GetObsidianTile,1000f,0f),
         new TileTier(_instance.tilesPack.GetCircusTile,2000f,1000f)
     };
     }

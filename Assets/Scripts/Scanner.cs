@@ -19,7 +19,6 @@ namespace Assets.Scan
                 gridManager = GridManager._instance;
         }
         public TileHitStruct Scan(Vector2Int gridStartPosition, DirectionEnum direction, int radius, TileMapLayer buildingLayer, IChecker checker) {
-
             startPosition = gridStartPosition;
             this.radius = radius;
             this.buildingLayer = buildingLayer;
