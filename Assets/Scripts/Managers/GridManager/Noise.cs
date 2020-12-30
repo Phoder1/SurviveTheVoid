@@ -7,6 +7,7 @@ public class Noise
     const int MAX_SEED_VALUE = 100000;
     [Header("Leave seed at 0 for random value")]
     public int seed;
+<<<<<<< HEAD:Assets/Scripts/ScriptableObjects/Scripts/NoiseSO.cs
     [SerializeField] private NoiseSO noise;
 
     public float threshold => noise.GetBoolThreshold;
@@ -14,6 +15,15 @@ public class Noise
         while (seed == 0) {
             seed = UnityEngine.Random.Range(MAX_SEED_VALUE, MAX_SEED_VALUE*10);
             seed *= UnityEngine.Random.Range(0,1)*2 - 1;
+=======
+    [Range(3f, 50f)]
+    public float resolution = 3;
+    [Range(0f, 0.99f)]
+    public float boolThreshold;
+    public void GenerateSeed() {
+        while (seed == 0) {
+            seed = UnityEngine.Random.Range(-MAX_SEED_VALUE, MAX_SEED_VALUE);
+>>>>>>> master:Assets/Scripts/Managers/GridManager/Noise.cs
             Debug.Log("Generating Seed");
         }
     }

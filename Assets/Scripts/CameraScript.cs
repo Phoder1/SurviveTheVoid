@@ -51,7 +51,11 @@ public class CameraScript : MonoBehaviour
         if (Input.GetKey(KeyCode.Mouse0)) {
             TileMapLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? TileMapLayer.Buildings : TileMapLayer.Floor;
             Vector2Int gridPosition = MouseGridPosition(TileMapLayer.Floor);
+<<<<<<< HEAD
             gridManager.SetTile(tilesPack.GetObsidianTile, gridPosition,  layer);
+=======
+            gridManager.SetTile(tilesPack.getObsidianTile, gridPosition,  layer);
+>>>>>>> master
 
         }
         else if (Input.GetKey(KeyCode.Mouse1)) {

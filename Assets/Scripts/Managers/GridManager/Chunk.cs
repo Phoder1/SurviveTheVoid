@@ -17,7 +17,11 @@ public partial class GridManager
         public Chunk(Vector2Int startPos) {
             chunkStartPos = startPos;
         }
+<<<<<<< HEAD
         public TileAbst GetTile(Vector2Int gridPosition, TileMapLayer buildingLayer) {
+=======
+        public GenericTile GetTile(Vector2Int gridPosition, TileMapLayer buildingLayer) {
+>>>>>>> master
             switch (buildingLayer) {
                 case TileMapLayer.Floor:
                     return floorArr?[gridPosition.x - chunkStartPos.x, gridPosition.y - chunkStartPos.y];
@@ -29,7 +33,11 @@ public partial class GridManager
 
         }
 
+<<<<<<< HEAD
         internal void SetTile(TileAbst tile, Vector2Int gridPosition, TileMapLayer buildingLayer, bool countsAsEdit = true) {
+=======
+        internal void SetTile(GenericTile tile, Vector2Int gridPosition, TileMapLayer buildingLayer, bool countsAsEdit = true) {
+>>>>>>> master
             switch (buildingLayer) {
                 case TileMapLayer.Floor:
                     SetTileByRef(tile, gridPosition, buildingLayer, countsAsEdit, ref floorArr, ref _instance.floor);
@@ -40,7 +48,11 @@ public partial class GridManager
             }
 
         }
+<<<<<<< HEAD
         private void SetTileByRef(TileAbst tile, Vector2Int gridPosition, TileMapLayer buildingLayer, bool countsAsEdit, ref TileAbst[,] tileArr, ref Tilemap tilemap) {
+=======
+        private void SetTileByRef(GenericTile tile, Vector2Int gridPosition, TileMapLayer buildingLayer, bool countsAsEdit, ref GenericTile[,] tileArr, ref Tilemap tilemap) {
+>>>>>>> master
             Vector2Int chunkPosition = GridToChunkPosition(gridPosition);
             bool tileExists = tileArr != null && tileArr[chunkPosition.x, chunkPosition.y] != null;
             if (tile != null || tileExists) {
@@ -80,6 +92,7 @@ public partial class GridManager
         internal Vector2Int GridToChunkPosition(Vector2Int gridPosition) => gridPosition - chunkStartPos;
         internal Vector2Int ChunkToGridPosition(Vector2Int chunkPosition) => chunkPosition + chunkStartPos;
         internal void GenerateIslands() {
+<<<<<<< HEAD
             Noise islandsNoise = _instance.islandsNoise;
             Noise plantsNoise = _instance.plantsNoise;
             TileTier[] tiers = _instance.floorBlocksTiers;
@@ -109,6 +122,15 @@ public partial class GridManager
                         if (plantsNoise.CheckThreshold(gridPosition, false, out _)) {
                             SetTile(plant, gridPosition, TileMapLayer.Buildings, false);
                         }
+=======
+            Noise noise = _instance.islandsNoise;
+            GenericTile tile = _instance.tilesPack.getObsidianTile;
+            for (int loopX = 0; loopX < CHUNK_SIZE; loopX++) {
+                for (int loopY = 0; loopY < CHUNK_SIZE; loopY++) {
+                    Vector2Int gridPosition = new Vector2Int(loopX, loopY) + chunkStartPos;
+                    if (noise.CheckThreshold(gridPosition)) {
+                        SetTile(tile, ChunkToGridPosition(new Vector2Int(loopX, loopY)), TileMapLayer.Floor, false);
+>>>>>>> master
                     }
                 }
             }
@@ -118,11 +140,14 @@ public partial class GridManager
                 for (int loopX = 0; loopX < CHUNK_SIZE; loopX++) {
                     for (int loopY = 0; loopY < CHUNK_SIZE; loopY++) {
                         SetTile(null, ChunkToGridPosition(new Vector2Int(loopX, loopY)), TileMapLayer.Floor, false);
+<<<<<<< HEAD
                     }
                 }
                 for (int loopX = 0; loopX < CHUNK_SIZE; loopX++) {
                     for (int loopY = 0; loopY < CHUNK_SIZE; loopY++) {
                         SetTile(null, ChunkToGridPosition(new Vector2Int(loopX, loopY)), TileMapLayer.Buildings, false);
+=======
+>>>>>>> master
                     }
                 }
                 chunksDict.Remove(chunkStartPos);
