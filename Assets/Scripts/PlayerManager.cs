@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scan;
 using Assets.TilesData;
+using System;
 
 public class PlayerManager : MonoBehaviour 
 {
@@ -69,7 +70,7 @@ public class PlayerManager : MonoBehaviour
         movementVector *= (5 * Time.deltaTime);
         currentPos = transform.position; //new Vector2(transform.position.x, transform.position.y);
         nextPos = currentPos + movementVector;
-
+        FindDirection();
         if ((movementVector != Vector2.zero && _GridManager.IsTileWalkable(nextPos, movementVector)) || Input.GetKey(KeyCode.LeftShift))
         {
             switch (_inputManager.GetAxis())
@@ -82,33 +83,80 @@ public class PlayerManager : MonoBehaviour
             UpdateView();
             Vector2Int currentPosOnGrid = _GridManager.WorldToGridPosition(transform.position, buildingLayer);
 
-            if (lastPosOnGrid != currentPosOnGrid && Vector2.Distance(currentPosOnGrid, closestTile.gridPosition) > Vector2.Distance(lastPosOnGrid, closestTile.gridPosition))
+            float posToClosestDis = Vector2.Distance(currentPos, _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
+            float lastposToClosestDis = Vector2.Distance(_GridManager.GridToWorldPosition(lastPosOnGrid, buildingLayer, true), _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
+            if (lastPosOnGrid != currentPosOnGrid && (posToClosestDis > lastposToClosestDis))
             {
                 Debug.Log("checkTile");
-                closestTile = _scanner.Scan(currentPosOnGrid, DirectionEnum.Down, 5, buildingLayer, new GatheringScanChecker());
+                closestTile = _scanner.Scan(currentPosOnGrid, movementDir, 5, buildingLayer, new GatheringScanChecker());
                 lastPosOnGrid = currentPosOnGrid;
+                
                 if (closestTile.tile != null)
                 {
-                    
-                    Debug.Log("dasdasd" + closestTile.gridPosition);
-                    closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
+
+                    //Check if Scanned-Do Not Delete!!//
+                   // closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
                 }
+               
               
             }
 
         }
 
-        if (_inputManager.a_Button) { ButtonA(); }
-        if (_inputManager.b_Button) { ButtonB(); }
+       
         
 
     }
 
+    private void FindDirection()
+    {
+        float angle = Vector2.SignedAngle(_inputManager.GetAxis(), Vector2.up);
+        int direction = Mathf.RoundToInt(angle / 90);
+
+        
+
+
+        switch (direction)
+        {
+            case 0:
+                movementDir = DirectionEnum.Up;
+                break;
+            case 1:
+                movementDir = DirectionEnum.Right;
+                break;
+            case -1:
+                movementDir = DirectionEnum.Left;
+                break;
+            case 2:
+                movementDir = DirectionEnum.Down;
+                break;
+            case -2:
+                movementDir = DirectionEnum.Down;
+                break;
+
+
+        }
+        Debug.Log(movementDir);
+    }
+
+    private void FixedUpdate()
+    {
+        if (_inputManager.a_Button) { ButtonA(); }
+        if (_inputManager.b_Button) { ButtonB(); }
+    }
+
     public void ButtonA()
     {
-        Debug.Log(_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer,true));
-       // transform.Translate(transform.position-_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer));
+
+        
+        if (closestTile.tile != null)
+        {
+        walkTowards(_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
         myState.ButtonA();
+
+        }
+        
+        // transform.Translate(transform.position-_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer));
     }
     public void ButtonB()
     {
@@ -142,6 +190,28 @@ public class PlayerManager : MonoBehaviour
         {
             return !tile.isActiveInteraction;
         }
+    }
+    public void walkTowards(Vector3 destination)
+    {
+
+        if (_GridManager.WorldToGridPosition(transform.position, buildingLayer) != closestTile.gridPosition)
+        {
+
+            transform.Translate((destination - transform.position) * Time.fixedDeltaTime);
+            
+            Debug.Log("Walking Towards:"+destination);
+        }
+        else
+        {
+            
+            closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
+            Debug.Log("TileHarvested");
+            closestTile = TileHitStruct.none;
+        }
+        
+        
+            
+        
     }
 
 }
