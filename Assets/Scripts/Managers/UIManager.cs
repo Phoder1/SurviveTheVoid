@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
 public class UIManager : MonoBehaviour
 {
     public static UIManager _instance;
@@ -27,14 +28,6 @@ public class UIManager : MonoBehaviour
     {
         craftingManager = CraftingManager._instance;
         _inputManager = InputManager._instance;
-
-        for (int i = 0; i < _uiElements.Length; i++)
-        {
-            if (i > 2)
-            {
-                _uiElements[i].SetActive(false);
-            }
-        }
     }
 
     private void Update()
@@ -63,8 +56,40 @@ public class UIManager : MonoBehaviour
     #endregion
 
 
+    #region ButtonsFunctions
+
+    bool isShown = true;
+
+    public void ButtonHide()
+	{
+        if(isShown == true)
+		{
+            _uiElements[5].gameObject.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
+
+            for (int i = 6; i <= 12; i++)
+            {
+                _uiElements[i].SetActive(false);
+            }
+
+            isShown = false;
+        }
+		else
+		{
+            _uiElements[5].gameObject.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
+
+            for (int i = 6; i <= 12; i++)
+            {
+                _uiElements[i].SetActive(true);
+            }
+
+            isShown = true;
+        }    
+	}
 
 
+
+
+    #endregion
 
 }
 
