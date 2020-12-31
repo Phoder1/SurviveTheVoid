@@ -1,25 +1,12 @@
-﻿using System.Collections;
-   
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class StateBase : ScriptableObject
+public abstract class StateBase
 {
-    public PlayerManager _playerManager;
-    public virtual void OnUpdate()
+    public void ButtonA()
     {
-        if (_playerManager == null)
-        {
-        _playerManager = PlayerManager._instance;
-        }
+        Debug.Log("Implement ButtonA");
+        PlayerManager._instance.ImplementGathering();
     }
-    public virtual void ButtonA()
-    {
-        _playerManager.check();
-        Debug.Log("A"+this);
-    }
-    public virtual void ButtonB()
-    {
-        Debug.Log("B" + this);
-    }
+    public abstract void ButtonB();
+
 }
