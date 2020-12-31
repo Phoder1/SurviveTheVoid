@@ -7,8 +7,6 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager _instance;
     InputManager _inputManager;
-    public VirtualButton[] _buttons;
-    public VirtualJoystick vJ;
     CraftingManager craftingManager;
     InventoryManager inventoryManager;
     // UI elements
@@ -32,12 +30,6 @@ public class UIManager : MonoBehaviour
         _inputManager = InputManager._instance;
     }
 
-    private void Update()
-    {
-        _inputManager.ButtonCheck(_buttons);
-        _inputManager.OnClicked("sdas", vJ);
-    }
-
 
     #region CraftingUI
     public void OnClickSelectedSections(string _section)
@@ -55,22 +47,35 @@ public class UIManager : MonoBehaviour
         craftingManager.AttemptToCraft();
     }
 
-	#endregion
+    #endregion
 
 
     #region ButtonsFunctions
 
     bool isShown = true;
-
     public void ButtonHide()
 	{
         if(isShown == true)
 		{
             _uiElements[5].gameObject.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
 
-            for (int i = 6; i <= 12; i++)
-            {
-                _uiElements[i].SetActive(false);
+            if(isQuickAccessSwapped == true)
+			{
+                for (int i = 6; i <= 12; i++)
+                {
+                    _uiElements[i].SetActive(false);
+                }
+            }
+			else
+			{
+                for (int i = 15; i <= 19; i++)
+                {
+                    _uiElements[i].SetActive(false);
+                }
+                for (int i = 11; i <= 12; i++)
+                {
+                    _uiElements[i].SetActive(false);
+                }
             }
 
             isShown = false;
@@ -79,15 +84,59 @@ public class UIManager : MonoBehaviour
 		{
             _uiElements[5].gameObject.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
 
-            for (int i = 6; i <= 12; i++)
+            if (isQuickAccessSwapped == true)
             {
-                _uiElements[i].SetActive(true);
+                for (int i = 6; i <= 12; i++)
+                {
+                    _uiElements[i].SetActive(true);
+                }
+            }
+            else
+            {
+                for (int i = 15; i <= 19; i++)
+                {
+                    _uiElements[i].SetActive(true);
+                }
+                for (int i = 11; i <= 12; i++)
+                {
+                    _uiElements[i].SetActive(true);
+                }
             }
 
             isShown = true;
         }    
 	}
 
+    bool isQuickAccessSwapped = true;
+    public void ButtonSwap()
+	{
+        if (isQuickAccessSwapped == true)
+		{
+            for(int i = 6; i<=10; i++)
+			{
+                _uiElements[i].SetActive(false);
+            }
+            for(int i = 15; i<=19; i++)
+			{
+                _uiElements[i].SetActive(true);
+            }
+
+            isQuickAccessSwapped = false;
+		}
+		else
+		{
+            for (int i = 6; i<=10; i++)
+            {
+                _uiElements[i].SetActive(true);
+            }
+            for (int i = 15; i<=19; i++)
+            {
+                _uiElements[i].SetActive(false);
+            }
+
+            isQuickAccessSwapped = true;
+        }
+	}
 
 
 
