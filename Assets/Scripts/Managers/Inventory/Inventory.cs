@@ -20,7 +20,7 @@ public class Inventory
     int itemAmountCount;
 
     ItemSlot[] inventoryList;
-    private int nextAddOnAmountForInventory = 5;
+    //private int nextAddOnAmountForInventory = 5;
 
     
 
@@ -442,9 +442,10 @@ public class ItemSlot
 {
     public ItemSO item;
     public int amount;
-
-    public ItemSlot(ItemSO item, int amount) {
+    public int? durability;
+    public ItemSlot(ItemSO item, int amount,int? durability = null) {
         this.item = item;
         this.amount = amount;
+        this.durability = durability;
     }
 }
