@@ -8,7 +8,6 @@ public class InputManager : MonoBehaviour
     UIManager _uiManager;
     static StateBase currentState;
     PlayerStateMachine playerStateMachine;
-    public bool a_Button, b_Button;
     [SerializeField] VirtualJoystick vJ;
 
     private void Awake() {
