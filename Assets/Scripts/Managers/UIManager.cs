@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     public VirtualButton[] _buttons;
     public VirtualJoystick vJ;
     CraftingManager craftingManager;
+    InventoryManager inventoryManager;
     // UI elements
     public GameObject[] _uiElements;
 
@@ -26,6 +27,7 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         craftingManager = CraftingManager._instance;
+        inventoryManager = InventoryManager._instance;
         _inputManager = InputManager._instance;
 
         for (int i = 0; i < _uiElements.Length; i++)
@@ -60,11 +62,12 @@ public class UIManager : MonoBehaviour
         craftingManager.AttemptToCraft();
     }
 
-    #endregion
+	#endregion
+
+	#region PlayerInventoryUI
 
 
-
-
+	#endregion
 
 }
 
