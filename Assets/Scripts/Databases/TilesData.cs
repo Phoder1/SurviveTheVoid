@@ -95,9 +95,9 @@ namespace Assets.TilesData
             GridManager._instance.SetTile(null, gridPosition, buildingLayer, true);
             Inventory inventory = Inventory.GetInstance;
             foreach (ItemSlot reward in rewards) {
-                inventory.AddToInventory(reward);
+                inventory.AddToInventory(0,reward);
             }
-            inventory.PrintInventory();
+            inventory.PrintInventory(0);
 
         }
     }

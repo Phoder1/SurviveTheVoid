@@ -54,27 +54,27 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            inventory.AddToInventory(new ItemSlot(items.getitemsArr[3], 1));
+            inventory.AddToInventory(0,new ItemSlot(items.getitemsArr[3], 1));
             ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
-            inventory.AddToInventory(new ItemSlot(items.getitemsArr[4], 1));
+            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[4], 1));
             ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
-            inventory.RemoveItemFromInventory(new ItemSlot(items.getitemsArr[3], 1));
+            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[3], 1));
             ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.V))
         {
-            inventory.RemoveItemFromInventory(new ItemSlot(items.getitemsArr[4], 1));
+            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[4], 1));
             ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            inventory.PrintInventory();
+            inventory.PrintInventory(0);
         }
         if (Input.GetKeyDown(KeyCode.T))
         {
@@ -283,7 +283,7 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
                 Text materialNameText = recipeMaterialSlots[i].transform.GetChild(0).GetComponent<Text>();
                 materialNameText.text = recipe.getitemCostArr[i].item.getItemEnum.ToString();
                 Text materialCostText = recipeMaterialSlots[i].transform.GetChild(1).GetComponent<Text>();
-                materialCostText.text = inventory.GetAmountOfItem(recipe.getitemCostArr[i]).ToString() + " / " + recipe.getitemCostArr[i].amount;
+                materialCostText.text = inventory.GetAmountOfItem(0,recipe.getitemCostArr[i]).ToString() + " / " + recipe.getitemCostArr[i].amount;
 
             }
             else

@@ -17,7 +17,7 @@ public class GearItemSO : ItemSO
         Legging,
         Shoes
     }
-
+    [SerializeField]
     private GearType gearType;
     public GearType GetGearTpye => gearType;
 
