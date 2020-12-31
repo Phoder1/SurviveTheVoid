@@ -18,7 +18,8 @@ public class GearItemSO : ItemSO
 
     }
 
-
+    private GearType gearType;
+    public GearType GetGearTpye => gearType;
 
 
 
