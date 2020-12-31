@@ -141,7 +141,6 @@ public class PlayerManager : MonoBehaviour
 
 
         }
-        Debug.Log(movementDir);
     }
 
     private void FixedUpdate()
