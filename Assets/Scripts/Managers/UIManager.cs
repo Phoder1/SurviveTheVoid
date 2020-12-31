@@ -6,8 +6,8 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager _instance;
     InputManager _inputManager;
-    public VirtualButton[] _buttons;
-    public VirtualJoystick vJ;
+
+
     CraftingManager craftingManager;
     InventoryManager inventoryManager;
     // UI elements
@@ -39,11 +39,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        _inputManager.ButtonCheck(_buttons);
-        _inputManager.OnClicked("sdas", vJ);
-    }
+   
 
 
     #region CraftingUI

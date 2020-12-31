@@ -14,7 +14,7 @@ public class PlayerManager : MonoBehaviour
     private GridManager _GridManager;
     private Scanner _scanner;
 
-    internal StateBase myState;
+   
     [SerializeField] internal Camera cameraComp;
 
     private Vector2 GetCameraRealSize => new Vector2(cameraComp.orthographicSize * 2 * cameraComp.aspect, cameraComp.orthographicSize * 2);
@@ -53,12 +53,6 @@ public class PlayerManager : MonoBehaviour
         _GridManager = GridManager._instance;
         _uiManager = UIManager._instance;
         
-        
-
-
-        _playerStateMachine = GetComponent<PlayerStateMachine>();
-        ChangeMode(InputManager.InputState.DefaultMode);
-       
 
         UpdateView();
 
@@ -108,8 +102,6 @@ public class PlayerManager : MonoBehaviour
                 //Check if Scanned-Do Not Delete!!//
                 // closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
             }
-
-
         }
     }
 
@@ -142,36 +134,29 @@ public class PlayerManager : MonoBehaviour
 
         }
     }
-
-    private void FixedUpdate()
-    {
-        if (_inputManager.a_Button) { ButtonA(); }
-        if (_inputManager.b_Button) { ButtonB(); }
-    }
-
-    public void ButtonA()
+    public void ImplementGathering()
     {
 
         Scan(new GatheringScanChecker());
         if (closestTile.tile != null)
         {
-        walkTowards(_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
-        myState.ButtonA();
+        WalkTowards(_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
+
 
         }
         
         // transform.Translate(transform.position-_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer));
     }
-    public void ButtonB()
+    public void ImplementSpecialInteraction()
     {
         Scan(new SpecialInterractionScanChecker());
         if (closestTile.tile != null)
         {
-            walkTowards(_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
-            myState.ButtonB();
+            WalkTowards(_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
+           
 
         }
-        myState.ButtonB();
+     
     }
 
 
@@ -181,18 +166,6 @@ public class PlayerManager : MonoBehaviour
         camPosition -= (Vector3)GetCameraRealSize / 2;
         Rect worldView = new Rect(camPosition, GetCameraRealSize);
         _GridManager.UpdateView(worldView);
-    }
-
-    public void ChangeMode(InputManager.InputState newState)
-    {
-        myState = _playerStateMachine.SwichState(newState);   
-        
-        myState.OnUpdate();
-    }
-    
-    public void Check()
-    {
-        Debug.Log("check Buttons");
     }
     public class GatheringScanChecker : IChecker
     {
@@ -208,7 +181,7 @@ public class PlayerManager : MonoBehaviour
             return tile.isActiveInteraction;
         }
     }
-    public void walkTowards(Vector3 destination)
+    public void WalkTowards(Vector3 destination)
     {
 
         if (_GridManager.WorldToGridPosition(transform.position, buildingLayer) != closestTile.gridPosition)
@@ -226,8 +199,6 @@ public class PlayerManager : MonoBehaviour
             closestTile = TileHitStruct.none;
         }
         
-        
-            
         
     }
 

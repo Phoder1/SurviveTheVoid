@@ -1,44 +1,37 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditorInternal;
-using UnityEngine;
-
+﻿public enum InputState { DefaultMode, BuildMode, FightMode };
 public class PlayerStateMachine 
 {
     private static PlayerStateMachine _instance;
 
-    public StateBase currentState;
-    public StateBase[] stateArray;
-
-    int counter=0; // ?****
+     StateBase currentState;
 
     private PlayerStateMachine()
     {
-        currentState = stateArray[counter];
+        currentState = SwichState(InputState.DefaultMode);
     }
     public static PlayerStateMachine GetInstance {
         get {
             if (_instance == null)
             {
                 _instance = new PlayerStateMachine();
+                
             }
             return _instance;
         }
     }
-    public StateBase SwichState(InputManager.InputState newState)
+    public StateBase SwichState(InputState newState)
     {
         switch (newState)
         {
-            case InputManager.InputState.DefaultMode:
-                currentState = stateArray[0];
+            case InputState.DefaultMode:
+                currentState = new DefaultState();
+                break;
+            case InputState.BuildMode:
+                currentState = new BuildingState();
                 break;
 
-            case InputManager.InputState.BuildMode:
-                currentState = stateArray[1];
-                break;
-
-            case InputManager.InputState.FightMode:
-                currentState = stateArray[2];
+            case InputState.FightMode:
+                currentState = new FightState();
                 break;
         }
         return currentState;

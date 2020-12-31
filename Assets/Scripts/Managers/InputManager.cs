@@ -1,20 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
+
 public class InputManager : MonoBehaviour
 {
     public static InputManager _instance;
     PlayerManager _playerManager;
     UIManager _uiManager;
-   
-    public bool a_Button,b_Button;
-       public enum InputState { DefaultMode, BuildMode, FightMode };
-    public InputState state;
+    StateBase currentState;
+    PlayerStateMachine playerStateMachine;
+    public bool a_Button, b_Button;
+   [SerializeField] VirtualJoystick vJ;
 
     private void Awake() {
+        playerStateMachine = PlayerStateMachine.GetInstance;
+        currentState = playerStateMachine.SwichState(InputState.DefaultMode);
+
         if (_instance != null) {
             Destroy(gameObject);
-            
+
         }
         else {
             _instance = this;
@@ -24,10 +27,10 @@ public class InputManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
         _playerManager = PlayerManager._instance;
         _uiManager = UIManager._instance;
-        
+
     }
 
     // Update is called once per frame
@@ -36,25 +39,23 @@ public class InputManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            state = InputState.DefaultMode;
-            _playerManager.ChangeMode(state);
+           UpdateState(InputState.BuildMode);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            state = InputState.BuildMode;
-            _playerManager.ChangeMode(state);
+            UpdateState(InputState.DefaultMode);
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            state = InputState.FightMode;
-            _playerManager.ChangeMode(state);
+
+           UpdateState(InputState.FightMode);
         }
 
-
+        OnTouch("sdas", vJ);
     }
-  
+
     // need to implement touch and use on phone 
-    public void OnClicked(string Button,VirtualJoystick vJ)
+    public void OnTouch(string Button, VirtualJoystick vJ)
     {
         Touch[] touch = new Touch[5];
         //if (Input.touchCount > 0)
@@ -69,36 +70,37 @@ public class InputManager : MonoBehaviour
                 }
 
             }
-        }  
-        
-    }
-    public void ButtonCheck(VirtualButton[] ButtonPressed)
-    {
-        if (ButtonPressed[0].IsPressed) { a_Button = true; } else a_Button=false;
-        if (ButtonPressed[1].IsPressed) { b_Button = true; } else b_Button = false;
-
+        }
 
     }
+  
     public Vector2 GetAxis()
     {
-       
-      //ControllersCheck that returns Vector2 
-        Vector2 moveDirection= _uiManager.vJ.inpudDir;
+
+        //ControllersCheck that returns Vector2 
+        Vector2 moveDirection = vJ.inpudDir;
         return moveDirection;
-    } 
-    
-    
- 
-  
+    }
+
+
+
+
 
     //World to grid position can be found on the Grid manager
     /*private Vector2Int ScreenToGridPosition(Vector3 screenPosition) {
 
     }*/
 
-  
-   
+    public void UpdateState(InputState _state) {
+        currentState = playerStateMachine.SwichState(_state);
+    }
 
+    public void PressButtonA() {
+        currentState.ButtonA();
+    } 
+    public void PressButtonB() {
+        currentState.ButtonB();
+    }
 }
 
 
