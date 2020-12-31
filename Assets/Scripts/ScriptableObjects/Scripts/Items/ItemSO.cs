@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum ResourceType
+public enum ItemName
 {
     Flower,
     OakLog,
@@ -19,23 +19,39 @@ public enum ResourceType
 
 
 
-[CreateAssetMenu(fileName = "New Resource", menuName = "Crafting/" + "Resource")]
+public enum ItemType
+{
+    Generic,
+
+    Consumable,
+    Building,
+    Equipable
+
+}
+
+
+
+
+
+[CreateAssetMenu(fileName = "New Generic", menuName = "Items/" + "Generic")]
 public class ItemSO : ScriptableObject
 {
     [SerializeField]
     private int maxStackSize;
-    public int getmaxStackSize { get => maxStackSize; }
+    public int getmaxStackSize => maxStackSize; 
 
     [SerializeField]
     private string description;
-    public string getDescription { get => description; }
+    public string getDescription => description; 
 
     [SerializeField]
-    private ResourceType itemEnum;
-    public ResourceType getItemEnum { get => itemEnum; }
+    private ItemName itemEnum;
+    public ItemName getItemEnum => itemEnum; 
 
     [SerializeField]
     private Sprite sprite;
     public Sprite getsprite { get => sprite; }
 
 }
+
+
