@@ -8,11 +8,7 @@ public class InputManager : MonoBehaviour
     UIManager _uiManager;
    
     public bool a_Button,b_Button;
-   
-    
-
-
-    public enum InputState { DefaultMode, BuildMode, FightMode };
+       public enum InputState { DefaultMode, BuildMode, FightMode };
     public InputState state;
 
     private void Awake() {
@@ -57,7 +53,7 @@ public class InputManager : MonoBehaviour
 
     }
   
-    
+    // need to implement touch and use on phone 
     public void OnClicked(string Button,VirtualJoystick vJ)
     {
         Touch[] touch = new Touch[5];

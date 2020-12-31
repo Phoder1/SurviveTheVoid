@@ -132,7 +132,7 @@ public class PlayerManager : MonoBehaviour
         myState.OnUpdate();
     }
     
-    public void check()
+    public void Check()
     {
         Debug.Log("check Buttons");
     }

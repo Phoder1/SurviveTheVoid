@@ -1,52 +1,46 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 
-public class PlayerStateMachine : MonoBehaviour
+public class PlayerStateMachine 
 {
-    PlayerManager _playerManager;
+    private static PlayerStateMachine _instance;
+
     public StateBase currentState;
     public StateBase[] stateArray;
 
-    int counter=0;
+    int counter=0; // ?****
 
-    private void Start()
+    private PlayerStateMachine()
     {
-        _playerManager = PlayerManager._instance;
         currentState = stateArray[counter];
-        
-
     }
-  
+    public static PlayerStateMachine GetInstance {
+        get {
+            if (_instance == null)
+            {
+                _instance = new PlayerStateMachine();
+            }
+            return _instance;
+        }
+    }
     public StateBase SwichState(InputManager.InputState newState)
     {
-     
-        SwichMode();
-
-        void SwichMode()
+        switch (newState)
         {
-            switch (newState)
-            {
-                case InputManager.InputState.DefaultMode:
-                    currentState = stateArray[0];
-                    break;
+            case InputManager.InputState.DefaultMode:
+                currentState = stateArray[0];
+                break;
 
-                case InputManager.InputState.BuildMode:
-                    currentState = stateArray[1];
-                    break;
+            case InputManager.InputState.BuildMode:
+                currentState = stateArray[1];
+                break;
 
-                case InputManager.InputState.FightMode:
-                    currentState = stateArray[2];
-                    break;
-            }
-
-
-
+            case InputManager.InputState.FightMode:
+                currentState = stateArray[2];
+                break;
         }
         return currentState;
-    }
-    public void Update()
-    {
-            
     }
 }
