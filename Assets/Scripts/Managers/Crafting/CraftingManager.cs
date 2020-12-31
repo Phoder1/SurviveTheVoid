@@ -11,16 +11,16 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
     public ItemPackSO items;
     public RecipePackSO recipes;
     public Transform sectionHolder;
+    public Transform ScrollsHolder;
     private Section[] sections;
     private Section selectedSection;
     public GameObject[] recipeMaterialSlots;
     public static CraftingManager _instance;
     List<RecipeSO> unlockedRecipes = new List<RecipeSO>();
-    
+    [SerializeField]
+    private GameObject ItemSlotPrefab;
     public Text CraftText;
 
-    // true = craft button, false = unlock button;
-    public bool IsOnCrafing;
 
 
     [FormerlySerializedAs("SelectedRecipe")]
@@ -54,27 +54,27 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            inventory.AddToInventory(new ItemSlot(items.getitemsArr[3], 1));
+            inventory.AddToInventory(0,new ItemSlot(items.getitemsArr[3], 1));
             ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
-            inventory.AddToInventory(new ItemSlot(items.getitemsArr[4], 1));
+            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[4], 1));
             ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
-            inventory.RemoveItemFromInventory(new ItemSlot(items.getitemsArr[3], 1));
+            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[3], 1));
             ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.V))
         {
-            inventory.RemoveItemFromInventory(new ItemSlot(items.getitemsArr[4], 1));
+            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[4], 1));
             ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            inventory.PrintInventory();
+            inventory.PrintInventory(0);
         }
         if (Input.GetKeyDown(KeyCode.T))
         {
@@ -93,7 +93,8 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
 
         ImportSlots();
         AddRecipeToList();
-        UpdateInformation();
+        InstantiateItemSlots();
+        //UpdateInformation();
         SelectSection("Blocks");
 
     }
@@ -101,12 +102,17 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
     private void ImportSlots()
     {
         sections = new Section[sectionHolder.childCount];
-
         for (int i = 0; i < sectionHolder.childCount; i++)
         {
             Transform sectionTransform = sectionHolder.GetChild(i);
             sections[i] = new Section(sectionTransform.name, sectionTransform.gameObject);
-            Transform[] slotsTransform = new Transform[sectionTransform.childCount];
+            Transform[] slotsTransform = new Transform[sectionTransform.GetChild(0).childCount];
+;
+            sections[i].scrollBar = ScrollsHolder.GetChild(i).gameObject;
+
+
+
+
             for (int j = 0; j < slotsTransform.Length; j++)
             {
 
@@ -130,25 +136,62 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
 
 
 
-            sections[i].sectionSlots = new Image[slotsTransform.Length];
+            sections[i].sectionSlotsList = new List<Image>();
             for (int j = 0; j < slotsTransform.Length; j++)
             {
-                sections[i].sectionSlots[j] = slotsTransform[j].GetComponent<Image>();
+                sections[i].sectionSlotsList[j] = slotsTransform[j].GetComponent<Image>();
+                
             }
+           
         }
-
+     
         Array.Sort(sections, (section1, section2) => String.Compare(section1.name, section2.name, StringComparison.Ordinal));
 
     }
 
     private void UpdateInformation()
     {
+        GameObject Slot = new GameObject();
         foreach (Section section in sections)
         {
             section.UpdateInformation();
             //Debug.Log("Updating Information");
         }
+
+
+
     }
+
+    void InstantiateItemSlots()
+    {
+        foreach (Section section in sections)
+        {
+            for (int i = 0; i < sections.Length; i++)
+            {
+                GameObject instiatedSlot = new GameObject();
+                if (section.name == sectionHolder.GetChild(i).gameObject.name)
+                {
+                    for (int j = 0; j < section.recipeList.Count; j++)
+                    {
+                        instiatedSlot = Instantiate(ItemSlotPrefab, sectionHolder.GetChild(i).gameObject.transform.GetChild(0).transform);
+                        instiatedSlot.transform.GetChild(0).GetComponent<Image>().sprite = section.recipeList[j].getoutcomeItem.item.getsprite;
+
+
+                        section.GetSectionSlots(instiatedSlot.GetComponent<Image>());
+                    }
+                    
+                }
+            }
+            UpdateInformation();
+        }
+
+
+        for (int i = 0; i < sections.Length; i++)
+        {
+           
+        }
+    }
+
 
     void AddRecipeToList()
     {
@@ -205,6 +248,26 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
                 break;
             }
         }
+
+        //for (int i = 0; i < scrolls.Length; i++)
+        //{
+        //    if (scrolls[i].gameObject.name == sectionName + "ScrollBar")
+        //    {
+        //        if (!scrolls[i].activeInHierarchy)
+        //        {
+        //            scrolls[i].SetActive(true);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (scrolls[i].activeInHierarchy)
+        //        {
+        //            scrolls[i].SetActive(false);
+        //        }
+        //    }
+        //}
+
+
     }
     public void ShowRecipe(RecipeSO recipe)
     {
@@ -220,7 +283,7 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
                 Text materialNameText = recipeMaterialSlots[i].transform.GetChild(0).GetComponent<Text>();
                 materialNameText.text = recipe.getitemCostArr[i].item.getItemEnum.ToString();
                 Text materialCostText = recipeMaterialSlots[i].transform.GetChild(1).GetComponent<Text>();
-                materialCostText.text = inventory.GetAmountOfItem(recipe.getitemCostArr[i]).ToString() + " / " + recipe.getitemCostArr[i].amount;
+                materialCostText.text = inventory.GetAmountOfItem(0,recipe.getitemCostArr[i]).ToString() + " / " + recipe.getitemCostArr[i].amount;
 
             }
             else
@@ -235,24 +298,16 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
 
     public void AttemptToCraft()
     {
-        if (IsOnCrafing)
+        if (!inventory.CheckEnoughItemsForRecipe(selectedRecipe))
         {
-            if (!inventory.CheckEnoughItemsForRecipe(selectedRecipe))
-            {
-                Debug.Log("Not Enough Materials");
-            }
-            else
-            {
-                ShowRecipe(selectedRecipe);
-            }
+            Debug.Log("Not Enough Materials");
         }
         else
         {
-            UnlockRecipe(selectedRecipe);
-            
+            ShowRecipe(selectedRecipe);
         }
     }
-
+    
     public void UnlockRecipe(RecipeSO _recipe) => GetSection(_recipe.getSection).UnlockRecipe(_recipe);
 
 
@@ -300,7 +355,9 @@ public class Section
 {
     public string name;
     public GameObject section;
-    public Image[] sectionSlots;
+    public GameObject scrollBar;
+    public List<Image> sectionSlotsList = new List<Image>();
+    //public Image[] sectionSlots;
     private int selectedSlot = 0;
     public List<RecipeSO> recipeList;
     private bool isSelected;
@@ -332,18 +389,19 @@ public class Section
         int recipeIndex = recipeList.IndexOf(_recipe);
         if (!_recipe.getisUnlocked)
         {
-            
-            sectionSlots[recipeIndex].color = Color.black;
+
+            sectionSlotsList[recipeIndex].color = Color.black;
 
         }
         else if (selectedSlot == recipeList.IndexOf(_recipe))
         {
-            //sectionSlots[recipeIndex].color = Color.yellow;
-            SelectSlot(recipeIndex);
+
+            sectionSlotsList[recipeIndex].color = Color.black;
         }
         else
         {
-            sectionSlots[recipeIndex].color = Color.white;
+
+            sectionSlotsList[recipeIndex].color = Color.white;
         }
     }
 
@@ -368,7 +426,9 @@ public class Section
         if (state == true)
         {
             SelectSlot(0);
+            
         }
+        scrollBar.SetActive(state);
         section.SetActive(state);
     }
 
@@ -376,25 +436,13 @@ public class Section
     {
         if (recipeList[slotNum].getisUnlocked)
         {
-            CraftingManager._instance.IsOnCrafing = true;
-            sectionSlots[selectedSlot].color = Color.white;
+            sectionSlotsList[selectedSlot].color = Color.white;
             selectedSlot = slotNum;
-            sectionSlots[selectedSlot].color = Color.yellow;
-            CraftingManager._instance.CraftText.text = "Craft";
+            sectionSlotsList[selectedSlot].color = Color.yellow;
 
             updateSelectedRecipe(slotNum);
         }
-        else
-        {
-            CraftingManager._instance.IsOnCrafing = false;
-            sectionSlots[selectedSlot].color = Color.white;
-            selectedSlot = slotNum;
-            sectionSlots[selectedSlot].color = Color.magenta;
-            CraftingManager._instance.CraftText.text = "Unlock";
 
-            updateSelectedRecipe(slotNum);
-
-        }
     }
     void updateSelectedRecipe(int slotNum)
     {
@@ -410,30 +458,29 @@ public class Section
     }
 
 
-
+    public void GetSectionSlots(Image _Slot)
+    {
+        sectionSlotsList.Add(_Slot);
+    }
 
     public void UpdateInformation()
     {
-        for (int i = 0; i < recipeList.Count; i++)
+        for (int i = 0; i < sectionSlotsList.Count; i++)
         {
-
-            sectionSlots[i].GetComponentInChildren<Text>().text = recipeList[i].getoutcomeItem.item.getItemEnum.ToString();
-
-
 
 
 
             CheckIflockedRecipe(recipeList[i]);
         }
-        for (int i = 0; i < sectionSlots.Length; i++)
+        for (int i = 0; i < sectionSlotsList.Count; i++)
         {
             if (i < recipeList.Count)
             {
-                sectionSlots[i].gameObject.SetActive(true);
+                sectionSlotsList[i].gameObject.SetActive(true);
             }
             else
             {
-                sectionSlots[i].gameObject.SetActive(false);
+                sectionSlotsList[i].gameObject.SetActive(false);
             }
         }
     }

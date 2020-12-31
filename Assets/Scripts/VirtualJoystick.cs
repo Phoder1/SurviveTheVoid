@@ -32,7 +32,7 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHan
             {
                 inpudDir = inpudDir.normalized; 
             }
-            Debug.Log(inpudDir);
+
             joystick.rectTransform.anchoredPosition = new Vector2(inpudDir.x * joystickBGx/joystickOffset, inpudDir.y * joystickBGy/ joystickOffset);
 
 

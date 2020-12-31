@@ -1,9 +1,10 @@
 ﻿using Assets.TilesData;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public enum BuildingLayer { Floor, Buildings }
+public enum TileMapLayer { Floor, Buildings }
 public partial class GridManager : MonoBehaviour, IGridManager
 {
     //Debug Chunks (Disable when not needed, very heavy on performance):
@@ -14,10 +15,11 @@ public partial class GridManager : MonoBehaviour, IGridManager
         foreach (Chunk chunk in chunksDict.Values) {
             Vector2Int minCorner = chunk.chunkStartPos;
             Vector2Int maxCorner = minCorner + Vector2Int.one * CHUNK_SIZE;
-            Vector3 leftCorner = GridToWorldPosition(Vector2Int.RoundToInt(new Vector2(minCorner.x, maxCorner.y)), BuildingLayer.Floor);
-            Vector3 rightCorner = GridToWorldPosition(Vector2Int.RoundToInt(new Vector2(maxCorner.x, minCorner.y)), BuildingLayer.Floor);
-            Vector3 topCorner = GridToWorldPosition(maxCorner, BuildingLayer.Floor);
-            Vector3 bottomCorner = GridToWorldPosition(minCorner, BuildingLayer.Floor);
+            Vector3 leftCorner = GridToWorldPosition(Vector2Int.RoundToInt(new Vector2(minCorner.x, maxCorner.y)), TileMapLayer.Floor, false);
+            Vector3 rightCorner = GridToWorldPosition(Vector2Int.RoundToInt(new Vector2(maxCorner.x, minCorner.y)), TileMapLayer.Floor, false);
+            Vector3 topCorner = GridToWorldPosition(maxCorner, TileMapLayer.Floor, false);
+            Vector3 bottomCorner = GridToWorldPosition(minCorner, TileMapLayer.Floor, false);
+
             //Debug.Log("Origin: Min:" + chunkStartCorner + ", Max:" + maxCorner + ", Real: Bottom:" + bottomCorner + ", Top:" + topCorner + "Left:" + leftCorner + ", Right:" + rightCorner);
             Gizmos.DrawLine(bottomCorner, leftCorner);
             Gizmos.DrawLine(bottomCorner, rightCorner);
@@ -33,29 +35,45 @@ public partial class GridManager : MonoBehaviour, IGridManager
     private Tilemap floor;
     [SerializeField]
     private Tilemap buildings;
-    public Tilemap GetTilemap(BuildingLayer buildingLayer) {
+    public Tilemap GetTilemap(TileMapLayer buildingLayer) {
         switch (buildingLayer) {
-            case BuildingLayer.Floor:
+            case TileMapLayer.Floor:
                 return floor;
-            case BuildingLayer.Buildings:
+            case TileMapLayer.Buildings:
                 return buildings;
             default:
                 return null;
         }
     }
     [SerializeField] private Noise islandsNoise;
+    [SerializeField] private Noise plantsNoise;
     [SerializeField] private int loadDistance;
     [SerializeField] private float offSet;
-    public TilesSO tilesPack;
+    public TilesPackSO tilesPack;
+
 
     private Vector2Int lastViewMin = Vector2Int.zero;
     private Vector2Int lastViewMax = Vector2Int.zero;
 
+    private TileTier[] floorBlocksTiers;
+    private protected readonly struct TileTier
+    {
+        public readonly TileAbst tile;
+        public readonly float distance;
+        public readonly float overlapStart;
+
+        public TileTier(TileAbst tile, float distance, float overlapStart) {
+            this.tile = tile;
+            this.distance = distance;
+            this.overlapStart = overlapStart;
+        }
+    }
 
     private const int CHUNK_SIZE = 16;
     private const int COLLISION_SENSITIVITY = 6;
     private const float BUILDING_LAYER_POSITION_OFFSET = 0.5f;
 
+    private const float TOP_FACE_HEIGHT = 0.7f;
 
     public static GridManager _instance;
 
@@ -67,20 +85,25 @@ public partial class GridManager : MonoBehaviour, IGridManager
             _instance = this;
         }
         islandsNoise.GenerateSeed();
-    }
-    private void Start() {
+        plantsNoise.GenerateSeed();
         Init();
     }
-    private void Init() {
 
+    
+    private void Init() {
+        floorBlocksTiers = new TileTier[3] {
+        new TileTier(_instance.tilesPack.GetMoonTile,0f,0f),
+        new TileTier(_instance.tilesPack.GetObsidianTile,1000f,0f),
+        new TileTier(_instance.tilesPack.GetCircusTile,2000f,1000f)
+    };
     }
 
     public void UpdateView(Rect view) {
 
-        Vector2Int bottomLeft = WorldToGridPosition(new Vector2(Mathf.Min(view.min.x, view.max.x), Mathf.Min(view.min.y, view.max.y)), BuildingLayer.Floor);
-        Vector2Int topRight = WorldToGridPosition(new Vector2(Mathf.Max(view.min.x, view.max.x), Mathf.Max(view.min.y, view.max.y)), BuildingLayer.Floor);
-        Vector2Int topLeft = WorldToGridPosition(new Vector2(Mathf.Min(view.min.x, view.max.x), Mathf.Max(view.min.y, view.max.y)), BuildingLayer.Floor);
-        Vector2Int bottomRight = WorldToGridPosition(new Vector2(Mathf.Max(view.min.x, view.max.x), Mathf.Min(view.min.y, view.max.y)), BuildingLayer.Floor);
+        Vector2Int bottomLeft = WorldToGridPosition(new Vector2(Mathf.Min(view.min.x, view.max.x), Mathf.Min(view.min.y, view.max.y)), TileMapLayer.Floor);
+        Vector2Int topRight = WorldToGridPosition(new Vector2(Mathf.Max(view.min.x, view.max.x), Mathf.Max(view.min.y, view.max.y)), TileMapLayer.Floor);
+        Vector2Int topLeft = WorldToGridPosition(new Vector2(Mathf.Min(view.min.x, view.max.x), Mathf.Max(view.min.y, view.max.y)), TileMapLayer.Floor);
+        Vector2Int bottomRight = WorldToGridPosition(new Vector2(Mathf.Max(view.min.x, view.max.x), Mathf.Min(view.min.y, view.max.y)), TileMapLayer.Floor);
         Vector2Int min = new Vector2Int(bottomLeft.x, bottomRight.y) - Vector2Int.one * CHUNK_SIZE * loadDistance;
         Vector2Int max = new Vector2Int(topRight.x, topLeft.y) + Vector2Int.one * CHUNK_SIZE * (loadDistance + 1);
         min = GridToChunkCoordinates(min);
@@ -161,12 +184,17 @@ public partial class GridManager : MonoBehaviour, IGridManager
             }
         }
     }
-    public Vector3 GridToWorldPosition(Vector2Int gridPosition, BuildingLayer buildingLayer) => grid.CellToWorld((Vector3Int)gridPosition) + Vector3.up * (buildingLayer == BuildingLayer.Buildings ? BUILDING_LAYER_POSITION_OFFSET : 0f);
-    public Vector2Int WorldToGridPosition(Vector3 worldPosition, BuildingLayer buildingLayer)
-        => (Vector2Int)GetTilemap(buildingLayer).WorldToCell(worldPosition - Vector3.up * (buildingLayer == BuildingLayer.Buildings ? BUILDING_LAYER_POSITION_OFFSET : 0f));
+    public Vector3 GridToWorldPosition(Vector2Int gridPosition, TileMapLayer buildingLayer, bool getCenter)
+    {
+        Vector3 position = GetTilemap(buildingLayer).CellToWorld((Vector3Int)gridPosition);
+        position += Vector3.up * ((buildingLayer == TileMapLayer.Buildings ? BUILDING_LAYER_POSITION_OFFSET : 0f) + (getCenter ? TOP_FACE_HEIGHT / 2 : 0f));
+        return position;
+    }
+    public Vector2Int WorldToGridPosition(Vector3 worldPosition, TileMapLayer buildingLayer)
+        => (Vector2Int)GetTilemap(buildingLayer).WorldToCell(worldPosition - Vector3.up * (buildingLayer == TileMapLayer.Buildings ? BUILDING_LAYER_POSITION_OFFSET : 0f));
     public bool IsTileWalkable(Vector2 worldPosition, Vector2 movementVector) {
         bool moveLegal = true;
-        GenericTile floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + movementVector.normalized * offSet, BuildingLayer.Floor), BuildingLayer.Floor);
+        TileAbst floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + movementVector.normalized * offSet, TileMapLayer.Floor), TileMapLayer.Floor);
         moveLegal &= floorTile != null;
         Quaternion rotationLeft = Quaternion.Euler(0, 0, 90f / COLLISION_SENSITIVITY);
         Quaternion rotationRight = Quaternion.Euler(0, 0, 90f / COLLISION_SENSITIVITY);
@@ -174,24 +202,28 @@ public partial class GridManager : MonoBehaviour, IGridManager
         Vector2 rightMovementVector = movementVector.normalized * offSet;
         for (int i = 0; i < COLLISION_SENSITIVITY && moveLegal; i++) {
             leftMovementVector = rotationLeft * leftMovementVector;
-            floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + leftMovementVector, BuildingLayer.Floor), BuildingLayer.Floor);
+            floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + leftMovementVector, TileMapLayer.Floor), TileMapLayer.Floor);
             moveLegal &= floorTile != null;
             rightMovementVector = rotationRight * rightMovementVector;
-            floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + rightMovementVector, BuildingLayer.Floor), BuildingLayer.Floor);
+            floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + rightMovementVector, TileMapLayer.Floor), TileMapLayer.Floor);
             moveLegal &= floorTile != null;
         }
         return moveLegal;
     }
-    public GenericTile GetTileFromGrid(Vector2Int gridPosition, BuildingLayer buildingLayer) {
+
+    public TileAbst GetTileFromGrid(Vector2Int gridPosition, TileMapLayer buildingLayer) {
+
         if (TryGetChunk(GridToChunkCoordinates(gridPosition), out Chunk chunk)) {
-            GenericTile tile = chunk.GetTile(gridPosition, buildingLayer);
+            TileAbst tile = chunk.GetTile(gridPosition, buildingLayer);
             return tile;
         }
         else {
             return null;
         }
     }
-    public GenericTile GetTileFromWorld(Vector2 worldPosition, BuildingLayer buildingLayer) => GetTileFromGrid(WorldToGridPosition(worldPosition, buildingLayer), buildingLayer);
+
+    public TileAbst GetTileFromWorld(Vector2 worldPosition, TileMapLayer buildingLayer) => GetTileFromGrid(WorldToGridPosition(worldPosition, buildingLayer), buildingLayer);
+
 
     /// <summary>
     /// Gets the tile on the at a certain position.
@@ -199,7 +231,7 @@ public partial class GridManager : MonoBehaviour, IGridManager
     /// and world position if you want to also check for tiles sides.
     /// </summary>
     /// <returns></returns>
-    public TileHitStruct GetHitFromClickPosition(Vector2 clickPosition, BuildingLayer buildingLayer) {
+    public TileHitStruct GetHitFromClickPosition(Vector2 clickPosition, TileMapLayer buildingLayer) {
         Vector2Int gridPosition = WorldToGridPosition(clickPosition, buildingLayer);
         TileHitStruct hit;
         if (TryGetChunk(GridToChunkCoordinates(gridPosition), out Chunk chunk)) {
@@ -208,7 +240,7 @@ public partial class GridManager : MonoBehaviour, IGridManager
                 return hit;
             }
             else {
-                Vector2 tileWorldPosition = GridToWorldPosition(gridPosition, buildingLayer);
+                Vector2 tileWorldPosition = GridToWorldPosition(gridPosition, buildingLayer, false);
                 Vector2 localPosition = clickPosition - tileWorldPosition;
                 if (localPosition.y < 0.2f && Mathf.Abs(localPosition.x) < 0.1f) {
                     return hit;
@@ -232,7 +264,8 @@ public partial class GridManager : MonoBehaviour, IGridManager
         return TileHitStruct.none;
 
     }
-    public void SetTile(GenericTile tile, Vector2Int gridPosition, BuildingLayer buildingLayer, bool playerAction = true) {
+    public void SetTile(TileAbst tile, Vector2Int gridPosition, TileMapLayer buildingLayer, bool playerAction = true) {
+
         Vector2Int chunkPos = GridToChunkCoordinates(gridPosition);
         if (TryGetChunk(chunkPos, out Chunk chunk)) {
             chunk.SetTile(tile, gridPosition, buildingLayer, playerAction);
