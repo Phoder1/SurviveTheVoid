@@ -2,12 +2,13 @@
 public class PlayerStateMachine 
 {
     private static PlayerStateMachine _instance;
-
-     StateBase currentState;
-
+    StateBase[] stateBases = new StateBase[3];
     private PlayerStateMachine()
     {
-        currentState = SwichState(InputState.DefaultMode);
+        stateBases[0] = new DefaultState();
+        stateBases[1] = new BuildingState();
+        stateBases[2] = new FightState();
+
     }
     public static PlayerStateMachine GetInstance {
         get {
@@ -19,21 +20,24 @@ public class PlayerStateMachine
             return _instance;
         }
     }
-    public StateBase SwichState(InputState newState)
+    public void SwitchState(InputState newState)
     {
         switch (newState)
         {
             case InputState.DefaultMode:
-                currentState = new DefaultState();
+                InputManager.SetInputState = stateBases[0];
                 break;
             case InputState.BuildMode:
-                currentState = new BuildingState();
+                InputManager.SetInputState = stateBases[1];
                 break;
 
             case InputState.FightMode:
-                currentState = new FightState();
+                InputManager.SetInputState = stateBases[2];
                 break;
+            default:
+                    InputManager.SetInputState = stateBases[0];
+                break;
+
         }
-        return currentState;
     }
 }

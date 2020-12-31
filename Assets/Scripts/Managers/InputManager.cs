@@ -6,14 +6,14 @@ public class InputManager : MonoBehaviour
     public static InputManager _instance;
     PlayerManager _playerManager;
     UIManager _uiManager;
-    StateBase currentState;
+    static StateBase currentState;
     PlayerStateMachine playerStateMachine;
     public bool a_Button, b_Button;
-   [SerializeField] VirtualJoystick vJ;
+    [SerializeField] VirtualJoystick vJ;
 
     private void Awake() {
         playerStateMachine = PlayerStateMachine.GetInstance;
-        currentState = playerStateMachine.SwichState(InputState.DefaultMode);
+
 
         if (_instance != null) {
             Destroy(gameObject);
@@ -24,6 +24,13 @@ public class InputManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
     }
+    public static StateBase SetInputState
+        {
+        set { currentState = value; }
+    }
+
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,16 +46,15 @@ public class InputManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-           UpdateState(InputState.BuildMode);
+            playerStateMachine.SwitchState(InputState.DefaultMode);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            UpdateState(InputState.DefaultMode);
+            playerStateMachine.SwitchState(InputState.BuildMode);
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-
-           UpdateState(InputState.FightMode);
+            playerStateMachine.SwitchState(InputState.FightMode);
         }
 
         OnTouch("sdas", vJ);
@@ -91,9 +97,7 @@ public class InputManager : MonoBehaviour
 
     }*/
 
-    public void UpdateState(InputState _state) {
-        currentState = playerStateMachine.SwichState(_state);
-    }
+
 
     public void PressButtonA() {
         currentState.ButtonA();
