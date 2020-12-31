@@ -4,7 +4,7 @@ public class DefaultState : StateBase
     public override void ButtonB()
     {
         Debug.Log("DefaultState");
-        PlayerManager._instance.ImplementSpecialInteraction();
+        PlayerManager._instance.ImplementGathering();
     }
 }
 

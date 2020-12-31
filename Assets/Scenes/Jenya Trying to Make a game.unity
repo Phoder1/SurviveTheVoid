@@ -173,7 +173,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57810b910c8e5804b811a4d40058c6ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsPressed: 0
 --- !u!114 &6130166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -576,7 +575,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57810b910c8e5804b811a4d40058c6ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsPressed: 0
 --- !u!114 &306677777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1011,7 +1009,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57810b910c8e5804b811a4d40058c6ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsPressed: 0
 --- !u!114 &452590622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1697,7 +1694,6 @@ GameObject:
   - component: {fileID: 688840925}
   - component: {fileID: 688840924}
   - component: {fileID: 688840923}
-  - component: {fileID: 688840922}
   m_Layer: 0
   m_Name: Button Gather
   m_TagString: Untagged
@@ -1725,19 +1721,6 @@ RectTransform:
   m_AnchoredPosition: {x: 646.4, y: -394.4}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &688840922
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 688840920}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57810b910c8e5804b811a4d40058c6ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsPressed: 0
 --- !u!114 &688840923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1780,7 +1763,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 688840924}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1596536632}
+        m_MethodName: PressButtonB
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &688840924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1945,7 +1939,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57810b910c8e5804b811a4d40058c6ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsPressed: 0
 --- !u!114 &708855844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2150,7 +2143,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57810b910c8e5804b811a4d40058c6ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsPressed: 0
 --- !u!114 &874224098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2363,7 +2355,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57810b910c8e5804b811a4d40058c6ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsPressed: 0
 --- !u!114 &917211658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3436,7 +3427,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57810b910c8e5804b811a4d40058c6ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsPressed: 0
 --- !u!114 &1226941856
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4160,7 +4150,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57810b910c8e5804b811a4d40058c6ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsPressed: 0
 --- !u!114 &1435621262
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4293,7 +4282,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57810b910c8e5804b811a4d40058c6ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsPressed: 0
 --- !u!114 &1452058024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4579,7 +4567,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57810b910c8e5804b811a4d40058c6ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsPressed: 0
 --- !u!114 &1577939980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5095,7 +5082,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57810b910c8e5804b811a4d40058c6ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsPressed: 0
 --- !u!1 &1642193292 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6557583896732731083, guid: 60eff25f79fd9c642b8f10c335fd2ff2,
@@ -5710,7 +5696,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57810b910c8e5804b811a4d40058c6ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsPressed: 0
 --- !u!114 &1726259567
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6991,7 +6976,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57810b910c8e5804b811a4d40058c6ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsPressed: 0
 --- !u!114 &1903699020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7204,7 +7188,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57810b910c8e5804b811a4d40058c6ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsPressed: 0
 --- !u!114 &1981975834
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7371,7 +7354,6 @@ GameObject:
   - component: {fileID: 2097132528}
   - component: {fileID: 2097132527}
   - component: {fileID: 2097132526}
-  - component: {fileID: 2097132525}
   m_Layer: 0
   m_Name: Button Interact
   m_TagString: Untagged
@@ -7399,19 +7381,6 @@ RectTransform:
   m_AnchoredPosition: {x: 802.8, y: -186.1}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2097132525
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2097132523}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57810b910c8e5804b811a4d40058c6ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsPressed: 0
 --- !u!114 &2097132526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7454,7 +7423,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2097132527}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1596536632}
+        m_MethodName: PressButtonA
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2097132527
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7711,7 +7691,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57810b910c8e5804b811a4d40058c6ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsPressed: 0
 --- !u!114 &2116005905
 MonoBehaviour:
   m_ObjectHideFlags: 0

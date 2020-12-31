@@ -8,6 +8,7 @@ public class PlayerStateMachine
         stateBases[0] = new DefaultState();
         stateBases[1] = new BuildingState();
         stateBases[2] = new FightState();
+        SwitchState(InputState.DefaultMode);
 
     }
     public static PlayerStateMachine GetInstance {
@@ -15,7 +16,6 @@ public class PlayerStateMachine
             if (_instance == null)
             {
                 _instance = new PlayerStateMachine();
-                
             }
             return _instance;
         }
