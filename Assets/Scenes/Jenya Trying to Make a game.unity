@@ -2406,8 +2406,10 @@ MonoBehaviour:
   buildings: {fileID: 1380187965}
   islandsNoise:
     seed: 0
-    resolution: 30
-    boolThreshold: 0.65
+    noise: {fileID: 11400000, guid: 66aec1671127f51419b179de63acab2a, type: 2}
+  plantsNoise:
+    seed: 0
+    noise: {fileID: 11400000, guid: 12769a37b407a2a49a9856524b4991dc, type: 2}
   loadDistance: 1
   offSet: 0.3
   tilesPack: {fileID: 11400000, guid: c26b20c4d1e44e04c99336e14bd337fe, type: 2}
