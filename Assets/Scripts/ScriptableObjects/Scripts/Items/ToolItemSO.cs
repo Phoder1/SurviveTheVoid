@@ -5,8 +5,19 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Item Tool", menuName = "Crafting/" + "Tool")]
 public class ToolItemSO : ItemSO
 {
+
+    public enum ToolType
+    {
+        Sword,
+        Axe
+    }
+
+
+
     [SerializeField]
-    EquipableType equipType;
+    ToolType equipType;
+    public ToolType GetEquipType => equipType;
+
 
     [SerializeField]
     private float gatheringSpeed;

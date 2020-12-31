@@ -29,20 +29,6 @@ public enum ItemType
 
 }
 
-public enum EquipableType
-{
-    None,
-
-    Helmet,
-    Chest,
-    HandOne,
-    HandTwo,
-    Legging,
-
-    Sword,
-    Axe
-}
-
 
 
 
