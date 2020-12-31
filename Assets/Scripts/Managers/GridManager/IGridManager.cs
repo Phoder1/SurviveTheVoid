@@ -13,5 +13,5 @@ public interface IGridManager
     TileHitStruct GetHitFromClickPosition(Vector2 clickPosition, TileMapLayer buildingLayer);
     Tilemap GetTilemap(TileMapLayer buildingLayer);
     bool IsTileWalkable(Vector2 worldPosition, Vector2 movementVector);
-    void UpdateView(Rect view);  
+    void UpdateView(Rect view);
 }
