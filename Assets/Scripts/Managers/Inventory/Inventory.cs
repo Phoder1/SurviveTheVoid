@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class Inventory : IInventory
+public class Inventory 
 {
 
     private static Inventory _instance;
