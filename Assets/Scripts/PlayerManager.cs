@@ -204,7 +204,7 @@ public class PlayerManager : MonoBehaviour
     }
     public class SpecialInterractionScanChecker : IChecker
     {
-        public bool CheckTile(GenericTile tile)
+        public bool CheckTile(TileAbst tile)
         {
             return tile.isActiveInteraction;
         }
