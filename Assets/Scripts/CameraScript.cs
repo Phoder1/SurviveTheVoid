@@ -15,7 +15,7 @@ public class CameraScript : MonoBehaviour
     private Rect worldView;
     private bool viewChanged;
     private Camera camera1;
-    private TilesSO tilesPack;
+    private TilesPackSO tilesPack;
 
     // Start is called before the first frame update
     private void Start() {
@@ -51,7 +51,8 @@ public class CameraScript : MonoBehaviour
         if (Input.GetKey(KeyCode.Mouse0)) {
             TileMapLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? TileMapLayer.Buildings : TileMapLayer.Floor;
             Vector2Int gridPosition = MouseGridPosition(TileMapLayer.Floor);
-            gridManager.SetTile(tilesPack.getObsidianTile, gridPosition,  layer);
+            gridManager.SetTile(tilesPack.GetObsidianTile, gridPosition,  layer);
+
 
         }
         else if (Input.GetKey(KeyCode.Mouse1)) {

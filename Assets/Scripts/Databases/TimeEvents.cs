@@ -11,7 +11,7 @@ namespace Assets.TimeEvents
     public abstract class TimeEvent
     {
         public readonly float triggerTime;
-        protected GenericTile triggeringTile;
+        protected BlockTile triggeringTile;
         protected readonly Vector2Int eventPosition;
         protected bool eventTriggered = false;
 

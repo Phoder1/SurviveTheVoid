@@ -11,9 +11,9 @@ namespace Assets.TilesData
     public readonly struct TileHitStruct
     {
         public readonly Vector2Int gridPosition;
-        public readonly GenericTile tile;
+        public readonly TileAbst tile;
 
-        public TileHitStruct(GenericTile tile, Vector2Int gridPosition) {
+        public TileHitStruct(TileAbst tile, Vector2Int gridPosition) {
             this.tile = tile;
             this.gridPosition = gridPosition;
         }
@@ -30,7 +30,7 @@ namespace Assets.TilesData
         public override bool Equals(object obj) {
             return (obj is TileHitStruct hit &&
                     EqualityComparer<Vector2Int?>.Default.Equals(gridPosition, hit.gridPosition) &&
-                    EqualityComparer<GenericTile>.Default.Equals(tile, hit.tile));
+                    EqualityComparer<TileAbst>.Default.Equals(tile, hit.tile));
         }
         public bool Equals(TileHitStruct other) {
             return tile == other.tile && gridPosition == other.gridPosition;
@@ -39,33 +39,33 @@ namespace Assets.TilesData
         public override int GetHashCode() {
             int hashCode = 1814505039;
             hashCode = hashCode * -1521134295 + gridPosition.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<GenericTile>.Default.GetHashCode(tile);
+            hashCode = hashCode * -1521134295 + EqualityComparer<TileAbst>.Default.GetHashCode(tile);
             return hashCode;
         }
     }
     #endregion
-    #region Actual Tiles
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    #region Main abstract class
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     [Serializable]
-    public class GenericTile
+    public abstract class TileAbst
     {
         public TileBase mainTileBase;
         public ToolInteractionEnum interactionType;
         public bool isActiveInteraction;
-        protected TimeEvent eventInstance;
+
         public bool isSolid;
         public virtual void Init(Vector2Int _position, TileMapLayer buildingLayer) { }
-        private protected GenericTile() { }
+        private protected TileAbst() { }
 
-        public virtual GenericTile Clone() {
-            GenericTile copy = (GenericTile)MemberwiseClone();
+
+        public virtual TileAbst Clone() {
+            TileAbst copy = (TileAbst)MemberwiseClone();
             copy.mainTileBase = mainTileBase;
             return copy;
 
         }
         public virtual void Remove() {
-            if (eventInstance != null)
-                eventInstance.Cancel();
+
         }
         public virtual void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) { }
         public virtual void LongPressUpdate() { }
@@ -77,16 +77,53 @@ namespace Assets.TilesData
             public float chanceWeight;
         }
     }
+    #endregion
+
+    #region Subtypes
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    [Serializable]
+    public class BlockTile : TileAbst
+    {
+
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    [Serializable]
+    public class GatherableTile : TileAbst
+    {
+        [SerializeField] ItemSlot[] rewards;
+        public override void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
+            GridManager._instance.SetTile(null, gridPosition, buildingLayer, true);
+            Inventory inventory = Inventory.GetInstance;
+            foreach (ItemSlot reward in rewards) {
+                inventory.AddToInventory(0,reward);
+            }
+            inventory.PrintInventory(0);
+
+        }
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    [Serializable]
+    public class TimedEventTiles : TileAbst
+    {
+        protected TimeEvent eventInstance;
+        public override void Remove() {
+            base.Remove();
+            if (eventInstance != null)
+                eventInstance.Cancel();
+        }
+    }
+    #endregion
+    #region Actual Tiles
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     [Serializable]
-    public class ToothPaste : GenericTile
+    public class ToothPaste : TimedEventTiles
     {
-        public GenericTile replacementTile;
+        public TileAbst replacementTile;
         public int eventDelay;
         private ToothPaste() { }
-        public override GenericTile Clone() {
+        public override TileAbst Clone() {
             ToothPaste copy = (ToothPaste)base.Clone();
-            copy.replacementTile = GridManager._instance.tilesPack.getCircusTile;
+            copy.replacementTile = GridManager._instance.tilesPack.GetCircusTile;
             return copy;
         }
 
@@ -97,7 +134,7 @@ namespace Assets.TilesData
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     [Serializable]
-    public class ObsidianTile : GenericTile
+    public class ObsidianTile : BlockTile
     {
         private ObsidianTile() { }
         public override void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
