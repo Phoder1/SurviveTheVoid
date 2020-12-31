@@ -21,7 +21,7 @@ public enum ItemName
 
 public enum ItemType
 {
-    None,
+    Generic,
 
     Consumable,
     Building,
@@ -33,7 +33,7 @@ public enum ItemType
 
 
 
-[CreateAssetMenu(fileName = "New Item", menuName = "Crafting/" + "Item")]
+[CreateAssetMenu(fileName = "New Generic", menuName = "Items/" + "Generic")]
 public class ItemSO : ScriptableObject
 {
     [SerializeField]

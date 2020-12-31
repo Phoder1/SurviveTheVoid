@@ -1,7 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[CreateAssetMenu(fileName = "New Gear Item", menuName = "Items/" + "Gear")]
 public class GearItemSO : ItemSO
 {
 
@@ -12,16 +13,23 @@ public class GearItemSO : ItemSO
 
         Helmet,
         Chest,
-        HandOne,
-        HandTwo,
+        Gloves,
         Legging,
-
+        Shoes
     }
 
     private GearType gearType;
     public GearType GetGearTpye => gearType;
 
+    [SerializeField]
+    private int maxDurability;
+    public int GetMaxDurability => maxDurability;
 
+
+    // gear tier 
+    [SerializeField]
+    private int gearTier;
+    public int GetGearTier => gearTier;
 
 
 
@@ -29,3 +37,4 @@ public class GearItemSO : ItemSO
 
 
 }
+

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Item Tool", menuName = "Crafting/" + "Tool")]
+[CreateAssetMenu(fileName = "New Item Tool", menuName = "Items/" + "Tool")]
 public class ToolItemSO : ItemSO
 {
 
@@ -24,9 +24,9 @@ public class ToolItemSO : ItemSO
     public float getGatheringSpeed => gatheringSpeed;
 
     [SerializeField]
-    private int durability;
-    public int getDurability => durability;
-
+    private int maxDurability;
+    public int getMaxDurability => maxDurability;
+    
     // int tier
     [SerializeField]
     private int toolTier;
