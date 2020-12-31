@@ -23,6 +23,7 @@ public class PlayerManager : MonoBehaviour
     private Vector2 currentPos;
     private Vector2 nextPos;
     private Vector2Int lastPosOnGrid;
+    private Vector2Int currentPosOnGrid;
     private TileMapLayer buildingLayer;
     private TileHitStruct closestTile;
     private DirectionEnum movementDir;
@@ -46,7 +47,7 @@ public class PlayerManager : MonoBehaviour
     private void Start()
     {
        
-        buildingLayer = TileMapLayer.Floor;
+        buildingLayer = TileMapLayer.Buildings;
         _scanner = new Scanner();
         _inputManager = InputManager._instance;
         _GridManager = GridManager._instance;
@@ -81,31 +82,35 @@ public class PlayerManager : MonoBehaviour
             
             transform.Translate(movementVector);
             UpdateView();
-            Vector2Int currentPosOnGrid = _GridManager.WorldToGridPosition(transform.position, buildingLayer);
+            currentPosOnGrid = _GridManager.WorldToGridPosition(transform.position, buildingLayer);
 
-            float posToClosestDis = Vector2.Distance(currentPos, _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
-            float lastposToClosestDis = Vector2.Distance(_GridManager.GridToWorldPosition(lastPosOnGrid, buildingLayer, true), _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
-            if (lastPosOnGrid != currentPosOnGrid && (posToClosestDis > lastposToClosestDis))
-            {
-                Debug.Log("checkTile");
-                closestTile = _scanner.Scan(currentPosOnGrid, movementDir, 5, buildingLayer, new GatheringScanChecker());
-                lastPosOnGrid = currentPosOnGrid;
-                
-                if (closestTile.tile != null)
-                {
-
-                    //Check if Scanned-Do Not Delete!!//
-                   // closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
-                }
-               
-              
-            }
+          
 
         }
 
        
         
 
+    }
+    public void Scan(IChecker checkType)
+    {
+        float posToClosestDis = Vector2.Distance(currentPos, _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
+        float lastposToClosestDis = Vector2.Distance(_GridManager.GridToWorldPosition(lastPosOnGrid, buildingLayer, true), _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
+        if (lastPosOnGrid != currentPosOnGrid && (posToClosestDis > lastposToClosestDis))
+        {
+            Debug.Log("checkTile");
+            closestTile = _scanner.Scan(currentPosOnGrid, movementDir, 5, buildingLayer, checkType);
+            lastPosOnGrid = currentPosOnGrid;
+
+            if (closestTile.tile != null)
+            {
+
+                //Check if Scanned-Do Not Delete!!//
+                // closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
+            }
+
+
+        }
     }
 
     private void FindDirection()
@@ -148,7 +153,7 @@ public class PlayerManager : MonoBehaviour
     public void ButtonA()
     {
 
-        
+        Scan(new GatheringScanChecker());
         if (closestTile.tile != null)
         {
         walkTowards(_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
@@ -160,7 +165,13 @@ public class PlayerManager : MonoBehaviour
     }
     public void ButtonB()
     {
-        
+        Scan(new SpecialInterractionScanChecker());
+        if (closestTile.tile != null)
+        {
+            walkTowards(_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
+            myState.ButtonB();
+
+        }
         myState.ButtonB();
     }
 
@@ -189,6 +200,13 @@ public class PlayerManager : MonoBehaviour
         public bool CheckTile(GenericTile tile)
         {
             return !tile.isActiveInteraction;
+        }
+    }
+    public class SpecialInterractionScanChecker : IChecker
+    {
+        public bool CheckTile(GenericTile tile)
+        {
+            return tile.isActiveInteraction;
         }
     }
     public void walkTowards(Vector3 destination)
