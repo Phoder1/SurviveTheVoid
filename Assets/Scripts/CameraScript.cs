@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Assets.TilesData;
 
 public class CameraScript : MonoBehaviour
 {
@@ -15,7 +14,7 @@ public class CameraScript : MonoBehaviour
     private Rect worldView;
     private bool viewChanged;
     private Camera camera1;
-    private TilesPackSO tilesPack;
+    [SerializeField] private BlockTileSO clickTile;
 
     // Start is called before the first frame update
     private void Start() {
@@ -26,7 +25,6 @@ public class CameraScript : MonoBehaviour
     private void Init() {
         cameraComp = GetComponent<Camera>();
         gridManager = GridManager._instance;
-        tilesPack = gridManager.tilesPack;
     }
 
     // Update is called once per frame
@@ -51,7 +49,7 @@ public class CameraScript : MonoBehaviour
         if (Input.GetKey(KeyCode.Mouse0)) {
             TileMapLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? TileMapLayer.Buildings : TileMapLayer.Floor;
             Vector2Int gridPosition = MouseGridPosition(TileMapLayer.Floor);
-            gridManager.SetTile(tilesPack.GetObsidianTile, gridPosition,  layer);
+            gridManager.SetTile(new TileSlot(clickTile, gridPosition, layer), gridPosition,  layer);
 
 
         }
@@ -69,13 +67,13 @@ public class CameraScript : MonoBehaviour
             Vector3 mousePos = camera1.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = 0;
             TileMapLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? TileMapLayer.Buildings : TileMapLayer.Floor;
-            TileHitStruct hit = gridManager.GetHitFromClickPosition(mousePos, layer);
+            TileHit hit = gridManager.GetHitFromWorldPosition(mousePos, layer);
 
             Debug.Log(hit.tile);
             if (hit.tile != null
-                && hit.tile.interactionType == ToolInteractionEnum.Any) {
+                && hit.tile.GetInteractionType == InteractionType.Any) {
                 Debug.Log("Color change");
-                hit.tile.GatherInteraction((Vector2Int)hit.gridPosition, layer);
+                hit.tile.GatherInteraction(hit.gridPosition, layer);
             }
         }
 

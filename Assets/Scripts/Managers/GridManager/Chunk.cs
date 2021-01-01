@@ -1,5 +1,4 @@
-﻿using Assets.TilesData;
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 public partial class GridManager
@@ -7,8 +6,8 @@ public partial class GridManager
     //Chunk
     internal class Chunk
     {
-        private TileAbst[,] floorArr;
-        private TileAbst[,] buildingsArr;
+        private TileSlot[,] floorArr;
+        private TileSlot[,] buildingsArr;
 
 
         internal readonly Vector2Int chunkStartPos;
@@ -17,7 +16,7 @@ public partial class GridManager
         public Chunk(Vector2Int startPos) {
             chunkStartPos = startPos;
         }
-        public TileAbst GetTile(Vector2Int gridPosition, TileMapLayer buildingLayer) {
+        public TileSlot GetTile(Vector2Int gridPosition, TileMapLayer buildingLayer) {
             switch (buildingLayer) {
                 case TileMapLayer.Floor:
                     return floorArr?[gridPosition.x - chunkStartPos.x, gridPosition.y - chunkStartPos.y];
@@ -28,7 +27,7 @@ public partial class GridManager
             }
 
         }
-        internal void SetTile(TileAbst tile, Vector2Int gridPosition, TileMapLayer buildingLayer, bool countsAsEdit = true) {
+        internal void SetTile(TileSlot tile, Vector2Int gridPosition, TileMapLayer buildingLayer, bool countsAsEdit = true) {
 
             switch (buildingLayer) {
                 case TileMapLayer.Floor:
@@ -40,16 +39,16 @@ public partial class GridManager
             }
 
         }
-        private void SetTileByRef(TileAbst tile, Vector2Int gridPosition, TileMapLayer buildingLayer, bool countsAsEdit, ref TileAbst[,] tileArr, ref Tilemap tilemap) {
+        private void SetTileByRef(TileSlot tile, Vector2Int gridPosition, TileMapLayer buildingLayer, bool countsAsEdit, ref TileSlot[,] tileArr, ref Tilemap tilemap) {
 
             Vector2Int chunkPosition = GridToChunkPosition(gridPosition);
             bool tileExists = tileArr != null && tileArr[chunkPosition.x, chunkPosition.y] != null;
             if (tile != null || tileExists) {
                 if (tileArr == null) {
-                    tileArr = new TileAbst[CHUNK_SIZE, CHUNK_SIZE];
+                    tileArr = new TileSlot[CHUNK_SIZE, CHUNK_SIZE];
                 }
                 if (tileExists && tile == null) {
-                    tileArr[chunkPosition.x, chunkPosition.y].Remove();
+                    tileArr[chunkPosition.x, chunkPosition.y].Remove(gridPosition, buildingLayer);
                     tilemap.SetTile((Vector3Int)gridPosition, null);
                     tileArr[chunkPosition.x, chunkPosition.y] = null;
 
@@ -63,16 +62,15 @@ public partial class GridManager
                 else if (!tileExists) {
                     tileCount++;
                     wasEdited |= countsAsEdit;
-                    tilemap.SetTile((Vector3Int)gridPosition, tile.mainTileBase);
+                    tilemap.SetTile((Vector3Int)gridPosition, tile.GetMainTileBase);
                     tileArr[chunkPosition.x, chunkPosition.y] = tile;
-                    tile.Init(gridPosition, buildingLayer);
                 }
-                else if (tile != tileArr[chunkPosition.x, chunkPosition.y]) {
-                    tileArr[chunkPosition.x, chunkPosition.y].Remove();
-                    tilemap.SetTile((Vector3Int)gridPosition, tile.mainTileBase);
-                    tileArr[chunkPosition.x, chunkPosition.y] = tile;
-                    tile.Init(gridPosition, buildingLayer);
-
+                else {
+                    if (tile != tileArr[chunkPosition.x, chunkPosition.y]) {
+                        tileArr[chunkPosition.x, chunkPosition.y].Remove(gridPosition, buildingLayer);
+                        tileArr[chunkPosition.x, chunkPosition.y] = tile;
+                    }
+                    tilemap.SetTile((Vector3Int)gridPosition, tile.GetMainTileBase);
                     wasEdited |= countsAsEdit;
                 }
             }
@@ -84,16 +82,16 @@ public partial class GridManager
             Noise islandsNoise = _instance.islandsNoise;
             Noise plantsNoise = _instance.plantsNoise;
             TileTier[] tiers = _instance.floorBlocksTiers;
-            TileAbst plant = _instance.tilesPack.GetTree;
+            TileAbstSO plant = _instance.plantTile;
             for (int loopX = 0; loopX < CHUNK_SIZE; loopX++) {
                 for (int loopY = 0; loopY < CHUNK_SIZE; loopY++) {
                     Vector2Int gridPosition = new Vector2Int(loopX, loopY) + chunkStartPos;
                     if (islandsNoise.CheckThreshold(gridPosition, true, out float noiseValue)) {
-                        TileAbst tile = tiers[tiers.Length-1].tile;
+                        TileAbstSO tile = tiers[tiers.Length - 1].tile;
                         float distance = Vector2Int.Distance(gridPosition, Vector2Int.zero);
                         for (int i = 0; i < tiers.Length; i++) {
                             if (distance <= tiers[i].distance) {
-    
+
                                 float overlap = (distance - tiers[i].overlapStart) / (tiers[i].distance - tiers[i].overlapStart);
                                 if (distance > tiers[i].overlapStart && easeInOutBounce(overlap) > islandsNoise.GetRandomValue(gridPosition)) {
                                     tile = tiers[i].tile;
@@ -103,12 +101,12 @@ public partial class GridManager
                                 }
                                 break;
                             }
-                            
-                            
+
+
                         }
-                        SetTile(tile, ChunkToGridPosition(new Vector2Int(loopX, loopY)), TileMapLayer.Floor, false);
+                        SetTile(new TileSlot(tile, gridPosition, TileMapLayer.Floor), ChunkToGridPosition(new Vector2Int(loopX, loopY)), TileMapLayer.Floor, false);
                         if (plantsNoise.CheckThreshold(gridPosition, false, out _)) {
-                            SetTile(plant, gridPosition, TileMapLayer.Buildings, false);
+                            SetTile(new TileSlot(plant, gridPosition, TileMapLayer.Buildings), gridPosition, TileMapLayer.Buildings, false);
                         }
                     }
                 }
