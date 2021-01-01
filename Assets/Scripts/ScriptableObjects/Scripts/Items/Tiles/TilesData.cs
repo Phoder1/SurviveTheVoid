@@ -69,20 +69,20 @@ public interface ITileState
 }
 public class TileSlot : ITileState
 {
-    public ITileState tileState;
-    public TileSlot(TileAbstSO tile, Vector2Int gridPosition, TileMapLayer tileMapLayer) {
+    private ITileState tileState;
+    public TileSlot(TileAbstSO tile) {
         switch (tile) {
             case PlantTileSO plant:
-                tileState = new PlantState(plant,  gridPosition,  tileMapLayer);
+                tileState = new PlantState(plant);
                 break;
             case BlockTileSO block:
-                tileState = new BlockState(block, gridPosition, tileMapLayer);
+                tileState = new BlockState(block);
                 break;
             case ProcessingTableTileSO table:
-                tileState = new ProcessingTableTileState(table, gridPosition, tileMapLayer);
+                tileState = new ProcessingTableTileState(table);
                 break;
             case LightSourceTileSO lightSource:
-                tileState = new LightSourceTileState(lightSource, gridPosition, tileMapLayer);
+                tileState = new LightSourceTileState(lightSource);
                 break;
             default:
                 throw new System.NotImplementedException();
@@ -107,6 +107,18 @@ public class TileSlot : ITileState
 
 
 #endregion
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*[Serializable]
+public class ObsidianTile : BlockTile
+{
+    private ObsidianTile() { }
+    public override void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
+        Tilemap tilemap = GridManager._instance.GetTilemap(buildingLayer);
+        tilemap.RemoveTileFlags((Vector3Int)gridPosition, TileFlags.LockColor);
+        tilemap.SetColor((Vector3Int)gridPosition, new Color(0.9f, 0.9f, 1f, 0.7f));
+
+    }
+}*/
 
 
 

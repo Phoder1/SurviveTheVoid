@@ -1,4 +1,4 @@
-﻿using Assets.TilesData;
+﻿
 using NUnit.Framework.Internal.Execution;
 using UnityEngine;
 
@@ -12,7 +12,7 @@ public class InputManager : MonoBehaviour
     [SerializeField] VirtualJoystick vJ;
     public static InputState inputState;
     Vector2 touchPos, startTouchPos;
-    TileHitStruct newTileHit, previousTileHit;
+    TileHit newTileHit, previousTileHit;
     bool isBuildingAttached = false;
    
     private void Awake() {
@@ -127,7 +127,7 @@ public class InputManager : MonoBehaviour
                 startTouchPos = Camera.main.ScreenToWorldPoint(touch.position);
 
                     previousTileHit = gridManager.GetHitFromClickPosition(startTouchPos, TileMapLayer.Floor);
-                    TileAbst buildTileToPlace = previousTileHit.tile;
+                    TileSlot buildTileToPlace = previousTileHit.tile;
 
                     if (buildTileToPlace == null)
                         return;
