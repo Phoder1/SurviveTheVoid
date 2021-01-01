@@ -69,20 +69,20 @@ public interface ITileState
 }
 public class TileSlot : ITileState
 {
-    private ITileState tileState;
-    public TileSlot(TileAbstSO tile) {
+    public ITileState tileState;
+    public TileSlot(TileAbstSO tile, Vector2Int gridPosition, TileMapLayer tileMapLayer) {
         switch (tile) {
             case PlantTileSO plant:
-                tileState = new PlantState(plant);
+                tileState = new PlantState(plant,  gridPosition,  tileMapLayer);
                 break;
             case BlockTileSO block:
-                tileState = new BlockState(block);
+                tileState = new BlockState(block, gridPosition, tileMapLayer);
                 break;
             case ProcessingTableTileSO table:
-                tileState = new ProcessingTableTileState(table);
+                tileState = new ProcessingTableTileState(table, gridPosition, tileMapLayer);
                 break;
             case LightSourceTileSO lightSource:
-                tileState = new LightSourceTileState(lightSource);
+                tileState = new LightSourceTileState(lightSource, gridPosition, tileMapLayer);
                 break;
             default:
                 throw new System.NotImplementedException();

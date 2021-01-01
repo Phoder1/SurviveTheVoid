@@ -16,7 +16,7 @@ public class PlantState : ITileState
     public PlantTileSO tile;
     public int currentStage = 0;
 
-    public PlantState(PlantTileSO tile) {
+    public PlantState(PlantTileSO tile, Vector2Int gridPosition, TileMapLayer tileMapLayer) {
         currentStage = 0;
         this.tile = tile;
     }
@@ -24,13 +24,13 @@ public class PlantState : ITileState
 
     public InteractionType GetInteractionType => tile.GetInteractionType;
 
-    public TileType GetTileType => throw new System.NotImplementedException();
+    public TileType GetTileType => tile.GetTileType;
 
-    public bool GetIsSolid => throw new System.NotImplementedException();
+    public bool GetIsSolid => tile.GetIsSolid;
 
-    public void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
+    public void GatherInteraction(Vector2Int gridPosition, TileMapLayer tileMapLayer) {
         Debug.Log("Tried gathering");
-        GridManager._instance.SetTile(null, gridPosition, buildingLayer, true);
+        GridManager._instance.SetTile(null, gridPosition, tileMapLayer, true);
         Inventory inventory = Inventory.GetInstance;
         foreach (ItemSlot reward in tile.getRewards) {
             inventory.AddToInventory(0, reward);
@@ -41,8 +41,28 @@ public class PlantState : ITileState
     public void Remove(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
     }
 
-    public void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
-        throw new System.NotImplementedException();
+    public void SpecialInteraction(Vector2Int gridPosition, TileMapLayer tileMapLayer) {
+        if (GetInteractionType == InteractionType.Special) {
+            throw new System.NotImplementedException();
+        }
+    }
+    public void Grow(Vector2Int gridPosition, TileMapLayer tileMapLayer) {
+
+    }
+}
+public class PlantGrowEvent : TimeEvent
+{
+    protected TileSlot triggeringTile;
+    protected readonly Vector2Int eventPosition;
+    protected readonly TileMapLayer tileMapLayer;
+    public PlantGrowEvent(float triggerTime, TileSlot triggeringTile, Vector2Int eventPosition, TileMapLayer tileMapLayer) : base(triggerTime) {
+        this.triggeringTile = triggeringTile;
+        this.eventPosition = eventPosition;
+        this.tileMapLayer = tileMapLayer;
+    }
+
+    public override void Trigger() {
+        ((PlantState)triggeringTile.tileState).Grow(eventPosition, tileMapLayer);
     }
 }
 

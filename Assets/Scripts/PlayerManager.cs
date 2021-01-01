@@ -209,7 +209,6 @@ public class PlayerManager : MonoBehaviour
     }
     public void walkTowards(Vector3 destination)
     {
-
         if (_GridManager.WorldToGridPosition(transform.position, buildingLayer) != closestTile.gridPosition)
         {
 

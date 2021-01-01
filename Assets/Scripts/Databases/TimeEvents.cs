@@ -5,14 +5,12 @@ namespace Assets.TimeEvents
     public abstract class TimeEvent
     {
         public readonly float triggerTime;
-        protected TileSlot triggeringTile;
-        protected readonly Vector2Int eventPosition;
         protected bool eventTriggered = false;
 
 
-        public TimeEvent(float triggerTime, Vector2Int eventPosition) {
+        public TimeEvent(float triggerTime) {
             this.triggerTime = triggerTime;
-            this.eventPosition = eventPosition;
+            TimeManager._instance.AddEvent(this);
         }
 
         public abstract void Trigger();
