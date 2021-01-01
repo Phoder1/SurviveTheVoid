@@ -1,12 +1,11 @@
-﻿using Assets.TilesData;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.TimeEvents
 {
     public abstract class TimeEvent
     {
         public readonly float triggerTime;
-        protected BlockTile triggeringTile;
+        protected TileSlot triggeringTile;
         protected readonly Vector2Int eventPosition;
         protected bool eventTriggered = false;
 
@@ -21,21 +20,6 @@ namespace Assets.TimeEvents
             if (!eventTriggered) {
                 TimeManager._instance.RemoveEvent(this);
             }
-        }
-    }
-
-    public class ToothPasteEvent : TimeEvent
-    {
-        protected new ToothPaste triggeringTile;
-
-        public ToothPasteEvent(ToothPaste triggeringTile, float triggerTime, Vector2Int eventPosition) : base(triggerTime, eventPosition) {
-            this.triggeringTile = triggeringTile;
-        }
-
-        public override void Trigger() {
-            eventTriggered = true;
-            GridManager._instance.SetTile(triggeringTile.replacementTile, eventPosition, TileMapLayer.Floor, false);
-            
         }
     }
 }

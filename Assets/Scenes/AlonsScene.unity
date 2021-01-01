@@ -518,6 +518,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrollSpeed: 100
   moveSpeed: 50
+  clickTile: {fileID: 11400000, guid: aad93d9da4855c44aa913aa4003eb399, type: 2}
 --- !u!81 &849385205
 AudioListener:
   m_ObjectHideFlags: 0
@@ -755,13 +756,16 @@ MonoBehaviour:
   buildings: {fileID: 1380187965}
   islandsNoise:
     seed: 0
-    noise: {fileID: 11400000, guid: 66aec1671127f51419b179de63acab2a, type: 2}
+    noise: {fileID: 11400000, guid: 590e0a2ecc5c88d4fb75db0217f0a49f, type: 2}
   plantsNoise:
     seed: 0
     noise: {fileID: 11400000, guid: 12769a37b407a2a49a9856524b4991dc, type: 2}
   loadDistance: 1
   offSet: 0
-  tilesPack: {fileID: 11400000, guid: c26b20c4d1e44e04c99336e14bd337fe, type: 2}
+  moonTile: {fileID: 11400000, guid: 38832a9085471904985e18510c56e5d7, type: 2}
+  circusTile: {fileID: 11400000, guid: 8190ee7f328b6674280febcc9769179d, type: 2}
+  toothpasteTile: {fileID: 11400000, guid: aad93d9da4855c44aa913aa4003eb399, type: 2}
+  plantTile: {fileID: 11400000, guid: 6ae7fda4f7596d84e8d77af3f94f2a4f, type: 2}
 --- !u!1 &1208442055
 GameObject:
   m_ObjectHideFlags: 0

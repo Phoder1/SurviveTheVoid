@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scan;
-using Assets.TilesData;
 using System;
 
 public class PlayerManager : MonoBehaviour 
@@ -25,7 +24,7 @@ public class PlayerManager : MonoBehaviour
     private Vector2Int lastPosOnGrid;
     private Vector2Int currentPosOnGrid;
     private TileMapLayer buildingLayer;
-    private TileHitStruct closestTile;
+    private TileHit closestTile;
     private DirectionEnum movementDir;
 
 
@@ -196,16 +195,16 @@ public class PlayerManager : MonoBehaviour
     }
     public class GatheringScanChecker : IChecker
     {
-        public bool CheckTile(TileAbst tile)
+        public bool CheckTile(TileSlot tile)
         {
-            return !tile.isActiveInteraction;
+            return tile.GetInteractionType != InteractionType.Special;
         }
     }
     public class SpecialInterractionScanChecker : IChecker
     {
-        public bool CheckTile(TileAbst tile)
+        public bool CheckTile(TileSlot tile)
         {
-            return tile.isActiveInteraction;
+            return tile.GetInteractionType == InteractionType.Special;
         }
     }
     public void walkTowards(Vector3 destination)
@@ -223,7 +222,7 @@ public class PlayerManager : MonoBehaviour
             
             closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
             Debug.Log("TileHarvested");
-            closestTile = TileHitStruct.none;
+            closestTile = TileHit.none;
         }
         
         

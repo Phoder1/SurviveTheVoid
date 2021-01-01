@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad4fb29703af1ac4e92edd55a5b9b4f5, type: 3}
+  m_Name: ToothPaste
+  m_EditorClassIdentifier: 
+  maxStackSize: 20
+  description: Toothpase tile!
+  itemEnum: 0
+  sprite: {fileID: 0}
+  mainTileBase: {fileID: 11400000, guid: 398649c56acc0e04292649cdc47fea34, type: 2}
+  interactionType: 8
+  tileType: 0
+  isSolid: 1

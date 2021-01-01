@@ -1,11 +1,9 @@
-﻿using Assets.TilesData;
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 using System.IO;
 
 public class StartingPlatformSaver : MonoBehaviour
 {
-    [SerializeField] private TilesPackSO tilesPack;
     object WriteReadLock = new object();
     private string buildBasePath;
     private string DirectoryPath { get => buildBasePath + "/Saves/"; }
@@ -51,8 +49,8 @@ public class StartingPlatformSaver : MonoBehaviour
     [Serializable]
     public class StartingPlatform
     {
-        public BlockTile[,] floorTiles;
-        public BlockTile[,] buildingsTiles;
+        public TileSlot[,] floorTiles;
+        public TileSlot[,] buildingsTiles;
         public Vector2Int startPos;
     }
 

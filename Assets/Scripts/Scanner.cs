@@ -1,5 +1,4 @@
-﻿using Assets.TilesData;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scan
@@ -18,30 +17,30 @@ namespace Assets.Scan
             gridManager = GridManager._instance;
         }
 
-        public TileHitStruct Scan(Vector2Int gridStartPosition, DirectionEnum _direction, int _radius, TileMapLayer _buildingLayer, IChecker _checker) {
+        public TileHit Scan(Vector2Int gridStartPosition, DirectionEnum _direction, int _radius, TileMapLayer _buildingLayer, IChecker _checker) {
             startPosition = gridStartPosition;
             radius = _radius;
             buildingLayer = _buildingLayer;
             checker = _checker;
             direction = _direction;
             for (int i = 1; i <= radius; i++) {
-                TileHitStruct tileHit = GetClosestTileInSquare(i);
+                TileHit tileHit = GetClosestTileInSquare(i);
                 if (tileHit.tile != null) {
                     return tileHit;
                 }
             }
 
-            return TileHitStruct.none;
+            return TileHit.none;
         }
 
-        public TileHitStruct GetClosestTileInSquare(int distanceFromCenter) {
-            TileHitStruct[] tiles = GetAllTilesInSquare(distanceFromCenter);
+        public TileHit GetClosestTileInSquare(int distanceFromCenter) {
+            TileHit[] tiles = GetAllTilesInSquare(distanceFromCenter);
 
-            if (tiles == null) return TileHitStruct.none;
+            if (tiles == null) return TileHit.none;
 
-            TileHitStruct closestTile = TileHitStruct.none;
+            TileHit closestTile = TileHit.none;
             float shortestDistance = float.MaxValue;
-            foreach (TileHitStruct tile in tiles)
+            foreach (TileHit tile in tiles)
             {
                 float distance;
                 if ((distance = Vector2Int.Distance(tile.gridPosition, startPosition)) < shortestDistance) {
@@ -51,10 +50,10 @@ namespace Assets.Scan
                 }
             }
 
-            return closestTile.tile != null ? closestTile : TileHitStruct.none;
+            return closestTile.tile != null ? closestTile : TileHit.none;
         }
-        private TileHitStruct[] GetAllTilesInSquare(int distanceFromCenter) {
-            List<TileHitStruct> tiles = new List<TileHitStruct>();
+        private TileHit[] GetAllTilesInSquare(int distanceFromCenter) {
+            List<TileHit> tiles = new List<TileHit>();
             int numOfTiles = 8 * distanceFromCenter;
             Vector2Int relativeCheckPosition;
             switch (direction) {
@@ -81,11 +80,11 @@ namespace Assets.Scan
             DirectionEnum currentDirection = direction;
             for (int i = 0; i < numOfTiles; i++) {
                 //Check tile
-                TileAbst currentTile = gridManager.GetTileFromGrid(relativeCheckPosition + startPosition , buildingLayer);
+                TileSlot currentTile = gridManager.GetTileFromGrid(relativeCheckPosition + startPosition , buildingLayer);
 
                 if (currentTile != null && checker.CheckTile(currentTile))
                 {
-                    tiles.Add(new TileHitStruct(currentTile, relativeCheckPosition));
+                    tiles.Add(new TileHit(currentTile, relativeCheckPosition));
                 }
                 //Check if at corner
                 if (relativeCheckPosition.x == relativeCheckPosition.y) {
@@ -138,7 +137,7 @@ namespace Assets.Scan
         /// The tile to check, return true to take the tile into account.
         /// </param>
         /// <returns></returns>
-        bool CheckTile(TileAbst tile);
+        bool CheckTile(TileSlot tile);
     }
 }
 
