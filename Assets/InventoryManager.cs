@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,7 +16,11 @@ public class InventoryManager : MonoBehaviour
 
 
     [Header("Inventory Related")]
-    public Image[] InventorySlots;
+    
+    public GameObject[] InventorySlots;
+    [SerializeField]Image[] InventorySlotImage;
+    [SerializeField] TextMeshProUGUI[] inventorySlotText;
+
     Inventory inventory;
     private void Awake()
     {
@@ -74,28 +80,56 @@ public class InventoryManager : MonoBehaviour
 
     void UpdateInventoryToUI()
     {
+        InventorySlotImage = new Image[inventory.GetInventory.Length];
+        inventorySlotText = new TextMeshProUGUI[inventory.GetInventory.Length];
         for (int i = 0; i < inventory.GetInventory.Length; i++)
         {
+            InventorySlotImage[i] = InventorySlots[i].transform.GetChild(0).GetComponent<Image>();
+
+            inventorySlotText[i] = InventorySlots[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+
             if (inventory.GetInventory[i] != null)
             {
-                if(!InventorySlots[i].isActiveAndEnabled)
+                if (!InventorySlotImage[i].isActiveAndEnabled)
+                {
                     SetInventorySlotActive(i, true);
-                InventorySlots[i].sprite = inventory.GetInventory[i].item.getsprite;
+                }
+
+                InventorySlotImage[i].sprite = inventory.GetInventory[i].item.getsprite;
+
+               UpdateInventorySlotAmountUI(i, inventory.GetInventory[i].amount,true);
             }
             else
             {
-                if (InventorySlots[i].isActiveAndEnabled)
+                if (InventorySlotImage[i].isActiveAndEnabled)
+                {
                     SetInventorySlotActive(i, false);
-                InventorySlots[i].sprite = null;
+                }
+                InventorySlotImage[i].sprite = null;
+                UpdateInventorySlotAmountUI(i, 0, false);
+
+
             }
         }
     }
 
     void SetInventorySlotActive(int Index,bool IsActive)
     {
-        InventorySlots[Index].gameObject.SetActive(IsActive);
+        InventorySlotImage[Index].gameObject.SetActive(IsActive);
+        inventorySlotText[Index].gameObject.SetActive(IsActive);
     }
+    void UpdateInventorySlotAmountUI(int Index,int Amount,bool IsItemExist)
+    {
+        if (IsItemExist && Amount > 1)
+        {
+            inventorySlotText[Index].text = Amount.ToString();
+        }
+        else
+        {
+            inventorySlotText[Index].text = "";
+        }
 
+    }
 
 
 }

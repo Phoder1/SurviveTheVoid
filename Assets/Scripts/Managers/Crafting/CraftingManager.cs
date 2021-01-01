@@ -168,16 +168,24 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
         {
             for (int i = 0; i < sections.Length; i++)
             {
-                GameObject instiatedSlot = new GameObject();
+
                 if (section.name == sectionHolder.GetChild(i).gameObject.name)
                 {
                     for (int j = 0; j < section.recipeList.Count; j++)
                     {
+                        GameObject instiatedSlot = new GameObject();
                         instiatedSlot = Instantiate(ItemSlotPrefab, sectionHolder.GetChild(i).gameObject.transform.GetChild(0).transform);
                         instiatedSlot.transform.GetChild(0).GetComponent<Image>().sprite = section.recipeList[j].getoutcomeItem.item.getsprite;
 
+                        // add function to the buttons
+                        int Index = j;
+                        instiatedSlot.GetComponent<Button>().onClick.AddListener(delegate { SelectRecipe(Index); });
+                        Debug.Log("Item slot: " + j);
+
+
 
                         section.GetSectionSlots(instiatedSlot.GetComponent<Image>());
+                        section.CheckIflockedRecipe(section.recipeList[j]);
                     }
                     
                 }
@@ -186,13 +194,14 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
         }
 
 
-        for (int i = 0; i < sections.Length; i++)
-        {
-           
-        }
+
     }
 
-
+    void test(int s)
+    {
+        Debug.Log(s);
+    }
+    
     void AddRecipeToList()
     {
         foreach (RecipeSO recipe in recipes.getrecipesArr)
@@ -222,6 +231,7 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
 
     public void SelectRecipe(int recipe)
     {
+
         selectedSection.SelectSlot(recipe);
     }
 
@@ -384,7 +394,7 @@ public class Section
 
     }
 
-    void CheckIflockedRecipe(RecipeSO _recipe)
+    public void CheckIflockedRecipe(RecipeSO _recipe)
     {
         int recipeIndex = recipeList.IndexOf(_recipe);
         if (!_recipe.getisUnlocked)
@@ -465,13 +475,7 @@ public class Section
 
     public void UpdateInformation()
     {
-        for (int i = 0; i < sectionSlotsList.Count; i++)
-        {
 
-
-
-            CheckIflockedRecipe(recipeList[i]);
-        }
         for (int i = 0; i < sectionSlotsList.Count; i++)
         {
             if (i < recipeList.Count)
@@ -483,6 +487,13 @@ public class Section
                 sectionSlotsList[i].gameObject.SetActive(false);
             }
         }
+
+        //for (int i = 0; i < recipeList.Count; i++)
+        //{
+        //    CheckIflockedRecipe(recipeList[i]);
+        //}
+
+
     }
 }
 

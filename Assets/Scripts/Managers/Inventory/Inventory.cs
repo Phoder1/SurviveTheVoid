@@ -1,7 +1,8 @@
 ﻿using System;
 using UnityEngine;
 
-public class Inventory 
+
+    public class Inventory 
 {
     private static Inventory _instance;
     //Inventory IInventory.GetInstance => GetInstance;
@@ -14,7 +15,7 @@ public class Inventory
             return _instance;
         }
     }
-    int maxCapacityOfItemsInList = 25;
+    int maxCapacityOfItemsInList = 24;
     bool checkForItem;
     int counter;
     int itemAmountCount;
@@ -437,15 +438,16 @@ public interface IInventory
 
 
 
-[Serializable]
-public class ItemSlot
-{
-    public ItemSO item;
-    public int amount;
-    public int? durability;
-    public ItemSlot(ItemSO item, int amount,int? durability = null) {
-        this.item = item;
-        this.amount = amount;
-        this.durability = durability;
+    [Serializable]
+    public class ItemSlot
+    {
+        public ItemSO item;
+        public int amount;
+        public int? durability;
+        public ItemSlot(ItemSO item, int amount, int? durability = null)
+        {
+            this.item = item;
+            this.amount = amount;
+            this.durability = durability;
+        }
     }
-}
