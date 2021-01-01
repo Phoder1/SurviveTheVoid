@@ -1176,26 +1176,13 @@ GameObject:
   - component: {fileID: 1596536632}
   - component: {fileID: 1596536633}
   - component: {fileID: 1596536634}
-  - component: {fileID: 1596536630}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1596536630
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1596536629}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6de63b51f6a346f4da30498054ae4ef2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_IsActive: 0
 --- !u!4 &1596536631
 Transform:
   m_ObjectHideFlags: 0
@@ -1223,8 +1210,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1216b153daeb65f4bb004893bad54868, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  a_Button: 0
-  b_Button: 0
   vJ: {fileID: 0}
 --- !u!212 &1596536633
 SpriteRenderer:
@@ -1288,7 +1273,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a526a7dfbaf78b468386abf267f4174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraComp: {fileID: 0}
+  cameraComp: {fileID: 519420031}
 --- !u!1 &2043060227
 GameObject:
   m_ObjectHideFlags: 0
