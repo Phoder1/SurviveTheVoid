@@ -19,7 +19,6 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
     List<RecipeSO> unlockedRecipes = new List<RecipeSO>();
     [SerializeField]
     private GameObject ItemSlotPrefab;
-    public Text CraftText;
 
 
 
@@ -102,6 +101,8 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
     private void ImportSlots()
     {
         sections = new Section[sectionHolder.childCount];
+        
+        Debug.Log(sectionHolder.childCount.ToString());
         for (int i = 0; i < sectionHolder.childCount; i++)
         {
             Transform sectionTransform = sectionHolder.GetChild(i);
@@ -142,11 +143,10 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
                 sections[i].sectionSlotsList[j] = slotsTransform[j].GetComponent<Image>();
                 
             }
-           
         }
      
         Array.Sort(sections, (section1, section2) => String.Compare(section1.name, section2.name, StringComparison.Ordinal));
-
+     
     }
 
     private void UpdateInformation()
@@ -180,7 +180,7 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
                         int Index = j;
                         instiatedSlot.GetComponent<Button>().onClick.AddListener(delegate { SelectRecipe(Index); });
 
-                        Debug.Log(instiatedSlot.gameObject.name);
+                        //Debug.Log(instiatedSlot.gameObject.name);
 
                         section.GetSectionSlots(instiatedSlot.GetComponent<Image>());
                         section.CheckIflockedRecipe(section.recipeList[j]);
@@ -195,11 +195,7 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
 
     }
 
-    void test(int s)
-    {
-        Debug.Log(s);
-    }
-    
+
     void AddRecipeToList()
     {
         foreach (RecipeSO recipe in recipes.getrecipesArr)

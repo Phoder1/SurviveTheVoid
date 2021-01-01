@@ -361,7 +361,18 @@ public class Inventory
             {
                 RemoveItemFromInventory(0, recipe.getitemCostArr[i]);
             }
-            AddToInventory(0, recipe.getoutcomeItem);
+            if(GetAmountOfItem(0,null) > 0)
+            {
+                AddToInventory(0, recipe.getoutcomeItem);
+            }
+            else
+            {
+                for (int i = 0; i < recipe.getitemCostArr.Length; i++)
+                {
+                    AddToInventory(0, recipe.getitemCostArr[i]);
+                }
+            }
+
         }
         else
             Debug.Log("Cant Craft Not Enough resources");
@@ -398,10 +409,10 @@ public class Inventory
                 }
             }
         }
-        if ((float)counter >= (float)(item.amount / item.item.getmaxStackSize))
-        {
-            return true;
-        }
+        //if ((float)counter >= (float)(item.amount) / (float)(item.item.getmaxStackSize))
+        //{
+        //    return true;
+        //}
 
         return false;
     }

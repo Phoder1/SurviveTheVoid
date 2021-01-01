@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 4043660047941272735}
   - component: {fileID: 4010407033306944410}
   - component: {fileID: 4002651174605677083}
-  - component: {fileID: 5123566333836081877}
   - component: {fileID: 1916986686293705550}
   - component: {fileID: 1782004605564606447}
   - component: {fileID: 41707134889584068}
@@ -90,19 +89,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efd8791f408626245894285b57a19865, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5123566333836081877
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6828253403587073456}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 088d9b86520b6294e92d2b2038c7047e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _uiElements: []
 --- !u!114 &1916986686293705550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,9 +117,15 @@ MonoBehaviour:
   recipes: {fileID: 11400000, guid: 0e290e14c38a82045b8652dd627c51c9, type: 2}
   sectionHolder: {fileID: 0}
   ScrollsHolder: {fileID: 0}
-  recipeMaterialSlots: []
-  ItemSlotPrefab: {fileID: 0}
-  CraftText: {fileID: 0}
+  recipeMaterialSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  ItemSlotPrefab: {fileID: 2458655832146661207, guid: a4ca921f8ddcf4d4d8535b9c3898c044,
+    type: 3}
   selectedRecipe: {fileID: 0}
 --- !u!114 &41707134889584068
 MonoBehaviour:
@@ -198,9 +190,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a6cc23cff2f84a458cfeaa58d39023d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EquipSlots: []
+  EquipSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   EquippedSlots: []
   IsInventoryOn: 1
-  InventorySlots: []
-  InventorySlotImage: []
-  inventorySlotText: []
+  InventorySlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
