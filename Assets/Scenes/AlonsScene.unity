@@ -1183,7 +1183,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1596536630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1196,11 +1196,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6de63b51f6a346f4da30498054ae4ef2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: {fileID: 11400000, guid: f1bee2818baf9da4aa37856fcbb44cb7, type: 2}
-  stateArray:
-  - {fileID: 11400000, guid: f1bee2818baf9da4aa37856fcbb44cb7, type: 2}
-  - {fileID: 11400000, guid: b5c9dbd4783f4c149a5fb71febc450e0, type: 2}
-  - {fileID: 11400000, guid: 9748e8fd77154914c8eb67ce0a6e3719, type: 2}
 --- !u!4 &1596536631
 Transform:
   m_ObjectHideFlags: 0
@@ -1230,7 +1225,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   a_Button: 0
   b_Button: 0
-  state: 0
+  vJ: {fileID: 0}
 --- !u!212 &1596536633
 SpriteRenderer:
   m_ObjectHideFlags: 0
