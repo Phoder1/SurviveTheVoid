@@ -8,7 +8,7 @@ public class UIManager : MonoBehaviour
     public static UIManager _instance;
     InputManager _inputManager;
     CraftingManager craftingManager;
-    InventoryManager inventoryManager;
+    InventoryUIManager inventoryManager;
     // UI elements
     public GameObject[] _uiElements;
 
@@ -26,7 +26,7 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         craftingManager = CraftingManager._instance;
-        inventoryManager = InventoryManager._instance;
+        inventoryManager = InventoryUIManager._instance;
         _inputManager = InputManager._instance;
     }
 

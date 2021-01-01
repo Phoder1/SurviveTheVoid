@@ -151,7 +151,6 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
 
     private void UpdateInformation()
     {
-        GameObject Slot = new GameObject();
         foreach (Section section in sections)
         {
             section.UpdateInformation();
@@ -173,16 +172,15 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
                 {
                     for (int j = 0; j < section.recipeList.Count; j++)
                     {
-                        GameObject instiatedSlot = new GameObject();
-                        instiatedSlot = Instantiate(ItemSlotPrefab, sectionHolder.GetChild(i).gameObject.transform.GetChild(0).transform);
+
+                        GameObject instiatedSlot = Instantiate(ItemSlotPrefab, sectionHolder.GetChild(i).gameObject.transform.GetChild(0).transform);
                         instiatedSlot.transform.GetChild(0).GetComponent<Image>().sprite = section.recipeList[j].getoutcomeItem.item.getsprite;
 
                         // add function to the buttons
                         int Index = j;
                         instiatedSlot.GetComponent<Button>().onClick.AddListener(delegate { SelectRecipe(Index); });
-                        Debug.Log("Item slot: " + j);
 
-
+                        Debug.Log(instiatedSlot.gameObject.name);
 
                         section.GetSectionSlots(instiatedSlot.GetComponent<Image>());
                         section.CheckIflockedRecipe(section.recipeList[j]);

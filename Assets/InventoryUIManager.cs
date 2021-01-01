@@ -5,15 +5,15 @@ using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InventoryManager : MonoBehaviour
+public class InventoryUIManager : MonoBehaviour
 {
-    public static InventoryManager _instance;
+    public static InventoryUIManager _instance;
 
     [Header("Equip Related")]
     // 0 = head, 1 = Chest, 2 = Legging, 3 = Gloves, 4 = Shoes
     public Image[] EquipSlots;
     public GearItemSO[] EquippedSlots;
-
+    [SerializeField] bool IsInventoryOn = true;
 
     [Header("Inventory Related")]
     
@@ -71,14 +71,15 @@ public class InventoryManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+
+        if (IsInventoryOn)
         {
             UpdateInventoryToUI();
         }
     }
 
-
-    void UpdateInventoryToUI()
+    //public boolean = setactive of all inventory,  only update inventory after this boolean is true, if false dont update
+    public void UpdateInventoryToUI()
     {
         InventorySlotImage = new Image[inventory.GetInventory.Length];
         inventorySlotText = new TextMeshProUGUI[inventory.GetInventory.Length];
