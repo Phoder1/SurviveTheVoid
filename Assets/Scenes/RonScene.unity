@@ -692,8 +692,8 @@ RectTransform:
   - {fileID: 57414109}
   - {fileID: 1560055876}
   - {fileID: 368872233}
-  m_Father: {fileID: 2110502522}
-  m_RootOrder: 0
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -933,10 +933,12 @@ MonoBehaviour:
   buildings: {fileID: 1380187965}
   islandsNoise:
     seed: 0
-    resolution: 30
-    boolThreshold: 0.65
+    noise: {fileID: 11400000, guid: 590e0a2ecc5c88d4fb75db0217f0a49f, type: 2}
+  plantsNoise:
+    seed: 0
+    noise: {fileID: 11400000, guid: 12769a37b407a2a49a9856524b4991dc, type: 2}
   loadDistance: 1
-  offSet: 0.3
+  offSet: 0
   tilesPack: {fileID: 11400000, guid: c26b20c4d1e44e04c99336e14bd337fe, type: 2}
 --- !u!1 &1140459362
 GameObject:
@@ -1588,7 +1590,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1596536629}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.08, y: -0.92, z: 0}
+  m_LocalPosition: {x: 0.08, y: -0.92, z: 3}
   m_LocalScale: {x: 5.368164, y: 5.40881, z: 1}
   m_Children:
   - {fileID: 519420032}
@@ -1648,7 +1650,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1700,8 +1702,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 917912020}
+  m_Children: []
   m_Father: {fileID: 992670121}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1721,6 +1722,7 @@ MonoBehaviour:
   - {fileID: 57414110}
   - {fileID: 1560055877}
   vJ: {fileID: 368872234}
+  _uiElements: []
 --- !u!1 &2129712954
 GameObject:
   m_ObjectHideFlags: 0
