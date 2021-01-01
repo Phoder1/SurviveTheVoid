@@ -49,7 +49,7 @@ public class CameraScript : MonoBehaviour
         if (Input.GetKey(KeyCode.Mouse0)) {
             TileMapLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? TileMapLayer.Buildings : TileMapLayer.Floor;
             Vector2Int gridPosition = MouseGridPosition(TileMapLayer.Floor);
-            gridManager.SetTile(new TileSlot(clickTile, gridPosition, layer), gridPosition,  layer);
+            gridManager.SetTile(new TileSlot(clickTile), gridPosition,  layer);
 
 
         }
@@ -69,8 +69,7 @@ public class CameraScript : MonoBehaviour
             TileMapLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? TileMapLayer.Buildings : TileMapLayer.Floor;
             TileHit hit = gridManager.GetHitFromWorldPosition(mousePos, layer);
 
-            Debug.Log(hit.tile);
-            if (hit.tile != null
+            if (hit != null
                 && hit.tile.GetInteractionType == InteractionType.Any) {
                 Debug.Log("Color change");
                 hit.tile.GatherInteraction(hit.gridPosition, layer);

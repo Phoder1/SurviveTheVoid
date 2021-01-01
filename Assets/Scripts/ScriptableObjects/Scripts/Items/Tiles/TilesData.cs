@@ -1,6 +1,4 @@
-﻿
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Tilemaps;
 
 
@@ -40,38 +38,31 @@ public interface ITileState
     bool GetIsSolid { get; }
     void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer);
     void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer);
-    void Remove(Vector2Int gridPosition, TileMapLayer tilemapLayer);
+    void CancelEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer);
+    void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer);
 }
 public class TileSlot : ITileState
 {
     public ITileState tileState;
-    public TileSlot(TileAbstSO tile, Vector2Int gridPosition, TileMapLayer tileMapLayer) {
+    public TileSlot(TileAbstSO tile) {
         switch (tile) {
             case PlantTileSO plant:
-                tileState = new PlantState(plant,  gridPosition,  tileMapLayer);
+                tileState = new PlantState(plant, this);
                 break;
             case BlockTileSO block:
-                tileState = new BlockState(block, gridPosition, tileMapLayer);
+                tileState = new BlockState(block);
                 break;
             case ProcessingTableTileSO table:
-                tileState = new ProcessingTableTileState(table, gridPosition, tileMapLayer);
+                tileState = new ProcessingTableTileState(table);
                 break;
             case LightSourceTileSO lightSource:
-                tileState = new LightSourceTileState(lightSource, gridPosition, tileMapLayer);
+                tileState = new LightSourceTileState(lightSource);
                 break;
             default:
                 throw new System.NotImplementedException();
 
         }
     }
-
-    private TileSlot(ITileState state) {
-        tileState = state;
-    }
-    //public TileSlot GetBlueprintVersion() {
-    //    TileSlot blueprint = new TileSlot(tileState);
-
-    //}
     #region Passthrough
     public virtual TileBase GetMainTileBase => tileState.GetMainTileBase;
     public virtual InteractionType GetInteractionType => tileState.GetInteractionType;
@@ -81,10 +72,13 @@ public class TileSlot : ITileState
     public virtual void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer)
         => tileState.GatherInteraction(gridPosition, buildingLayer);
 
-    public virtual void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) 
+    public virtual void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer)
         => tileState.SpecialInteraction(gridPosition, buildingLayer);
-    public virtual void Remove(Vector2Int gridPosition, TileMapLayer tilemapLayer) 
-        => tileState.Remove(gridPosition, tilemapLayer);
+    public virtual void CancelEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer)
+        => tileState.CancelEvent(gridPosition, tilemapLayer);
+
+    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer)
+        => tileState.Init(gridPosition, tilemapLayer);
     #endregion
 }
 
