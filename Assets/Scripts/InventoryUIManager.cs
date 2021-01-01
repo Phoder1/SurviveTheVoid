@@ -18,8 +18,8 @@ public class InventoryUIManager : MonoBehaviour
     [Header("Inventory Related")]
     
     public GameObject[] InventorySlots;
-    [SerializeField]Image[] InventorySlotImage;
-    [SerializeField] TextMeshProUGUI[] inventorySlotText;
+    Image[] InventorySlotImage;
+    TextMeshProUGUI[] inventorySlotText;
 
     Inventory inventory;
     private void Awake()
