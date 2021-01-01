@@ -16,31 +16,6 @@ public class TileHit
         this.tile = tile;
         this.gridPosition = gridPosition;
     }
-
-    public static TileHit none => new TileHit(null, Vector2Int.zero);
-
-    public static bool operator ==(TileHit lhs, TileHit rhs) {
-        return lhs.Equals(rhs);
-    }
-    public static bool operator !=(TileHit lhs, TileHit rhs) {
-        return !lhs.Equals(rhs);
-    }
-
-    public override bool Equals(object obj) {
-        return (obj is TileHit hit &&
-                EqualityComparer<Vector2Int?>.Default.Equals(gridPosition, hit.gridPosition) &&
-                EqualityComparer<TileSlot>.Default.Equals(tile, hit.tile));
-    }
-    public bool Equals(TileHit other) {
-        return tile == other.tile && gridPosition == other.gridPosition;
-    }
-
-    public override int GetHashCode() {
-        int hashCode = 1814505039;
-        hashCode = hashCode * -1521134295 + gridPosition.GetHashCode();
-        hashCode = hashCode * -1521134295 + EqualityComparer<TileSlot>.Default.GetHashCode(tile);
-        return hashCode;
-    }
 }
 #endregion
 #region Main abstract classes
@@ -89,6 +64,14 @@ public class TileSlot : ITileState
 
         }
     }
+
+    private TileSlot(ITileState state) {
+        tileState = state;
+    }
+    //public TileSlot GetBlueprintVersion() {
+    //    TileSlot blueprint = new TileSlot(tileState);
+
+    //}
     #region Passthrough
     public virtual TileBase GetMainTileBase => tileState.GetMainTileBase;
     public virtual InteractionType GetInteractionType => tileState.GetInteractionType;

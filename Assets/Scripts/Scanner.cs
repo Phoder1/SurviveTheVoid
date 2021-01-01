@@ -30,15 +30,15 @@ namespace Assets.Scan
                 }
             }
 
-            return TileHit.none;
+            return null;
         }
 
         public TileHit GetClosestTileInSquare(int distanceFromCenter) {
             TileHit[] tiles = GetAllTilesInSquare(distanceFromCenter);
 
-            if (tiles == null) return TileHit.none;
+            if (tiles == null) return null;
 
-            TileHit closestTile = TileHit.none;
+            TileHit closestTile = null;
             float shortestDistance = float.MaxValue;
             foreach (TileHit tile in tiles)
             {
@@ -50,7 +50,7 @@ namespace Assets.Scan
                 }
             }
 
-            return closestTile.tile != null ? closestTile : TileHit.none;
+            return closestTile.tile != null ? closestTile : null;
         }
         private TileHit[] GetAllTilesInSquare(int distanceFromCenter) {
             List<TileHit> tiles = new List<TileHit>();

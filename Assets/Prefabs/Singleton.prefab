@@ -158,10 +158,17 @@ MonoBehaviour:
     noise: {fileID: 11400000, guid: 12769a37b407a2a49a9856524b4991dc, type: 2}
   loadDistance: 0
   offSet: 0
-  moonTile: {fileID: 11400000, guid: 38832a9085471904985e18510c56e5d7, type: 2}
-  circusTile: {fileID: 11400000, guid: 8190ee7f328b6674280febcc9769179d, type: 2}
-  toothpasteTile: {fileID: 11400000, guid: aad93d9da4855c44aa913aa4003eb399, type: 2}
   plantTile: {fileID: 11400000, guid: 6ae7fda4f7596d84e8d77af3f94f2a4f, type: 2}
+  floorBlocksTiers:
+  - tile: {fileID: 11400000, guid: 38832a9085471904985e18510c56e5d7, type: 2}
+    distance: 0
+    overlapStart: 0
+  - tile: {fileID: 11400000, guid: 858d4b4581017784f995624b706f79e0, type: 2}
+    distance: 1000
+    overlapStart: 0
+  - tile: {fileID: 11400000, guid: 8190ee7f328b6674280febcc9769179d, type: 2}
+    distance: 3000
+    overlapStart: 1000
 --- !u!114 &4672845829821667805
 MonoBehaviour:
   m_ObjectHideFlags: 0
