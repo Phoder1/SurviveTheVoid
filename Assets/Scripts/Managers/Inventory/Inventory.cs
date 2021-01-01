@@ -22,7 +22,7 @@ public class Inventory
             return _instance;
         }
     }
-    int maxCapacityOfItemsInList = 25;
+    int maxCapacityOfItemsInList = 24;
     bool checkForItem = false;
     int counter = 0;
     int itemAmountCount = 0;
@@ -418,23 +418,23 @@ public class Inventory
 
 
 
-        counter = 0;
+        int counterCache = 0;
         for (int i = 0; i < inventoryCache.Length; i++)
         {
             if (item == null && inventoryCache[i] == null)
             {
-                counter++;
+                counterCache++;
                 continue;
             }
             else if (item != null && inventoryCache[i] != null)
             {
                 if (item.item.getItemEnum == inventoryCache[i].item.getItemEnum)
                 {
-                    counter += inventoryCache[i].amount;
+                    counterCache += inventoryCache[i].amount;
                 }
             }
         }
-        return counter;
+        return counterCache;
 
     }
     public int GetItemIndexInArray(int chestID, ItemSlot item)
