@@ -3,16 +3,20 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
+   
     public static InputManager _instance;
-    PlayerManager _playerManager;
-    UIManager _uiManager;
+    GridManager gridManager;
     static StateBase currentState;
     PlayerStateMachine playerStateMachine;
     [SerializeField] VirtualJoystick vJ;
-
+    public static InputState inputState;
+    Vector2 touchPos, startTouchPos;
+    TileHit newTileHit, previousTileHit;
+    bool isBuildingAttached = false;
+    
     private void Awake() {
         playerStateMachine = PlayerStateMachine.GetInstance;
-
+        gridManager = GridManager._instance;
 
         if (_instance != null) {
             Destroy(gameObject);
@@ -25,7 +29,19 @@ public class InputManager : MonoBehaviour
     }
     public static StateBase SetInputState
         {
-        set { currentState = value; }
+        set {
+            currentState = value;
+
+            if (currentState is BuildingState)
+                inputState = InputState.BuildState;
+
+            else if (currentState is FightState)
+                inputState = InputState.FightState;
+
+            else
+                inputState = InputState.DefaultState;
+            
+        }
     }
 
 
@@ -33,10 +49,8 @@ public class InputManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
-        _playerManager = PlayerManager._instance;
-        _uiManager = UIManager._instance;
-
+     
+        gridManager = GridManager._instance;
     }
 
     // Update is called once per frame
@@ -45,39 +59,141 @@ public class InputManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            playerStateMachine.SwitchState(InputState.DefaultMode);
+            playerStateMachine.SwitchState(InputState.DefaultState);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            playerStateMachine.SwitchState(InputState.BuildMode);
+            playerStateMachine.SwitchState(InputState.BuildState);
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            playerStateMachine.SwitchState(InputState.FightMode);
+            playerStateMachine.SwitchState(InputState.FightState);
         }
 
-        OnTouch("sdas", vJ);
+        OnTouch();
     }
 
     // need to implement touch and use on phone 
-    public void OnTouch(string Button, VirtualJoystick vJ)
+    public void OnTouch()
     {
-        Touch[] touch = new Touch[5];
-        //if (Input.touchCount > 0)
+        if (Input.touchCount > 0)
         {
+            
+            Touch[] touch = new Touch[3];
+
+
+            Debug.Log(Input.touchCount);
             for (int i = 0; i < Input.touchCount; i++)
             {
+                if (i >= touch.Length)
+                    return;
+
                 touch[i] = Input.GetTouch(i);
+
                 if (touch[i].position == new Vector2(vJ.gameObject.transform.position.x, vJ.gameObject.transform.position.y) || new Vector2(Input.mousePosition.x, Input.mousePosition.y) == new Vector2(vJ.gameObject.transform.position.x, vJ.gameObject.transform.position.y))
+                continue;
+
+                switch (inputState)
                 {
-
-
+                    case InputState.DefaultState:
+                        // default state
+                        break;
+                    case InputState.BuildState:
+                        BuildingStateOnTouch(touch[i]);
+                        break;
+                    case InputState.FightState:
+                        // fightState
+                        break;
+                    default:
+                        break;
                 }
+
+
+
 
             }
         }
 
     }
+
+
+    void BuildingStateOnTouch(Touch touch) {
+
+        switch (touch.phase)
+        {
+            case TouchPhase.Began:
+
+                startTouchPos = Camera.main.ScreenToWorldPoint(touch.position);
+
+                    previousTileHit = gridManager.GetHitFromWorldPosition(startTouchPos, TileMapLayer.Floor);
+                    TileSlot buildTileToPlace = previousTileHit.tile;
+
+                    if (buildTileToPlace == null)
+                        return;
+
+                    isBuildingAttached = true;
+                break;
+
+
+
+
+            case TouchPhase.Stationary:
+            case TouchPhase.Moved:
+                { 
+                    if (previousTileHit.tile == null)
+                        return;
+
+                    touchPos = Camera.main.ScreenToWorldPoint(touch.position);
+
+                    newTileHit = gridManager.GetHitFromWorldPosition(touchPos, TileMapLayer.Floor);
+
+                    if (newTileHit == null)
+                        return;
+
+
+
+                    if (newTileHit.gridPosition == previousTileHit.gridPosition)
+                    {
+                        //  gridManager.SetTile(buildTileToPlace,previousTileHit.gridPosition, TileMapLayer.Buildings, true);
+                        
+                        //  var buildTileToPlace.position = previousTileHit.gridPosition;   // 
+                        //     tileHit.gridPosition;
+                    }
+                    else
+                    {
+                        previousTileHit = newTileHit;
+                   
+                    }
+
+
+                }
+                break;
+            
+
+               
+            case TouchPhase.Ended:
+            case TouchPhase.Canceled:
+
+
+                if (isBuildingAttached)
+                {
+                    // wait till the player confirm the building position
+                    //  gridManager.SetTile(buildTileToPlace,previousTileHit.gridPosition, TileMapLayer.Buildings, true);
+            
+                    isBuildingAttached = false;
+                }
+
+
+                break;
+
+        }
+    }
+
+
+
+
+
+
   
     public Vector2 GetAxis()
     {
@@ -105,5 +221,3 @@ public class InputManager : MonoBehaviour
         currentState.ButtonB();
     }
 }
-
-
