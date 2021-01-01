@@ -484,7 +484,18 @@ public class Inventory
     }
 
 
+    public ItemSlot GetItemFromIndexInInventory(int chestID, int id) {
+        inventoryCache = GetInventoryFromDictionary(chestID);
 
+        if (inventoryCache == null)
+            return null;
+
+        if (id < 0 || id > inventoryCache.Length)
+            return null;
+
+
+        return inventoryCache[id];
+    }
 
     public void PrintInventory(int chestID)
     {
