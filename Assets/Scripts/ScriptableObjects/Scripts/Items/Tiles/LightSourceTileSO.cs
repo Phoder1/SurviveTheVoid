@@ -5,13 +5,12 @@ using UnityEngine.Tilemaps;
 
 public class LightSourceTileSO : TileAbstSO
 {
-    public LightSourceTileState GetNewSlot => new LightSourceTileState(this);
 }
 public class LightSourceTileState : ITileState
 {
     public LightSourceTileSO tile;
 
-    public LightSourceTileState(LightSourceTileSO tile) {
+    public LightSourceTileState(LightSourceTileSO tile, Vector2Int gridPosition, TileMapLayer tileMapLayer) {
         this.tile = tile;
     }
 

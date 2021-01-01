@@ -9,7 +9,7 @@ public class BlockState : ITileState
 {
     public BlockTileSO tile;
 
-    public BlockState(BlockTileSO tile) {
+    public BlockState(BlockTileSO tile, Vector2Int gridPosition, TileMapLayer tileMapLayer) {
         this.tile = tile;
     }
 

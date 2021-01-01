@@ -9,7 +9,7 @@ public class ProcessingTableTileState : ITileState
 {
     public ProcessingTableTileSO tile;
 
-    public ProcessingTableTileState(ProcessingTableTileSO tile) {
+    public ProcessingTableTileState(ProcessingTableTileSO tile, Vector2Int gridPosition, TileMapLayer tileMapLayer) {
         this.tile = tile;
     }
 

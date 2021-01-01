@@ -107,18 +107,6 @@ public class TileSlot : ITileState
 
 
 #endregion
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*[Serializable]
-public class ObsidianTile : BlockTile
-{
-    private ObsidianTile() { }
-    public override void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
-        Tilemap tilemap = GridManager._instance.GetTilemap(buildingLayer);
-        tilemap.RemoveTileFlags((Vector3Int)gridPosition, TileFlags.LockColor);
-        tilemap.SetColor((Vector3Int)gridPosition, new Color(0.9f, 0.9f, 1f, 0.7f));
-
-    }
-}*/
 
 
 
