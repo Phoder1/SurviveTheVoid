@@ -1,4 +1,4 @@
-﻿public enum InputState { DefaultMode, BuildMode, FightMode };
+﻿public enum InputState { DefaultState, BuildState, FightState };
 public class PlayerStateMachine 
 {
     private static PlayerStateMachine _instance;
@@ -8,7 +8,7 @@ public class PlayerStateMachine
         stateBases[0] = new DefaultState();
         stateBases[1] = new BuildingState();
         stateBases[2] = new FightState();
-        SwitchState(InputState.DefaultMode);
+        SwitchState(InputState.DefaultState);
 
     }
     public static PlayerStateMachine GetInstance {
@@ -24,14 +24,14 @@ public class PlayerStateMachine
     {
         switch (newState)
         {
-            case InputState.DefaultMode:
+            case InputState.DefaultState:
                 InputManager.SetInputState = stateBases[0];
                 break;
-            case InputState.BuildMode:
+            case InputState.BuildState:
                 InputManager.SetInputState = stateBases[1];
                 break;
 
-            case InputState.FightMode:
+            case InputState.FightState:
                 InputManager.SetInputState = stateBases[2];
                 break;
             default:

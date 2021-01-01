@@ -211,7 +211,6 @@ GameObject:
   - component: {fileID: 57414113}
   - component: {fileID: 57414112}
   - component: {fileID: 57414111}
-  - component: {fileID: 57414110}
   m_Layer: 0
   m_Name: ButtonA
   m_TagString: Untagged
@@ -239,18 +238,6 @@ RectTransform:
   m_AnchoredPosition: {x: 579, y: -426}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &57414110
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 57414108}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57810b910c8e5804b811a4d40058c6ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &57414111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -293,7 +280,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 57414112}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1596536632}
+        m_MethodName: PressButtonA
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &57414112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1380,7 +1378,6 @@ GameObject:
   - component: {fileID: 1560055880}
   - component: {fileID: 1560055879}
   - component: {fileID: 1560055878}
-  - component: {fileID: 1560055877}
   m_Layer: 0
   m_Name: Button B
   m_TagString: Untagged
@@ -1408,18 +1405,6 @@ RectTransform:
   m_AnchoredPosition: {x: 800, y: -226}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1560055877
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1560055875}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57810b910c8e5804b811a4d40058c6ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1560055878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1462,7 +1447,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1560055879}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1596536632}
+        m_MethodName: PressButtonB
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1560055879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1557,7 +1553,6 @@ GameObject:
   - component: {fileID: 1596536632}
   - component: {fileID: 1596536633}
   - component: {fileID: 1596536634}
-  - component: {fileID: 1596536630}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1565,23 +1560,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1596536630
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1596536629}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6de63b51f6a346f4da30498054ae4ef2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentState: {fileID: 11400000, guid: f1bee2818baf9da4aa37856fcbb44cb7, type: 2}
-  stateArray:
-  - {fileID: 11400000, guid: f1bee2818baf9da4aa37856fcbb44cb7, type: 2}
-  - {fileID: 11400000, guid: b5c9dbd4783f4c149a5fb71febc450e0, type: 2}
-  - {fileID: 11400000, guid: 9748e8fd77154914c8eb67ce0a6e3719, type: 2}
 --- !u!4 &1596536631
 Transform:
   m_ObjectHideFlags: 0
@@ -1609,9 +1587,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1216b153daeb65f4bb004893bad54868, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  a_Button: 0
-  b_Button: 0
-  state: 0
+  vJ: {fileID: 368872234}
 --- !u!212 &1596536633
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1718,10 +1694,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 088d9b86520b6294e92d2b2038c7047e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _buttons:
-  - {fileID: 57414110}
-  - {fileID: 1560055877}
-  vJ: {fileID: 368872234}
   _uiElements: []
 --- !u!1 &2129712954
 GameObject:
