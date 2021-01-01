@@ -6,7 +6,7 @@ using TMPro;
 public class UIManager : MonoBehaviour
 {
     public static UIManager _instance;
-    InputManager _inputManager;
+    InputManager inputManager;
     CraftingManager craftingManager;
     InventoryUIManager inventoryManager;
     // UI elements
@@ -27,7 +27,7 @@ public class UIManager : MonoBehaviour
     {
         craftingManager = CraftingManager._instance;
         inventoryManager = InventoryUIManager._instance;
-        _inputManager = InputManager._instance;
+        inputManager = InputManager._instance;
     }
 
 
@@ -51,6 +51,14 @@ public class UIManager : MonoBehaviour
 
 
     #region ButtonsFunctions
+    void ButtonA()
+    {
+        inputManager.PressButtonA();
+    }
+    void ButtonB()
+    {
+        inputManager.PressButtonB();
+    }
 
     bool isShown = true;
     public void ButtonHide()
