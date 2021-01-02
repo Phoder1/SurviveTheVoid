@@ -41,7 +41,7 @@ public class PlantState : ITileState
     public void GatherInteraction(Vector2Int gridPosition, TileMapLayer tileMapLayer) {
         if (reachedMaxStage) {
             Debug.Log("Tried gathering");
-            GridManager.GetInstance.SetTile(null, gridPosition, tileMapLayer, true);
+            GridManager._instance.SetTile(null, gridPosition, tileMapLayer, true);
             Inventory inventory = Inventory.GetInstance;
             foreach (ItemSlot reward in tile.getRewards) {
                 inventory.AddToInventory(0, reward);
@@ -62,7 +62,7 @@ public class PlantState : ITileState
     }
     public void Grow(Vector2Int gridPosition, TileMapLayer tileMapLayer) {
         currentStage++;
-        GridManager.GetInstance.SetTile(tileSlot, gridPosition, tileMapLayer, false);
+        GridManager._instance.SetTile(tileSlot, gridPosition, tileMapLayer, false);
         if (!reachedMaxStage) {
             InitEvent(gridPosition, tileMapLayer);
         }

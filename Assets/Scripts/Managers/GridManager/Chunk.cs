@@ -30,10 +30,10 @@ public partial class GridManager
 
             switch (buildingLayer) {
                 case TileMapLayer.Floor:
-                    SetTileByRef(tile, gridPosition, buildingLayer, countsAsEdit, ref floorArr, ref GetInstance.floor);
+                    SetTileByRef(tile, gridPosition, buildingLayer, countsAsEdit, ref floorArr, ref _instance.floor);
                     break;
                 case TileMapLayer.Buildings:
-                    SetTileByRef(tile, gridPosition, buildingLayer, countsAsEdit, ref buildingsArr, ref GetInstance.buildings);
+                    SetTileByRef(tile, gridPosition, buildingLayer, countsAsEdit, ref buildingsArr, ref _instance.buildings);
                     break;
             }
 
@@ -79,15 +79,15 @@ public partial class GridManager
         internal Vector2Int GridToChunkPosition(Vector2Int gridPosition) => gridPosition - chunkStartPos;
         internal Vector2Int ChunkToGridPosition(Vector2Int chunkPosition) => chunkPosition + chunkStartPos;
         internal void GenerateIslands() {
-            Noise islandsNoise = GetInstance.islandsNoise;
-            GridRandom buildingsRandom = GetInstance.buildingsRandom;
-            TileTierStruct[] tiers = GetInstance.floorBlocksTiers;
-            BuildingGenStruct[] buildings = GetInstance.buildingsGeneration;
+            Noise islandsNoise = _instance.islandsNoise;
+            GridRandom buildingsRandom = _instance.buildingsRandom;
+            TileTierStruct[] tiers = _instance.floorBlocksTiers;
+            BuildingGenStruct[] buildings = _instance.buildingsGeneration;
             for (int loopX = 0; loopX < CHUNK_SIZE; loopX++) {
                 for (int loopY = 0; loopY < CHUNK_SIZE; loopY++) {
                     Vector2Int gridPosition = new Vector2Int(loopX, loopY) + chunkStartPos;
                     float distance = Vector2Int.Distance(gridPosition, Vector2Int.zero);
-                    if (distance > GetInstance.clearZoneRadius) {
+                    if (distance > _instance.clearZoneRadius) {
                         if (islandsNoise.CheckThreshold(gridPosition, out float noiseValue)) {
                             TileAbstSO tile = tiers[tiers.Length - 1].tile;
                             for (int i = 0; i < tiers.Length; i++) {
@@ -112,7 +112,7 @@ public partial class GridManager
                             }
                         }
                     }
-                    else if (distance <= GetInstance.startIslandRadius) {
+                    else if (distance <= _instance.startIslandRadius) {
                         SetTile(new TileSlot(tiers[0].tile), ChunkToGridPosition(new Vector2Int(loopX, loopY)), TileMapLayer.Floor, false);
                     }
                 }

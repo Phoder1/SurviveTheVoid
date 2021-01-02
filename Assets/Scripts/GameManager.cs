@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gridManager = GridManager.GetInstance;
+        gridManager = GridManager._instance;
         playerManager = PlayerManager._instance;
         cameraScript = CameraScript._instance;
         craftingManager = CraftingManager._instance;
