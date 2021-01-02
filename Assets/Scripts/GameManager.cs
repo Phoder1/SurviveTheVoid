@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
             cameraScript.Init();
         if(playerManager != null) 
             playerManager.Init();
-        if (playerManager != null)
+        if (gridManager != null)
             gridManager.Init();
         
     }
