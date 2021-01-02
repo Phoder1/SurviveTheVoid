@@ -63,7 +63,7 @@ public class PlantState : ITileState
     }
     public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer) { if (eventInstance == null) InitEvent(gridPosition, tilemapLayer); }
     private void InitEvent(Vector2Int gridPosition, TileMapLayer tileMapLayer) {
-        eventInstance = new PlantGrowEvent(Time.time + Random.Range(10f, 30f), tileSlot, gridPosition, tileMapLayer);
+        eventInstance = new PlantGrowEvent(Time.time + Random.Range(3f, 5f), tileSlot, gridPosition, tileMapLayer);
     }
 
 
@@ -80,6 +80,7 @@ public class PlantGrowEvent : TimeEvent
     }
 
     public override void Trigger() {
+        eventTriggered = true;
         ((PlantState)triggeringTile.tileState).Grow(eventPosition, tileMapLayer);
 
     }
