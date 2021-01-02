@@ -13,18 +13,22 @@ public class CameraScript : MonoBehaviour
     private Vector2 cameraRealSize => new Vector2(cameraComp.orthographicSize * 2 * cameraComp.aspect, cameraComp.orthographicSize * 2);
     private Rect worldView;
     private bool viewChanged;
-    private Camera camera1;
     [SerializeField] private BlockTileSO clickTile;
+    public static CameraScript _instance;
+    private void Awake() {
+        if (_instance != null) {
+            Destroy(gameObject);
+        }
+        else {
+            _instance = this;
+        }
+    }
 
     // Start is called before the first frame update
-    private void Start() {
-        camera1 = Camera.main;
-        Init();
-        UpdateView();
-    }
-    private void Init() {
+    public void Init() {
         cameraComp = GetComponent<Camera>();
         gridManager = GridManager._instance;
+        UpdateView();
     }
 
     // Update is called once per frame
@@ -49,7 +53,7 @@ public class CameraScript : MonoBehaviour
         if (Input.GetKey(KeyCode.Mouse0)) {
             TileMapLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? TileMapLayer.Buildings : TileMapLayer.Floor;
             Vector2Int gridPosition = MouseGridPosition(TileMapLayer.Floor);
-            gridManager.SetTile(new TileSlot(clickTile, gridPosition, layer), gridPosition,  layer);
+            gridManager.SetTile(new TileSlot(clickTile), gridPosition,  layer);
 
 
         }
@@ -64,13 +68,12 @@ public class CameraScript : MonoBehaviour
             Debug.Log(gridManager.GetTileFromGrid(MouseGridPosition(layer), layer));
         }
         else if (Input.GetKeyDown(KeyCode.Mouse2)) {
-            Vector3 mousePos = camera1.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mousePos = cameraComp.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = 0;
             TileMapLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? TileMapLayer.Buildings : TileMapLayer.Floor;
             TileHit hit = gridManager.GetHitFromWorldPosition(mousePos, layer);
 
-            Debug.Log(hit.tile);
-            if (hit.tile != null
+            if (hit != null
                 && hit.tile.GetInteractionType == InteractionType.Any) {
                 Debug.Log("Color change");
                 hit.tile.GatherInteraction(hit.gridPosition, layer);
@@ -82,7 +85,7 @@ public class CameraScript : MonoBehaviour
         }
     }
     private Vector2Int MouseGridPosition(TileMapLayer buildingLayer) {
-        Vector3 mousePos = camera1.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 mousePos = cameraComp.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0;
         return gridManager.WorldToGridPosition(mousePos, buildingLayer);
     }

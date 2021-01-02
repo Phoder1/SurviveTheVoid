@@ -39,7 +39,7 @@ public partial class GridManager
             }
 
         }
-        private void SetTileByRef(TileSlot tile, Vector2Int gridPosition, TileMapLayer buildingLayer, bool countsAsEdit, ref TileSlot[,] tileArr, ref Tilemap tilemap) {
+        private void SetTileByRef(TileSlot tile, Vector2Int gridPosition, TileMapLayer tilemapLayer, bool countsAsEdit, ref TileSlot[,] tileArr, ref Tilemap tilemap) {
 
             Vector2Int chunkPosition = GridToChunkPosition(gridPosition);
             bool tileExists = tileArr != null && tileArr[chunkPosition.x, chunkPosition.y] != null;
@@ -48,7 +48,7 @@ public partial class GridManager
                     tileArr = new TileSlot[CHUNK_SIZE, CHUNK_SIZE];
                 }
                 if (tileExists && tile == null) {
-                    tileArr[chunkPosition.x, chunkPosition.y].Remove(gridPosition, buildingLayer);
+                    tileArr[chunkPosition.x, chunkPosition.y].CancelEvent(gridPosition, tilemapLayer);
                     tilemap.SetTile((Vector3Int)gridPosition, null);
                     tileArr[chunkPosition.x, chunkPosition.y] = null;
 
@@ -64,17 +64,18 @@ public partial class GridManager
                     wasEdited |= countsAsEdit;
                     tilemap.SetTile((Vector3Int)gridPosition, tile.GetMainTileBase);
                     tileArr[chunkPosition.x, chunkPosition.y] = tile;
+                    tile.Init(gridPosition, tilemapLayer);
                 }
                 else {
                     if (tile != tileArr[chunkPosition.x, chunkPosition.y]) {
-                        tileArr[chunkPosition.x, chunkPosition.y].Remove(gridPosition, buildingLayer);
+                        tileArr[chunkPosition.x, chunkPosition.y].CancelEvent(gridPosition, tilemapLayer);
                         tileArr[chunkPosition.x, chunkPosition.y] = tile;
+                        tile.Init(gridPosition, tilemapLayer);
                     }
                     tilemap.SetTile((Vector3Int)gridPosition, tile.GetMainTileBase);
                     wasEdited |= countsAsEdit;
                 }
             }
-
         }
         internal Vector2Int GridToChunkPosition(Vector2Int gridPosition) => gridPosition - chunkStartPos;
         internal Vector2Int ChunkToGridPosition(Vector2Int chunkPosition) => chunkPosition + chunkStartPos;
@@ -86,28 +87,32 @@ public partial class GridManager
             for (int loopX = 0; loopX < CHUNK_SIZE; loopX++) {
                 for (int loopY = 0; loopY < CHUNK_SIZE; loopY++) {
                     Vector2Int gridPosition = new Vector2Int(loopX, loopY) + chunkStartPos;
-                    if (islandsNoise.CheckThreshold(gridPosition, true, out float noiseValue)) {
-                        TileAbstSO tile = tiers[tiers.Length - 1].tile;
-                        float distance = Vector2Int.Distance(gridPosition, Vector2Int.zero);
-                        for (int i = 0; i < tiers.Length; i++) {
-                            if (distance <= tiers[i].distance) {
+                    float distance = Vector2Int.Distance(gridPosition, Vector2Int.zero);
+                    if (distance > _instance.clearZoneRadius) {
+                        if (islandsNoise.CheckThreshold(gridPosition, true, out float noiseValue)) {
+                            TileAbstSO tile = tiers[tiers.Length - 1].tile;
+                            for (int i = 0; i < tiers.Length; i++) {
+                                if (distance <= tiers[i].distance) {
 
-                                float overlap = (distance - tiers[i].overlapStart) / (tiers[i].distance - tiers[i].overlapStart);
-                                if (distance > tiers[i].overlapStart && easeInOutBounce(overlap) > islandsNoise.GetRandomValue(gridPosition)) {
-                                    tile = tiers[i].tile;
+                                    float overlap = (distance - tiers[i].overlapStart) / (tiers[i].distance - tiers[i].overlapStart);
+                                    if (distance > tiers[i].overlapStart && easeInOutBounce(overlap) > islandsNoise.GetRandomValue(gridPosition)) {
+                                        tile = tiers[i].tile;
+                                    }
+                                    else {
+                                        tile = tiers[i - 1].tile;
+                                    }
+                                    break;
                                 }
-                                else {
-                                    tile = tiers[i - 1].tile;
-                                }
-                                break;
+
+
                             }
-
-
+                            SetTile(new TileSlot(tile), ChunkToGridPosition(new Vector2Int(loopX, loopY)), TileMapLayer.Floor, false);
+                            if (plantsNoise.CheckThreshold(gridPosition, false, out _)) {
+                                SetTile(new TileSlot(plant), gridPosition, TileMapLayer.Buildings, false);
+                            }
                         }
-                        SetTile(new TileSlot(tile, gridPosition, TileMapLayer.Floor), ChunkToGridPosition(new Vector2Int(loopX, loopY)), TileMapLayer.Floor, false);
-                        if (plantsNoise.CheckThreshold(gridPosition, false, out _)) {
-                            SetTile(new TileSlot(plant, gridPosition, TileMapLayer.Buildings), gridPosition, TileMapLayer.Buildings, false);
-                        }
+                    } else if (distance <= _instance.startIslandRadius) {
+                        SetTile(new TileSlot(tiers[0].tile), ChunkToGridPosition(new Vector2Int(loopX, loopY)), TileMapLayer.Floor, false);
                     }
                 }
             }

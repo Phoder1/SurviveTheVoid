@@ -9,7 +9,7 @@ public class ProcessingTableTileState : ITileState
 {
     public ProcessingTableTileSO tile;
 
-    public ProcessingTableTileState(ProcessingTableTileSO tile, Vector2Int gridPosition, TileMapLayer tileMapLayer) {
+    public ProcessingTableTileState(ProcessingTableTileSO tile) {
         this.tile = tile;
     }
 
@@ -25,12 +25,14 @@ public class ProcessingTableTileState : ITileState
         throw new System.NotImplementedException();
     }
 
-    public void Remove(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
+    public void CancelEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
         throw new System.NotImplementedException();
     }
 
     public void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
         throw new System.NotImplementedException();
     }
+
+    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer) { }
 }
 

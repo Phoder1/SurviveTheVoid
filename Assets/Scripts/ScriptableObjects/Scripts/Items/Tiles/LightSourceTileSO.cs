@@ -10,7 +10,7 @@ public class LightSourceTileState : ITileState
 {
     public LightSourceTileSO tile;
 
-    public LightSourceTileState(LightSourceTileSO tile, Vector2Int gridPosition, TileMapLayer tileMapLayer) {
+    public LightSourceTileState(LightSourceTileSO tile) {
         this.tile = tile;
     }
 
@@ -26,11 +26,13 @@ public class LightSourceTileState : ITileState
         throw new System.NotImplementedException();
     }
 
-    public void Remove(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
+    public void CancelEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
         throw new System.NotImplementedException();
     }
 
     public void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
         throw new System.NotImplementedException();
     }
+
+    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer) { }
 }

@@ -18,8 +18,8 @@ public class InventoryUIManager : MonoBehaviour
     [Header("Inventory Related")]
     
     public GameObject[] InventorySlots;
-    [SerializeField]Image[] InventorySlotImage;
-    [SerializeField] TextMeshProUGUI[] inventorySlotText;
+    Image[] InventorySlotImage;
+    TextMeshProUGUI[] inventorySlotText;
 
     Inventory inventory;
     private void Awake()
@@ -71,14 +71,20 @@ public class InventoryUIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdateInventory();
+    }
 
+    //public boolean = setactive of all inventory,  only update inventory after this boolean is true, if false dont update
+
+    public void UpdateInventory()
+    {
         if (IsInventoryOn)
         {
             UpdateInventoryToUI();
         }
     }
 
-    //public boolean = setactive of all inventory,  only update inventory after this boolean is true, if false dont update
+
     public void UpdateInventoryToUI()
     {
         InventorySlotImage = new Image[inventory.GetInventory.Length];

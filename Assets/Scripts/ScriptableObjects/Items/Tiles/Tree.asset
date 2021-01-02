@@ -15,7 +15,7 @@ MonoBehaviour:
   maxStackSize: 20
   description: A simple tree.
   itemEnum: 0
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: d7e90656936195248a6032f557321baf, type: 3}
   mainTileBase: {fileID: 11400000, guid: 4c4346b9a20c40c47bea99b56593e34f, type: 2}
   interactionType: 8
   tileType: 0
@@ -29,3 +29,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4ea9cd078e7b9d64ca99a8c476addd0a, type: 2}
   - {fileID: 11400000, guid: ea80f8e67af76e44ab21f659941c74b5, type: 2}
   - {fileID: 11400000, guid: 4c4346b9a20c40c47bea99b56593e34f, type: 2}
+  minGrowTime: 2
+  maxGrowTime: 8
