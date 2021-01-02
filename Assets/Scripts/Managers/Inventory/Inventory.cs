@@ -22,7 +22,7 @@ public class Inventory
             return _instance;
         }
     }
-    int maxCapacityOfItemsInList = 24;
+    int maxCapacityOfItemsInList = 18;
     bool checkForItem = false;
     int counter = 0;
     int itemAmountCount = 0;
