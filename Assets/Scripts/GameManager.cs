@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     GridManager gridManager;
     PlayerManager playerManager;
     CameraScript cameraScript;
-
+    CraftingManager craftingManager;
 
     private void Awake() {
         if (_instance != null) {
@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
         gridManager = GridManager._instance;
         playerManager = PlayerManager._instance;
         cameraScript = CameraScript._instance;
-
+        craftingManager = CraftingManager._instance;
         //playerManager Init must run before gridManager
         if (cameraScript != null)
             cameraScript.Init();
@@ -33,6 +33,8 @@ public class GameManager : MonoBehaviour
             playerManager.Init();
         if (gridManager != null)
             gridManager.Init();
+        if (craftingManager != null)
+            craftingManager.Init();
         
     }
 

@@ -86,14 +86,13 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
 
 
 
-    private void Init()
+    public void Init()
     {
         inventory = Inventory.GetInstance;
 
         ImportSlots();
         AddRecipeToList();
         InstantiateItemSlots();
-        //UpdateInformation();
         SelectSection("Blocks");
 
     }
