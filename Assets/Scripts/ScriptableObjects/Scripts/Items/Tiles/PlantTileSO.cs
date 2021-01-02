@@ -9,6 +9,12 @@ public class PlantTileSO : TileAbstSO
     public ItemSlot[] getRewards => rewards;
     [SerializeField] private TileBase[] stages;
     public TileBase[] getStages => stages;
+
+
+    [SerializeField] private float minGrowTime;
+    [SerializeField] private float maxGrowTime;
+    public float GetMinGrowTime { get => minGrowTime; }
+    public float GetMaxGrowTime { get => maxGrowTime; }
 }
 public class PlantState : ITileState
 {
@@ -63,7 +69,7 @@ public class PlantState : ITileState
     }
     public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer) { if (eventInstance == null) InitEvent(gridPosition, tilemapLayer); }
     private void InitEvent(Vector2Int gridPosition, TileMapLayer tileMapLayer) {
-        eventInstance = new PlantGrowEvent(Time.time + Random.Range(3f, 5f), tileSlot, gridPosition, tileMapLayer);
+        eventInstance = new PlantGrowEvent(Time.time + Random.Range(tile.GetMinGrowTime, tile.GetMaxGrowTime), tileSlot, gridPosition, tileMapLayer);
     }
 
 
