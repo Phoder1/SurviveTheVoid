@@ -52,6 +52,10 @@ using UnityEngine;
         private Sprite sprite;
         public Sprite getsprite { get => sprite; }
 
-    }
+    [SerializeField]
+    private ItemType itemType;
+
+    public ItemType GetItemType { get => itemType; }
+}
 
 
