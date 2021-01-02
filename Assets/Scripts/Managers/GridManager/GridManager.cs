@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public enum TileMapLayer { Floor, Buildings }
-public partial class GridManager : MonoBehaviour, IGridManager
+public partial class GridManager : MonoSingleton<GridManager>, IGridManager
 {
     //Debug Chunks (Disable when not needed, very heavy on performance):
     #region Debug
@@ -43,23 +43,31 @@ public partial class GridManager : MonoBehaviour, IGridManager
         }
     }
     [SerializeField] private Noise islandsNoise;
-    [SerializeField] private Noise plantsNoise;
+    [SerializeField] private GridRandom buildingsRandom;
     [SerializeField] private int loadDistance;
     [SerializeField] private float offSet;
-
-    [SerializeField] private TileAbstSO plantTile;
 
 
     private Vector2Int lastViewMin = Vector2Int.zero;
     private Vector2Int lastViewMax = Vector2Int.zero;
 
-    [SerializeField] private TileTier[] floorBlocksTiers;
+    [SerializeField] private TileTierStruct[] floorBlocksTiers;
+    [SerializeField] private BuildingGenStruct[] buildingsGeneration;
     [System.Serializable]
-    private protected struct TileTier
+    private protected struct TileTierStruct
     {
         public TileAbstSO tile;
         public float distance;
         public float overlapStart;
+    }
+    [System.Serializable]
+    private protected struct BuildingGenStruct
+    {
+        public TileAbstSO tile;
+        public float chance;
+        public float distance;
+        public bool global;
+        public float spread;
     }
 
     private const int CHUNK_SIZE = 16;
@@ -68,23 +76,23 @@ public partial class GridManager : MonoBehaviour, IGridManager
 
     private const float TOP_FACE_HEIGHT = 0.7f;
 
-    public static GridManager _instance;
+    //public static GridManager GetInstance;
 
-    private void Awake() {
-        if (isActiveAndEnabled) {
-            if (_instance != null) {
-                Destroy(gameObject);
-            }
-            else {
-                _instance = this;
-            }
-        }
-    }
+    //private void Awake() {
+    //    if (isActiveAndEnabled) {
+    //        if (_instance != null) {
+    //            Destroy(gameObject);
+    //        }
+    //        else {
+    //            _instance = this;
+    //        }
+    //    }
+    //}
 
-    
+
     public void Init() {
         islandsNoise.GenerateSeed();
-        plantsNoise.GenerateSeed();
+        buildingsRandom.GenerateSeed();
     }
 
     public void UpdateView(Rect view) {

@@ -1,26 +1,10 @@
 ﻿using UnityEngine;
-[CreateAssetMenu(fileName = "New Noise", menuName = "SO/" + "Noise")]
-public class NoiseSO : ScriptableObject
-{
-    [Range(3f, 100f)]
-    [SerializeField] private float resolution = 3;
-    public float GetResolution => resolution;
-    [Range(0f, 0.99f)]
-    [SerializeField] private float boolThreshold;
-    public float GetBoolThreshold => boolThreshold;
-
-
-
-}
 [System.Serializable]
-public class Noise
+public class GridRandom
 {
     const int MAX_SEED_VALUE = 100000;
     [Header("Leave seed at 0 for random value")]
     public int seed;
-    [SerializeField] private NoiseSO noise;
-
-    public float threshold => noise.GetBoolThreshold;
     public void GenerateSeed() {
         while (seed == 0) {
             seed = Random.Range(MAX_SEED_VALUE, MAX_SEED_VALUE*10);
@@ -28,11 +12,6 @@ public class Noise
             Debug.Log("Generating Seed");
         }
     }
-    public float GetNoiseAtPosition(Vector2 position)
-        => Mathf.PerlinNoise((position.x + seed) / noise.GetResolution, (position.y + seed) / noise.GetResolution);
-    public bool CheckThreshold(Vector2Int position, out float value) 
-        => (value = GetNoiseAtPosition(position)) > this.noise.GetBoolThreshold;
-
     public float GetRandomValue(Vector2Int position) {
         var oldState = Random.state;
         position += new Vector2Int(seed, seed);
@@ -50,5 +29,3 @@ public class Noise
 
 
 }
-
-

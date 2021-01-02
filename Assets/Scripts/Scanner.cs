@@ -14,7 +14,7 @@ namespace Assets.Scan
         private DirectionEnum direction;
 
         public Scanner() {
-            gridManager = GridManager._instance;
+            gridManager = GridManager.GetInstance;
         }
 
         public TileHit Scan(Vector2Int gridStartPosition, DirectionEnum _direction, int _radius, TileMapLayer _buildingLayer, IChecker _checker) {

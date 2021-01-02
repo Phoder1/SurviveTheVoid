@@ -16,7 +16,7 @@ public class InputManager : MonoBehaviour
     
     private void Awake() {
         playerStateMachine = PlayerStateMachine.GetInstance;
-        gridManager = GridManager._instance;
+        gridManager = GridManager.GetInstance;
 
         if (_instance != null) {
             Destroy(gameObject);
@@ -50,7 +50,7 @@ public class InputManager : MonoBehaviour
     void Start()
     {
      
-        gridManager = GridManager._instance;
+        gridManager = GridManager.GetInstance;
     }
 
     // Update is called once per frame

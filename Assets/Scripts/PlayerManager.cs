@@ -49,7 +49,7 @@ public class PlayerManager : MonoBehaviour
         buildingLayer = TileMapLayer.Buildings;
         _scanner = new Scanner();
         _inputManager = InputManager._instance;
-        _GridManager = GridManager._instance;
+        _GridManager = GridManager.GetInstance;
         _uiManager = UIManager._instance;
         
 
