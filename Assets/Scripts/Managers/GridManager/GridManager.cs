@@ -71,11 +71,13 @@ public partial class GridManager : MonoBehaviour, IGridManager
     public static GridManager _instance;
 
     private void Awake() {
-        if (_instance != null) {
-            Destroy(gameObject);
-        }
-        else {
-            _instance = this;
+        if (isActiveAndEnabled) {
+            if (_instance != null) {
+                Destroy(gameObject);
+            }
+            else {
+                _instance = this;
+            }
         }
     }
 
