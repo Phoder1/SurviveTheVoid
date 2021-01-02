@@ -67,11 +67,11 @@ public class PlayerManager : MonoBehaviour
         FindDirection();
         if ((movementVector != Vector2.zero && _GridManager.IsTileWalkable(nextPos, movementVector)) || Input.GetKey(KeyCode.LeftShift))
         {
-            switch (_inputManager.GetAxis())
-            {
-                //case :
-                    //break;
-            }
+            //switch (_inputManager.GetAxis())
+            //{
+            //    //case :
+            //        //break;
+            //}
             
             transform.Translate(movementVector);
             UpdateView();
@@ -194,7 +194,7 @@ public class PlayerManager : MonoBehaviour
             
             closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
             Debug.Log("TileHarvested");
-            closestTile = TileHit.none;
+            closestTile = null;
         }
         
         

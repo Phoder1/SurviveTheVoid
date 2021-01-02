@@ -48,27 +48,19 @@ public partial class GridManager : MonoBehaviour, IGridManager
     [SerializeField] private int loadDistance;
     [SerializeField] private float offSet;
 
-    [SerializeField] private TileAbstSO moonTile;
-    [SerializeField] private TileAbstSO circusTile;
-    [SerializeField] private TileAbstSO toothpasteTile;
     [SerializeField] private TileAbstSO plantTile;
 
 
     private Vector2Int lastViewMin = Vector2Int.zero;
     private Vector2Int lastViewMax = Vector2Int.zero;
 
-    private TileTier[] floorBlocksTiers;
-    private protected readonly struct TileTier
+    [SerializeField] private TileTier[] floorBlocksTiers;
+    [System.Serializable]
+    private protected struct TileTier
     {
-        public readonly TileAbstSO tile;
-        public readonly float distance;
-        public readonly float overlapStart;
-
-        public TileTier(TileAbstSO tile, float distance, float overlapStart) {
-            this.tile = tile;
-            this.distance = distance;
-            this.overlapStart = overlapStart;
-        }
+        public TileAbstSO tile;
+        public float distance;
+        public float overlapStart;
     }
 
     private const int CHUNK_SIZE = 16;
@@ -93,11 +85,6 @@ public partial class GridManager : MonoBehaviour, IGridManager
 
     
     private void Init() {
-        floorBlocksTiers = new TileTier[3] {
-        new TileTier(moonTile,0f,0f),
-        new TileTier(circusTile,1000f,0f),
-        new TileTier(toothpasteTile,2000f,1000f)
-    };
         if(plantTile is BlockTileSO) {
             Debug.Log(plantTile.GetType());
         }
@@ -266,7 +253,7 @@ public partial class GridManager : MonoBehaviour, IGridManager
             }
 
         }
-        return TileHit.none;
+        return null;
 
     }
     public void SetTile(TileSlot tile, Vector2Int gridPosition, TileMapLayer buildingLayer, bool playerAction = true) {

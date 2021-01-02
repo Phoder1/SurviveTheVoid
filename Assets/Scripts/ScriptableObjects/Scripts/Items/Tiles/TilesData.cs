@@ -1,6 +1,4 @@
-﻿
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Tilemaps;
 
 
@@ -15,31 +13,6 @@ public class TileHit
     public TileHit(TileSlot tile, Vector2Int gridPosition) {
         this.tile = tile;
         this.gridPosition = gridPosition;
-    }
-
-    public static TileHit none => new TileHit(null, Vector2Int.zero);
-
-    public static bool operator ==(TileHit lhs, TileHit rhs) {
-        return lhs.Equals(rhs);
-    }
-    public static bool operator !=(TileHit lhs, TileHit rhs) {
-        return !lhs.Equals(rhs);
-    }
-
-    public override bool Equals(object obj) {
-        return (obj is TileHit hit &&
-                EqualityComparer<Vector2Int?>.Default.Equals(gridPosition, hit.gridPosition) &&
-                EqualityComparer<TileSlot>.Default.Equals(tile, hit.tile));
-    }
-    public bool Equals(TileHit other) {
-        return tile == other.tile && gridPosition == other.gridPosition;
-    }
-
-    public override int GetHashCode() {
-        int hashCode = 1814505039;
-        hashCode = hashCode * -1521134295 + gridPosition.GetHashCode();
-        hashCode = hashCode * -1521134295 + EqualityComparer<TileSlot>.Default.GetHashCode(tile);
-        return hashCode;
     }
 }
 #endregion
@@ -65,24 +38,25 @@ public interface ITileState
     bool GetIsSolid { get; }
     void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer);
     void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer);
-    void Remove(Vector2Int gridPosition, TileMapLayer tilemapLayer);
+    void CancelEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer);
+    void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer);
 }
 public class TileSlot : ITileState
 {
     public ITileState tileState;
-    public TileSlot(TileAbstSO tile, Vector2Int gridPosition, TileMapLayer tileMapLayer) {
+    public TileSlot(TileAbstSO tile) {
         switch (tile) {
             case PlantTileSO plant:
-                tileState = new PlantState(plant,  gridPosition,  tileMapLayer);
+                tileState = new PlantState(plant, this);
                 break;
             case BlockTileSO block:
-                tileState = new BlockState(block, gridPosition, tileMapLayer);
+                tileState = new BlockState(block);
                 break;
             case ProcessingTableTileSO table:
-                tileState = new ProcessingTableTileState(table, gridPosition, tileMapLayer);
+                tileState = new ProcessingTableTileState(table);
                 break;
             case LightSourceTileSO lightSource:
-                tileState = new LightSourceTileState(lightSource, gridPosition, tileMapLayer);
+                tileState = new LightSourceTileState(lightSource);
                 break;
             default:
                 throw new System.NotImplementedException();
@@ -98,10 +72,13 @@ public class TileSlot : ITileState
     public virtual void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer)
         => tileState.GatherInteraction(gridPosition, buildingLayer);
 
-    public virtual void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) 
+    public virtual void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer)
         => tileState.SpecialInteraction(gridPosition, buildingLayer);
-    public virtual void Remove(Vector2Int gridPosition, TileMapLayer tilemapLayer) 
-        => tileState.Remove(gridPosition, tilemapLayer);
+    public virtual void CancelEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer)
+        => tileState.CancelEvent(gridPosition, tilemapLayer);
+
+    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer)
+        => tileState.Init(gridPosition, tilemapLayer);
     #endregion
 }
 

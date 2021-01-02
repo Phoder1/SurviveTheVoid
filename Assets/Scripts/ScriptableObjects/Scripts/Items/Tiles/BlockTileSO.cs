@@ -9,7 +9,7 @@ public class BlockState : ITileState
 {
     public BlockTileSO tile;
 
-    public BlockState(BlockTileSO tile, Vector2Int gridPosition, TileMapLayer tileMapLayer) {
+    public BlockState(BlockTileSO tile) {
         this.tile = tile;
     }
 
@@ -27,12 +27,14 @@ public class BlockState : ITileState
         tilemap.SetColor((Vector3Int)gridPosition, new Color(0.9f, 0.9f, 1f, 0.7f));
     }
 
-    public void Remove(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
+    public void CancelEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
     }
 
     public void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
         throw new System.NotImplementedException();
     }
+
+    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer) { }
 }
 
 
