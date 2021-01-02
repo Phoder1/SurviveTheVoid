@@ -117,8 +117,13 @@ MonoBehaviour:
   recipes: {fileID: 11400000, guid: 0e290e14c38a82045b8652dd627c51c9, type: 2}
   sectionHolder: {fileID: 0}
   ScrollsHolder: {fileID: 0}
-  recipeMaterialSlots: [{fileID: 0}, {fileID: 0}, {fileID: 0}, {fileID: 0}, {fileID: 0},
-    {fileID: 0}]
+  recipeMaterialSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   ItemSlotPrefab: {fileID: 2458655832146661207, guid: a4ca921f8ddcf4d4d8535b9c3898c044,
     type: 3}
   selectedRecipe: {fileID: 0}
@@ -137,6 +142,7 @@ MonoBehaviour:
   grid: {fileID: 0}
   floor: {fileID: 0}
   buildings: {fileID: 0}
+  clearZoneRadius: 25
   islandsNoise:
     seed: 0
     noise: {fileID: 11400000, guid: 590e0a2ecc5c88d4fb75db0217f0a49f, type: 2}
@@ -192,11 +198,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a6cc23cff2f84a458cfeaa58d39023d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EquipSlots: [{fileID: 0}, {fileID: 0}, {fileID: 0}, {fileID: 0}, {fileID: 0}]
+  EquipSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   EquippedSlots: []
   IsInventoryOn: 1
-  InventorySlots: [{fileID: 0}, {fileID: 0}, {fileID: 0}, {fileID: 0}, {fileID: 0},
-    {fileID: 0}, {fileID: 0}, {fileID: 0}, {fileID: 0}, {fileID: 0}, {fileID: 0},
-    {fileID: 0}, {fileID: 0}, {fileID: 0}, {fileID: 0}, {fileID: 0}, {fileID: 0},
-    {fileID: 0}, {fileID: 0}, {fileID: 0}, {fileID: 0}, {fileID: 0}, {fileID: 0},
-    {fileID: 0}]
+  InventorySlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

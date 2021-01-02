@@ -70,7 +70,7 @@ public partial class GridManager
                     if (tile != tileArr[chunkPosition.x, chunkPosition.y]) {
                         tileArr[chunkPosition.x, chunkPosition.y].CancelEvent(gridPosition, tilemapLayer);
                         tileArr[chunkPosition.x, chunkPosition.y] = tile;
-                        tile.Init(gridPosition,tilemapLayer);
+                        tile.Init(gridPosition, tilemapLayer);
                     }
                     tilemap.SetTile((Vector3Int)gridPosition, tile.GetMainTileBase);
                     wasEdited |= countsAsEdit;
@@ -90,24 +90,26 @@ public partial class GridManager
                     if (islandsNoise.CheckThreshold(gridPosition, true, out float noiseValue)) {
                         TileAbstSO tile = tiers[tiers.Length - 1].tile;
                         float distance = Vector2Int.Distance(gridPosition, Vector2Int.zero);
-                        for (int i = 0; i < tiers.Length; i++) {
-                            if (distance <= tiers[i].distance) {
+                        if (distance > _instance.clearZoneRadius) {
+                            for (int i = 0; i < tiers.Length; i++) {
+                                if (distance <= tiers[i].distance) {
 
-                                float overlap = (distance - tiers[i].overlapStart) / (tiers[i].distance - tiers[i].overlapStart);
-                                if (distance > tiers[i].overlapStart && easeInOutBounce(overlap) > islandsNoise.GetRandomValue(gridPosition)) {
-                                    tile = tiers[i].tile;
+                                    float overlap = (distance - tiers[i].overlapStart) / (tiers[i].distance - tiers[i].overlapStart);
+                                    if (distance > tiers[i].overlapStart && easeInOutBounce(overlap) > islandsNoise.GetRandomValue(gridPosition)) {
+                                        tile = tiers[i].tile;
+                                    }
+                                    else {
+                                        tile = tiers[i - 1].tile;
+                                    }
+                                    break;
                                 }
-                                else {
-                                    tile = tiers[i - 1].tile;
-                                }
-                                break;
+
+
                             }
-
-
-                        }
-                        SetTile(new TileSlot(tile), ChunkToGridPosition(new Vector2Int(loopX, loopY)), TileMapLayer.Floor, false);
-                        if (plantsNoise.CheckThreshold(gridPosition, false, out _)) {
-                            SetTile(new TileSlot(plant), gridPosition, TileMapLayer.Buildings, false);
+                            SetTile(new TileSlot(tile), ChunkToGridPosition(new Vector2Int(loopX, loopY)), TileMapLayer.Floor, false);
+                            if (plantsNoise.CheckThreshold(gridPosition, false, out _)) {
+                                SetTile(new TileSlot(plant), gridPosition, TileMapLayer.Buildings, false);
+                            }
                         }
                     }
                 }
