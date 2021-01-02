@@ -45,7 +45,7 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
     private void Start()
     {
 
-        Init();
+     
 
     }
     private void Update()
