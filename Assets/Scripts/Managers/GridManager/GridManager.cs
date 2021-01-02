@@ -27,12 +27,10 @@ public partial class GridManager : MonoBehaviour, IGridManager
     }
     #endregion
 
-    [SerializeField]
-    private Grid grid;
-    [SerializeField]
-    private Tilemap floor;
-    [SerializeField]
-    private Tilemap buildings;
+    [SerializeField] private Grid grid;
+    [SerializeField] private Tilemap floor;
+    [SerializeField] private Tilemap buildings;
+    [SerializeField] float clearZoneRadius;
     public Tilemap GetTilemap(TileMapLayer buildingLayer) {
         switch (buildingLayer) {
             case TileMapLayer.Floor:
@@ -78,16 +76,12 @@ public partial class GridManager : MonoBehaviour, IGridManager
         else {
             _instance = this;
         }
-        islandsNoise.GenerateSeed();
-        plantsNoise.GenerateSeed();
-        Init();
     }
 
     
-    private void Init() {
-        if(plantTile is BlockTileSO) {
-            Debug.Log(plantTile.GetType());
-        }
+    public void Init() {
+        islandsNoise.GenerateSeed();
+        plantsNoise.GenerateSeed();
     }
 
     public void UpdateView(Rect view) {

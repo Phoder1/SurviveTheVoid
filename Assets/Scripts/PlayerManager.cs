@@ -43,7 +43,7 @@ public class PlayerManager : MonoBehaviour
         }
     }
     // Start is called before the first frame update
-    private void Start()
+    public void Init()
     {
        
         buildingLayer = TileMapLayer.Buildings;
