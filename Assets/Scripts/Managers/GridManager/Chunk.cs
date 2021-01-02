@@ -87,10 +87,10 @@ public partial class GridManager
             for (int loopX = 0; loopX < CHUNK_SIZE; loopX++) {
                 for (int loopY = 0; loopY < CHUNK_SIZE; loopY++) {
                     Vector2Int gridPosition = new Vector2Int(loopX, loopY) + chunkStartPos;
-                    if (islandsNoise.CheckThreshold(gridPosition, true, out float noiseValue)) {
-                        TileAbstSO tile = tiers[tiers.Length - 1].tile;
-                        float distance = Vector2Int.Distance(gridPosition, Vector2Int.zero);
-                        if (distance > _instance.clearZoneRadius) {
+                    float distance = Vector2Int.Distance(gridPosition, Vector2Int.zero);
+                    if (distance > _instance.clearZoneRadius) {
+                        if (islandsNoise.CheckThreshold(gridPosition, true, out float noiseValue)) {
+                            TileAbstSO tile = tiers[tiers.Length - 1].tile;
                             for (int i = 0; i < tiers.Length; i++) {
                                 if (distance <= tiers[i].distance) {
 
@@ -111,6 +111,8 @@ public partial class GridManager
                                 SetTile(new TileSlot(plant), gridPosition, TileMapLayer.Buildings, false);
                             }
                         }
+                    } else if (distance <= _instance.startIslandRadius) {
+                        SetTile(new TileSlot(tiers[0].tile), ChunkToGridPosition(new Vector2Int(loopX, loopY)), TileMapLayer.Floor, false);
                     }
                 }
             }

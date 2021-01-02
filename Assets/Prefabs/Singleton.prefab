@@ -142,7 +142,8 @@ MonoBehaviour:
   grid: {fileID: 0}
   floor: {fileID: 0}
   buildings: {fileID: 0}
-  clearZoneRadius: 25
+  clearZoneRadius: 40
+  startIslandRadius: 10
   islandsNoise:
     seed: 0
     noise: {fileID: 11400000, guid: 590e0a2ecc5c88d4fb75db0217f0a49f, type: 2}

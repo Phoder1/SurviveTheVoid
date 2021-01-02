@@ -31,6 +31,7 @@ public partial class GridManager : MonoBehaviour, IGridManager
     [SerializeField] private Tilemap floor;
     [SerializeField] private Tilemap buildings;
     [SerializeField] float clearZoneRadius;
+    [SerializeField] float startIslandRadius;
     public Tilemap GetTilemap(TileMapLayer buildingLayer) {
         switch (buildingLayer) {
             case TileMapLayer.Floor:
