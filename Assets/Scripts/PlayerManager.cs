@@ -47,11 +47,12 @@ public class PlayerManager : MonoBehaviour
     private void Start()
     {
        
-        buildingLayer = TileMapLayer.Buildings;
+        buildingLayer = TileMapLayer.Floor;
         _scanner = new Scanner();
         _inputManager = InputManager._instance;
         _GridManager = GridManager._instance;
         _uiManager = UIManager._instance;
+     
         
         
 
@@ -72,6 +73,7 @@ public class PlayerManager : MonoBehaviour
         currentPos = transform.position; //new Vector2(transform.position.x, transform.position.y);
         nextPos = currentPos + movementVector;
         FindDirection();
+        
         if ((movementVector != Vector2.zero && _GridManager.IsTileWalkable(nextPos, movementVector)) || Input.GetKey(KeyCode.LeftShift))
         {
             switch (_inputManager.GetAxis())
@@ -94,23 +96,29 @@ public class PlayerManager : MonoBehaviour
     }
     public void Scan(IChecker checkType)
     {
-        float posToClosestDis = Vector2.Distance(currentPos, _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
-        float lastposToClosestDis = Vector2.Distance(_GridManager.GridToWorldPosition(lastPosOnGrid, buildingLayer, true), _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
-        if (lastPosOnGrid != currentPosOnGrid && (posToClosestDis > lastposToClosestDis))
-        {
-            Debug.Log("checkTile");
-            closestTile = _scanner.Scan(currentPosOnGrid, movementDir, 5, buildingLayer, checkType);
-            lastPosOnGrid = currentPosOnGrid;
 
-            if (closestTile.tile != null)
-            {
+        Debug.Log(currentPosOnGrid);
+           // float posToClosestDis = Vector2.Distance(currentPos, _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
+          //  float lastposToClosestDis = Vector2.Distance(_GridManager.GridToWorldPosition(lastPosOnGrid, buildingLayer, true), _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
+            if ((lastPosOnGrid != currentPosOnGrid )) //&& (posToClosestDis > lastposToClosestDis)
+           {
+                Debug.Log("checkTile");
 
-                //Check if Scanned-Do Not Delete!!//
-                // closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
+                closestTile = _scanner.Scan(currentPosOnGrid, movementDir,1, buildingLayer, checkType);
+                closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
+                lastPosOnGrid = currentPosOnGrid;
+
+            
             }
+<<<<<<< Updated upstream
 
 
         }
+=======
+        
+        
+
+>>>>>>> Stashed changes
     }
 
     private void FindDirection()
@@ -154,7 +162,8 @@ public class PlayerManager : MonoBehaviour
     {
 
         Scan(new GatheringScanChecker());
-        if (closestTile.tile != null)
+            Debug.Log("GO");
+        if (closestTile != null)
         {
         walkTowards(_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
         myState.ButtonA();
@@ -166,7 +175,7 @@ public class PlayerManager : MonoBehaviour
     public void ButtonB()
     {
         Scan(new SpecialInterractionScanChecker());
-        if (closestTile.tile != null)
+        if (closestTile != null)
         {
             walkTowards(_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
             myState.ButtonB();
@@ -215,7 +224,8 @@ public class PlayerManager : MonoBehaviour
         if (_GridManager.WorldToGridPosition(transform.position, buildingLayer) != closestTile.gridPosition)
         {
 
-            transform.Translate((destination - transform.position) * Time.fixedDeltaTime);
+            transform.Translate(destination-transform.position);
+            
             
             Debug.Log("Walking Towards:"+destination);
         }

@@ -25,8 +25,13 @@ namespace Assets.Scan
             checker = _checker;
             direction = _direction;
             for (int i = 1; i <= radius; i++) {
+<<<<<<< Updated upstream
                 TileHitStruct tileHit = GetClosestTileInSquare(i);
                 if (tileHit.tile != null) {
+=======
+                TileHit tileHit = GetClosestTileInSquare(i);
+                if (tileHit != null) { 
+>>>>>>> Stashed changes
                     return tileHit;
                 }
             }
@@ -51,7 +56,11 @@ namespace Assets.Scan
                 }
             }
 
+<<<<<<< Updated upstream
             return closestTile.tile != null ? closestTile : TileHitStruct.none;
+=======
+            return closestTile != null ? closestTile : null;
+>>>>>>> Stashed changes
         }
         private TileHitStruct[] GetAllTilesInSquare(int distanceFromCenter) {
             List<TileHitStruct> tiles = new List<TileHitStruct>();
