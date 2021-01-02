@@ -40,6 +40,8 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
         {
             Destroy(gameObject);
         }
+        inventory = Inventory.GetInstance;
+        Init();
     }
 
     private void Start()

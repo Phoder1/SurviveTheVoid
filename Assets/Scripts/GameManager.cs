@@ -33,8 +33,8 @@ public class GameManager : MonoBehaviour
             playerManager.Init();
         if (gridManager != null)
             gridManager.Init();
-        if (craftingManager != null)
-            craftingManager.Init();
+        //if (craftingManager != null)
+        //    craftingManager.Init();
         
     }
 
