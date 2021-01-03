@@ -17,7 +17,7 @@ public class InputManager : MonoSingleton<InputManager>
     bool isBuildingAttached = false;
    
     TileSlot tileSlotCache;
-    public void Init() {
+    public override void Init() {
         playerStateMachine = PlayerStateMachine.GetInstance;
         gridManager = GridManager._instance;
     }

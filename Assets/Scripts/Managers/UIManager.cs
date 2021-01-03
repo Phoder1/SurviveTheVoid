@@ -12,7 +12,12 @@ public class UIManager : MonoSingleton<UIManager>
     public GameObject[] _uiElements;
 
 
+<<<<<<< HEAD
     public void Init()
+=======
+
+    public override void Init()
+>>>>>>> master
     {
         craftingManager = CraftingManager._instance;
         inventoryManager = InventoryUIManager._instance;

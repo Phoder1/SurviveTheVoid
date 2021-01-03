@@ -68,7 +68,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
 
 
-    public void Init()
+    public override void Init()
     {
         inventory = Inventory.GetInstance;
 

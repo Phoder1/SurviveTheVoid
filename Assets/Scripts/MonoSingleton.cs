@@ -1,5 +1,9 @@
 ﻿using UnityEngine;
-public abstract class MonoSingleton<T> : MonoBehaviour where T : Component
+public interface ISingleton
+{
+    void Init();
+}
+public abstract class MonoSingleton<T> : MonoBehaviour,ISingleton where T : Component
 {
     public static T _instance;
 
@@ -15,5 +19,5 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : Component
         }
     }
 
-    //public abstract void Init();
+    public abstract void Init();
 }
