@@ -1,37 +1,60 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
+using System.Net;
+using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.Tilemaps;
+
 public class InputManager : MonoBehaviour
 {
+   
     public static InputManager _instance;
-    PlayerManager _playerManager;
-    UIManager _uiManager;
+    GridManager gridManager;
+    static StateBase currentState;
+    PlayerStateMachine playerStateMachine;
+    [SerializeField] VirtualJoystick vJ;
+    public static InputState inputState;
+    Vector2 touchPosition;
+    TileHit newTileHit, currentTileHit;
+    bool isBuildingAttached = false;
    
-    public bool a_Button,b_Button;
-   
-    
-
-
-    public enum InputState { DefaultMode, BuildMode, FightMode };
-    public InputState state;
-
+    TileSlot tileSlotCache;
     private void Awake() {
+        playerStateMachine = PlayerStateMachine.GetInstance;
+        gridManager = GridManager._instance;
+
         if (_instance != null) {
             Destroy(gameObject);
-            
+
         }
         else {
             _instance = this;
             DontDestroyOnLoad(gameObject);
         }
     }
+    public static StateBase SetInputState
+        {
+        set {
+            currentState = value;
+
+            if (currentState is BuildingState)
+                inputState = InputState.BuildState;
+
+            else if (currentState is FightState)
+                inputState = InputState.FightState;
+
+            else
+                inputState = InputState.DefaultState;
+            
+        }
+    }
+
+
+
     // Start is called before the first frame update
     void Start()
     {
-        
-        _playerManager = PlayerManager._instance;
-        _uiManager = UIManager._instance;
-        
+     
+        gridManager = GridManager._instance;
     }
 
     // Update is called once per frame
@@ -40,69 +63,174 @@ public class InputManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            state = InputState.DefaultMode;
-            _playerManager.ChangeMode(state);
+            playerStateMachine.SwitchState(InputState.DefaultState);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            state = InputState.BuildMode;
-            _playerManager.ChangeMode(state);
+            playerStateMachine.SwitchState(InputState.BuildState);
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            state = InputState.FightMode;
-            _playerManager.ChangeMode(state);
+            playerStateMachine.SwitchState(InputState.FightState);
+        }
+
+        OnTouch();
+    }
+
+    // need to implement touch and use on phone 
+    public void OnTouch()
+    {
+        if (Input.touchCount > 0)
+        {
+            
+            Touch[] touch = new Touch[3];
+
+
+            Debug.Log(Input.touchCount);
+            for (int i = 0; i < Input.touchCount; i++)
+            {
+                if (i >= touch.Length)
+                    return;
+
+                touch[i] = Input.GetTouch(i);
+
+                if (touch[i].position == new Vector2(vJ.gameObject.transform.position.x, vJ.gameObject.transform.position.y) || new Vector2(Input.mousePosition.x, Input.mousePosition.y) == new Vector2(vJ.gameObject.transform.position.x, vJ.gameObject.transform.position.y))
+                continue;
+
+                switch (inputState)
+                {
+                    case InputState.DefaultState:
+                        // default state
+                        break;
+                    case InputState.BuildState:
+                        BuildingStateOnTouch(touch[i]);
+                        break;
+                    case InputState.FightState:
+                        // fightState
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+    }
+
+
+    void BuildingStateOnTouch(Touch touch)
+    {
+
+        switch (touch.phase)
+        {
+            case TouchPhase.Began:
+            case TouchPhase.Moved:
+             
+
+                touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
+
+
+                currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
+                if (currentTileHit == null || gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) != null)
+                    return;
+
+
+                isBuildingAttached = true;
+
+                if (newTileHit.gridPosition == currentTileHit.gridPosition)
+                {
+
+                     gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Buildings, false);
+                }
+                else
+                {
+                    newTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
+
+
+                    if (newTileHit == null || gridManager.GetTileFromGrid(newTileHit.gridPosition, TileMapLayer.Buildings) != null)
+                            gridManager.SetTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings, false);
+                      
+                    currentTileHit = newTileHit;
+                }
+
+                break;
+        }
+    }
+
+
+    public void SetBuildingTile(TileAbstSO Item) {
+
+        if (Item == null)
+            return;
+
+        //   tileSlotCache = new TileSlot( Item , vector koshehu(willberemoved) ,TileMapLayer.Buildings);
+    }
+
+
+
+
+    public Vector2 GetAxis()
+    {
+
+        //ControllersCheck that returns Vector2 
+        Vector2 moveDirection = vJ.inpudDir;
+        return moveDirection;
+    }
+
+
+    public void PressedConfirmBuildingButton(bool toConfirm)
+    {
+        if (toConfirm)
+        {
+            Touch newTouch = new Touch();
+           
+
+            if ((Vector2)Camera.main.ScreenToWorldPoint(newTouch.position)  != touchPosition)
+            {
+
+
+
+
+
+                PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
+            }
+
+
+
+
+
+        }
+        else
+        {
+
         }
 
 
-    }
-  
-    
-    public void OnClicked(string Button,VirtualJoystick vJ)
-    {
-        Touch[] touch = new Touch[5];
-        //if (Input.touchCount > 0)
-        {
-            for (int i = 0; i < Input.touchCount; i++)
-            {
-                touch[i] = Input.GetTouch(i);
-                if (touch[i].position == new Vector2(vJ.gameObject.transform.position.x, vJ.gameObject.transform.position.y) || new Vector2(Input.mousePosition.x, Input.mousePosition.y) == new Vector2(vJ.gameObject.transform.position.x, vJ.gameObject.transform.position.y))
-                {
 
 
-                }
 
-            }
-        }  
-        
-    }
-    public void ButtonCheck(VirtualButton[] ButtonPressed)
-    {
-        if (ButtonPressed[0].IsPressed) { a_Button = true; } else a_Button=false;
-        if (ButtonPressed[1].IsPressed) { b_Button = true; } else b_Button = false;
+
+
+
+
+
+
+
 
 
     }
-    public Vector2 GetAxis()
-    {
-       
-      //ControllersCheck that returns Vector2 
-        Vector2 moveDirection= _uiManager.vJ.inpudDir;
-        return moveDirection;
-    } 
-    
-    
- 
-  
+
 
     //World to grid position can be found on the Grid manager
     /*private Vector2Int ScreenToGridPosition(Vector3 screenPosition) {
 
     }*/
 
-  
-   
 
+
+    public void PressButtonA() {
+        currentState.ButtonA();
+    } 
+    public void PressButtonB() {
+        currentState.ButtonB();
+    }
 }
-
-

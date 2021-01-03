@@ -2,35 +2,250 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-public class UIManager : MonoBehaviour 
+using TMPro;
+public class UIManager : MonoBehaviour
 {
     public static UIManager _instance;
-    InputManager _inputManager;
-    public VirtualButton[] _buttons;
-    public VirtualJoystick vJ;
+    InputManager inputManager;
+    CraftingManager craftingManager;
+    InventoryUIManager inventoryManager;
+    // UI elements
+    public GameObject[] _uiElements;
 
-    private void Awake() {
-        if (_instance != null) {
+    private void Awake()
+    {
+        if (_instance != null)
+        {
             Destroy(gameObject);
-           
         }
-        else {
-         
+        else
+        {
             _instance = this;
         }
     }
     void Start()
     {
-        _inputManager = InputManager._instance;
+        craftingManager = CraftingManager._instance;
+        inventoryManager = InventoryUIManager._instance;
+        inputManager = InputManager._instance;
     }
-    private void Update()
-    {
-        _inputManager.ButtonCheck(_buttons);
-        _inputManager.OnClicked("sdas",vJ);
-    }
-    
-    
 
+
+
+    #region CraftingUI
+    public void OnClickSelectedSections(string _section)
+    {
+        craftingManager.SelectSection(_section);
+    }
+
+    public void OnClickSelectedRecipe(int _recipe)
+    {
+        craftingManager.SelectRecipe(_recipe);
+    }
+
+    public void OnClickCraftButton()
+    {
+        craftingManager.AttemptToCraft();
+    }
+
+    #endregion
+
+
+    #region ButtonsFunctions
+
+    bool isShown = true;
+    bool isQuickAccessSwapped = true;
+    bool isInventoryOpen = false;
+
+    public void ButtonA()
+    {
+        inputManager.PressButtonA();
+    }
+
+    public void ButtonB()
+    {
+        inputManager.PressButtonB();
+    }
+
+    public void ButtonHide()
+	{
+        if(isShown == true)
+		{
+            _uiElements[5].gameObject.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
+
+            if(isQuickAccessSwapped == true)
+			{
+                for (int i = 6; i <= 12; i++)
+                {
+                    _uiElements[i].SetActive(false);
+                }
+            }
+			else
+			{
+                for (int i = 15; i <= 19; i++)
+                {
+                    _uiElements[i].SetActive(false);
+                }
+                for (int i = 11; i <= 12; i++)
+                {
+                    _uiElements[i].SetActive(false);
+                }
+            }
+
+            isShown = false;
+        }
+		else
+		{
+            _uiElements[5].gameObject.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
+
+            if (isQuickAccessSwapped == true)
+            {
+                for (int i = 6; i <= 12; i++)
+                {
+                    _uiElements[i].SetActive(true);
+                }
+            }
+            else
+            {
+                for (int i = 15; i <= 19; i++)
+                {
+                    _uiElements[i].SetActive(true);
+                }
+                for (int i = 11; i <= 12; i++)
+                {
+                    _uiElements[i].SetActive(true);
+                }
+            }
+
+            isShown = true;
+        }    
+	}
+
+    public void ButtonSwap()
+	{
+        if (isQuickAccessSwapped == true)
+		{
+            for(int i = 6; i<=10; i++)
+			{
+                _uiElements[i].SetActive(false);
+            }
+            for(int i = 15; i<=19; i++)
+			{
+                _uiElements[i].SetActive(true);
+            }
+
+            isQuickAccessSwapped = false;
+		}
+		else
+		{
+            for (int i = 6; i<=10; i++)
+            {
+                _uiElements[i].SetActive(true);
+            }
+            for (int i = 15; i<=19; i++)
+            {
+                _uiElements[i].SetActive(false);
+            }
+
+            isQuickAccessSwapped = true;
+        }
+	}
+
+    public void ButtonInventory()
+	{
+        if(_uiElements[20].activeSelf == true)
+		{
+            _uiElements[20].SetActive(false);
+
+            for(int i = 1; i<=3; i++)
+			{
+                _uiElements[i].SetActive(true);
+			}
+
+            isInventoryOpen = false;
+        }
+        else
+		{
+            _uiElements[20].SetActive(true);
+
+            for (int i = 1; i <= 3; i++)
+            {
+                _uiElements[i].SetActive(false);
+            }
+
+            isInventoryOpen = true;
+        }
+	}
+
+    public void ButtonFightTransition()
+	{
+        _uiElements[1].transform.GetChild(0).gameObject.SetActive(false);
+        _uiElements[1].transform.GetChild(1).gameObject.SetActive(true);
+
+        _uiElements[3].transform.GetChild(0).gameObject.SetActive(false);
+        _uiElements[3].transform.GetChild(1).gameObject.SetActive(true);
+    }
+
+    public void BottunGatherTransition()
+	{
+        _uiElements[1].transform.GetChild(0).gameObject.SetActive(true);
+        _uiElements[1].transform.GetChild(1).gameObject.SetActive(false);
+
+        _uiElements[3].transform.GetChild(0).gameObject.SetActive(true);
+        _uiElements[3].transform.GetChild(1).gameObject.SetActive(false);
+    }
+
+    public void ButtonSettings()
+	{	
+        if (_uiElements[21].activeSelf == false)
+        {
+            _uiElements[21].SetActive(true);
+
+            for(int i = 0; i<=20; i++)
+			{
+                if(i == 13)
+				{
+                    _uiElements[i].SetActive(true);
+                }
+				else
+				{
+                    _uiElements[i].SetActive(false);
+                }
+			}
+
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            Time.timeScale = 1f;
+
+            for (int i = 0; i <= 20; i++)
+            {
+                if (i == 20 || i == 4 || i == 15 || i == 16 || i == 17 || i ==18 || i == 19)
+                {
+                    _uiElements[i].SetActive(false);
+                }
+                else
+                {
+                    _uiElements[i].SetActive(true);
+                }
+            }
+
+            _uiElements[21].SetActive(false);
+
+            if(isInventoryOpen == true)
+			{
+                _uiElements[20].SetActive(true);
+
+                for (int i = 1; i <= 3; i++)
+                {
+                    _uiElements[i].SetActive(false);
+                }
+            }
+        }
+    }
+
+    #endregion
 
 }
 

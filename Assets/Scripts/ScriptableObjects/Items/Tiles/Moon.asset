@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad4fb29703af1ac4e92edd55a5b9b4f5, type: 3}
+  m_Name: Moon
+  m_EditorClassIdentifier: 
+  maxStackSize: 20
+  description: Piece of the moon
+  itemEnum: 0
+  sprite: {fileID: 21300000, guid: acdff7ef05846004f92be3d47dc8d610, type: 3}
+  mainTileBase: {fileID: 11400000, guid: a4e89a1eaa06df848801e7fe73ed99cc, type: 2}
+  interactionType: 8
+  tileType: 0
+  isSolid: 1

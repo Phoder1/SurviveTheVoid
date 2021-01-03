@@ -1,52 +1,43 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class PlayerStateMachine : MonoBehaviour
+﻿public enum InputState { DefaultState, BuildState, FightState };
+public class PlayerStateMachine 
 {
-    PlayerManager _playerManager;
-    public StateBase currentState;
-    public StateBase[] stateArray;
-
-    int counter=0;
-
-    private void Start()
+    private static PlayerStateMachine _instance;
+    StateBase[] stateBases = new StateBase[3];
+    private PlayerStateMachine()
     {
-        _playerManager = PlayerManager._instance;
-        currentState = stateArray[counter];
-        
+        stateBases[0] = new DefaultState();
+        stateBases[1] = new BuildingState();
+        stateBases[2] = new FightState();
+        SwitchState(InputState.DefaultState);
 
     }
-  
-    public StateBase SwichState(InputManager.InputState newState)
-    {
-     
-        SwichMode();
-
-        void SwichMode()
-        {
-            switch (newState)
+    public static PlayerStateMachine GetInstance {
+        get {
+            if (_instance == null)
             {
-                case InputManager.InputState.DefaultMode:
-                    currentState = stateArray[0];
-                    break;
-
-                case InputManager.InputState.BuildMode:
-                    currentState = stateArray[1];
-                    break;
-
-                case InputManager.InputState.FightMode:
-                    currentState = stateArray[2];
-                    break;
+                _instance = new PlayerStateMachine();
             }
+            return _instance;
+        }
+    }
+    public void SwitchState(InputState newState)
+    {
+        switch (newState)
+        {
+            case InputState.DefaultState:
+                InputManager.SetInputState = stateBases[0];
+                break;
+            case InputState.BuildState:
+                InputManager.SetInputState = stateBases[1];
+                break;
 
-
+            case InputState.FightState:
+                InputManager.SetInputState = stateBases[2];
+                break;
+            default:
+                    InputManager.SetInputState = stateBases[0];
+                break;
 
         }
-        return currentState;
-    }
-    public void Update()
-    {
-            
     }
 }

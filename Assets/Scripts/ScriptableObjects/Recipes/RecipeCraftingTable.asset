@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0385232e857e8e446aa3c8cacfcbfb44, type: 3}
   m_Name: RecipeCraftingTable
   m_EditorClassIdentifier: 
-  itemCostArr:
+  ItemCostArr:
   - item: {fileID: 11400000, guid: 6317b6bed700609419a7ffe65ff2b6d9, type: 2}
-    amount: 5
+    amount: 2
+  - item: {fileID: 11400000, guid: 628e0d79b7c898a4fb43629a7bbe139f, type: 2}
+    amount: 1
   outcomeItem:
     item: {fileID: 11400000, guid: eceba57f53dffb34a885be3b8900c198, type: 2}
     amount: 1
