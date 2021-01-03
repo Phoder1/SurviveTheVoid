@@ -25,7 +25,7 @@ namespace Assets.Scan
             direction = _direction;
             for (int i = 1; i <= radius; i++) {
                 TileHit tileHit = GetClosestTileInSquare(i);
-                if (tileHit.tile != null) {
+                if (tileHit != null) {
                     return tileHit;
                 }
             }
@@ -50,7 +50,7 @@ namespace Assets.Scan
                 }
             }
 
-            return closestTile.tile != null ? closestTile : null;
+            return closestTile != null ? closestTile : null;
         }
         private TileHit[] GetAllTilesInSquare(int distanceFromCenter) {
             List<TileHit> tiles = new List<TileHit>();

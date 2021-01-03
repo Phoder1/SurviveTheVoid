@@ -46,7 +46,7 @@ public class PlayerManager : MonoBehaviour
     public void Init()
     {
        
-        buildingLayer = TileMapLayer.Buildings;
+        buildingLayer = TileMapLayer.Floor;
         _scanner = new Scanner();
         _inputManager = InputManager._instance;
         _GridManager = GridManager._instance;
@@ -87,19 +87,28 @@ public class PlayerManager : MonoBehaviour
     }
     public void Scan(IChecker checkType)
     {
-        float posToClosestDis = Vector2.Distance(currentPos, _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
-        float lastposToClosestDis = Vector2.Distance(_GridManager.GridToWorldPosition(lastPosOnGrid, buildingLayer, true), _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
-        if (lastPosOnGrid != currentPosOnGrid && (posToClosestDis > lastposToClosestDis))
+        if (closestTile == null)
         {
-            Debug.Log("checkTile");
             closestTile = _scanner.Scan(currentPosOnGrid, movementDir, 5, buildingLayer, checkType);
             lastPosOnGrid = currentPosOnGrid;
+        }
+        else
+        {
 
-            if (closestTile.tile != null)
+            float posToClosestDis = Vector2.Distance(currentPos, _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
+            float lastposToClosestDis = Vector2.Distance(_GridManager.GridToWorldPosition(lastPosOnGrid, buildingLayer, true), _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
+            if (lastPosOnGrid != currentPosOnGrid && (posToClosestDis > lastposToClosestDis))
             {
+                Debug.Log("checkTile");
+                closestTile = _scanner.Scan(currentPosOnGrid, movementDir, 5, buildingLayer, checkType);
+                lastPosOnGrid = currentPosOnGrid;
 
-                //Check if Scanned-Do Not Delete!!//
-                // closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
+                if (closestTile.tile != null)
+                {
+
+                    //Check if Scanned-Do Not Delete!!//
+                    // closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
+                }
             }
         }
     }
@@ -137,7 +146,7 @@ public class PlayerManager : MonoBehaviour
     {
 
         Scan(new GatheringScanChecker());
-        if (closestTile.tile != null)
+        if (closestTile != null)
         {
         WalkTowards(_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
 

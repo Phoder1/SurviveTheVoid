@@ -5,7 +5,7 @@ public abstract class StateBase
     public void ButtonA()
     {
         Debug.Log("Implement ButtonA");
-        PlayerManager._instance.ImplementSpecialInteraction();
+        PlayerManager._instance.ImplementGathering();
     }
     public abstract void ButtonB();
 
