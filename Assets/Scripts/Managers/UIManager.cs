@@ -13,7 +13,7 @@ public class UIManager : MonoSingleton<UIManager>
 
 
 
-    public void Init()
+    public override void Init()
     {
         craftingManager = CraftingManager._instance;
         inventoryManager = InventoryUIManager._instance;

@@ -53,7 +53,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         }
     }
 
-    public void Init()
+    public override void Init()
     {
         inventory = Inventory.GetInstance;
     }

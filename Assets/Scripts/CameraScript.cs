@@ -16,7 +16,7 @@ public class CameraScript : MonoSingleton<CameraScript>
     [SerializeField] private BlockTileSO clickTile;
 
     // Start is called before the first frame update
-    public void Init() {
+    public override void Init() {
         cameraComp = Camera.main;
         gridManager = GridManager._instance;
         UpdateView();

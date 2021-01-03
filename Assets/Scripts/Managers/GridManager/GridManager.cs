@@ -90,7 +90,7 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
     //}
 
 
-    public void Init() {
+    public override void Init() {
         islandsNoise.GenerateSeed();
         buildingsRandom.GenerateSeed();
     }

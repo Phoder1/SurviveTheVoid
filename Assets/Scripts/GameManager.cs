@@ -4,40 +4,28 @@ using UnityEngine;
 
 public class GameManager : MonoSingleton<GameManager>
 {
-    GridManager gridManager;
-    PlayerManager playerManager;
-    CameraScript cameraScript;
-    CraftingManager craftingManager;
-    InventoryUIManager inventoryUIManager;
-    UIManager uIManager;
-    // Start is called before the first frame update
-    void Start()
-    {
-        gridManager = GridManager._instance;
-        playerManager = PlayerManager._instance;
-        cameraScript = CameraScript._instance;
-        craftingManager = CraftingManager._instance;
-        inventoryUIManager = InventoryUIManager._instance;
-        uIManager = UIManager._instance;
-        //playerManager Init must run before gridManager
-        if (cameraScript != null)
-            cameraScript.Init();
-        if(playerManager != null) 
-            playerManager.Init();
-        if (gridManager != null)
-            gridManager.Init();
-        if (craftingManager != null)
-            craftingManager.Init();
-        if (uIManager != null)
-            uIManager.Init();
-        if (inventoryUIManager != null)
-            inventoryUIManager.Init();
+    private ISingleton[] singletons;
+
+    // The original start that controls all other Inits
+    void Start() {
+        Init();
+
+    }
+    public override void Init() {
+        singletons = new ISingleton[6] {
+             GridManager._instance,
+             PlayerManager._instance,
+             CameraScript._instance,
+             CraftingManager._instance,
+             InventoryUIManager._instance,
+             UIManager._instance
+        };
+        foreach (ISingleton singleton in singletons) {
+            if(singleton != null) {
+                singleton.Init();
+            }
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-      
-        //Debug.Log("hi");
-    }
+
 }
