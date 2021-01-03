@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 {
-
     [Header("Equip Related")]
     // 0 = head, 1 = Chest, 2 = Legging, 3 = Gloves, 4 = Shoes
     public Image[] EquipSlots;
@@ -21,7 +20,8 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     TextMeshProUGUI[] inventorySlotText;
 
     Inventory inventory;
-  
+
+
     public void OnPressedInventoryButton(int buttonId)
 	{
         ItemSlot itemCache = inventory.GetItemFromInventoryButton(0, buttonId);
@@ -36,17 +36,12 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
 
 
-
-
-
     // Update is called once per frame
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.P))
         UpdateInventory();
     }
-
-
-
 
     //public boolean = setactive of all inventory,  only update inventory after this boolean is true, if false dont update
 
@@ -57,6 +52,12 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
             UpdateInventoryToUI();
         }
     }
+
+    public void Init()
+    {
+        inventory = Inventory.GetInstance;
+    }
+
 
 
     public void UpdateInventoryToUI()
