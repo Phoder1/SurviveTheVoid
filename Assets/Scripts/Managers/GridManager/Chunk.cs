@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Tilemaps;
 public partial class GridManager
 {
@@ -23,7 +22,7 @@ public partial class GridManager
                 case TileMapLayer.Buildings:
                     return buildingsArr?[gridPosition.x - chunkStartPos.x, gridPosition.y - chunkStartPos.y];
                 default:
-                    throw new NotImplementedException();
+                    throw new System.NotImplementedException();
             }
 
         }
@@ -81,15 +80,15 @@ public partial class GridManager
         internal Vector2Int ChunkToGridPosition(Vector2Int chunkPosition) => chunkPosition + chunkStartPos;
         internal void GenerateIslands() {
             Noise islandsNoise = _instance.islandsNoise;
-            Noise plantsNoise = _instance.plantsNoise;
-            TileTier[] tiers = _instance.floorBlocksTiers;
-            TileAbstSO plant = _instance.plantTile;
+            GridRandom buildingsRandom = _instance.buildingsRandom;
+            TileTierStruct[] tiers = _instance.floorBlocksTiers;
+            BuildingGenStruct[] buildings = _instance.buildingsGeneration;
             for (int loopX = 0; loopX < CHUNK_SIZE; loopX++) {
                 for (int loopY = 0; loopY < CHUNK_SIZE; loopY++) {
                     Vector2Int gridPosition = new Vector2Int(loopX, loopY) + chunkStartPos;
                     float distance = Vector2Int.Distance(gridPosition, Vector2Int.zero);
                     if (distance > _instance.clearZoneRadius) {
-                        if (islandsNoise.CheckThreshold(gridPosition, true, out float noiseValue)) {
+                        if (islandsNoise.CheckThreshold(gridPosition, out float noiseValue)) {
                             TileAbstSO tile = tiers[tiers.Length - 1].tile;
                             for (int i = 0; i < tiers.Length; i++) {
                                 if (distance <= tiers[i].distance) {
@@ -107,14 +106,43 @@ public partial class GridManager
 
                             }
                             SetTile(new TileSlot(tile), ChunkToGridPosition(new Vector2Int(loopX, loopY)), TileMapLayer.Floor, false);
-                            if (plantsNoise.CheckThreshold(gridPosition, false, out _)) {
-                                SetTile(new TileSlot(plant), gridPosition, TileMapLayer.Buildings, false);
+                            TileAbstSO building = ChooseBuilding(gridPosition, distance);
+                            if (building != null) {
+                                SetTile(new TileSlot(building), gridPosition, TileMapLayer.Buildings, false);
                             }
                         }
-                    } else if (distance <= _instance.startIslandRadius) {
+                    }
+                    else if (distance <= _instance.startIslandRadius) {
                         SetTile(new TileSlot(tiers[0].tile), ChunkToGridPosition(new Vector2Int(loopX, loopY)), TileMapLayer.Floor, false);
                     }
                 }
+            }
+            TileAbstSO ChooseBuilding(Vector2Int gridPosition, float distance) {
+                float sumWeight = 0f;
+                float[] chances = new float[buildings.Length];
+                for (int i = 0; i < buildings.Length; i++) {
+                    if (buildings[i].global) {
+                        chances[i] = buildings[i].chance;
+                    }
+                    else {
+                    chances[i] = easeInOutSine(1- Mathf.Clamp(Mathf.Abs(buildings[i].distance - distance) / buildings[i].spread, 0f, 1f)) * buildings[i].chance;
+                    }
+                    sumWeight += chances[i];
+                }
+                if (sumWeight > 1) {
+                    for (int i = 0; i < chances.Length; i++) {
+                        chances[i] /= sumWeight;
+                    }
+                }
+                float roll = buildingsRandom.GetRandomValue(gridPosition);
+                for (int i = 0; i < chances.Length; i++) {
+                    roll -= chances[i];
+                    if (roll <= 0f) {
+                        return buildings[i].tile;
+                    }
+                }
+                return null;
+
             }
         }
         public void MarkOutOfView() {
@@ -133,7 +161,9 @@ public partial class GridManager
             }
         }
 
-        private float EaseInOutQuart(float x) => -(Mathf.Cos(Mathf.PI * x) - 1) / 2;
+
+
+        private float easeInOutSine(float x) => -(Mathf.Cos(Mathf.PI * x) - 1) / 2;
         private float easeOutBounce(float x) {
             const float n1 = 7.5625f;
             const float d1 = 2.75f;
@@ -155,6 +185,7 @@ public partial class GridManager
         private float easeInBounce(float x) => 1 - easeOutBounce(1 - x);
 
         private float easeInOutBounce(float x) => x < 0.5f ? (1 - easeOutBounce(1 - 2 * x)) / 2 : (1 + easeOutBounce(2 * x - 1)) / 2;
+
     }
 }
 

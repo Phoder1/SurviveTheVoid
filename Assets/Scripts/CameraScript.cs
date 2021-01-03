@@ -26,7 +26,7 @@ public class CameraScript : MonoBehaviour
 
     // Start is called before the first frame update
     public void Init() {
-        cameraComp = GetComponent<Camera>();
+        cameraComp = Camera.main;
         gridManager = GridManager._instance;
         UpdateView();
     }
