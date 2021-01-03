@@ -5,9 +5,8 @@ using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InventoryUIManager : MonoBehaviour
+public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 {
-    public static InventoryUIManager _instance;
 
     [Header("Equip Related")]
     // 0 = head, 1 = Chest, 2 = Legging, 3 = Gloves, 4 = Shoes
@@ -22,19 +21,7 @@ public class InventoryUIManager : MonoBehaviour
     TextMeshProUGUI[] inventorySlotText;
 
     Inventory inventory;
-    private void Awake()
-    {
-        if (_instance == null)
-        {
-            _instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-        inventory = Inventory.GetInstance;
-    }
-
+  
     public void OnPressedInventoryButton(int buttonId)
 	{
         ItemSlot itemCache = inventory.GetItemFromInventoryButton(0, buttonId);
@@ -52,36 +39,14 @@ public class InventoryUIManager : MonoBehaviour
 
 
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        //for (int i = 0; i < EquippedSlots.Length; i++)
-        //{
-        //    if(EquippedSlots[i] == null)
-        //    {
-        //        if (EquipSlots[i].gameObject.activeInHierarchy)
-        //        {
-        //            EquipSlots[i].gameObject.SetActive(false);
-        //        }
-
-        //    }
-        //    else
-        //    {
-        //        if (!EquipSlots[i].gameObject.activeInHierarchy)
-        //        {
-        //            EquipSlots[i].gameObject.SetActive(true);
-        //        }
-        //        EquipSlots[i].sprite = EquippedSlots[i].getsprite;
-        //    }
-        //}
-
-    }
-
     // Update is called once per frame
     void Update()
     {
         UpdateInventory();
     }
+
+
+
 
     //public boolean = setactive of all inventory,  only update inventory after this boolean is true, if false dont update
 

@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
     PlayerManager playerManager;
     CameraScript cameraScript;
     CraftingManager craftingManager;
-
     private void Awake() {
         if (_instance != null) {
             Destroy(gameObject);
@@ -33,9 +32,9 @@ public class GameManager : MonoBehaviour
             playerManager.Init();
         if (gridManager != null)
             gridManager.Init();
-        //if (craftingManager != null)
-        //    craftingManager.Init();
-        
+        if (craftingManager != null)
+            craftingManager.Init();
+
     }
 
     // Update is called once per frame
