@@ -15,5 +15,5 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : Component
         }
     }
 
-    public abstract void Init();
+    //public abstract void Init();
 }
