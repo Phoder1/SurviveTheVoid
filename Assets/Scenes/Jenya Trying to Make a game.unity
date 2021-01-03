@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 8e42919010a8e894f8b3aabc4a85ef98, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -394,6 +394,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5435700085615291382, guid: ee73434160860324a921a0989281f1ff,
+        type: 3}
+      propertyPath: m_ClearFlags
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5435700086702367932, guid: ee73434160860324a921a0989281f1ff,
         type: 3}
       propertyPath: m_Name
@@ -1610,6 +1615,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: UImanager
       objectReference: {fileID: 0}
+    - target: {fileID: 3303330037121906518, guid: ec261434d51bce44fa7c7f1d01379781,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 8bf2723fe02f89545bff5d507f3d0c7f,
+        type: 3}
+    - target: {fileID: 3303330037121906518, guid: ec261434d51bce44fa7c7f1d01379781,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0.5019608
+      objectReference: {fileID: 0}
+    - target: {fileID: 3303330037121906520, guid: ec261434d51bce44fa7c7f1d01379781,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3303330037215079380, guid: ec261434d51bce44fa7c7f1d01379781,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -1639,6 +1660,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5055158341629960376, guid: ec261434d51bce44fa7c7f1d01379781,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -76.3
       objectReference: {fileID: 0}
     - target: {fileID: 6033404864412062686, guid: ec261434d51bce44fa7c7f1d01379781,
         type: 3}

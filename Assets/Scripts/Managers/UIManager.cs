@@ -242,6 +242,29 @@ public class UIManager : MonoBehaviour
                     _uiElements[i].SetActive(false);
                 }
             }
+
+            if(isQuickAccessSwapped == false)
+			{
+                for (int i = 6; i <= 10; i++)
+                {
+                    _uiElements[i].SetActive(false);
+                }
+                for (int i = 15; i <= 19; i++)
+                {
+                    _uiElements[i].SetActive(true);
+                }
+            }
+            else
+			{
+                for (int i = 6; i <= 10; i++)
+                {
+                    _uiElements[i].SetActive(true);
+                }
+                for (int i = 15; i <= 19; i++)
+                {
+                    _uiElements[i].SetActive(false);
+                }
+            }
         }
     }
 
