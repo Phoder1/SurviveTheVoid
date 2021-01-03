@@ -89,7 +89,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (closestTile == null)
         {
-            closestTile = _scanner.Scan(currentPosOnGrid, movementDir, 5, buildingLayer, checkType);
+            closestTile = _scanner.Scan(currentPosOnGrid, DirectionEnum.Up, 5, buildingLayer, checkType);
             lastPosOnGrid = currentPosOnGrid;
         }
         else
@@ -100,12 +100,11 @@ public class PlayerManager : MonoBehaviour
             if (lastPosOnGrid != currentPosOnGrid && (posToClosestDis > lastposToClosestDis))
             {
                 Debug.Log("checkTile");
-                closestTile = _scanner.Scan(currentPosOnGrid, movementDir, 5, buildingLayer, checkType);
+                closestTile = _scanner.Scan(currentPosOnGrid, DirectionEnum.Up, 5, buildingLayer, checkType);
                 lastPosOnGrid = currentPosOnGrid;
 
-                if (closestTile.tile != null)
+                if (closestTile != null)
                 {
-
                     //Check if Scanned-Do Not Delete!!//
                     // closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
                 }
@@ -148,7 +147,9 @@ public class PlayerManager : MonoBehaviour
         Scan(new GatheringScanChecker());
         if (closestTile != null)
         {
-        WalkTowards(_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
+            Vector3 destination = _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true);
+            destination.z = transform.position.z;
+            WalkTowards(destination);
 
 
         }
@@ -158,10 +159,12 @@ public class PlayerManager : MonoBehaviour
     public void ImplementSpecialInteraction()
     {
         Scan(new SpecialInterractionScanChecker());
-        if (closestTile.tile != null)
+        if (closestTile != null)
         {
-            WalkTowards(_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
-           
+            Vector3 destination = _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true);
+            destination.z = transform.position.z;
+            WalkTowards(destination);
+
 
         }
      
@@ -196,7 +199,7 @@ public class PlayerManager : MonoBehaviour
 
             transform.Translate((destination - transform.position) * Time.fixedDeltaTime);
             
-            Debug.Log("Walking Towards:"+destination);
+            
         }
         else
         {

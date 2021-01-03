@@ -36,7 +36,7 @@ namespace Assets.Scan
         public TileHit GetClosestTileInSquare(int distanceFromCenter) {
             TileHit[] tiles = GetAllTilesInSquare(distanceFromCenter);
 
-            if (tiles == null) return null;
+            if (tiles == null || tiles.Length == 0) return null;
 
             TileHit closestTile = null;
             float shortestDistance = float.MaxValue;
@@ -84,7 +84,7 @@ namespace Assets.Scan
 
                 if (currentTile != null && checker.CheckTile(currentTile))
                 {
-                    tiles.Add(new TileHit(currentTile, relativeCheckPosition));
+                    tiles.Add(new TileHit(currentTile, relativeCheckPosition + startPosition));
                 }
                 //Check if at corner
                 if (relativeCheckPosition.x == relativeCheckPosition.y) {
