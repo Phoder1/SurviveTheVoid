@@ -2,22 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoSingleton<GameManager>
 {
-    public static GameManager _instance;
-
     GridManager gridManager;
     PlayerManager playerManager;
     CameraScript cameraScript;
     CraftingManager craftingManager;
-    private void Awake() {
-        if (_instance != null) {
-            Destroy(gameObject);
-        }
-        else {
-            _instance = this;
-        }
-    }
     // Start is called before the first frame update
     void Start()
     {
@@ -32,9 +22,9 @@ public class GameManager : MonoBehaviour
             playerManager.Init();
         if (gridManager != null)
             gridManager.Init();
-        if (craftingManager != null)
-            craftingManager.Init();
-
+        //if (craftingManager != null)
+        //    craftingManager.Init();
+        
     }
 
     // Update is called once per frame
