@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
-public class CameraScript : MonoBehaviour
-{
+public class CameraScript : MonoSingleton<CameraScript>
+{ 
     [SerializeField]
     private float scrollSpeed;
     [SerializeField]
@@ -14,15 +14,6 @@ public class CameraScript : MonoBehaviour
     private Rect worldView;
     private bool viewChanged;
     [SerializeField] private BlockTileSO clickTile;
-    public static CameraScript _instance;
-    private void Awake() {
-        if (_instance != null) {
-            Destroy(gameObject);
-        }
-        else {
-            _instance = this;
-        }
-    }
 
     // Start is called before the first frame update
     public void Init() {
