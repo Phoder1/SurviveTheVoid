@@ -1,5 +1,8 @@
 ﻿
+using System.Net;
+using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class InputManager : MonoBehaviour
 {
@@ -10,10 +13,11 @@ public class InputManager : MonoBehaviour
     PlayerStateMachine playerStateMachine;
     [SerializeField] VirtualJoystick vJ;
     public static InputState inputState;
-    Vector2 touchPos, startTouchPos;
-    TileHit newTileHit, previousTileHit;
+    Vector2 touchPosition;
+    TileHit newTileHit, currentTileHit;
     bool isBuildingAttached = false;
-    
+   
+    TileSlot tileSlotCache;
     private void Awake() {
         playerStateMachine = PlayerStateMachine.GetInstance;
         gridManager = GridManager._instance;
@@ -107,94 +111,63 @@ public class InputManager : MonoBehaviour
                     default:
                         break;
                 }
-
-
-
-
             }
         }
 
     }
 
 
-    void BuildingStateOnTouch(Touch touch) {
+    void BuildingStateOnTouch(Touch touch)
+    {
 
         switch (touch.phase)
         {
             case TouchPhase.Began:
-
-                startTouchPos = Camera.main.ScreenToWorldPoint(touch.position);
-
-                    previousTileHit = gridManager.GetHitFromWorldPosition(startTouchPos, TileMapLayer.Floor);
-                    TileSlot buildTileToPlace = previousTileHit.tile;
-
-                    if (buildTileToPlace == null)
-                        return;
-
-                    isBuildingAttached = true;
-                break;
-
-
-
-
-            case TouchPhase.Stationary:
             case TouchPhase.Moved:
-                { 
-                    if (previousTileHit.tile == null)
-                        return;
+             
 
-                    touchPos = Camera.main.ScreenToWorldPoint(touch.position);
-
-                    newTileHit = gridManager.GetHitFromWorldPosition(touchPos, TileMapLayer.Floor);
-
-                    if (newTileHit == null)
-                        return;
+                touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
 
 
-
-                    if (newTileHit.gridPosition == previousTileHit.gridPosition)
-                    {
-                        //  gridManager.SetTile(buildTileToPlace,previousTileHit.gridPosition, TileMapLayer.Buildings, true);
-                        
-                        //  var buildTileToPlace.position = previousTileHit.gridPosition;   // 
-                        //     tileHit.gridPosition;
-                    }
-                    else
-                    {
-                        previousTileHit = newTileHit;
-                   
-                    }
+                currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
+                if (currentTileHit == null || gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) != null)
+                    return;
 
 
-                }
-                break;
-            
+                isBuildingAttached = true;
 
-               
-            case TouchPhase.Ended:
-            case TouchPhase.Canceled:
-
-
-                if (isBuildingAttached)
+                if (newTileHit.gridPosition == currentTileHit.gridPosition)
                 {
-                    // wait till the player confirm the building position
-                    //  gridManager.SetTile(buildTileToPlace,previousTileHit.gridPosition, TileMapLayer.Buildings, true);
-            
-                    isBuildingAttached = false;
+
+                     gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Buildings, false);
+                }
+                else
+                {
+                    newTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
+
+
+                    if (newTileHit == null || gridManager.GetTileFromGrid(newTileHit.gridPosition, TileMapLayer.Buildings) != null)
+                            gridManager.SetTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings, false);
+                      
+                    currentTileHit = newTileHit;
                 }
 
-
                 break;
-
         }
+    }
+
+
+    public void SetBuildingTile(TileAbstSO Item) {
+
+        if (Item == null)
+            return;
+
+        //   tileSlotCache = new TileSlot( Item , vector koshehu(willberemoved) ,TileMapLayer.Buildings);
     }
 
 
 
 
-
-
-  
     public Vector2 GetAxis()
     {
 
@@ -204,7 +177,47 @@ public class InputManager : MonoBehaviour
     }
 
 
+    public void PressedConfirmBuildingButton(bool toConfirm)
+    {
+        if (toConfirm)
+        {
+            Touch newTouch = new Touch();
+           
 
+            if ((Vector2)Camera.main.ScreenToWorldPoint(newTouch.position)  != touchPosition)
+            {
+
+
+
+
+
+                PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
+            }
+
+
+
+
+
+        }
+        else
+        {
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
 
 
     //World to grid position can be found on the Grid manager

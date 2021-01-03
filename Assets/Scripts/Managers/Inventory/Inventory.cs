@@ -22,7 +22,7 @@ public class Inventory
             return _instance;
         }
     }
-    int maxCapacityOfItemsInList = 24;
+    int maxCapacityOfItemsInList = 18;
     bool checkForItem = false;
     int counter = 0;
     int itemAmountCount = 0;
@@ -361,7 +361,7 @@ public class Inventory
             {
                 RemoveItemFromInventory(0, recipe.getitemCostArr[i]);
             }
-            if(GetAmountOfItem(0,null) > 0)
+            if(GetAmountOfItem(0,null) > 0 || GetAmountOfItem(0, recipe.getoutcomeItem) < recipe.getoutcomeItem.item.getmaxStackSize)
             {
                 AddToInventory(0, recipe.getoutcomeItem);
             }
@@ -495,7 +495,16 @@ public class Inventory
     }
 
 
+    public ItemSlot GetItemFromInventoryButton(int chestId, int buttonId)
+	{
+        inventoryCache = GetInventoryFromDictionary(chestId);
+        if (inventoryCache == null)
+		{
+            return null;
+        }
 
+        return inventoryCache[buttonId];
+	}
 
     public void PrintInventory(int chestID)
     {

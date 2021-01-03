@@ -31,6 +31,7 @@ public class UIManager : MonoBehaviour
     }
 
 
+
     #region CraftingUI
     public void OnClickSelectedSections(string _section)
     {
@@ -51,16 +52,21 @@ public class UIManager : MonoBehaviour
 
 
     #region ButtonsFunctions
-    void ButtonA()
+
+    bool isShown = true;
+    bool isQuickAccessSwapped = true;
+    bool isInventoryOpen = false;
+
+    public void ButtonA()
     {
         inputManager.PressButtonA();
     }
-    void ButtonB()
+
+    public void ButtonB()
     {
         inputManager.PressButtonB();
     }
 
-    bool isShown = true;
     public void ButtonHide()
 	{
         if(isShown == true)
@@ -115,7 +121,6 @@ public class UIManager : MonoBehaviour
         }    
 	}
 
-    bool isQuickAccessSwapped = true;
     public void ButtonSwap()
 	{
         if (isQuickAccessSwapped == true)
@@ -146,7 +151,99 @@ public class UIManager : MonoBehaviour
         }
 	}
 
+    public void ButtonInventory()
+	{
+        if(_uiElements[20].activeSelf == true)
+		{
+            _uiElements[20].SetActive(false);
 
+            for(int i = 1; i<=3; i++)
+			{
+                _uiElements[i].SetActive(true);
+			}
+
+            isInventoryOpen = false;
+        }
+        else
+		{
+            _uiElements[20].SetActive(true);
+
+            for (int i = 1; i <= 3; i++)
+            {
+                _uiElements[i].SetActive(false);
+            }
+
+            isInventoryOpen = true;
+        }
+	}
+
+    public void ButtonFightTransition()
+	{
+        _uiElements[1].transform.GetChild(0).gameObject.SetActive(false);
+        _uiElements[1].transform.GetChild(1).gameObject.SetActive(true);
+
+        _uiElements[3].transform.GetChild(0).gameObject.SetActive(false);
+        _uiElements[3].transform.GetChild(1).gameObject.SetActive(true);
+    }
+
+    public void BottunGatherTransition()
+	{
+        _uiElements[1].transform.GetChild(0).gameObject.SetActive(true);
+        _uiElements[1].transform.GetChild(1).gameObject.SetActive(false);
+
+        _uiElements[3].transform.GetChild(0).gameObject.SetActive(true);
+        _uiElements[3].transform.GetChild(1).gameObject.SetActive(false);
+    }
+
+    public void ButtonSettings()
+	{	
+        if (_uiElements[21].activeSelf == false)
+        {
+            _uiElements[21].SetActive(true);
+
+            for(int i = 0; i<=20; i++)
+			{
+                if(i == 13)
+				{
+                    _uiElements[i].SetActive(true);
+                }
+				else
+				{
+                    _uiElements[i].SetActive(false);
+                }
+			}
+
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            Time.timeScale = 1f;
+
+            for (int i = 0; i <= 20; i++)
+            {
+                if (i == 20 || i == 4 || i == 15 || i == 16 || i == 17 || i ==18 || i == 19)
+                {
+                    _uiElements[i].SetActive(false);
+                }
+                else
+                {
+                    _uiElements[i].SetActive(true);
+                }
+            }
+
+            _uiElements[21].SetActive(false);
+
+            if(isInventoryOpen == true)
+			{
+                _uiElements[20].SetActive(true);
+
+                for (int i = 1; i <= 3; i++)
+                {
+                    _uiElements[i].SetActive(false);
+                }
+            }
+        }
+    }
 
     #endregion
 

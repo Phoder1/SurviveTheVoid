@@ -35,7 +35,16 @@ public class InventoryUIManager : MonoBehaviour
         inventory = Inventory.GetInstance;
     }
 
+    public void OnPressedInventoryButton(int buttonId)
+	{
+        ItemSlot itemCache = inventory.GetItemFromInventoryButton(0, buttonId);
 
+		if (itemCache.item.GetItemType == ItemType.Building)
+		{
+            PlayerStateMachine.GetInstance.SwitchState(InputState.BuildState);
+            //InputManager._instance.SetBuildingTile(itemCache);
+		}
+	}
 
 
 
