@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-
 public abstract class MonoSingleton<T> : MonoBehaviour where T : Component
 {
     public static T _instance;
@@ -11,8 +10,10 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : Component
                 DontDestroyOnLoad(gameObject);
             }
             else if(_instance != this as T){
-                Destroy(gameObject);
+                Destroy(this);
             }
         }
     }
+
+    //public abstract void Init();
 }

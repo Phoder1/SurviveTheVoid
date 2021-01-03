@@ -4,10 +4,9 @@ using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class InputManager : MonoBehaviour
+public class InputManager : MonoSingleton<InputManager>
 {
-   
-    public static InputManager _instance;
+
     GridManager gridManager;
     static StateBase currentState;
     PlayerStateMachine playerStateMachine;
@@ -18,18 +17,9 @@ public class InputManager : MonoBehaviour
     bool isBuildingAttached = false;
    
     TileSlot tileSlotCache;
-    private void Awake() {
+    public void Init() {
         playerStateMachine = PlayerStateMachine.GetInstance;
         gridManager = GridManager._instance;
-
-        if (_instance != null) {
-            Destroy(gameObject);
-
-        }
-        else {
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
     }
     public static StateBase SetInputState
         {
@@ -50,12 +40,6 @@ public class InputManager : MonoBehaviour
 
 
 
-    // Start is called before the first frame update
-    void Start()
-    {
-     
-        gridManager = GridManager._instance;
-    }
 
     // Update is called once per frame
     void Update()

@@ -8,6 +8,8 @@ public class GameManager : MonoSingleton<GameManager>
     PlayerManager playerManager;
     CameraScript cameraScript;
     CraftingManager craftingManager;
+    InventoryUIManager inventoryUIManager;
+    UIManager uIManager;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,6 +17,8 @@ public class GameManager : MonoSingleton<GameManager>
         playerManager = PlayerManager._instance;
         cameraScript = CameraScript._instance;
         craftingManager = CraftingManager._instance;
+        inventoryUIManager = InventoryUIManager._instance;
+        uIManager = UIManager._instance;
         //playerManager Init must run before gridManager
         if (cameraScript != null)
             cameraScript.Init();
@@ -22,9 +26,12 @@ public class GameManager : MonoSingleton<GameManager>
             playerManager.Init();
         if (gridManager != null)
             gridManager.Init();
-        //if (craftingManager != null)
-        //    craftingManager.Init();
-        
+        if (craftingManager != null)
+            craftingManager.Init();
+        if (uIManager != null)
+            uIManager.Init();
+        if (inventoryUIManager != null)
+            inventoryUIManager.Init();
     }
 
     // Update is called once per frame

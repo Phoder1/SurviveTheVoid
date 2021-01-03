@@ -5,10 +5,8 @@ using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InventoryUIManager : MonoBehaviour
+public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 {
-    public static InventoryUIManager _instance;
-
     [Header("Equip Related")]
     // 0 = head, 1 = Chest, 2 = Legging, 3 = Gloves, 4 = Shoes
     public Image[] EquipSlots;
@@ -22,18 +20,7 @@ public class InventoryUIManager : MonoBehaviour
     TextMeshProUGUI[] inventorySlotText;
 
     Inventory inventory;
-    private void Awake()
-    {
-        if (_instance == null)
-        {
-            _instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-        inventory = Inventory.GetInstance;
-    }
+
 
     public void OnPressedInventoryButton(int buttonId)
 	{
@@ -49,37 +36,10 @@ public class InventoryUIManager : MonoBehaviour
 
 
 
-
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        //for (int i = 0; i < EquippedSlots.Length; i++)
-        //{
-        //    if(EquippedSlots[i] == null)
-        //    {
-        //        if (EquipSlots[i].gameObject.activeInHierarchy)
-        //        {
-        //            EquipSlots[i].gameObject.SetActive(false);
-        //        }
-
-        //    }
-        //    else
-        //    {
-        //        if (!EquipSlots[i].gameObject.activeInHierarchy)
-        //        {
-        //            EquipSlots[i].gameObject.SetActive(true);
-        //        }
-        //        EquipSlots[i].sprite = EquippedSlots[i].getsprite;
-        //    }
-        //}
-
-    }
-
     // Update is called once per frame
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.P))
         UpdateInventory();
     }
 
@@ -92,6 +52,12 @@ public class InventoryUIManager : MonoBehaviour
             UpdateInventoryToUI();
         }
     }
+
+    public void Init()
+    {
+        inventory = Inventory.GetInstance;
+    }
+
 
 
     public void UpdateInventoryToUI()

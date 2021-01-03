@@ -11,14 +11,13 @@ public class UIManager : MonoSingleton<UIManager>
     // UI elements
     public GameObject[] _uiElements;
 
+
     public void Init()
     {
         craftingManager = CraftingManager._instance;
         inventoryManager = InventoryUIManager._instance;
         inputManager = InputManager._instance;
     }
-
-
 
     #region CraftingUI
     public void OnClickSelectedSections(string _section)

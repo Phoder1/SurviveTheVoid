@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 
 
-public class CraftingManager : MonoBehaviour, ICraftingManager
+public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 {
     public ItemPackSO items;
     public RecipePackSO recipes;
@@ -15,7 +15,6 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
     private Section[] sections;
     private Section selectedSection;
     public GameObject[] recipeMaterialSlots;
-    public static CraftingManager _instance;
     List<RecipeSO> unlockedRecipes = new List<RecipeSO>();
     [SerializeField]
     private GameObject ItemSlotPrefab;
@@ -30,26 +29,6 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
 
 
 
-    private void Awake()
-    {
-        if (_instance == null)
-        {
-            _instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-        inventory = Inventory.GetInstance;
-        Init();
-    }
-
-    private void Start()
-    {
-
-     
-
-    }
     private void Update()
     {
 
@@ -57,6 +36,7 @@ public class CraftingManager : MonoBehaviour, ICraftingManager
         {
             inventory.AddToInventory(0,new ItemSlot(items.getitemsArr[3], 1));
             ShowRecipe(selectedRecipe);
+
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
