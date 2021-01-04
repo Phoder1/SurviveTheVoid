@@ -28,6 +28,10 @@ public class CameraScript : MonoSingleton<CameraScript>
         cameraComp = Camera.main;
         gridManager = GridManager._instance;
         UpdateView();
+        foreach (StarsParalax stars in starsParalax) {
+            stars.offset = new Vector2(Random.Range(0.3f,1.3f), Random.Range(0.3f, 1.3f));
+            stars.mr.sharedMaterial.SetTextureOffset("_MainTex", stars.offset);
+        }
     }
 
     // Update is called once per frame

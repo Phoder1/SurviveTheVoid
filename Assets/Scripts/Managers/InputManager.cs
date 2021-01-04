@@ -1,8 +1,4 @@
-﻿
-using System.Net;
-using UnityEditorInternal;
-using UnityEngine;
-using UnityEngine.Tilemaps;
+﻿using UnityEngine;
 
 public class InputManager : MonoSingleton<InputManager>
 {

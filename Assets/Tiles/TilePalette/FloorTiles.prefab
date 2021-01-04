@@ -89,7 +89,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 1
-      m_TileSpriteIndex: 2
+      m_TileSpriteIndex: 12
       m_TileMatrixIndex: 0
       m_TileColorIndex: 3
       m_TileObjectToInstantiateIndex: 65535
@@ -98,7 +98,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 2
-      m_TileSpriteIndex: 3
+      m_TileSpriteIndex: 11
       m_TileMatrixIndex: 0
       m_TileColorIndex: 3
       m_TileObjectToInstantiateIndex: 65535
@@ -107,7 +107,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 0
-      m_TileSpriteIndex: 1
+      m_TileSpriteIndex: 10
       m_TileMatrixIndex: 0
       m_TileColorIndex: 3
       m_TileObjectToInstantiateIndex: 65535
@@ -116,7 +116,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 5
-      m_TileSpriteIndex: 5
+      m_TileSpriteIndex: 9
       m_TileMatrixIndex: 0
       m_TileColorIndex: 3
       m_TileObjectToInstantiateIndex: 65535
@@ -125,7 +125,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 4
-      m_TileSpriteIndex: 4
+      m_TileSpriteIndex: 5
       m_TileMatrixIndex: 0
       m_TileColorIndex: 3
       m_TileObjectToInstantiateIndex: 65535
@@ -134,7 +134,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 3
-      m_TileSpriteIndex: 0
+      m_TileSpriteIndex: 4
       m_TileMatrixIndex: 0
       m_TileColorIndex: 3
       m_TileObjectToInstantiateIndex: 65535
@@ -197,27 +197,35 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: 219d62620bc6bb24699fab44e6dc3e20, type: 2}
   - m_RefCount: 0
     m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   m_TileSpriteArray:
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 1
     m_Data: {fileID: 21300000, guid: e64666cdcaa3118429586879dfbb178f, type: 3}
   - m_RefCount: 1
-    m_Data: {fileID: 21300000, guid: f386fde0cacead94cabe83c2697b1dd4, type: 3}
-  - m_RefCount: 1
-    m_Data: {fileID: 21300000, guid: acdff7ef05846004f92be3d47dc8d610, type: 3}
-  - m_RefCount: 1
-    m_Data: {fileID: 21300000, guid: 1b732710a729109458c643b74c574c64, type: 3}
-  - m_RefCount: 1
     m_Data: {fileID: 21300000, guid: 07331ba2234a83d4395d20048d7dd0e4, type: 3}
-  - m_RefCount: 1
-    m_Data: {fileID: 21300000, guid: be2e153014d205f4fbaeb6b70193dfcc, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: 21300000, guid: 53d65c38dd6fb684ab90c35cc428d8b0, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: 21300000, guid: 6a8bffdf89cfcb740a99d657cb5f5868, type: 3}
   - m_RefCount: 2
     m_Data: {fileID: 21300000, guid: f45fbc90eb257ad4a8d4cc700e571a33, type: 3}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: 21300000, guid: be2e153014d205f4fbaeb6b70193dfcc, type: 3}
+  - m_RefCount: 1
+    m_Data: {fileID: 21300000, guid: f386fde0cacead94cabe83c2697b1dd4, type: 3}
+  - m_RefCount: 1
+    m_Data: {fileID: 21300000, guid: 1b732710a729109458c643b74c574c64, type: 3}
+  - m_RefCount: 1
+    m_Data: {fileID: 21300000, guid: acdff7ef05846004f92be3d47dc8d610, type: 3}
   m_TileMatrixArray:
   - m_RefCount: 10
     m_Data:
@@ -241,17 +249,16 @@ Tilemap:
   - m_RefCount: 0
     m_Data: {r: 0, g: 0, b: 0, a: 0}
   - m_RefCount: 0
-    m_Data: {r: 0.0000000012615331, g: 0.0000000012615331, b: 0.0000000012615331,
-      a: 0.0000000012615331}
+    m_Data: {r: 5.630188, g: 5.630188, b: 5.630188, a: 5.630188}
   - m_RefCount: 0
-    m_Data: {r: 0.000000001262034, g: 0.000000001262034, b: 0.000000001262034, a: 0.000000001262034}
+    m_Data: {r: 7.000931, g: 7.000931, b: 7.000931, a: 7.000931}
   - m_RefCount: 10
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: -2, y: 0, z: 0}
-  m_Size: {x: 7, y: 9, z: 1}
+  m_Size: {x: 9, y: 49, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
