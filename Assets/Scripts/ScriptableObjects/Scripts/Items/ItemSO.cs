@@ -9,7 +9,11 @@ using UnityEngine;
     OakLog,
     WoodenStick,
     Stone,
+    Sugar,
+    UncookedMeat,
     //Consumable
+    CookedMeat,
+    SweetCookedMeat,
     Apple,
     OxygenBubble,
     // Building

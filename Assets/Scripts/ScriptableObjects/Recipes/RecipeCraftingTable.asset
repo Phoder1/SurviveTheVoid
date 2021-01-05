@@ -18,8 +18,9 @@ MonoBehaviour:
   - item: {fileID: 11400000, guid: 15f6588093b9bde479796bc44fb85fd4, type: 2}
     amount: 1
   outcomeItem:
-    item: {fileID: 0}
+    item: {fileID: 11400000, guid: c3853bafc1716d34fa23f4773d7d7a2d, type: 2}
     amount: 1
   tier: 0
   section: 1
   isUnlocked: 1
+  CraftingTime: 30

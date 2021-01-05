@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ad4fb29703af1ac4e92edd55a5b9b4f5, type: 3}
-  m_Name: New Block Tile
+  m_Name: TileFlower
   m_EditorClassIdentifier: 
-  maxStackSize: 0
+  maxStackSize: 20
   description: 
-  itemEnum: 0
-  sprite: {fileID: 0}
-  mainTileBase: {fileID: 0}
-  interactionType: 0
+  itemEnum: 5
+  sprite: {fileID: 21300000, guid: 242c587d9e949f04b88d6a8903d2695e, type: 3}
+  mainTileBase: {fileID: 11400000, guid: ea80f8e67af76e44ab21f659941c74b5, type: 2}
+  interactionType: 8
   tileType: 0
   isSolid: 0
