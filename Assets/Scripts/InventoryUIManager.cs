@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEditor.Build;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,10 +23,14 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 	{
         ItemSlot itemCache = inventory.GetItemFromInventoryButton(0, buttonId);
 
+        if (itemCache == null)
+            return;
+        
 		if (itemCache.item.GetItemType == ItemType.Building)
 		{
+            UIManager._instance.ButtonInventory();
             PlayerStateMachine.GetInstance.SwitchState(InputState.BuildState);
-            //InputManager._instance.SetBuildingTile(itemCache);
+            InputManager._instance.SetBuildingTile(itemCache.item as TileAbstSO);
 		}
 	}
 

@@ -12,7 +12,6 @@ public class UIManager : MonoSingleton<UIManager>
     public GameObject[] _uiElements;
 
 
-
     public override void Init()
     {
         craftingManager = CraftingManager._instance;

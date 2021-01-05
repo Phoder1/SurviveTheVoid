@@ -71,7 +71,7 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
     }
 
     private const int CHUNK_SIZE = 16;
-    private const int COLLISION_SENSITIVITY = 6;
+    private const int COLLISION_SENSITIVITY = 10;
     private const float BUILDING_LAYER_POSITION_OFFSET = 0.5f;
 
     private const float TOP_FACE_HEIGHT = 0.7f;
@@ -190,13 +190,17 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
     public Vector2Int WorldToGridPosition(Vector3 worldPosition, TileMapLayer buildingLayer)
         => (Vector2Int)GetTilemap(buildingLayer).WorldToCell(worldPosition - Vector3.up * (buildingLayer == TileMapLayer.Buildings ? BUILDING_LAYER_POSITION_OFFSET : 0f));
     public bool IsTileWalkable(Vector2 worldPosition, Vector2 movementVector) {
+        if (movementVector == Vector2.zero || movementVector.magnitude < 0.01f)
+            return true;
         bool moveLegal = true;
-        TileSlot floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + movementVector.normalized * offSet, TileMapLayer.Floor), TileMapLayer.Floor);
+        TileSlot floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + movementVector + movementVector.normalized * offSet, TileMapLayer.Floor), TileMapLayer.Floor);
         moveLegal &= floorTile != null;
-        Quaternion rotationLeft = Quaternion.Euler(0, 0, 90f / COLLISION_SENSITIVITY);
-        Quaternion rotationRight = Quaternion.Euler(0, 0, 90f / COLLISION_SENSITIVITY);
-        Vector2 leftMovementVector = movementVector.normalized * offSet;
-        Vector2 rightMovementVector = movementVector.normalized * offSet;
+        if (!moveLegal) 
+            return moveLegal;        
+        Quaternion rotationLeft = Quaternion.Euler(0, 0, 75f / COLLISION_SENSITIVITY);
+        Quaternion rotationRight = Quaternion.Euler(0, 0, -75f / COLLISION_SENSITIVITY);
+        Vector2 leftMovementVector = movementVector + movementVector.normalized * offSet;
+        Vector2 rightMovementVector = movementVector + movementVector.normalized * offSet;
         for (int i = 0; i < COLLISION_SENSITIVITY && moveLegal; i++) {
             leftMovementVector = rotationLeft * leftMovementVector;
             floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + leftMovementVector, TileMapLayer.Floor), TileMapLayer.Floor);
