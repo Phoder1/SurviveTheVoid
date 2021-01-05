@@ -25,11 +25,18 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     private TileMapLayer buildingLayer;
     private TileHit closestTile;
     private DirectionEnum movementDir;
-    // Start is called before the first frame update
+
+
+    [SerializeField] int lookRange=5;
+
+
+
+ 
+
     public override void Init()
     {
        
-        buildingLayer = TileMapLayer.Floor;
+        buildingLayer = TileMapLayer.Buildings;
         _scanner = new Scanner();
         _inputManager = InputManager._instance;
         _GridManager = GridManager._instance;
@@ -50,11 +57,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         FindDirection();
         if ((movementVector != Vector2.zero && _GridManager.IsTileWalkable(nextPos, movementVector)) || Input.GetKey(KeyCode.LeftShift))
         {
-            //switch (_inputManager.GetAxis())
-            //{
-            //    //case :
-            //        //break;
-            //}
+       
             
             transform.Translate(movementVector);
             UpdateView();
@@ -70,58 +73,52 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     }
     public void Scan(IChecker checkType)
     {
-        if (closestTile == null)
-        {
-            closestTile = _scanner.Scan(currentPosOnGrid, DirectionEnum.Up, 5, buildingLayer, checkType);
-            lastPosOnGrid = currentPosOnGrid;
-        }
-        else
-        {
 
-            float posToClosestDis = Vector2.Distance(currentPos, _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
-            float lastposToClosestDis = Vector2.Distance(_GridManager.GridToWorldPosition(lastPosOnGrid, buildingLayer, true), _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true));
-            if (lastPosOnGrid != currentPosOnGrid && (posToClosestDis > lastposToClosestDis))
-            {
-                Debug.Log("checkTile");
-                closestTile = _scanner.Scan(currentPosOnGrid, DirectionEnum.Up, 5, buildingLayer, checkType);
-                lastPosOnGrid = currentPosOnGrid;
+        Debug.Log("checkTile");
+        closestTile = _scanner.Scan(currentPosOnGrid, movementDir, lookRange, buildingLayer, checkType);
+        lastPosOnGrid = currentPosOnGrid;
 
-                if (closestTile != null)
-                {
-                    //Check if Scanned-Do Not Delete!!//
-                    // closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
-                }
-            }
-        }
+
+
+        //to check if scan works//
+        //closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
+
     }
 
     private void FindDirection()
     {
-        float angle = Vector2.SignedAngle(_inputManager.GetAxis(), Vector2.up);
-        int direction = Mathf.RoundToInt(angle / 90);
+        if (_inputManager.GetAxis() != Vector2.zero)
+        {
+            float angle = Vector2.SignedAngle(_inputManager.GetAxis(), Vector2.up);
+            int direction = Mathf.RoundToInt(angle / 90);
+        
 
         
 
 
         switch (direction)
         {
-            case 0:
-                movementDir = DirectionEnum.Up;
-                break;
-            case 1:
+                case 0:
+                    movementDir = DirectionEnum.Up;
+
+                    break;
+
+                case 1:
                 movementDir = DirectionEnum.Right;
+               
                 break;
             case -1:
                 movementDir = DirectionEnum.Left;
+              
                 break;
+         
             case 2:
                 movementDir = DirectionEnum.Down;
-                break;
-            case -2:
-                movementDir = DirectionEnum.Down;
+               
                 break;
 
 
+        }
         }
     }
     public void ImplementGathering()
