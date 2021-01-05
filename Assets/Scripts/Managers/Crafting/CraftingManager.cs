@@ -45,7 +45,8 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
-            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[3], 1));
+            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[11], 1));
+            
             ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.V))
@@ -137,8 +138,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
             section.UpdateInformation();
             //Debug.Log("Updating Information");
         }
-
-
+   
 
     }
 

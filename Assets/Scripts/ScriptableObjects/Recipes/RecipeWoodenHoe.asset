@@ -13,13 +13,14 @@ MonoBehaviour:
   m_Name: RecipeWoodenHoe
   m_EditorClassIdentifier: 
   ItemCostArr:
-  - item: {fileID: 11400000, guid: 6317b6bed700609419a7ffe65ff2b6d9, type: 2}
+  - item: {fileID: 11400000, guid: 6e3627ca283f52b4499153bb2af26248, type: 2}
     amount: 3
-  - item: {fileID: 11400000, guid: 628e0d79b7c898a4fb43629a7bbe139f, type: 2}
+  - item: {fileID: 11400000, guid: 15f6588093b9bde479796bc44fb85fd4, type: 2}
     amount: 1
   outcomeItem:
-    item: {fileID: 11400000, guid: e284635c31d594e489f9dbcf20606aad, type: 2}
+    item: {fileID: 11400000, guid: 5ed48cf6144d6bf40bc98f5de10bdad1, type: 2}
     amount: 1
   tier: 0
   section: 4
   isUnlocked: 1
+  CraftingTime: 60
