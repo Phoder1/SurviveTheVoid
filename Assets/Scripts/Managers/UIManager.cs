@@ -46,11 +46,13 @@ public class UIManager : MonoSingleton<UIManager>
 
     public void ButtonA()
     {
+        Debug.Log("!");
         inputManager.PressButtonA();
     }
 
     public void ButtonB()
     {
+        Debug.Log("!");
         inputManager.PressButtonB();
     }
 

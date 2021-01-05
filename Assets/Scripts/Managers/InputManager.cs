@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using NUnit.Framework;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class InputManager : MonoSingleton<InputManager>
 {
@@ -11,7 +14,10 @@ public class InputManager : MonoSingleton<InputManager>
     Vector2 touchPosition;
     TileHit newTileHit, currentTileHit;
     bool isBuildingAttached = false;
-   
+
+    List<Vector2Int> TileList = new List<Vector2Int>();
+    [SerializeField] Button btn;
+
     TileSlot tileSlotCache;
     public override void Init() {
         playerStateMachine = PlayerStateMachine.GetInstance;
@@ -109,28 +115,45 @@ public class InputManager : MonoSingleton<InputManager>
                 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
   
                  currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
-                if (tileSlotCache == null || currentTileHit == null || gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) != null)
+                if (tileSlotCache == null || currentTileHit == null || currentTileHit.tile == null || gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) != null)
                     return;
 
-
+              
                 isBuildingAttached = true;
 
                 if (newTileHit != null && newTileHit.gridPosition == currentTileHit.gridPosition)
                 {
 
-                     gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Buildings, false);
+                    gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Buildings, false);
+                    if (!TileList.Contains(currentTileHit.gridPosition))
+                    {
+                        TileList.Add(currentTileHit.gridPosition);
+                    }
                 }
                 else
                 {
+                    if (TileList.Count > 0)
+                    {
+                        foreach (var tile in TileList)
+                        {
+                            if (tile == null)
+                            {
+                                continue;
+                            }
+                            gridManager.SetTile(null, tile, TileMapLayer.Buildings, false);
+                        }
+                        TileList.Clear();
+                    }
                     newTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
 
 
+
                     if (newTileHit == null || gridManager.GetTileFromGrid(newTileHit.gridPosition, TileMapLayer.Buildings) != null)
-                            gridManager.SetTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings, false);
-                      
+                        gridManager.SetTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings, false);
+
                     currentTileHit = newTileHit;
                 }
-
+                
                 break;
         }
     }
