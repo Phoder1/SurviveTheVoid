@@ -45,6 +45,8 @@ public class TileSlot : ITileState
 {
     public ITileState tileState;
     public TileSlot(TileAbstSO tile) {
+        if (tile == null)
+            throw new System.NullReferenceException();
         switch (tile) {
             case PlantTileSO plant:
                 tileState = new PlantState(plant, this);

@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public enum TileMapLayer { Floor, Buildings }
-public partial class GridManager : MonoBehaviour, IGridManager
+public partial class GridManager : MonoSingleton<GridManager>, IGridManager
 {
     //Debug Chunks (Disable when not needed, very heavy on performance):
     #region Debug
@@ -43,46 +43,56 @@ public partial class GridManager : MonoBehaviour, IGridManager
         }
     }
     [SerializeField] private Noise islandsNoise;
-    [SerializeField] private Noise plantsNoise;
+    [SerializeField] private GridRandom buildingsRandom;
     [SerializeField] private int loadDistance;
     [SerializeField] private float offSet;
-
-    [SerializeField] private TileAbstSO plantTile;
 
 
     private Vector2Int lastViewMin = Vector2Int.zero;
     private Vector2Int lastViewMax = Vector2Int.zero;
 
-    [SerializeField] private TileTier[] floorBlocksTiers;
+    [SerializeField] private TileTierStruct[] floorBlocksTiers;
+    [SerializeField] private BuildingGenStruct[] buildingsGeneration;
     [System.Serializable]
-    private protected struct TileTier
+    private protected struct TileTierStruct
     {
         public TileAbstSO tile;
         public float distance;
         public float overlapStart;
     }
+    [System.Serializable]
+    private protected struct BuildingGenStruct
+    {
+        public TileAbstSO tile;
+        public float chance;
+        public float distance;
+        public bool global;
+        public float spread;
+    }
 
     private const int CHUNK_SIZE = 16;
-    private const int COLLISION_SENSITIVITY = 6;
+    private const int COLLISION_SENSITIVITY = 10;
     private const float BUILDING_LAYER_POSITION_OFFSET = 0.5f;
 
     private const float TOP_FACE_HEIGHT = 0.7f;
 
-    public static GridManager _instance;
+    //public static GridManager GetInstance;
 
-    private void Awake() {
-        if (_instance != null) {
-            Destroy(gameObject);
-        }
-        else {
-            _instance = this;
-        }
-    }
+    //private void Awake() {
+    //    if (isActiveAndEnabled) {
+    //        if (_instance != null) {
+    //            Destroy(gameObject);
+    //        }
+    //        else {
+    //            _instance = this;
+    //        }
+    //    }
+    //}
 
-    
-    public void Init() {
+
+    public override void Init() {
         islandsNoise.GenerateSeed();
-        plantsNoise.GenerateSeed();
+        buildingsRandom.GenerateSeed();
     }
 
     public void UpdateView(Rect view) {
@@ -180,13 +190,17 @@ public partial class GridManager : MonoBehaviour, IGridManager
     public Vector2Int WorldToGridPosition(Vector3 worldPosition, TileMapLayer buildingLayer)
         => (Vector2Int)GetTilemap(buildingLayer).WorldToCell(worldPosition - Vector3.up * (buildingLayer == TileMapLayer.Buildings ? BUILDING_LAYER_POSITION_OFFSET : 0f));
     public bool IsTileWalkable(Vector2 worldPosition, Vector2 movementVector) {
+        if (movementVector == Vector2.zero || movementVector.magnitude < 0.01f)
+            return true;
         bool moveLegal = true;
-        TileSlot floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + movementVector.normalized * offSet, TileMapLayer.Floor), TileMapLayer.Floor);
+        TileSlot floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + movementVector + movementVector.normalized * offSet, TileMapLayer.Floor), TileMapLayer.Floor);
         moveLegal &= floorTile != null;
-        Quaternion rotationLeft = Quaternion.Euler(0, 0, 90f / COLLISION_SENSITIVITY);
-        Quaternion rotationRight = Quaternion.Euler(0, 0, 90f / COLLISION_SENSITIVITY);
-        Vector2 leftMovementVector = movementVector.normalized * offSet;
-        Vector2 rightMovementVector = movementVector.normalized * offSet;
+        if (!moveLegal) 
+            return moveLegal;        
+        Quaternion rotationLeft = Quaternion.Euler(0, 0, 75f / COLLISION_SENSITIVITY);
+        Quaternion rotationRight = Quaternion.Euler(0, 0, -75f / COLLISION_SENSITIVITY);
+        Vector2 leftMovementVector = movementVector + movementVector.normalized * offSet;
+        Vector2 rightMovementVector = movementVector + movementVector.normalized * offSet;
         for (int i = 0; i < COLLISION_SENSITIVITY && moveLegal; i++) {
             leftMovementVector = rotationLeft * leftMovementVector;
             floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + leftMovementVector, TileMapLayer.Floor), TileMapLayer.Floor);

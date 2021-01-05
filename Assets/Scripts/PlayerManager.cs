@@ -4,9 +4,8 @@ using UnityEngine;
 using Assets.Scan;
 using System;
 
-public class PlayerManager : MonoBehaviour 
+public class PlayerManager : MonoSingleton<PlayerManager> 
 {
-    public static PlayerManager _instance;
     private InputManager _inputManager;
     private UIManager _uiManager;
     private PlayerStateMachine _playerStateMachine;
@@ -26,24 +25,8 @@ public class PlayerManager : MonoBehaviour
     private TileMapLayer buildingLayer;
     private TileHit closestTile;
     private DirectionEnum movementDir;
-
-
-
-    private void Awake()
-    {
-        if (_instance != null)
-        {
-            Destroy(gameObject);
-
-        }
-        else
-        {
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-    }
     // Start is called before the first frame update
-    public void Init()
+    public override void Init()
     {
        
         buildingLayer = TileMapLayer.Floor;

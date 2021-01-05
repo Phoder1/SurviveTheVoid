@@ -1,7 +1,16 @@
 ﻿using UnityEngine;
 
-public class CameraScript : MonoBehaviour
+public class CameraScript : MonoSingleton<CameraScript>
 {
+    [System.Serializable]
+    private class StarsParalax
+    {
+        [SerializeField] internal MeshRenderer mr;
+        [Range(0.001f,0.01f)]
+        [SerializeField] internal float speed;
+        internal Vector2 offset = Vector2.zero;
+    }
+    [SerializeField] private StarsParalax[] starsParalax;
     [SerializeField]
     private float scrollSpeed;
     [SerializeField]
@@ -14,25 +23,21 @@ public class CameraScript : MonoBehaviour
     private Rect worldView;
     private bool viewChanged;
     [SerializeField] private BlockTileSO clickTile;
-    public static CameraScript _instance;
-    private void Awake() {
-        if (_instance != null) {
-            Destroy(gameObject);
-        }
-        else {
-            _instance = this;
-        }
-    }
-
     // Start is called before the first frame update
-    public void Init() {
-        cameraComp = GetComponent<Camera>();
+    public override void Init() {
+        cameraComp = Camera.main;
         gridManager = GridManager._instance;
         UpdateView();
     }
 
     // Update is called once per frame
     private void Update() {
+        foreach(StarsParalax stars in starsParalax) {
+            stars.offset += new Vector2(stars.speed * Time.deltaTime, 0f);
+
+            stars.mr.sharedMaterial.SetTextureOffset("_MainTex", stars.offset);
+        }
+
         viewChanged = false;
         movement = new Vector2(
             Input.GetKey(KeyCode.D) ? 1 : 0 - (Input.GetKey(KeyCode.A) ? 1 : 0),
