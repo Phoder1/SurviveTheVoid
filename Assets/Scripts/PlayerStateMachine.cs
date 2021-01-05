@@ -1,4 +1,6 @@
-﻿public enum InputState { DefaultState, BuildState, FightState };
+﻿using System.Diagnostics;
+using UnityEngine;
+public enum InputState { DefaultState, BuildState, FightState };
 public class PlayerStateMachine 
 {
     private static PlayerStateMachine _instance;
@@ -22,6 +24,7 @@ public class PlayerStateMachine
     }
     public void SwitchState(InputState newState)
     {
+               UnityEngine.Debug.Log(newState);
         switch (newState)
         {
             case InputState.DefaultState:

@@ -1,8 +1,4 @@
-﻿
-using System.Net;
-using UnityEditorInternal;
-using UnityEngine;
-using UnityEngine.Tilemaps;
+﻿using UnityEngine;
 
 public class InputManager : MonoSingleton<InputManager>
 {
@@ -111,16 +107,15 @@ public class InputManager : MonoSingleton<InputManager>
              
 
                 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
-
-
-                currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
-                if (currentTileHit == null || gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) != null)
+  
+                 currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
+                if (tileSlotCache == null || currentTileHit == null || gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) != null)
                     return;
 
 
                 isBuildingAttached = true;
 
-                if (newTileHit.gridPosition == currentTileHit.gridPosition)
+                if (newTileHit != null && newTileHit.gridPosition == currentTileHit.gridPosition)
                 {
 
                      gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Buildings, false);
@@ -142,11 +137,12 @@ public class InputManager : MonoSingleton<InputManager>
 
 
     public void SetBuildingTile(TileAbstSO Item) {
-
+        tileSlotCache = null;
         if (Item == null)
             return;
 
-        //   tileSlotCache = new TileSlot( Item , vector koshehu(willberemoved) ,TileMapLayer.Buildings);
+
+         tileSlotCache = new TileSlot(Item);
     }
 
 
