@@ -5,16 +5,33 @@ using UnityEngine;
 
     public enum ItemName
     {
-        Flower,
-        OakLog,
-        CraftingTable,
-        WoodenStick,
-        WoodenSword,
-        WoodenHoe,
-        Apple,
-        WoodBlock,
-        Stone,
-        StoneBlock
+    //generic
+    OakLog,
+    WoodenStick,
+    Stone,
+    //Consumable
+    Apple,
+    OxygenBubble,
+    // Building
+    Flower,
+    CraftingTable,
+    WoodBlock,
+    StoneBlock,
+    //Tools
+    WoodenSword,
+    WoodenHoe
+    //Gear
+
+
+
+
+
+
+
+
+
+
+
     }
 
 
@@ -22,7 +39,7 @@ using UnityEngine;
     public enum ItemType
     {
         Generic,
-
+        Tools,
         Consumable,
         Building,
         Equipable
@@ -52,10 +69,27 @@ using UnityEngine;
         private Sprite sprite;
         public Sprite getsprite { get => sprite; }
 
-    [SerializeField]
-    private ItemType itemType;
 
-    public ItemType GetItemType { get => itemType; }
+
+    public ItemType GetItemType
+    {
+        get
+        {
+            switch (this)
+            {
+                case ConsumableItemSO consumable:
+                    return ItemType.Consumable;
+                case GearItemSO Gear:
+                    return ItemType.Equipable;
+                case TileAbstSO Tile:
+                    return ItemType.Building;
+                case ToolItemSO Tool:
+                    return ItemType.Tools;
+                default:
+                    return ItemType.Generic; 
+            }
+        } 
+    }
 }
 
 
