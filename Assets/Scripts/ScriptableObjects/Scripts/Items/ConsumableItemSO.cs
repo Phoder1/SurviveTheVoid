@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 	[CreateAssetMenu(fileName = "New Consumable Item", menuName = "Items/" + "Consumable")]
-	public class ConsumableItemSO : ScriptableObject
+	public class ConsumableItemSO : ItemSO
 	{
 		public enum ConsumableType
 		{

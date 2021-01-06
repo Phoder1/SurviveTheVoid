@@ -13,13 +13,14 @@ MonoBehaviour:
   m_Name: RecipeStoneBlock
   m_EditorClassIdentifier: 
   ItemCostArr:
-  - item: {fileID: 11400000, guid: dd62219544b6c2741af84dcf2dd07b89, type: 2}
+  - item: {fileID: 11400000, guid: 23363b482a082a744a29b4d5b83f4043, type: 2}
     amount: 2
-  - item: {fileID: 11400000, guid: 628e0d79b7c898a4fb43629a7bbe139f, type: 2}
+  - item: {fileID: 11400000, guid: 15f6588093b9bde479796bc44fb85fd4, type: 2}
     amount: 1
   outcomeItem:
-    item: {fileID: 11400000, guid: cb1a5c95174da67498a16b5315f06778, type: 2}
+    item: {fileID: 11400000, guid: 851e3140614e87e43812086f1a46f73f, type: 2}
     amount: 1
   tier: 0
   section: 0
   isUnlocked: 0
+  CraftingTime: 30

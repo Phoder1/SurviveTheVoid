@@ -39,5 +39,13 @@ public class RecipeSO : ScriptableObject
     {
         isUnlocked = _unlocked;
     }
+
+
+    // 60 = 1 minute
+    [SerializeField]
+    private int CraftingTime;
+    public int GetCraftingTime => CraftingTime;
+
+
 }
 

@@ -12,13 +12,15 @@ public class GameManager : MonoSingleton<GameManager>
 
     }
     public override void Init() {
-        singletons = new ISingleton[6] {
+        singletons = new ISingleton[7] {
              GridManager._instance,
              PlayerManager._instance,
              CameraScript._instance,
              CraftingManager._instance,
              InventoryUIManager._instance,
-             UIManager._instance
+             UIManager._instance,
+             InputManager._instance
+             
         };
         foreach (ISingleton singleton in singletons) {
             if(singleton != null) {

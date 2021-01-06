@@ -11,7 +11,8 @@ using UnityEngine;
         public enum ToolType
         {
             Sword,
-            Axe
+            Axe,
+            Hoe
         }
 
 
