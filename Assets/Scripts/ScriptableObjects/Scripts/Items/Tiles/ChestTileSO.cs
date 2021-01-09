@@ -22,6 +22,8 @@ public class ChestTileSlot : ITileState
 
     public bool GetIsSolid => throw new System.NotImplementedException();
 
+    public TileAbstSO GetTileAbst => tile;
+
     public void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
         throw new System.NotImplementedException();
     }
