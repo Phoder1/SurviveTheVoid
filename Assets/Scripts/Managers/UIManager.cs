@@ -1,8 +1,6 @@
-﻿using System;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using TMPro;
 public class UIManager : MonoSingleton<UIManager>
 {
     InputManager inputManager;
@@ -20,9 +18,13 @@ public class UIManager : MonoSingleton<UIManager>
     }
 
     #region CraftingUI
+    [Header("Crafting UI")]
+    [SerializeField] Sprite[] sectionBackGroundSprite;
+    [SerializeField] Image[] SectionBackGroundImage;
     public void OnClickSelectedSections(string _section)
     {
         craftingManager.SelectSection(_section);
+        HighLightSection(_section);
     }
 
     public void OnClickSelectedRecipe(int _recipe)
@@ -33,6 +35,69 @@ public class UIManager : MonoSingleton<UIManager>
     public void OnClickCraftButton()
     {
         craftingManager.AttemptToCraft();
+    }
+
+    public void HighLightSection(string _section)
+    {
+        for (int i = 0; i < SectionBackGroundImage.Length; i++)
+        {
+            if (_section == "Blocks")
+            {
+                if (i != 0)
+                    SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
+
+
+                SectionBackGroundImage[0].sprite = sectionBackGroundSprite[1];
+            }
+            else if (_section == "Furnitures")
+            {
+                if (i != 1)
+                    SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
+
+                SectionBackGroundImage[1].sprite = sectionBackGroundSprite[1];
+            }
+            else if (_section == "Plants")
+            {
+                if (i != 2)
+                    SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
+
+                SectionBackGroundImage[2].sprite = sectionBackGroundSprite[1];
+            }
+            else if (_section == "Weapons")
+            {
+                if (i != 3)
+                    SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
+
+                SectionBackGroundImage[3].sprite = sectionBackGroundSprite[1];
+            }
+            else if (_section == "Tools")
+            {
+                if (i != 4)
+                    SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
+
+                SectionBackGroundImage[4].sprite = sectionBackGroundSprite[1];
+            }
+            else if (_section == "Food")
+            {
+                if (i != 5)
+                    SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
+
+                SectionBackGroundImage[5].sprite = sectionBackGroundSprite[1];
+            }
+        }
+
+    }
+
+    public void ToggleCraftingUI()
+    {
+        _uiElements[4].SetActive(!_uiElements[4].activeInHierarchy);
+        if (_uiElements[4].activeInHierarchy)
+        {
+            //craftingManager.clearRecipeMat();
+            craftingManager.UpdateInformation();
+            craftingManager.SelectSection("Blocks");
+            HighLightSection("Blocks");
+        }
     }
 
     #endregion
@@ -55,20 +120,20 @@ public class UIManager : MonoSingleton<UIManager>
     }
 
     public void ButtonHide()
-	{
-        if(isShown == true)
-		{
+    {
+        if (isShown == true)
+        {
             _uiElements[5].gameObject.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
 
-            if(isQuickAccessSwapped == true)
-			{
+            if (isQuickAccessSwapped == true)
+            {
                 for (int i = 6; i <= 12; i++)
                 {
                     _uiElements[i].SetActive(false);
                 }
             }
-			else
-			{
+            else
+            {
                 for (int i = 15; i <= 19; i++)
                 {
                     _uiElements[i].SetActive(false);
@@ -81,8 +146,8 @@ public class UIManager : MonoSingleton<UIManager>
 
             isShown = false;
         }
-		else
-		{
+        else
+        {
             _uiElements[5].gameObject.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
 
             if (isQuickAccessSwapped == true)
@@ -105,54 +170,54 @@ public class UIManager : MonoSingleton<UIManager>
             }
 
             isShown = true;
-        }    
-	}
+        }
+    }
 
     public void ButtonSwap()
-	{
+    {
         if (isQuickAccessSwapped == true)
-		{
-            for(int i = 6; i<=10; i++)
-			{
+        {
+            for (int i = 6; i <= 10; i++)
+            {
                 _uiElements[i].SetActive(false);
             }
-            for(int i = 15; i<=19; i++)
-			{
+            for (int i = 15; i <= 19; i++)
+            {
                 _uiElements[i].SetActive(true);
             }
 
             isQuickAccessSwapped = false;
-		}
-		else
-		{
-            for (int i = 6; i<=10; i++)
+        }
+        else
+        {
+            for (int i = 6; i <= 10; i++)
             {
                 _uiElements[i].SetActive(true);
             }
-            for (int i = 15; i<=19; i++)
+            for (int i = 15; i <= 19; i++)
             {
                 _uiElements[i].SetActive(false);
             }
 
             isQuickAccessSwapped = true;
         }
-	}
+    }
 
     public void ButtonInventory()
-	{
-        if(_uiElements[20].activeSelf == true)
-		{
+    {
+        if (_uiElements[20].activeSelf == true)
+        {
             _uiElements[20].SetActive(false);
 
-            for(int i = 1; i<=3; i++)
-			{
+            for (int i = 1; i <= 3; i++)
+            {
                 _uiElements[i].SetActive(true);
-			}
+            }
 
             isInventoryOpen = false;
         }
         else
-		{
+        {
             _uiElements[20].SetActive(true);
 
             for (int i = 1; i <= 3; i++)
@@ -162,10 +227,10 @@ public class UIManager : MonoSingleton<UIManager>
 
             isInventoryOpen = true;
         }
-	}
+    }
 
     public void ButtonFightTransition()
-	{
+    {
         _uiElements[1].transform.GetChild(0).gameObject.SetActive(false);
         _uiElements[1].transform.GetChild(1).gameObject.SetActive(true);
 
@@ -174,7 +239,7 @@ public class UIManager : MonoSingleton<UIManager>
     }
 
     public void BottunGatherTransition()
-	{
+    {
         _uiElements[1].transform.GetChild(0).gameObject.SetActive(true);
         _uiElements[1].transform.GetChild(1).gameObject.SetActive(false);
 
@@ -183,22 +248,22 @@ public class UIManager : MonoSingleton<UIManager>
     }
 
     public void ButtonSettings()
-	{	
+    {
         if (_uiElements[21].activeSelf == false)
         {
             _uiElements[21].SetActive(true);
 
-            for(int i = 0; i<=20; i++)
-			{
-                if(i == 13)
-				{
+            for (int i = 0; i <= 20; i++)
+            {
+                if (i == 13)
+                {
                     _uiElements[i].SetActive(true);
                 }
-				else
-				{
+                else
+                {
                     _uiElements[i].SetActive(false);
                 }
-			}
+            }
 
             Time.timeScale = 0f;
         }
@@ -208,7 +273,7 @@ public class UIManager : MonoSingleton<UIManager>
 
             for (int i = 0; i <= 20; i++)
             {
-                if (i == 20 || i == 4 || i == 15 || i == 16 || i == 17 || i ==18 || i == 19)
+                if (i == 20 || i == 4 || i == 15 || i == 16 || i == 17 || i == 18 || i == 19)
                 {
                     _uiElements[i].SetActive(false);
                 }
@@ -220,8 +285,8 @@ public class UIManager : MonoSingleton<UIManager>
 
             _uiElements[21].SetActive(false);
 
-            if(isInventoryOpen == true)
-			{
+            if (isInventoryOpen == true)
+            {
                 _uiElements[20].SetActive(true);
 
                 for (int i = 1; i <= 3; i++)
@@ -230,8 +295,8 @@ public class UIManager : MonoSingleton<UIManager>
                 }
             }
 
-            if(isQuickAccessSwapped == false)
-			{
+            if (isQuickAccessSwapped == false)
+            {
                 for (int i = 6; i <= 10; i++)
                 {
                     _uiElements[i].SetActive(false);
@@ -242,7 +307,7 @@ public class UIManager : MonoSingleton<UIManager>
                 }
             }
             else
-			{
+            {
                 for (int i = 6; i <= 10; i++)
                 {
                     _uiElements[i].SetActive(true);
