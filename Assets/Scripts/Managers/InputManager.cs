@@ -144,7 +144,8 @@ public class InputManager : MonoSingleton<InputManager>
         if (Item == null)
             return;
 
-
+        newTileHit = null;
+        currentTileHit = null;
         tileSlotCache = new TileSlot(Item);
     }
 
@@ -164,12 +165,19 @@ public class InputManager : MonoSingleton<InputManager>
     {
         if (!isBuildingAttached)
             return;
+       
 
         Touch newTouch = new Touch();
         if ((Vector2)Camera.main.ScreenToWorldPoint(newTouch.position) != touchPosition)
         {
             gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Buildings, true);
+            newTileHit = null;
+            currentTileHit = null;
+            Inventory.GetInstance.RemoveItemFromInventory(0,  new ItemSlot(tileSlotCache.GetTileAbst, 1));
+            tileSlotCache = null;
             PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
+            TileList.Clear();
+            Debug.Log("Placed");
         }
 
     }
@@ -178,9 +186,9 @@ public class InputManager : MonoSingleton<InputManager>
  
     public void ActivateStateButton(bool isButtonA) {
         if (isButtonA)
-            Debug.Log("Pressed A"); //   currentState.ButtonA();
+             currentState.ButtonA();
         else
-            Debug.Log("Pressed B");    //  currentState.ButtonB();
+           currentState.ButtonB();
     }
     void Update()
     {
