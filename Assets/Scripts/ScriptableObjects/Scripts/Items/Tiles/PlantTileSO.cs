@@ -31,6 +31,7 @@ public class PlantState : ITileState
         this.tileSlot = tileSlot;
     }
     public TileBase GetMainTileBase => tile.getStages[currentStage];
+    public TileAbstSO GetTileAbst => tile;
 
     public InteractionType GetInteractionType => tile.GetInteractionType;
 

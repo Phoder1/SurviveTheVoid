@@ -21,6 +21,8 @@ public class BlockState : ITileState
 
     public bool GetIsSolid => tile.GetIsSolid;
 
+    public TileAbstSO GetTileAbst => tile;
+
     public void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
         Tilemap tilemap = GridManager._instance.GetTilemap(buildingLayer);
         tilemap.RemoveTileFlags((Vector3Int)gridPosition, TileFlags.LockColor);

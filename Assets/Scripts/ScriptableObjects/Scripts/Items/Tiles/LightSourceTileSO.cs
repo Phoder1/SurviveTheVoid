@@ -15,6 +15,7 @@ public class LightSourceTileState : ITileState
     }
 
     public TileBase GetMainTileBase => throw new System.NotImplementedException();
+    public TileAbstSO GetTileAbst => tile;
 
     public InteractionType GetInteractionType => throw new System.NotImplementedException();
 
