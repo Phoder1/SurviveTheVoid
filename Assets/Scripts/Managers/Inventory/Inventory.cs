@@ -216,19 +216,20 @@ public class Inventory
 
     }
 
-    public void AddToInventory(int chestID, ItemSlot item)
+    public bool AddToInventory(int chestID, ItemSlot item)
     {
         if (item == null)
-            return;
+            return false;
         // if i dont have it in the inventory
         if (CheckIfEnoughSpaceInInventory(chestID, item))
         {
             itemAmountCount = 0;
             AddAmountOfItem(chestID, item);
             inventoryUI.UpdateInventoryToUI();
-            return;
+            return true;
         }
         Debug.Log("Cant Add The Item");
+        return false;
     }
 
     private void RemoveObjectFromInventory(int chestID, ItemSlot item)
@@ -555,7 +556,7 @@ public class Inventory
         }
 
     }
-
+   
     public ItemSlot GetItemFromInventoryButton(int chestId, int buttonId)
 	{
         inventoryCache = GetInventoryFromDictionary(chestId);

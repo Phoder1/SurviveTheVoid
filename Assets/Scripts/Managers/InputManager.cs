@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.Net;
 using UnityEngine;
 
 public class InputManager : MonoSingleton<InputManager>
@@ -12,19 +15,23 @@ public class InputManager : MonoSingleton<InputManager>
     Vector2 touchPosition;
     TileHit newTileHit, currentTileHit;
     bool isBuildingAttached = false;
+    bool cameFromBuildingState;
+
 
 
     List<Vector2Int> TileList = new List<Vector2Int>();
 
 
     TileSlot tileSlotCache;
-    public override void Init() {
+    public override void Init()
+    {
         playerStateMachine = PlayerStateMachine.GetInstance;
         gridManager = GridManager._instance;
     }
     public static StateBase SetInputState
     {
-        set {
+        set
+        {
             currentState = value;
 
             if (currentState is BuildingState)
@@ -33,6 +40,9 @@ public class InputManager : MonoSingleton<InputManager>
             else if (currentState is FightState)
                 inputState = InputState.FightState;
 
+            else if (currentState is RemovalState)
+                inputState = InputState.RemovalState;
+            
             else
                 inputState = InputState.DefaultState;
 
@@ -47,6 +57,7 @@ public class InputManager : MonoSingleton<InputManager>
     // need to implement touch and use on phone 
     public void OnTouch()
     {
+        Debug.Log(currentState);
         if (Input.touchCount > 0)
         {
 
@@ -74,6 +85,9 @@ public class InputManager : MonoSingleton<InputManager>
                         break;
                     case InputState.FightState:
                         // fightState
+                        break;
+                    case InputState.RemovalState:
+                        RemovalStateOnTouch(touch[i]);
                         break;
                     default:
                         break;
@@ -119,7 +133,7 @@ public class InputManager : MonoSingleton<InputManager>
                         {
                             if (tile == null)
                                 continue;
-                            
+
                             gridManager.SetTile(null, tile, TileMapLayer.Buildings, false);
                         }
                         TileList.Clear();
@@ -138,8 +152,29 @@ public class InputManager : MonoSingleton<InputManager>
         }
     }
 
+    void RemovalStateOnTouch(Touch touch)
+    {
 
-    public void SetBuildingTile(TileAbstSO Item) {
+        switch (touch.phase)
+        {
+            case TouchPhase.Began:
+            case TouchPhase.Moved:
+
+
+                touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
+
+                currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Buildings);
+                Debug.Log(currentTileHit);
+                if (currentTileHit == null || currentTileHit.tile == null || gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) == null)
+                    return;
+                Debug.Log("Found!");
+                tileSlotCache = currentTileHit.tile;
+                break;
+        }
+    }
+
+    public void SetBuildingTile(TileAbstSO Item)
+    {
         tileSlotCache = null;
         if (Item == null)
             return;
@@ -160,12 +195,25 @@ public class InputManager : MonoSingleton<InputManager>
         return moveDirection;
     }
 
+    public void ConfirmRemoval()
+    {
+        if (tileSlotCache == null)
+            return;
 
+
+        if (currentTileHit!= null && Inventory.GetInstance.AddToInventory(0, new ItemSlot(currentTileHit.tile.GetTileAbst, 1)))
+        {
+
+            gridManager.SetTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings, true);
+            CancelButtonChangeState(true);
+
+        }
+    }
     public void PressedConfirmBuildingButton()
     {
-        if (!isBuildingAttached)
+        if (!isBuildingAttached || tileSlotCache == null || currentTileHit==null)
             return;
-       
+
 
         Touch newTouch = new Touch();
         if ((Vector2)Camera.main.ScreenToWorldPoint(newTouch.position) != touchPosition)
@@ -173,26 +221,71 @@ public class InputManager : MonoSingleton<InputManager>
             gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Buildings, true);
             newTileHit = null;
             currentTileHit = null;
-            Inventory.GetInstance.RemoveItemFromInventory(0,  new ItemSlot(tileSlotCache.GetTileAbst, 1));
+            var itemSlotCache = new ItemSlot(tileSlotCache.GetTileAbst, 1);
+            Inventory.GetInstance.RemoveItemFromInventory(0, itemSlotCache);
+            if (Inventory.GetInstance.GetAmountOfItem(0, itemSlotCache) >= 1)
+            {
+                SetBuildingTile(itemSlotCache.item as TileAbstSO);
+            }
+            else
+            {
+                PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
             tileSlotCache = null;
-            PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
+
+            }
+           
             TileList.Clear();
             Debug.Log("Placed");
         }
 
     }
 
+    public void CancelButtonChangeState(bool _cameFromBuildingState)
+    {
 
- 
-    public void ActivateStateButton(bool isButtonA) {
-        if (isButtonA)
-             currentState.ButtonA();
+        cameFromBuildingState = _cameFromBuildingState;
+
+        if (cameFromBuildingState)
+        {
+            playerStateMachine.SwitchState(InputState.BuildState);
+        }
         else
-           currentState.ButtonB();
+        {
+            playerStateMachine.SwitchState(InputState.DefaultState);
+        }
+
+    }
+    public void SinglePressedButton(bool isButtonA)
+    {
+
+        if (isButtonA)
+            currentState.ButtonA();
+        else
+            currentState.ButtonB();
+
+
+    }
+
+
+    public void HoldingButton(bool isButtonA)
+    {
+
+        switch (currentState)
+        {
+            case RemovalState s:
+            case BuildingState z:
+                return;
+        }
+
+
+        if (isButtonA)
+            currentState.ButtonA();
+        else
+            currentState.ButtonB();
     }
     void Update()
     {
-       
+
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             playerStateMachine.SwitchState(InputState.DefaultState);
