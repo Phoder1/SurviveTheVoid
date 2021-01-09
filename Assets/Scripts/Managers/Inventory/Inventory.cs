@@ -340,7 +340,7 @@ public class Inventory
         return checkForItem;
     }
 
-    public bool CheckEnoughItemsForRecipe(RecipeSO recipe, TileSlot workBench)
+    public bool CheckEnoughItemsForRecipe(RecipeSO recipe) //, TileSlot workBench
     {
         bool haveAllIngridients = true;
         
@@ -494,7 +494,7 @@ public class Inventory
 
     public void CreateNewInventory(int chestId) => inventoryDict.Add(chestId, new ItemSlot[maxCapacityOfItemsInChest]);
 
-    public void ChangeBetweenButtons(int chestID, int drag, int drop)
+    public void ChangeBetweenItems(int chestID, int drag, int drop)
     {
 
         inventoryCache = GetInventoryFromDictionary(chestID);

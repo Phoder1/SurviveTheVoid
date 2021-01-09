@@ -19,6 +19,13 @@ public class UIManager : MonoSingleton<UIManager>
         inputManager = InputManager._instance;
     }
 
+
+    private void Update()
+    {
+        ButtonControls();
+    }
+
+
     #region CraftingUI
     public void OnClickSelectedSections(string _section)
     {
@@ -39,7 +46,7 @@ public class UIManager : MonoSingleton<UIManager>
 
 
     #region ButtonsFunctions
-
+    bool isHoldingButton = false, stopHoldingButton = false, isButtonA;
     bool isShown = true;
     bool isQuickAccessSwapped = true;
     bool isInventoryOpen = false;
@@ -55,6 +62,46 @@ public class UIManager : MonoSingleton<UIManager>
     //    Debug.Log("!");
     //    inputManager.PressButtonB();
     //}
+
+    void ButtonControls()
+    {
+        if (isHoldingButton)
+        {
+            ReleaseButton();
+
+        }
+    }
+
+
+
+
+    public void ButtonPressedDown(bool _isButtonA)
+    {
+        this.isButtonA = _isButtonA;
+        stopHoldingButton = false;
+        PressButton();
+    }
+    public void ButtonPressedUp()
+    {
+
+        isHoldingButton = false;
+        stopHoldingButton = true;
+    }
+    void ReleaseButton()
+    {
+        isHoldingButton = false;
+        if (!stopHoldingButton)
+        {
+                Invoke("PressButton", .5f);
+        }
+    }
+    void PressButton()
+    {
+        isHoldingButton = true;
+        inputManager.ActivateStateButton(isButtonA);
+    }
+
+
 
     public void ButtonHide()
 	{

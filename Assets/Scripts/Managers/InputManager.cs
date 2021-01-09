@@ -175,57 +175,55 @@ public class InputManager : MonoSingleton<InputManager>
     }
 
 
-    void ButtonControls() {
-        if (isHoldingButton)
-        {
-            ReleaseButton();
-      
-        }
-    }
+ 
 
-
-
-
-    public void ButtonPressedDown(bool _isButtonA)
-    {
-        this.isButtonA = _isButtonA;
-        stopHoldingButton = false;
-        if (_isButtonA)
-            PressButtonA();
+    //public void ButtonPressedDown(bool _isButtonA)
+    //{
+    //    this.isButtonA = _isButtonA;
+    //    stopHoldingButton = false;
+    //    if (_isButtonA)
+    //        PressButtonA();
         
-        else
-            PressButtonB();
-    } 
-    public void ButtonPressedUp() {
+    //    else
+    //        PressButtonB();
+    //} 
+    //public void ButtonPressedUp() {
        
-        isHoldingButton = false;
-        stopHoldingButton = true;
-    }
-    void ReleaseButton()
-    {
-        isHoldingButton = false;
-        if (!stopHoldingButton)
-        {
-            if (isButtonA)
-                Invoke("PressButtonA", .5f);
+    //    isHoldingButton = false;
+    //    stopHoldingButton = true;
+    //}
+    //void ReleaseButton()
+    //{
+    //    isHoldingButton = false;
+    //    if (!stopHoldingButton)
+    //    {
+    //        if (isButtonA)
+    //            Invoke("PressButtonA", .5f);
             
-            else
-                Invoke("PressButtonB", .5f);
-        }
-    }
-     void PressButtonB() {
-        isHoldingButton = true;
-        //  currentState.ButtonB();
-        Debug.Log("Press Button B");
-    }
-     void PressButtonA() {
-        isHoldingButton = true;
-        Debug.Log("Press Button A");
-        //currentState.ButtonA();
+    //        else
+    //            Invoke("PressButtonB", .5f);
+    //    }
+    //}
+    // void PressButtonB() {
+    //    isHoldingButton = true;
+    //    //  currentState.ButtonB();
+    //    Debug.Log("Press Button B");
+    //}
+    // void PressButtonA() {
+    //    isHoldingButton = true;
+    //    Debug.Log("Press Button A");
+    //    //currentState.ButtonA();
+    //}
+
+    public void ActivateStateButton(bool isButtonA) {
+        if (isButtonA)
+            Debug.Log("Pressed A"); //   currentState.ButtonA();
+        else
+            Debug.Log("Pressed B");    //  currentState.ButtonB();
     }
     void Update()
     {
-        ButtonControls();
+       
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             playerStateMachine.SwitchState(InputState.DefaultState);
