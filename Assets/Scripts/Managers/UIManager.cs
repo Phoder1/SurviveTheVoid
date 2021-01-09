@@ -44,17 +44,17 @@ public class UIManager : MonoSingleton<UIManager>
     bool isQuickAccessSwapped = true;
     bool isInventoryOpen = false;
 
-    public void ButtonA()
-    {
-        Debug.Log("!");
-        inputManager.PressButtonA();
-    }
+    //public void ButtonA()
+    //{
+    //    Debug.Log("!");
+    //    inputManager.PressButtonA();
+    //}
 
-    public void ButtonB()
-    {
-        Debug.Log("!");
-        inputManager.PressButtonB();
-    }
+    //public void ButtonB()
+    //{
+    //    Debug.Log("!");
+    //    inputManager.PressButtonB();
+    //}
 
     public void ButtonHide()
 	{

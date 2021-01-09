@@ -5,11 +5,10 @@ using UnityEngine;
 
 public class Inventory 
 {
-
     private static Inventory _instance;
     //Inventory IInventory.GetInstance => GetInstance;
 
-
+    InventoryUIManager inventoryUI;
     public static Inventory GetInstance
     {
         get
@@ -22,7 +21,7 @@ public class Inventory
             return _instance;
         }
     }
-    int maxCapacityOfItemsInList = 18;
+    int maxCapacityOfItemsInList = 18, maxCapacityOfItemsInChest = 12;
     bool checkForItem = false;
     int counter = 0;
     int itemAmountCount = 0;
@@ -49,6 +48,7 @@ public class Inventory
         inventoryList = new ItemSlot[maxCapacityOfItemsInList];
         inventoryDict = new Dictionary<int, ItemSlot[]>();
         inventoryDict.Add(amountOfIDChests, inventoryList);
+        inventoryUI = InventoryUIManager._instance;
     }
 
 
@@ -139,7 +139,6 @@ public class Inventory
         return checkForItem;
     }
 
-
     void AddAmountOfItem(int chestID, ItemSlot item)
     {
 
@@ -226,11 +225,11 @@ public class Inventory
         {
             itemAmountCount = 0;
             AddAmountOfItem(chestID, item);
+            inventoryUI.UpdateInventoryToUI();
             return;
         }
         Debug.Log("Cant Add The Item");
     }
-
 
     private void RemoveObjectFromInventory(int chestID, ItemSlot item)
     {
@@ -311,6 +310,7 @@ public class Inventory
     {
         itemAmountCount = item.amount;
         RemoveObjectFromInventory(chestID, item);
+        inventoryUI.UpdateInventoryToUI();
     }
 
     public bool CheckInventoryForItem(int chestID, ItemSlot item)
@@ -340,10 +340,10 @@ public class Inventory
         return checkForItem;
     }
 
-    public bool CheckEnoughItemsForRecipe(RecipeSO recipe)
+    public bool CheckEnoughItemsForRecipe(RecipeSO recipe, TileSlot workBench)
     {
         bool haveAllIngridients = true;
-
+        
 
         foreach (var item in recipe.getitemCostArr)
         {
@@ -361,7 +361,11 @@ public class Inventory
             {
                 RemoveItemFromInventory(0, recipe.getitemCostArr[i]);
             }
-            if(GetAmountOfItem(0,null) > 0 || GetAmountOfItem(0, recipe.getoutcomeItem) < recipe.getoutcomeItem.item.getmaxStackSize)
+        
+            // workBench.add(,recipe.getoutcomeItem);
+
+
+            if (GetAmountOfItem(0,null) > 0 || GetAmountOfItem(0, recipe.getoutcomeItem) < recipe.getoutcomeItem.item.getmaxStackSize)
             {
                 AddToInventory(0, recipe.getoutcomeItem);
             }
@@ -488,20 +492,16 @@ public class Inventory
         return inventoryCache;
     }
 
-    public void CreateNewInventory(int chestId)
-    {
-
-        inventoryDict.Add(chestId, new ItemSlot[maxCapacityOfItemsInList]);
-    }
+    public void CreateNewInventory(int chestId) => inventoryDict.Add(chestId, new ItemSlot[maxCapacityOfItemsInChest]);
+    
 
 
     public ItemSlot GetItemFromInventoryButton(int chestId, int buttonId)
 	{
         inventoryCache = GetInventoryFromDictionary(chestId);
         if (inventoryCache == null)
-		{
             return null;
-        }
+        
 
         return inventoryCache[buttonId];
 	}
