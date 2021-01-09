@@ -13,7 +13,7 @@ public class InputManager : MonoSingleton<InputManager>
     TileHit newTileHit, currentTileHit;
     bool isBuildingAttached = false;
 
-    bool isHoldingButton = false, stopHoldingButton = false, isButtonA;
+
 
     List<Vector2Int> TileList = new List<Vector2Int>();
 
@@ -217,9 +217,9 @@ public class InputManager : MonoSingleton<InputManager>
 
     public void ActivateStateButton(bool isButtonA) {
         if (isButtonA)
-            Debug.Log("Pressed A"); //   currentState.ButtonA();
+           currentState.ButtonA();
         else
-            Debug.Log("Pressed B");    //  currentState.ButtonB();
+           currentState.ButtonB();
     }
     void Update()
     {

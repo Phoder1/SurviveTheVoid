@@ -92,7 +92,8 @@ public class UIManager : MonoSingleton<UIManager>
         isHoldingButton = false;
         if (!stopHoldingButton)
         {
-                Invoke("PressButton", .5f);
+            //Invoke("PressButton", .5f);
+            PressButton();
         }
     }
     void PressButton()

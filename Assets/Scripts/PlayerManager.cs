@@ -185,7 +185,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
             if (_GridManager.WorldToGridPosition(transform.position, buildingLayer) != closestTile.gridPosition)
             {
 
-                transform.Translate((destination - transform.position) / 2); //*Time.fixedDeltaTime
+                transform.Translate((destination - transform.position) * (Time.fixedDeltaTime/playerStats.GetSetSpeed)); 
 
 
 
