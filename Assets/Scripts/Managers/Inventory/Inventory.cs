@@ -494,31 +494,64 @@ public class Inventory
 
     public void CreateNewInventory(int chestId) => inventoryDict.Add(chestId, new ItemSlot[maxCapacityOfItemsInChest]);
 
-    public void ChangeBetweenItems(int chestID, int drag, int drop)
+    public void ChangeBetweenItems(int firstChestID, int secondChestID, int drag, int drop)
     {
 
-        inventoryCache = GetInventoryFromDictionary(chestID);
+        inventoryCache = GetInventoryFromDictionary(firstChestID);
         if (inventoryCache == null)
             return;
-        if (inventoryCache[drag] == null && inventoryCache[drop] == null)
+
+        if (firstChestID != secondChestID)
         {
-            return;
+            var inventoryCacheTwo = GetInventoryFromDictionary(secondChestID);
+            if (inventoryCacheTwo == null)
+                return;
+
+            if (inventoryCache[drag] == null && inventoryCacheTwo[drop] == null)
+            {
+                return;
+            }
+            else if (inventoryCache[drag] != null && inventoryCacheTwo[drop] != null)
+            {
+                ItemSlot temporaryCache = inventoryCacheTwo[drop];
+                inventoryCacheTwo[drop] = inventoryCache[drag];
+                inventoryCache[drag] = temporaryCache;
+            }
+            else if (inventoryCache[drag] == null && inventoryCacheTwo[drop] != null)
+            {
+                inventoryCache[drag] = inventoryCacheTwo[drop];
+                inventoryCacheTwo[drop] = null;
+            }
+            else if (inventoryCache[drag] != null && inventoryCacheTwo[drop] == null)
+            {
+                inventoryCacheTwo[drop] = inventoryCache[drag];
+                inventoryCache[drag] = null;
+            }
+
         }
-        else if (inventoryCache[drag] != null && inventoryCache[drop] != null)
+        else
         {
-            ItemSlot temporaryCache = inventoryCache[drop];
-            inventoryCache[drop] = inventoryCache[drag];
-            inventoryCache[drag] = temporaryCache;
-        }
-        else if (inventoryCache[drag] == null && inventoryCache[drop] != null)
-        {
-            inventoryCache[drag] = inventoryCache[drop];
-            inventoryCache[drop] = null;
-        }
-        else if (inventoryCache[drag] != null && inventoryCache[drop] == null)
-        {
-            inventoryCache[drop] = inventoryCache[drag];
-            inventoryCache[drag] = null;
+            if (inventoryCache[drag] == null && inventoryCache[drop] == null)
+            {
+                return;
+            }
+            else if (inventoryCache[drag] != null && inventoryCache[drop] != null)
+            {
+                ItemSlot temporaryCache = inventoryCache[drop];
+                inventoryCache[drop] = inventoryCache[drag];
+                inventoryCache[drag] = temporaryCache;
+            }
+            else if (inventoryCache[drag] == null && inventoryCache[drop] != null)
+            {
+                inventoryCache[drag] = inventoryCache[drop];
+                inventoryCache[drop] = null;
+            }
+            else if (inventoryCache[drag] != null && inventoryCache[drop] == null)
+            {
+                inventoryCache[drop] = inventoryCache[drag];
+                inventoryCache[drag] = null;
+            }
+
         }
 
     }
