@@ -88,16 +88,13 @@ public class UIManager : MonoSingleton<UIManager>
 
     }
 
-    public void ToggleCraftingUI()
+
+
+
+    public void ToggleCraftingUI(ProcessorType _type)
     {
         _uiElements[4].SetActive(!_uiElements[4].activeInHierarchy);
-        if (_uiElements[4].activeInHierarchy)
-        {
-            //craftingManager.clearRecipeMat();
-            craftingManager.UpdateInformation();
-            craftingManager.SelectSection("Blocks");
-            HighLightSection("Blocks");
-        }
+        craftingManager.GetSetProcessor = _type;
     }
 
     #endregion
@@ -224,7 +221,7 @@ public class UIManager : MonoSingleton<UIManager>
             {
                 _uiElements[i].SetActive(false);
             }
-
+            inventoryManager.UpdateInventoryToUI();
             isInventoryOpen = true;
         }
     }

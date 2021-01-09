@@ -106,7 +106,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     {
         sections = new Section[sectionHolder.childCount];
 
-        Debug.Log(sectionHolder.childCount.ToString());
+        //Debug.Log(sectionHolder.childCount.ToString());
         for (int i = 0; i < sectionHolder.childCount; i++)
         {
             Transform sectionTransform = sectionHolder.GetChild(i);
@@ -322,7 +322,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     bool IsCrafting;
     public void AttemptToCraft()
     {
-        if (!IsCrafting)
+        if (!IsCrafting && selectedRecipe != null)
         {
             if (!inventory.CheckEnoughItemsForRecipe(selectedRecipe))
             {
@@ -500,12 +500,12 @@ public class Section
                 else
                 {
                     SelectSlot(i);
-                    Debug.Log("Selecting: " + i);
                     break;
                 }
             }
             if (Index == recipeList.Count)
             {
+                CraftingManager._instance.selectedRecipe = null;
                 CraftingManager._instance.clearRecipeMat();
             }
 
