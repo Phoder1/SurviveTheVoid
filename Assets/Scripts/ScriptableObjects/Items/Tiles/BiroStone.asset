@@ -10,14 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ad4fb29703af1ac4e92edd55a5b9b4f5, type: 3}
-  m_Name: ToothPaste
+  m_Name: BiroStone
   m_EditorClassIdentifier: 
   maxStackSize: 20
-  description: Toothpase tile!
+  description: An extremely hard, white stone.
   itemEnum: 0
-  sprite: {fileID: 21300000, guid: 1b732710a729109458c643b74c574c64, type: 3}
-  itemType: 2
-  mainTileBase: {fileID: 11400000, guid: 398649c56acc0e04292649cdc47fea34, type: 2}
-  interactionType: 8
+  sprite: {fileID: 21300000, guid: c6252a0dc9528f549ab9b07716197a1b, type: 3}
+  mainTileBase: {fileID: 11400000, guid: ae0288f1bd280644aa206cccb849906f, type: 2}
+  interactionType: 0
   tileType: 0
   isSolid: 1
