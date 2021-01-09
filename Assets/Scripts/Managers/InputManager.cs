@@ -178,9 +178,9 @@ public class InputManager : MonoSingleton<InputManager>
  
     public void ActivateStateButton(bool isButtonA) {
         if (isButtonA)
-            Debug.Log("Pressed A"); //   currentState.ButtonA();
+             currentState.ButtonA();
         else
-            Debug.Log("Pressed B");    //  currentState.ButtonB();
+           currentState.ButtonB();
     }
     void Update()
     {
