@@ -95,7 +95,7 @@ namespace Assets.Scan
 
                 }
                 //Check if at corner
-                if (relativeCheckPosition.x == relativeCheckPosition.y) {
+                if (Mathf.Abs(relativeCheckPosition.x) == Mathf.Abs(relativeCheckPosition.y)) {
                     switch (currentDirection) {
                         case DirectionEnum.Up:
                             currentDirection = DirectionEnum.Right;
