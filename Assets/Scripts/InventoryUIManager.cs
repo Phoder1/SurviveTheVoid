@@ -21,14 +21,13 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
     public void OnPressedInventoryButton(int buttonId)
 	{
-        ItemSlot itemCache = inventory.GetItemFromInventoryButton(0, buttonId);
+        ItemSlot itemCache = new ItemSlot(inventory.GetItemFromInventoryButton(0, buttonId).item,1);
 
         if (itemCache == null)
             return;
         
 		if (itemCache.item.GetItemType == ItemType.Building)
 		{
-
             UIManager._instance.ButtonInventory();
             PlayerStateMachine.GetInstance.SwitchState(InputState.BuildState);
             InputManager._instance.SetBuildingTile(itemCache.item as TileAbstSO);
