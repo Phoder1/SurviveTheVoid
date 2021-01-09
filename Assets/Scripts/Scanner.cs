@@ -23,7 +23,12 @@ namespace Assets.Scan
             buildingLayer = _buildingLayer;
             checker = _checker;
             direction = _direction;
-            for (int i = 1; i <= radius; i++) {
+            TileSlot currentTile = gridManager.GetTileFromGrid(startPosition, buildingLayer);
+            if (currentTile != null && checker.CheckTile(currentTile))
+            {
+                return new TileHit(currentTile,startPosition);
+            }
+                for (int i = 1; i <= radius; i++) {
                 TileHit tileHit = GetClosestTileInSquare(i);
                 if (tileHit != null) {
                     return tileHit;
@@ -81,14 +86,6 @@ namespace Assets.Scan
             for (int i = 0; i < numOfTiles; i++) {
                 //Check tile
                 TileSlot currentTile = gridManager.GetTileFromGrid(relativeCheckPosition + startPosition , buildingLayer);
-                
-                TileSlot floorTile = gridManager.GetTileFromGrid(relativeCheckPosition + startPosition, TileMapLayer.Floor);
-                if (floorTile != null)
-                {
-
-                floorTile.GatherInteraction(relativeCheckPosition+startPosition,TileMapLayer.Floor);
-                }
-
                 if (currentTile != null && checker.CheckTile(currentTile))
                 {
                     tiles.Add(new TileHit(currentTile, relativeCheckPosition + startPosition));

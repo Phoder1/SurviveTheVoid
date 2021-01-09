@@ -2,15 +2,6 @@
 
 public class CameraScript : MonoSingleton<CameraScript>
 {
-    [System.Serializable]
-    private class StarsParalax
-    {
-        [SerializeField] internal MeshRenderer mr;
-        [Range(0.001f,0.01f)]
-        [SerializeField] internal float speed;
-        internal Vector2 offset = Vector2.zero;
-    }
-    [SerializeField] private StarsParalax[] starsParalax;
     [SerializeField]
     private float scrollSpeed;
     [SerializeField]
@@ -23,21 +14,17 @@ public class CameraScript : MonoSingleton<CameraScript>
     private Rect worldView;
     private bool viewChanged;
     [SerializeField] private BlockTileSO clickTile;
+    StarsParallaxController starsCont;
     // Start is called before the first frame update
     public override void Init() {
         cameraComp = Camera.main;
         gridManager = GridManager._instance;
+        starsCont = GetComponent<StarsParallaxController>();
         UpdateView();
     }
 
     // Update is called once per frame
     private void Update() {
-        foreach(StarsParalax stars in starsParalax) {
-            stars.offset += new Vector2(stars.speed * Time.deltaTime, 0f);
-
-            stars.mr.sharedMaterial.SetTextureOffset("_MainTex", stars.offset);
-        }
-
         viewChanged = false;
         movement = new Vector2(
             Input.GetKey(KeyCode.D) ? 1 : 0 - (Input.GetKey(KeyCode.A) ? 1 : 0),
@@ -53,6 +40,7 @@ public class CameraScript : MonoSingleton<CameraScript>
         if (scrollMovement != 0) {
             cameraComp.orthographicSize += scrollMovement;
             viewChanged = true;
+            starsCont.UpdateViewSize();
         }
 
         if (Input.GetKey(KeyCode.Mouse0)) {

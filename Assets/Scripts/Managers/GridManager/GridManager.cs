@@ -30,8 +30,6 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
     [SerializeField] private Grid grid;
     [SerializeField] private Tilemap floor;
     [SerializeField] private Tilemap buildings;
-    [SerializeField] float clearZoneRadius;
-    [SerializeField] float startIslandRadius;
     public Tilemap GetTilemap(TileMapLayer buildingLayer) {
         switch (buildingLayer) {
             case TileMapLayer.Floor:
@@ -42,6 +40,9 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
                 return null;
         }
     }
+    [SerializeField] float clearZoneRadius;
+    [SerializeField] float startIslandRadius;
+    [SerializeField] private TileAbstSO startIslandTile;
     [SerializeField] private Noise islandsNoise;
     [SerializeField] private GridRandom buildingsRandom;
     [SerializeField] private int loadDistance;

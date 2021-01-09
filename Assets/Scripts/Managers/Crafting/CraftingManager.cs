@@ -26,7 +26,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     public RecipeSO selectedRecipe;
 
     private Inventory inventory;
-
+    InventoryUIManager inventoryUI;
 
 
     private void Update()
@@ -34,23 +34,26 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            inventory.AddToInventory(0,new ItemSlot(items.getitemsArr[11], 1));
+            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[4], 1));
             ShowRecipe(selectedRecipe);
-
+            inventoryUI.UpdateInventoryToUI();
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
-            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[4], 1));
+            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[8], 1));
+            inventoryUI.UpdateInventoryToUI();
             ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
-            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[3], 1));
+            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[4], 1));
+            inventoryUI.UpdateInventoryToUI();
             ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.V))
         {
-            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[4], 1));
+            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[8], 1));
+            inventoryUI.UpdateInventoryToUI();
             ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.Space))
@@ -62,7 +65,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
             UnlockRecipe(recipes.getrecipesArr[4]);
         }
 
-
+        StartCrafting();
     }
 
 
@@ -70,8 +73,10 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
     public override void Init()
     {
-        inventory = Inventory.GetInstance;
 
+
+        inventory = Inventory.GetInstance;
+        inventoryUI = InventoryUIManager._instance;
         ImportSlots();
         AddRecipeToList();
         InstantiateItemSlots();
@@ -82,14 +87,14 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     private void ImportSlots()
     {
         sections = new Section[sectionHolder.childCount];
-        
+
         Debug.Log(sectionHolder.childCount.ToString());
         for (int i = 0; i < sectionHolder.childCount; i++)
         {
             Transform sectionTransform = sectionHolder.GetChild(i);
             sections[i] = new Section(sectionTransform.name, sectionTransform.gameObject);
             Transform[] slotsTransform = new Transform[sectionTransform.GetChild(0).childCount];
-;
+            ;
             sections[i].scrollBar = ScrollsHolder.GetChild(i).gameObject;
 
 
@@ -122,12 +127,12 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
             for (int j = 0; j < slotsTransform.Length; j++)
             {
                 sections[i].sectionSlotsList[j] = slotsTransform[j].GetComponent<Image>();
-                
+
             }
         }
-     
+
         Array.Sort(sections, (section1, section2) => String.Compare(section1.name, section2.name, StringComparison.Ordinal));
-     
+
     }
 
     private void UpdateInformation()
@@ -137,7 +142,6 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
             section.UpdateInformation();
             //Debug.Log("Updating Information");
         }
-
 
 
     }
@@ -166,7 +170,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
                         section.GetSectionSlots(instiatedSlot.GetComponent<Image>());
                         section.CheckIflockedRecipe(section.recipeList[j]);
                     }
-                    
+
                 }
             }
             UpdateInformation();
@@ -268,7 +272,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
                 Text materialNameText = recipeMaterialSlots[i].transform.GetChild(0).GetComponent<Text>();
                 materialNameText.text = recipe.getitemCostArr[i].item.getItemEnum.ToString();
                 Text materialCostText = recipeMaterialSlots[i].transform.GetChild(1).GetComponent<Text>();
-                materialCostText.text = inventory.GetAmountOfItem(0,recipe.getitemCostArr[i]).ToString() + " / " + recipe.getitemCostArr[i].amount;
+                materialCostText.text = inventory.GetAmountOfItem(0, recipe.getitemCostArr[i]).ToString() + " / " + recipe.getitemCostArr[i].amount;
 
             }
             else
@@ -280,19 +284,55 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     }
 
     // public ResourceStruct CraftResource(Recipe recipe) { return resourceStruct; }
-
+    bool IsCrafting;
     public void AttemptToCraft()
     {
-        if (!inventory.CheckEnoughItemsForRecipe(selectedRecipe))
+        if (!IsCrafting)
         {
-            Debug.Log("Not Enough Materials");
+            if (!inventory.CheckEnoughItemsForRecipe(selectedRecipe))
+            {
+                Debug.Log("Not Enough Materials");
+            }
+            else
+            {
+                ShowRecipe(selectedRecipe);
+                IsCrafting = true;
+                startcount = true;
+            }
+
         }
         else
         {
-            ShowRecipe(selectedRecipe);
+            Debug.Log("You are crafting Currently");
         }
     }
+    [SerializeField] float Timer;
+    bool startcount;
+    void StartCrafting()
+    {
+       
+        if (IsCrafting)
+        {
+            if (startcount)
+            {
+                Timer = selectedRecipe.GetCraftingTime;
+                startcount = false;
+            }
+            if (Timer > 0)
+            {
+                Timer -= Time.deltaTime;
+            }
+            else
+            {
+                IsCrafting = false;
+            }
+        }
+    }
+
+
     
+
+
     public void UnlockRecipe(RecipeSO _recipe) => GetSection(_recipe.getSection).UnlockRecipe(_recipe);
 
 
@@ -411,7 +451,7 @@ public class Section
         if (state == true)
         {
             SelectSlot(0);
-            
+
         }
         scrollBar.SetActive(state);
         section.SetActive(state);

@@ -274,7 +274,7 @@ Transform:
   m_GameObject: {fileID: 549156217}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1}
-  m_LocalScale: {x: 35.603333, y: 20.009277, z: 1}
+  m_LocalScale: {x: 35.55556, y: 20, z: 1}
   m_Children: []
   m_Father: {fileID: 849385207}
   m_RootOrder: 0
@@ -418,6 +418,7 @@ GameObject:
   - component: {fileID: 849385206}
   - component: {fileID: 849385205}
   - component: {fileID: 849385204}
+  - component: {fileID: 849385208}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -437,13 +438,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e67f4dee8a21e3d4fa634a90fe341bed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  starsParalax:
-  - mr: {fileID: 549156220}
-    speed: 0.00187
-  - mr: {fileID: 1768585230}
-    speed: 0.0047
-  - mr: {fileID: 976365971}
-    speed: 0.0077
   scrollSpeed: 100
   moveSpeed: 50
   clickTile: {fileID: 11400000, guid: aad93d9da4855c44aa913aa4003eb399, type: 2}
@@ -515,6 +509,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &849385208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 849385203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70cc078e40c1d3f4c968790d6fa56770, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  starsParallax:
+  - mr: {fileID: 549156220}
+    speed: 0.001
+  - mr: {fileID: 1768585230}
+    speed: 0.00302
+  - mr: {fileID: 976365971}
+    speed: 0.00529
 --- !u!1 &976365970
 GameObject:
   m_ObjectHideFlags: 0
@@ -604,7 +617,7 @@ Transform:
   m_GameObject: {fileID: 976365970}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1}
-  m_LocalScale: {x: 35.603333, y: 20.009277, z: 1}
+  m_LocalScale: {x: 35.55556, y: 20, z: 1}
   m_Children: []
   m_Father: {fileID: 849385207}
   m_RootOrder: 2
@@ -633,15 +646,60 @@ PrefabInstance:
       objectReference: {fileID: 2069701920}
     - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}
+      propertyPath: startIslandTile
+      value: 
+      objectReference: {fileID: 11400000, guid: aad93d9da4855c44aa913aa4003eb399,
+        type: 2}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: floorBlocksTiers.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
       propertyPath: buildingsGeneration.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: floorBlocksTiers.Array.data[0].tile
+      value: 
+      objectReference: {fileID: 11400000, guid: 8190ee7f328b6674280febcc9769179d,
+        type: 2}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: floorBlocksTiers.Array.data[1].tile
+      value: 
+      objectReference: {fileID: 11400000, guid: 38832a9085471904985e18510c56e5d7,
+        type: 2}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: floorBlocksTiers.Array.data[2].tile
+      value: 
+      objectReference: {fileID: 11400000, guid: 858d4b4581017784f995624b706f79e0,
+        type: 2}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: floorBlocksTiers.Array.data[3].tile
+      value: 
+      objectReference: {fileID: 11400000, guid: 73236a474193ae74fb0fa5a3fa9cb38f,
+        type: 2}
     - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}
       propertyPath: buildingsGeneration.Array.data[0].tile
       value: 
       objectReference: {fileID: 11400000, guid: 6ae7fda4f7596d84e8d77af3f94f2a4f,
         type: 2}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: floorBlocksTiers.Array.data[2].distance
+      value: 2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: floorBlocksTiers.Array.data[3].distance
+      value: 3000
+      objectReference: {fileID: 0}
     - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}
       propertyPath: buildingsGeneration.Array.data[0].chance
@@ -661,6 +719,11 @@ PrefabInstance:
         type: 3}
       propertyPath: buildingsGeneration.Array.data[0].distance
       value: 2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: floorBlocksTiers.Array.data[3].overlapStart
+      value: 1500
       objectReference: {fileID: 0}
     - target: {fileID: 1782004605564606447, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}
@@ -787,7 +850,7 @@ Transform:
   m_GameObject: {fileID: 1768585227}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1}
-  m_LocalScale: {x: 35.603333, y: 20.009277, z: 1}
+  m_LocalScale: {x: 35.55556, y: 20, z: 1}
   m_Children: []
   m_Father: {fileID: 849385207}
   m_RootOrder: 1

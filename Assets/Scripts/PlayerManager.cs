@@ -6,11 +6,14 @@ using System;
 
 public class PlayerManager : MonoSingleton<PlayerManager> 
 {
+    [SerializeField] PlayerStats playerStats;
+
     private InputManager _inputManager;
     private UIManager _uiManager;
     private PlayerStateMachine _playerStateMachine;
     private GridManager _GridManager;
     private Scanner _scanner;
+    
 
    
     [SerializeField] internal Camera cameraComp;
@@ -50,34 +53,27 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     // Update is called once per frame
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.K))
+        movementVector = _inputManager.GetAxis(); 
+ 
+         //new Vector2(transform.position.x, transform.position.y);
+        
+
+
+        if (movementVector != Vector2.zero)
         {
-            Debug.Log(closestTile);
-        }
-
-        movementVector = _inputManager.GetAxis();
-        movementVector *= (5 * Time.deltaTime);
-        currentPos = transform.position; //new Vector2(transform.position.x, transform.position.y);
-        nextPos = currentPos + movementVector;
-        FindDirection();
-        if ((movementVector != Vector2.zero && _GridManager.IsTileWalkable(nextPos, movementVector)) || Input.GetKey(KeyCode.LeftShift))
-        {
-       
-            
-            transform.Translate(movementVector);
-            UpdateView();
-            currentPosOnGrid = _GridManager.WorldToGridPosition(transform.position, buildingLayer);
-
-          
-
+            FindDirection();
+            WalkTowards(movementVector, false);
         }
 
        
         
 
     }
+    
     public void Scan(IChecker checkType)
     {
+        currentPosOnGrid = _GridManager.WorldToGridPosition(new Vector3(transform.position.x,transform.position.y,0), TileMapLayer.Buildings);
+
 
         Debug.Log("checkTile");
         closestTile = _scanner.Scan(currentPosOnGrid, movementDir, lookRange, buildingLayer, checkType);
@@ -88,45 +84,44 @@ public class PlayerManager : MonoSingleton<PlayerManager>
 
 
        //to check if scan works//
-        closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
+       // closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
 
     }
 
     private void FindDirection()
     {
-        if (_inputManager.GetAxis() != Vector2.zero)
-        {
+        
             float angle = Vector2.SignedAngle(_inputManager.GetAxis(), Vector2.up);
             int direction = Mathf.RoundToInt(angle / 90);
-        
-
-        
 
 
-        switch (direction)
-        {
+
+
+
+            switch (direction)
+            {
                 case 0:
                     movementDir = DirectionEnum.Up;
 
                     break;
 
                 case 1:
-                movementDir = DirectionEnum.Right;
-               
-                break;
-            case -1:
-                movementDir = DirectionEnum.Left;
-              
-                break;
-         
-            case 2:
-                movementDir = DirectionEnum.Down;
-               
-                break;
+                    movementDir = DirectionEnum.Right;
+
+                    break;
+                case -1:
+                    movementDir = DirectionEnum.Left;
+
+                    break;
+
+                case 2:
+                    movementDir = DirectionEnum.Down;
+
+                    break;
 
 
-        }
-        }
+            }
+        
     }
     public void ImplementGathering()
     {
@@ -136,7 +131,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         {
             Vector3 destination = _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true);
             destination.z = transform.position.z;
-            WalkTowards(destination);
+            WalkTowards(destination,true);
 
 
         }
@@ -150,7 +145,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         {
             Vector3 destination = _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true);
             destination.z = transform.position.z;
-            WalkTowards(destination);
+            WalkTowards(destination,true);
 
 
 
@@ -180,26 +175,45 @@ public class PlayerManager : MonoSingleton<PlayerManager>
             return tile.GetInteractionType == InteractionType.Special;
         }
     }
-    public void WalkTowards(Vector3 destination)
+    public void WalkTowards(Vector3 destination,bool ScanMod)
     {
-        if (_GridManager.WorldToGridPosition(transform.position, buildingLayer) != closestTile.gridPosition)
+
+        if (ScanMod)
         {
 
-            transform.Translate((destination - transform.position) / 2); //*Time.fixedDeltaTime
+
+            if (_GridManager.WorldToGridPosition(transform.position, buildingLayer) != closestTile.gridPosition)
+            {
+
+                transform.Translate((destination - transform.position) / 2); //*Time.fixedDeltaTime
 
 
 
+            }
+
+            if (Vector2.Distance(transform.position, _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true)) < 0.3f)
+            {
+
+                closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
+                Debug.Log(Vector2.Distance(transform.position, _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true)));
+                Debug.Log("TileHarvested");
+                closestTile = null;
+            }
         }
-         if (Vector2.Distance(transform.position, _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true))<0.3f) 
+        else 
         {
-            
-            closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
-            Debug.Log(Vector2.Distance(transform.position, _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true)));
-            Debug.Log("TileHarvested");
-            closestTile = null;
+            destination *= (playerStats.GetSetSpeed * Time.deltaTime);
+            currentPos = transform.position;
+            nextPos = currentPos + new Vector2(destination.x,destination.y);
+            if (_GridManager.IsTileWalkable(nextPos, destination) || Input.GetKey(KeyCode.LeftShift))
+            {
+            transform.Translate(destination);
+
+            }
         }
-        
-        
+
+        UpdateView();
+
     }
 
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class InputManager : MonoSingleton<InputManager>
 {
@@ -11,14 +12,19 @@ public class InputManager : MonoSingleton<InputManager>
     Vector2 touchPosition;
     TileHit newTileHit, currentTileHit;
     bool isBuildingAttached = false;
-   
+
+    bool isHoldingButton = false, stopHoldingButton = false, isButtonA;
+
+    List<Vector2Int> TileList = new List<Vector2Int>();
+
+
     TileSlot tileSlotCache;
     public override void Init() {
         playerStateMachine = PlayerStateMachine.GetInstance;
         gridManager = GridManager._instance;
     }
     public static StateBase SetInputState
-        {
+    {
         set {
             currentState = value;
 
@@ -30,7 +36,7 @@ public class InputManager : MonoSingleton<InputManager>
 
             else
                 inputState = InputState.DefaultState;
-            
+
         }
     }
 
@@ -38,31 +44,13 @@ public class InputManager : MonoSingleton<InputManager>
 
 
     // Update is called once per frame
-    void Update()
-    {
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            playerStateMachine.SwitchState(InputState.DefaultState);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            playerStateMachine.SwitchState(InputState.BuildState);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            playerStateMachine.SwitchState(InputState.FightState);
-        }
-
-        OnTouch();
-    }
 
     // need to implement touch and use on phone 
     public void OnTouch()
     {
         if (Input.touchCount > 0)
         {
-            
+
             Touch[] touch = new Touch[3];
 
 
@@ -75,7 +63,7 @@ public class InputManager : MonoSingleton<InputManager>
                 touch[i] = Input.GetTouch(i);
 
                 if (touch[i].position == new Vector2(vJ.gameObject.transform.position.x, vJ.gameObject.transform.position.y) || new Vector2(Input.mousePosition.x, Input.mousePosition.y) == new Vector2(vJ.gameObject.transform.position.x, vJ.gameObject.transform.position.y))
-                continue;
+                    continue;
 
                 switch (inputState)
                 {
@@ -104,12 +92,12 @@ public class InputManager : MonoSingleton<InputManager>
         {
             case TouchPhase.Began:
             case TouchPhase.Moved:
-             
+
 
                 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
-  
-                 currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
-                if (tileSlotCache == null || currentTileHit == null || gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) != null)
+
+                currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
+                if (tileSlotCache == null || currentTileHit == null || currentTileHit.tile == null || gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) != null)
                     return;
 
 
@@ -118,16 +106,33 @@ public class InputManager : MonoSingleton<InputManager>
                 if (newTileHit != null && newTileHit.gridPosition == currentTileHit.gridPosition)
                 {
 
-                     gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Buildings, false);
+                    gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Buildings, false);
+                    if (!TileList.Contains(currentTileHit.gridPosition))
+                    {
+                        TileList.Add(currentTileHit.gridPosition);
+                    }
                 }
                 else
                 {
+                    if (TileList.Count > 0)
+                    {
+                        foreach (var tile in TileList)
+                        {
+                            if (tile == null)
+                            {
+                                continue;
+                            }
+                            gridManager.SetTile(null, tile, TileMapLayer.Buildings, false);
+                        }
+                        TileList.Clear();
+                    }
                     newTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
 
 
+
                     if (newTileHit == null || gridManager.GetTileFromGrid(newTileHit.gridPosition, TileMapLayer.Buildings) != null)
-                            gridManager.SetTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings, false);
-                      
+                        gridManager.SetTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings, false);
+
                     currentTileHit = newTileHit;
                 }
 
@@ -142,7 +147,7 @@ public class InputManager : MonoSingleton<InputManager>
             return;
 
 
-         tileSlotCache = new TileSlot(Item);
+        tileSlotCache = new TileSlot(Item);
     }
 
 
@@ -162,55 +167,76 @@ public class InputManager : MonoSingleton<InputManager>
         if (toConfirm)
         {
             Touch newTouch = new Touch();
-           
-
-            if ((Vector2)Camera.main.ScreenToWorldPoint(newTouch.position)  != touchPosition)
+            if ((Vector2)Camera.main.ScreenToWorldPoint(newTouch.position) != touchPosition)
             {
-
-
-
-
-
                 PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
             }
-
-
-
-
-
         }
-        else
-        {
-
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 
 
-    //World to grid position can be found on the Grid manager
-    /*private Vector2Int ScreenToGridPosition(Vector3 screenPosition) {
+ 
 
-    }*/
+    //public void ButtonPressedDown(bool _isButtonA)
+    //{
+    //    this.isButtonA = _isButtonA;
+    //    stopHoldingButton = false;
+    //    if (_isButtonA)
+    //        PressButtonA();
+        
+    //    else
+    //        PressButtonB();
+    //} 
+    //public void ButtonPressedUp() {
+       
+    //    isHoldingButton = false;
+    //    stopHoldingButton = true;
+    //}
+    //void ReleaseButton()
+    //{
+    //    isHoldingButton = false;
+    //    if (!stopHoldingButton)
+    //    {
+    //        if (isButtonA)
+    //            Invoke("PressButtonA", .5f);
+            
+    //        else
+    //            Invoke("PressButtonB", .5f);
+    //    }
+    //}
+    // void PressButtonB() {
+    //    isHoldingButton = true;
+    //    //  currentState.ButtonB();
+    //    Debug.Log("Press Button B");
+    //}
+    // void PressButtonA() {
+    //    isHoldingButton = true;
+    //    Debug.Log("Press Button A");
+    //    //currentState.ButtonA();
+    //}
 
+    public void ActivateStateButton(bool isButtonA) {
+        if (isButtonA)
+            Debug.Log("Pressed A"); //   currentState.ButtonA();
+        else
+            Debug.Log("Pressed B");    //  currentState.ButtonB();
+    }
+    void Update()
+    {
+       
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            playerStateMachine.SwitchState(InputState.DefaultState);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            playerStateMachine.SwitchState(InputState.BuildState);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            playerStateMachine.SwitchState(InputState.FightState);
+        }
 
-
-    public void PressButtonA() {
-        currentState.ButtonA();
-    } 
-    public void PressButtonB() {
-        currentState.ButtonB();
+        OnTouch();
     }
 }
