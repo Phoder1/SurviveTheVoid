@@ -113,7 +113,7 @@ public partial class GridManager
                         }
                     }
                     else if (distance <= _instance.startIslandRadius) {
-                        SetTile(new TileSlot(tiers[0].tile), ChunkToGridPosition(new Vector2Int(loopX, loopY)), TileMapLayer.Floor, false);
+                        SetTile(new TileSlot(_instance.startIslandTile), ChunkToGridPosition(new Vector2Int(loopX, loopY)), TileMapLayer.Floor, false);
                     }
                 }
             }
