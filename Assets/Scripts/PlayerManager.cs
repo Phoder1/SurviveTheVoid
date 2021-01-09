@@ -50,6 +50,11 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     // Update is called once per frame
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Debug.Log(closestTile);
+        }
+
         movementVector = _inputManager.GetAxis();
         movementVector *= (5 * Time.deltaTime);
         currentPos = transform.position; //new Vector2(transform.position.x, transform.position.y);
@@ -77,11 +82,13 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         Debug.Log("checkTile");
         closestTile = _scanner.Scan(currentPosOnGrid, movementDir, lookRange, buildingLayer, checkType);
         lastPosOnGrid = currentPosOnGrid;
+        Debug.Log(currentPosOnGrid+" "+ " "+movementDir + " "+lookRange + " "+buildingLayer + " "+ checkType + " " + closestTile);
+       
 
 
 
-        //to check if scan works//
-        //closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
+       //to check if scan works//
+        closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
 
     }
 
@@ -146,6 +153,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
             WalkTowards(destination);
 
 
+
         }
      
     }
@@ -177,14 +185,16 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         if (_GridManager.WorldToGridPosition(transform.position, buildingLayer) != closestTile.gridPosition)
         {
 
-            transform.Translate((destination - transform.position) * Time.fixedDeltaTime);
-            
-            
+            transform.Translate((destination - transform.position) / 2); //*Time.fixedDeltaTime
+
+
+
         }
-        else
+         if (Vector2.Distance(transform.position, _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true))<0.3f) 
         {
             
             closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
+            Debug.Log(Vector2.Distance(transform.position, _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true)));
             Debug.Log("TileHarvested");
             closestTile = null;
         }

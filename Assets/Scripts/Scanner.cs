@@ -81,10 +81,18 @@ namespace Assets.Scan
             for (int i = 0; i < numOfTiles; i++) {
                 //Check tile
                 TileSlot currentTile = gridManager.GetTileFromGrid(relativeCheckPosition + startPosition , buildingLayer);
+                
+                TileSlot floorTile = gridManager.GetTileFromGrid(relativeCheckPosition + startPosition, TileMapLayer.Floor);
+                if (floorTile != null)
+                {
+
+                floorTile.GatherInteraction(relativeCheckPosition+startPosition,TileMapLayer.Floor);
+                }
 
                 if (currentTile != null && checker.CheckTile(currentTile))
                 {
                     tiles.Add(new TileHit(currentTile, relativeCheckPosition + startPosition));
+
                 }
                 //Check if at corner
                 if (relativeCheckPosition.x == relativeCheckPosition.y) {
