@@ -12,11 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0385232e857e8e446aa3c8cacfcbfb44, type: 3}
   m_Name: RecipeSweatMeat
   m_EditorClassIdentifier: 
-  ItemCostArr: []
+  ItemCostArr:
+  - item: {fileID: 11400000, guid: b5504b3b3f6cef540b7a82dfcea5739a, type: 2}
+    amount: 1
+  - item: {fileID: 11400000, guid: b67a8df7d4fe12140a0fa0943a10efdf, type: 2}
+    amount: 1
   outcomeItem:
-    item: {fileID: 0}
-    amount: 0
+    item: {fileID: 11400000, guid: f41038be2f5eef64fa2cd8c9911af922, type: 2}
+    amount: 1
   tier: 0
-  section: 0
+  section: 5
   isUnlocked: 0
-  CraftingTime: 0
+  CraftingTime: 60
