@@ -13,7 +13,6 @@ public class InputManager : MonoSingleton<InputManager>
     TileHit newTileHit, currentTileHit;
     bool isBuildingAttached = false;
 
-    bool isHoldingButton = false, stopHoldingButton = false, isButtonA;
 
     List<Vector2Int> TileList = new List<Vector2Int>();
 
@@ -119,9 +118,8 @@ public class InputManager : MonoSingleton<InputManager>
                         foreach (var tile in TileList)
                         {
                             if (tile == null)
-                            {
                                 continue;
-                            }
+                            
                             gridManager.SetTile(null, tile, TileMapLayer.Buildings, false);
                         }
                         TileList.Clear();
@@ -162,59 +160,22 @@ public class InputManager : MonoSingleton<InputManager>
     }
 
 
-    public void PressedConfirmBuildingButton(bool toConfirm)
+    public void PressedConfirmBuildingButton()
     {
-        if (toConfirm)
+        if (!isBuildingAttached)
+            return;
+
+        Touch newTouch = new Touch();
+        if ((Vector2)Camera.main.ScreenToWorldPoint(newTouch.position) != touchPosition)
         {
-            Touch newTouch = new Touch();
-            if ((Vector2)Camera.main.ScreenToWorldPoint(newTouch.position) != touchPosition)
-            {
-                PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
-            }
+            gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Buildings, true);
+            PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
         }
+
     }
 
 
  
-
-    //public void ButtonPressedDown(bool _isButtonA)
-    //{
-    //    this.isButtonA = _isButtonA;
-    //    stopHoldingButton = false;
-    //    if (_isButtonA)
-    //        PressButtonA();
-        
-    //    else
-    //        PressButtonB();
-    //} 
-    //public void ButtonPressedUp() {
-       
-    //    isHoldingButton = false;
-    //    stopHoldingButton = true;
-    //}
-    //void ReleaseButton()
-    //{
-    //    isHoldingButton = false;
-    //    if (!stopHoldingButton)
-    //    {
-    //        if (isButtonA)
-    //            Invoke("PressButtonA", .5f);
-            
-    //        else
-    //            Invoke("PressButtonB", .5f);
-    //    }
-    //}
-    // void PressButtonB() {
-    //    isHoldingButton = true;
-    //    //  currentState.ButtonB();
-    //    Debug.Log("Press Button B");
-    //}
-    // void PressButtonA() {
-    //    isHoldingButton = true;
-    //    Debug.Log("Press Button A");
-    //    //currentState.ButtonA();
-    //}
-
     public void ActivateStateButton(bool isButtonA) {
         if (isButtonA)
             Debug.Log("Pressed A"); //   currentState.ButtonA();
