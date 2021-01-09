@@ -195,7 +195,6 @@ public class InputManager : MonoSingleton<InputManager>
         
         else
             PressButtonB();
-        
     } 
     public void ButtonPressedUp() {
        
@@ -214,7 +213,7 @@ public class InputManager : MonoSingleton<InputManager>
                 Invoke("PressButtonB", .5f);
         }
     }
-    public void PressButtonB() {
+     void PressButtonB() {
         isHoldingButton = true;
         //  currentState.ButtonB();
         Debug.Log("Press Button B");

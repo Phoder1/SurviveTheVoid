@@ -493,8 +493,35 @@ public class Inventory
     }
 
     public void CreateNewInventory(int chestId) => inventoryDict.Add(chestId, new ItemSlot[maxCapacityOfItemsInChest]);
-    
 
+    public void ChangeBetweenButtons(int chestID, int drag, int drop)
+    {
+
+        inventoryCache = GetInventoryFromDictionary(chestID);
+        if (inventoryCache == null)
+            return;
+        if (inventoryCache[drag] == null && inventoryCache[drop] == null)
+        {
+            return;
+        }
+        else if (inventoryCache[drag] != null && inventoryCache[drop] != null)
+        {
+            ItemSlot temporaryCache = inventoryCache[drop];
+            inventoryCache[drop] = inventoryCache[drag];
+            inventoryCache[drag] = temporaryCache;
+        }
+        else if (inventoryCache[drag] == null && inventoryCache[drop] != null)
+        {
+            inventoryCache[drag] = inventoryCache[drop];
+            inventoryCache[drop] = null;
+        }
+        else if (inventoryCache[drag] != null && inventoryCache[drop] == null)
+        {
+            inventoryCache[drop] = inventoryCache[drag];
+            inventoryCache[drag] = null;
+        }
+
+    }
 
     public ItemSlot GetItemFromInventoryButton(int chestId, int buttonId)
 	{
