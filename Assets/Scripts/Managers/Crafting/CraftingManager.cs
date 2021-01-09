@@ -73,6 +73,8 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
     public override void Init()
     {
+
+
         inventory = Inventory.GetInstance;
         inventoryUI = InventoryUIManager._instance;
         ImportSlots();

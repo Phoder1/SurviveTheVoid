@@ -11,6 +11,13 @@ public enum SectionEnum
     Food
 }
 
+public enum ProcessorType
+{
+    CraftingTable,
+    Cooker
+}
+
+
 [CreateAssetMenu(fileName = "New Recipe", menuName = "Crafting/" + "Recipe")]
 public class RecipeSO : ScriptableObject
 {
@@ -34,17 +41,32 @@ public class RecipeSO : ScriptableObject
     [SerializeField]
     private bool isUnlocked;
     public bool getisUnlocked { get => isUnlocked; }
-  
-    public void UpdateIfRecipeUnlocked(bool _unlocked)
-    {
-        isUnlocked = _unlocked;
-    }
 
+    [SerializeField]
+    ProcessorType processorType;
+    public ProcessorType GetProcessorType => processorType;
 
     // 60 = 1 minute
     [SerializeField]
     private int CraftingTime;
     public int GetCraftingTime => CraftingTime;
+
+
+
+
+
+
+
+
+
+
+
+
+    public void UpdateIfRecipeUnlocked(bool _unlocked)
+    {
+        isUnlocked = _unlocked;
+    }
+
 
 
 }
