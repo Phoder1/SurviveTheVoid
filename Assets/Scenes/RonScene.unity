@@ -864,18 +864,19 @@ MonoBehaviour:
   grid: {fileID: 1584882287}
   floor: {fileID: 1208442058}
   buildings: {fileID: 1380187965}
+  clearZoneRadius: 0
+  startIslandRadius: 0
+  startIslandTile: {fileID: 0}
   islandsNoise:
     seed: 0
     noise: {fileID: 11400000, guid: 590e0a2ecc5c88d4fb75db0217f0a49f, type: 2}
-  plantsNoise:
+  buildingsRandom:
     seed: 0
-    noise: {fileID: 11400000, guid: 12769a37b407a2a49a9856524b4991dc, type: 2}
   loadDistance: 1
-  offSet: 0
-  moonTile: {fileID: 0}
-  circusTile: {fileID: 0}
-  toothpasteTile: {fileID: 0}
-  plantTile: {fileID: 0}
+  floorOffSet: 0
+  buildingsOffSet: 0
+  floorBlocksTiers: []
+  buildingsGeneration: []
 --- !u!1 &1140459362
 GameObject:
   m_ObjectHideFlags: 0
@@ -1371,6 +1372,11 @@ PrefabInstance:
       propertyPath: buildings
       value: 
       objectReference: {fileID: 1380187965}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: buildingsOffSet
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 1782004605564606447, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}
       propertyPath: m_Enabled
@@ -1379,7 +1385,7 @@ PrefabInstance:
     - target: {fileID: 1916986686293705550, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4002651174605677083, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}

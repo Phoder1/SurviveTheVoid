@@ -123,7 +123,8 @@ MonoBehaviour:
   buildingsRandom:
     seed: 0
   loadDistance: 0
-  offSet: 0
+  floorOffSet: 0
+  buildingsOffSet: 0
   floorBlocksTiers:
   - tile: {fileID: 11400000, guid: 38832a9085471904985e18510c56e5d7, type: 2}
     distance: 0
@@ -134,7 +135,12 @@ MonoBehaviour:
   - tile: {fileID: 11400000, guid: 8190ee7f328b6674280febcc9769179d, type: 2}
     distance: 3000
     overlapStart: 1000
-  buildingsGeneration: []
+  buildingsGeneration:
+  - tile: {fileID: 11400000, guid: 6ae7fda4f7596d84e8d77af3f94f2a4f, type: 2}
+    chance: 0.04
+    distance: 0
+    global: 1
+    spread: 0
 --- !u!114 &4672845829821667805
 MonoBehaviour:
   m_ObjectHideFlags: 0
