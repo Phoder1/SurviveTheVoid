@@ -46,7 +46,8 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
     [SerializeField] private Noise islandsNoise;
     [SerializeField] private GridRandom buildingsRandom;
     [SerializeField] private int loadDistance;
-    [SerializeField] private float offSet;
+    [SerializeField] private float floorOffSet;
+    [SerializeField] private float buildingsOffSet;
 
 
     private Vector2Int lastViewMin = Vector2Int.zero;
@@ -194,21 +195,24 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
         if (movementVector == Vector2.zero || movementVector.magnitude < 0.01f)
             return true;
         bool moveLegal = true;
-        TileSlot floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + movementVector + movementVector.normalized * offSet, TileMapLayer.Floor), TileMapLayer.Floor);
-        moveLegal &= floorTile != null;
+        TileSlot floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + movementVector + movementVector.normalized * floorOffSet, TileMapLayer.Floor), TileMapLayer.Floor);
+        TileSlot buildingTile = GetTileFromGrid(WorldToGridPosition(worldPosition + movementVector + movementVector.normalized * buildingsOffSet , TileMapLayer.Buildings), TileMapLayer.Buildings);
+        moveLegal &= floorTile != null && !(buildingTile != null && buildingTile.GetIsSolid);
         if (!moveLegal) 
             return moveLegal;        
         Quaternion rotationLeft = Quaternion.Euler(0, 0, 75f / COLLISION_SENSITIVITY);
         Quaternion rotationRight = Quaternion.Euler(0, 0, -75f / COLLISION_SENSITIVITY);
-        Vector2 leftMovementVector = movementVector + movementVector.normalized * offSet;
-        Vector2 rightMovementVector = movementVector + movementVector.normalized * offSet;
+        Vector2 leftMovementVector = movementVector + movementVector.normalized * floorOffSet;
+        Vector2 rightMovementVector = movementVector + movementVector.normalized * floorOffSet;
         for (int i = 0; i < COLLISION_SENSITIVITY && moveLegal; i++) {
             leftMovementVector = rotationLeft * leftMovementVector;
             floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + leftMovementVector, TileMapLayer.Floor), TileMapLayer.Floor);
-            moveLegal &= floorTile != null;
+            buildingTile = GetTileFromGrid(WorldToGridPosition(worldPosition + leftMovementVector, TileMapLayer.Buildings), TileMapLayer.Buildings);
+            moveLegal &= floorTile != null && !(buildingTile != null && buildingTile.GetIsSolid);
             rightMovementVector = rotationRight * rightMovementVector;
             floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + rightMovementVector, TileMapLayer.Floor), TileMapLayer.Floor);
-            moveLegal &= floorTile != null;
+            buildingTile = GetTileFromGrid(WorldToGridPosition(worldPosition + leftMovementVector, TileMapLayer.Buildings), TileMapLayer.Buildings);
+            moveLegal &= floorTile != null && !(buildingTile != null && buildingTile.GetIsSolid);
         }
         return moveLegal;
     }
@@ -223,6 +227,13 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
             return null;
         }
     }
+
+    public void SetTileColor(Vector2Int gridposition, TileMapLayer tileMapLayer, Color color) {
+        GetTilemap(tileMapLayer).RemoveTileFlags((Vector3Int)gridposition, TileFlags.LockColor);
+        GetTilemap(tileMapLayer).SetColor((Vector3Int)gridposition, color);
+    }
+    public void ResetTileColor(Vector2Int gridposition, TileMapLayer tileMapLayer) => SetTileColor(gridposition, tileMapLayer, Color.white);    
+
 
     public TileSlot GetTileFromWorld(Vector2 worldPosition, TileMapLayer buildingLayer) => GetTileFromGrid(WorldToGridPosition(worldPosition, buildingLayer), buildingLayer);
 
