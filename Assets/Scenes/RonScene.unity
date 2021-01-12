@@ -1382,6 +1382,12 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3303330036332173218, guid: ec261434d51bce44fa7c7f1d01379781,
+        type: 3}
+      propertyPath: recipes
+      value: 
+      objectReference: {fileID: 11400000, guid: 0cedeede050c1944e8d9b4a5e2887bff,
+        type: 2}
     - target: {fileID: 3303330036332173220, guid: ec261434d51bce44fa7c7f1d01379781,
         type: 3}
       propertyPath: m_RootOrder
@@ -2308,6 +2314,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _uiElements: []
+  sectionBackGroundSprite: []
+  SectionBackGroundImage: []
 --- !u!1 &2129712954
 GameObject:
   m_ObjectHideFlags: 0
@@ -2480,15 +2488,60 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}
+      propertyPath: startIslandTile
+      value: 
+      objectReference: {fileID: 11400000, guid: 641ea8fb1feee234ea2766c9833153c2,
+        type: 2}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: floorBlocksTiers.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
       propertyPath: buildingsGeneration.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: floorBlocksTiers.Array.data[0].tile
+      value: 
+      objectReference: {fileID: 11400000, guid: 013be4b7ab0cd214389b787359a2cbfd,
+        type: 2}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: floorBlocksTiers.Array.data[1].tile
+      value: 
+      objectReference: {fileID: 11400000, guid: f2e8c9f82eba2dc489797a21f686fbb5,
+        type: 2}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: floorBlocksTiers.Array.data[2].tile
+      value: 
+      objectReference: {fileID: 11400000, guid: 43ffbefb0d9ed6447b4842d45a68cd6b,
+        type: 2}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: floorBlocksTiers.Array.data[3].tile
+      value: 
+      objectReference: {fileID: 11400000, guid: 641ea8fb1feee234ea2766c9833153c2,
+        type: 2}
     - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}
       propertyPath: buildingsGeneration.Array.data[0].tile
       value: 
       objectReference: {fileID: 11400000, guid: 6ae7fda4f7596d84e8d77af3f94f2a4f,
         type: 2}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: floorBlocksTiers.Array.data[2].distance
+      value: 2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: floorBlocksTiers.Array.data[3].distance
+      value: 3000
+      objectReference: {fileID: 0}
     - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}
       propertyPath: buildingsGeneration.Array.data[0].chance
@@ -2499,15 +2552,15 @@ PrefabInstance:
       propertyPath: buildingsGeneration.Array.data[0].global
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: floorBlocksTiers.Array.data[3].overlapStart
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 1782004605564606447, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}
       propertyPath: m_Enabled
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1916986686293705550, guid: 8f0d45ae4df922940b20a49049c2d1e0,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1916986686293705550, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}

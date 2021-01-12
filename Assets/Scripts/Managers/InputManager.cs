@@ -252,15 +252,7 @@ public class InputManager : MonoSingleton<InputManager>
         else
            currentState.ButtonB();
     }
-    void Update()
-    {
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            playerStateMachine.SwitchState(InputState.DefaultState);
-        }
-
-    }
+  
     public void SinglePressedButton(bool isButtonA)
     {
 
@@ -283,7 +275,7 @@ public class InputManager : MonoSingleton<InputManager>
                 return;
         }
 
-
+        Debug.Log("Clicked");
         if (isButtonA)
             currentState.ButtonA();
         else
