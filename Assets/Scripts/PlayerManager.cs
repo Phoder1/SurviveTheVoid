@@ -4,7 +4,7 @@ using UnityEngine;
 using Assets.Scan;
 using System;
 
-public class PlayerManager : MonoSingleton<PlayerManager> 
+public class PlayerManager : MonoSingleton<PlayerManager>
 {
     [SerializeField] PlayerStats playerStats;
 
@@ -13,9 +13,9 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     private PlayerStateMachine _playerStateMachine;
     private GridManager _GridManager;
     private Scanner _scanner;
-    
 
-   
+
+
     [SerializeField] internal Camera cameraComp;
 
     private Vector2 GetCameraRealSize => new Vector2(cameraComp.orthographicSize * 2 * cameraComp.aspect, cameraComp.orthographicSize * 2);
@@ -34,17 +34,17 @@ public class PlayerManager : MonoSingleton<PlayerManager>
 
 
 
- 
+
 
     public override void Init()
     {
-       
+
         buildingLayer = TileMapLayer.Buildings;
         _scanner = new Scanner();
         _inputManager = InputManager._instance;
         _GridManager = GridManager._instance;
         _uiManager = UIManager._instance;
-        
+
 
         UpdateView();
 
@@ -53,10 +53,10 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     // Update is called once per frame
     private void Update()
     {
-        movementVector = _inputManager.GetAxis(); 
- 
+        movementVector = _inputManager.GetAxis();
+
          //new Vector2(transform.position.x, transform.position.y);
-        
+
 
 
         if (movementVector != Vector2.zero)
@@ -65,11 +65,11 @@ public class PlayerManager : MonoSingleton<PlayerManager>
             WalkTowards(movementVector, false);
         }
 
-       
-        
+
+
 
     }
-    
+
     public void Scan(IChecker checkType)
     {
         currentPosOnGrid = _GridManager.WorldToGridPosition(new Vector3(transform.position.x,transform.position.y,0), TileMapLayer.Buildings);
@@ -77,9 +77,11 @@ public class PlayerManager : MonoSingleton<PlayerManager>
 
         Debug.Log("checkTile");
         closestTile = _scanner.Scan(currentPosOnGrid, movementDir, lookRange, buildingLayer, checkType);
+
         lastPosOnGrid = currentPosOnGrid;
         Debug.Log(currentPosOnGrid+" "+ " "+movementDir + " "+lookRange + " "+buildingLayer + " "+ checkType + " " + closestTile);
-       
+
+
 
 
 
@@ -90,7 +92,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
 
     private void FindDirection()
     {
-        
+
             float angle = Vector2.SignedAngle(_inputManager.GetAxis(), Vector2.up);
             int direction = Mathf.RoundToInt(angle / 90);
 
@@ -121,7 +123,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
 
 
             }
-        
+
     }
     public void ImplementGathering()
     {
@@ -135,7 +137,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
 
 
         }
-        
+
         // transform.Translate(transform.position-_GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer));
     }
     public void ImplementSpecialInteraction()
@@ -150,7 +152,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
 
 
         }
-     
+
     }
 
 
@@ -165,7 +167,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     {
         public bool CheckTile(TileSlot tile)
         {
-            return tile.GetInteractionType != InteractionType.Special;
+            return tile.GetInteractionType != InteractionType.Special&&tile.GetTileAbst is PlantTileSO;
         }
     }
     public class SpecialInterractionScanChecker : IChecker
@@ -175,32 +177,45 @@ public class PlayerManager : MonoSingleton<PlayerManager>
             return tile.GetInteractionType == InteractionType.Special;
         }
     }
+
+    IEnumerator HarvestTile(TileHit Tile,float Time)
+    {
+        float speed = playerStats.GetSetSpeed;
+        playerStats.GetSetSpeed = 0;
+        yield return new WaitForSeconds(Time);
+        playerStats.GetSetSpeed = speed;
+        Tile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
+
+
+    }
     public void WalkTowards(Vector3 destination,bool ScanMod)
     {
 
+
+
+
+
         if (ScanMod)
         {
-
+            float timeToHarvest = ((PlantTileSO)closestTile.tile.GetTileAbst).GetGatheringTime;
 
             if (_GridManager.WorldToGridPosition(transform.position, buildingLayer) != closestTile.gridPosition)
             {
 
-                transform.Translate((destination - transform.position) * (Time.fixedDeltaTime/playerStats.GetSetSpeed)); 
-
+                transform.Translate((destination - transform.position).normalized * Time.fixedDeltaTime/playerStats.GetSetSpeed);
 
 
             }
 
             if (Vector2.Distance(transform.position, _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true)) < 0.3f)
             {
-
-                closestTile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
+                StartCoroutine(HarvestTile(closestTile, timeToHarvest));
                 Debug.Log(Vector2.Distance(transform.position, _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true)));
                 Debug.Log("TileHarvested");
                 closestTile = null;
             }
         }
-        else 
+        else
         {
             destination *= (playerStats.GetSetSpeed * Time.deltaTime);
             currentPos = transform.position;
@@ -217,8 +232,3 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     }
 
 }
-
-
-
-
-
