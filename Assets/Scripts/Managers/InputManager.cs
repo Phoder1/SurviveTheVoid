@@ -50,14 +50,9 @@ public class InputManager : MonoSingleton<InputManager>
     }
 
 
-
-
-    // Update is called once per frame
-
-    // need to implement touch and use on phone
     public void OnTouch()
     {
-        Debug.Log(currentState);
+      
         if (Input.touchCount > 0)
         {
 
@@ -96,7 +91,6 @@ public class InputManager : MonoSingleton<InputManager>
         }
 
     }
-
 
     void BuildingStateOnTouch(Touch touch)
     {
@@ -164,7 +158,7 @@ public class InputManager : MonoSingleton<InputManager>
                 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
 
                 currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Buildings);
-                Debug.Log(currentTileHit);
+
                 if (currentTileHit == null || currentTileHit.tile == null || gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) == null)
                     return;
                 Debug.Log("Found!");
@@ -183,9 +177,6 @@ public class InputManager : MonoSingleton<InputManager>
         currentTileHit = null;
         tileSlotCache = new TileSlot(Item);
     }
-
-
-
 
     public Vector2 GetAxis()
     {
@@ -211,32 +202,40 @@ public class InputManager : MonoSingleton<InputManager>
     }
     public void PressedConfirmBuildingButton()
     {
-        if (!isBuildingAttached || tileSlotCache == null || currentTileHit==null)
+        if (!isBuildingAttached || tileSlotCache == null || currentTileHit == null)
             return;
 
 
         Touch newTouch = new Touch();
-        if ((Vector2)Camera.main.ScreenToWorldPoint(newTouch.position) != touchPosition)
+        if ((Vector2)Camera.main.ScreenToWorldPoint(newTouch.position) == touchPosition)
+            return;
+
+        if (TileList.Count >= 1)
         {
-            gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Buildings, true);
-            newTileHit = null;
-            currentTileHit = null;
-            var itemSlotCache = new ItemSlot(tileSlotCache.GetTileAbst, 1);
-            Inventory.GetInstance.RemoveItemFromInventory(0, itemSlotCache);
-            if (Inventory.GetInstance.GetAmountOfItem(0, itemSlotCache) >= 1)
+            for (int i = 0; i < TileList.Count; i++)
             {
-                SetBuildingTile(itemSlotCache.item as TileAbstSO);
+                gridManager.SetTile(null, TileList[i], TileMapLayer.Buildings, true);
             }
-            else
-            {
-                PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
+        }
+        gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Buildings, true);
+        newTileHit = null;
+        currentTileHit = null;
+        var itemSlotCache = new ItemSlot(tileSlotCache.GetTileAbst, 1);
+        Inventory.GetInstance.RemoveItemFromInventory(0, itemSlotCache);
+        if (Inventory.GetInstance.GetAmountOfItem(0, itemSlotCache) >= 1)
+        {
+            SetBuildingTile(itemSlotCache.item as TileAbstSO);
+        }
+        else
+        {
+            PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
             tileSlotCache = null;
 
-            }
-
-            TileList.Clear();
-            Debug.Log("Placed");
         }
+
+        TileList.Clear();
+        Debug.Log("Placed");
+
 
     }
 
@@ -246,9 +245,8 @@ public class InputManager : MonoSingleton<InputManager>
         cameFromBuildingState = _cameFromBuildingState;
 
         if (cameFromBuildingState)
-        {
             playerStateMachine.SwitchState(InputState.BuildState);
-        }
+       
         else
            currentState.ButtonB();
     }
@@ -287,14 +285,22 @@ public class InputManager : MonoSingleton<InputManager>
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             playerStateMachine.SwitchState(InputState.DefaultState);
-        }
+            Debug.Log(currentState);
+        }else
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             playerStateMachine.SwitchState(InputState.BuildState);
+            Debug.Log(currentState);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             playerStateMachine.SwitchState(InputState.FightState);
+            Debug.Log(currentState);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            playerStateMachine.SwitchState(InputState.RemovalState);
+            Debug.Log(currentState);
         }
 
         OnTouch();
