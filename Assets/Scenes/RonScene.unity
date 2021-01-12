@@ -1962,7 +1962,8 @@ MonoBehaviour:
   buildingsRandom:
     seed: 0
   loadDistance: 1
-  offSet: 0
+  floorOffSet: 0
+  buildingsOffSet: 0
   floorBlocksTiers: []
   buildingsGeneration: []
 --- !u!1 &1140459362
@@ -2474,6 +2475,11 @@ PrefabInstance:
       objectReference: {fileID: 1380187965}
     - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}
+      propertyPath: buildingsOffSet
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
       propertyPath: buildingsGeneration.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -2497,6 +2503,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1916986686293705550, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1916986686293705550, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}

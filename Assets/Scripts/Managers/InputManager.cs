@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.Net;
 using UnityEngine;
 
 public class InputManager : MonoSingleton<InputManager>
@@ -12,6 +15,7 @@ public class InputManager : MonoSingleton<InputManager>
     Vector2 touchPosition;
     TileHit newTileHit, currentTileHit;
     bool isBuildingAttached = false;
+    bool cameFromBuildingState;
 
 
 
@@ -19,13 +23,15 @@ public class InputManager : MonoSingleton<InputManager>
 
 
     TileSlot tileSlotCache;
-    public override void Init() {
+    public override void Init()
+    {
         playerStateMachine = PlayerStateMachine.GetInstance;
         gridManager = GridManager._instance;
     }
     public static StateBase SetInputState
     {
-        set {
+        set
+        {
             currentState = value;
 
             if (currentState is BuildingState)
@@ -33,6 +39,9 @@ public class InputManager : MonoSingleton<InputManager>
 
             else if (currentState is FightState)
                 inputState = InputState.FightState;
+
+            else if (currentState is RemovalState)
+                inputState = InputState.RemovalState;
 
             else
                 inputState = InputState.DefaultState;
@@ -45,9 +54,10 @@ public class InputManager : MonoSingleton<InputManager>
 
     // Update is called once per frame
 
-    // need to implement touch and use on phone 
+    // need to implement touch and use on phone
     public void OnTouch()
     {
+        Debug.Log(currentState);
         if (Input.touchCount > 0)
         {
 
@@ -75,6 +85,9 @@ public class InputManager : MonoSingleton<InputManager>
                         break;
                     case InputState.FightState:
                         // fightState
+                        break;
+                    case InputState.RemovalState:
+                        RemovalStateOnTouch(touch[i]);
                         break;
                     default:
                         break;
@@ -119,9 +132,8 @@ public class InputManager : MonoSingleton<InputManager>
                         foreach (var tile in TileList)
                         {
                             if (tile == null)
-                            {
                                 continue;
-                            }
+
                             gridManager.SetTile(null, tile, TileMapLayer.Buildings, false);
                         }
                         TileList.Clear();
@@ -140,13 +152,35 @@ public class InputManager : MonoSingleton<InputManager>
         }
     }
 
+    void RemovalStateOnTouch(Touch touch)
+    {
 
-    public void SetBuildingTile(TileAbstSO Item) {
+        switch (touch.phase)
+        {
+            case TouchPhase.Began:
+            case TouchPhase.Moved:
+
+
+                touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
+
+                currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Buildings);
+                Debug.Log(currentTileHit);
+                if (currentTileHit == null || currentTileHit.tile == null || gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) == null)
+                    return;
+                Debug.Log("Found!");
+                tileSlotCache = currentTileHit.tile;
+                break;
+        }
+    }
+
+    public void SetBuildingTile(TileAbstSO Item)
+    {
         tileSlotCache = null;
         if (Item == null)
             return;
 
-
+        newTileHit = null;
+        currentTileHit = null;
         tileSlotCache = new TileSlot(Item);
     }
 
@@ -156,74 +190,108 @@ public class InputManager : MonoSingleton<InputManager>
     public Vector2 GetAxis()
     {
 
-        //ControllersCheck that returns Vector2 
+        //ControllersCheck that returns Vector2
         Vector2 moveDirection = vJ.inpudDir;
         return moveDirection;
     }
 
-
-    public void PressedConfirmBuildingButton(bool toConfirm)
+    public void ConfirmRemoval()
     {
-        if (toConfirm)
+        if (tileSlotCache == null)
+            return;
+
+
+        if (currentTileHit!= null && Inventory.GetInstance.AddToInventory(0, new ItemSlot(currentTileHit.tile.GetTileAbst, 1)))
         {
-            Touch newTouch = new Touch();
-            if ((Vector2)Camera.main.ScreenToWorldPoint(newTouch.position) != touchPosition)
-            {
-                PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
-            }
+
+            gridManager.SetTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings, true);
+            CancelButtonChangeState(true);
+
         }
     }
+    public void PressedConfirmBuildingButton()
+    {
+        if (!isBuildingAttached || tileSlotCache == null || currentTileHit==null)
+            return;
 
 
- 
+        Touch newTouch = new Touch();
+        if ((Vector2)Camera.main.ScreenToWorldPoint(newTouch.position) != touchPosition)
+        {
+            gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Buildings, true);
+            newTileHit = null;
+            currentTileHit = null;
+            var itemSlotCache = new ItemSlot(tileSlotCache.GetTileAbst, 1);
+            Inventory.GetInstance.RemoveItemFromInventory(0, itemSlotCache);
+            if (Inventory.GetInstance.GetAmountOfItem(0, itemSlotCache) >= 1)
+            {
+                SetBuildingTile(itemSlotCache.item as TileAbstSO);
+            }
+            else
+            {
+                PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
+            tileSlotCache = null;
 
-    //public void ButtonPressedDown(bool _isButtonA)
-    //{
-    //    this.isButtonA = _isButtonA;
-    //    stopHoldingButton = false;
-    //    if (_isButtonA)
-    //        PressButtonA();
-        
-    //    else
-    //        PressButtonB();
-    //} 
-    //public void ButtonPressedUp() {
-       
-    //    isHoldingButton = false;
-    //    stopHoldingButton = true;
-    //}
-    //void ReleaseButton()
-    //{
-    //    isHoldingButton = false;
-    //    if (!stopHoldingButton)
-    //    {
-    //        if (isButtonA)
-    //            Invoke("PressButtonA", .5f);
-            
-    //        else
-    //            Invoke("PressButtonB", .5f);
-    //    }
-    //}
-    // void PressButtonB() {
-    //    isHoldingButton = true;
-    //    //  currentState.ButtonB();
-    //    Debug.Log("Press Button B");
-    //}
-    // void PressButtonA() {
-    //    isHoldingButton = true;
-    //    Debug.Log("Press Button A");
-    //    //currentState.ButtonA();
-    //}
+            }
 
-    public void ActivateStateButton(bool isButtonA) {
-        if (isButtonA)
-           currentState.ButtonA();
+            TileList.Clear();
+            Debug.Log("Placed");
+        }
+
+    }
+
+    public void CancelButtonChangeState(bool _cameFromBuildingState)
+    {
+
+        cameFromBuildingState = _cameFromBuildingState;
+
+        if (cameFromBuildingState)
+        {
+            playerStateMachine.SwitchState(InputState.BuildState);
+        }
         else
            currentState.ButtonB();
     }
     void Update()
     {
-       
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            playerStateMachine.SwitchState(InputState.DefaultState);
+        }
+
+    }
+    public void SinglePressedButton(bool isButtonA)
+    {
+
+        if (isButtonA)
+            currentState.ButtonA();
+        else
+            currentState.ButtonB();
+
+
+    }
+
+
+    public void HoldingButton(bool isButtonA)
+    {
+
+        switch (currentState)
+        {
+            case RemovalState s:
+            case BuildingState z:
+                return;
+        }
+
+
+        if (isButtonA)
+            currentState.ButtonA();
+        else
+            currentState.ButtonB();
+    }
+    void Update()
+    {
+
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             playerStateMachine.SwitchState(InputState.DefaultState);

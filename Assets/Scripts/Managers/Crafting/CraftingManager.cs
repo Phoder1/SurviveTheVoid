@@ -18,8 +18,19 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     List<RecipeSO> unlockedRecipes = new List<RecipeSO>();
     [SerializeField]
     private GameObject ItemSlotPrefab;
+    private ProcessorType processor;
+    public ProcessorType GetSetProcessor
+    {
+        get => processor;
+        set
+        {
+            processor = value;
 
+            SelectSection("Blocks");
+            UpdateInformation();
 
+        }
+    }
 
     [FormerlySerializedAs("SelectedRecipe")]
     [HideInInspector]
@@ -31,10 +42,20 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            GetSetProcessor = ProcessorType.Cooker;
+        }
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            GetSetProcessor = ProcessorType.CraftingTable;
+        }
+
+
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[4], 1));
+            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[11], 1));
             ShowRecipe(selectedRecipe);
             inventoryUI.UpdateInventoryToUI();
         }
@@ -60,10 +81,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         {
             inventory.PrintInventory(0);
         }
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            UnlockRecipe(recipes.getrecipesArr[4]);
-        }
+
 
         StartCrafting();
     }
@@ -88,7 +106,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     {
         sections = new Section[sectionHolder.childCount];
 
-        Debug.Log(sectionHolder.childCount.ToString());
+        //Debug.Log(sectionHolder.childCount.ToString());
         for (int i = 0; i < sectionHolder.childCount; i++)
         {
             Transform sectionTransform = sectionHolder.GetChild(i);
@@ -135,11 +153,12 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
     }
 
-    private void UpdateInformation()
+    public void UpdateInformation()
     {
         foreach (Section section in sections)
         {
-            section.UpdateInformation();
+            section.UpdateInformation(GetSetProcessor);
+
             //Debug.Log("Updating Information");
         }
 
@@ -169,10 +188,15 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
                         section.GetSectionSlots(instiatedSlot.GetComponent<Image>());
                         section.CheckIflockedRecipe(section.recipeList[j]);
+
+
+
+
                     }
 
                 }
             }
+
             UpdateInformation();
         }
 
@@ -220,6 +244,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         {
             if (section.name == sectionName)
             {
+
                 if (selectedSection != null)
                 {
                     if (selectedSection.name != sectionName)
@@ -227,17 +252,20 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
                         selectedSection.getSetIsSelected = false;
                         section.getSetIsSelected = true;
                         selectedSection = section;
+                        selectedSection.ChangeSectionSelection(true);
                     }
                 }
                 else
                 {
                     section.getSetIsSelected = true;
                     selectedSection = section;
+                    selectedSection.ChangeSectionSelection(true);
                 }
+
                 break;
             }
         }
-
+        selectedSection.ChangeSectionSelection(true);
         //for (int i = 0; i < scrolls.Length; i++)
         //{
         //    if (scrolls[i].gameObject.name == sectionName + "ScrollBar")
@@ -282,12 +310,19 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
         }
     }
+    public void clearRecipeMat()
+    {
+        for (int i = 0; i < recipeMaterialSlots.Length; i++)
+        {
+            recipeMaterialSlots[i].gameObject.SetActive(false);
+        }
+    }
 
     // public ResourceStruct CraftResource(Recipe recipe) { return resourceStruct; }
     bool IsCrafting;
     public void AttemptToCraft()
     {
-        if (!IsCrafting)
+        if (!IsCrafting && selectedRecipe != null)
         {
             if (!inventory.CheckEnoughItemsForRecipe(selectedRecipe))
             {
@@ -308,9 +343,12 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     }
     [SerializeField] float Timer;
     bool startcount;
+
+
+
     void StartCrafting()
     {
-       
+
         if (IsCrafting)
         {
             if (startcount)
@@ -330,7 +368,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     }
 
 
-    
+
 
 
     public void UnlockRecipe(RecipeSO _recipe) => GetSection(_recipe.getSection).UnlockRecipe(_recipe);
@@ -446,11 +484,31 @@ public class Section
 
 
 
-    private void ChangeSectionSelection(bool state)
+    public void ChangeSectionSelection(bool state)
     {
+
         if (state == true)
         {
-            SelectSlot(0);
+            int Index = 0;
+            for (int i = 0; i < recipeList.Count; i++)
+            {
+
+                if (recipeList[i].GetProcessorType != CraftingManager._instance.GetSetProcessor)
+                {
+                    Index++;
+                }
+                else
+                {
+                    SelectSlot(i);
+                    break;
+                }
+            }
+            if (Index == recipeList.Count)
+            {
+                CraftingManager._instance.selectedRecipe = null;
+                CraftingManager._instance.clearRecipeMat();
+            }
+
 
         }
         scrollBar.SetActive(state);
@@ -466,7 +524,10 @@ public class Section
             sectionSlotsList[selectedSlot].color = Color.yellow;
 
             updateSelectedRecipe(slotNum);
+
+
         }
+
 
     }
     void updateSelectedRecipe(int slotNum)
@@ -488,7 +549,7 @@ public class Section
         sectionSlotsList.Add(_Slot);
     }
 
-    public void UpdateInformation()
+    public void UpdateInformation(ProcessorType _Type)
     {
 
         for (int i = 0; i < sectionSlotsList.Count; i++)
@@ -501,8 +562,9 @@ public class Section
             {
                 sectionSlotsList[i].gameObject.SetActive(false);
             }
-        }
 
+        }
+        GetTableType(_Type);
         //for (int i = 0; i < recipeList.Count; i++)
         //{
         //    CheckIflockedRecipe(recipeList[i]);
@@ -510,5 +572,19 @@ public class Section
 
 
     }
+
+
+    public void GetTableType(ProcessorType _Type)
+    {
+        for (int i = 0; i < sectionSlotsList.Count; i++)
+        {
+            if (_Type != recipeList[i].GetProcessorType)
+            {
+                sectionSlotsList[i].gameObject.SetActive(false);
+            }
+        }
+    }
+
+
 }
 

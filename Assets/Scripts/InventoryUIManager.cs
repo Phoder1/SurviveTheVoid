@@ -21,7 +21,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
     public void OnPressedInventoryButton(int buttonId)
 	{
-        ItemSlot itemCache = inventory.GetItemFromInventoryButton(0, buttonId);
+        ItemSlot itemCache = new ItemSlot(inventory.GetItemFromInventoryButton(0, buttonId).item,1);
 
         if (itemCache == null)
             return;
@@ -58,8 +58,6 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     {
         inventory = Inventory.GetInstance;
     }
-
-
 
     public void UpdateInventoryToUI()
     {

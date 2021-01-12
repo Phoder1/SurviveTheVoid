@@ -1,15 +1,16 @@
 ﻿using System.Diagnostics;
 using UnityEngine;
-public enum InputState { DefaultState, BuildState, FightState };
+public enum InputState { DefaultState, BuildState, FightState , RemovalState };
 public class PlayerStateMachine 
 {
     private static PlayerStateMachine _instance;
-    StateBase[] stateBases = new StateBase[3];
+    StateBase[] stateBases = new StateBase[4];
     private PlayerStateMachine()
     {
         stateBases[0] = new DefaultState();
         stateBases[1] = new BuildingState();
         stateBases[2] = new FightState();
+        stateBases[3] = new RemovalState();
         SwitchState(InputState.DefaultState);
 
     }
@@ -36,6 +37,9 @@ public class PlayerStateMachine
 
             case InputState.FightState:
                 InputManager.SetInputState = stateBases[2];
+                break;
+            case InputState.RemovalState:
+                InputManager.SetInputState = stateBases[3];
                 break;
             default:
                     InputManager.SetInputState = stateBases[0];

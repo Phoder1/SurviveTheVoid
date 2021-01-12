@@ -33,6 +33,7 @@ public abstract class TileAbstSO : ItemSO
 public interface ITileState
 {
     TileBase GetMainTileBase { get; }
+    TileAbstSO GetTileAbst { get; }
     InteractionType GetInteractionType { get; }
     TileType GetTileType { get; }
     bool GetIsSolid { get; }
@@ -67,6 +68,7 @@ public class TileSlot : ITileState
     }
     #region Passthrough
     public virtual TileBase GetMainTileBase => tileState.GetMainTileBase;
+    public virtual TileAbstSO GetTileAbst => tileState.GetTileAbst;
     public virtual InteractionType GetInteractionType => tileState.GetInteractionType;
     public virtual TileType GetTileType => tileState.GetTileType;
     public virtual bool GetIsSolid => tileState.GetIsSolid;
