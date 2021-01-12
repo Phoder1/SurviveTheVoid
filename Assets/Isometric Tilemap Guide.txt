@@ -1,0 +1,9 @@
+In order to make an isometric tilemap work you need to do the following things:
+1) Measure the height and width if the tile cap (the top of the tile only)
+2) Set the sprite Pixels Per Unit to the cap width
+3) Set the tile pivot point to the tile's front edge.
+3) Create a new tile pallete with Y = height/width
+4) Set the Project settings > Graphics > Transperency Sort Mode to Custom Axis and Axis to (0,1, (Grid Y * -0.5) - 0.01)
+
+Also:
+sin( Isometric Angle ) = Tile cap height / Tile cap width
