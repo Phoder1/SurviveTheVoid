@@ -59,8 +59,6 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         inventory = Inventory.GetInstance;
     }
 
-
-
     public void UpdateInventoryToUI()
     {
         InventorySlotImage = new Image[inventory.GetInventory.Length];

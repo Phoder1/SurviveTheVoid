@@ -113,17 +113,7 @@ public class UIManager : MonoSingleton<UIManager>
     bool isQuickAccessSwapped = true;
     bool isInventoryOpen = false;
 
-    //public void ButtonA()
-    //{
-    //    Debug.Log("!");
-    //    inputManager.PressButtonA();
-    //}
-
-    //public void ButtonB()
-    //{
-    //    Debug.Log("!");
-    //    inputManager.PressButtonB();
-    //}
+    
 
     void ButtonControls()
     {
@@ -132,15 +122,12 @@ public class UIManager : MonoSingleton<UIManager>
             ReleaseButton();
         }
     }
-
-
-
-
     public void ButtonPressedDown(bool _isButtonA)
     {
         this.isButtonA = _isButtonA;
         stopHoldingButton = false;
-        PressButton();
+        inputManager.SinglePressedButton(_isButtonA);
+    
     }
     public void ButtonPressedUp()
     {
@@ -153,13 +140,13 @@ public class UIManager : MonoSingleton<UIManager>
         isHoldingButton = false;
         if (!stopHoldingButton)
         {
-                Invoke("PressButton", .5f);
+            PressButton();
         }
     }
     void PressButton()
     {
         isHoldingButton = true;
-        inputManager.ActivateStateButton(isButtonA);
+        inputManager.HoldingButton(isButtonA);
     }
 
 
