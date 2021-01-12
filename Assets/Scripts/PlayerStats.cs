@@ -3,16 +3,18 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
+
+
     int HP;
     int hunger;
     int EXP;
-    float speed;
+    float speed=5;
     int temperature;
     int attackDMG;
     int level;
     public void Init()
     {
-
+     
     }
 
     public int GetSetHP { get { return HP; } set { HP = value; } }
