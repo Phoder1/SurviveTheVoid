@@ -42,7 +42,7 @@ public class InputManager : MonoSingleton<InputManager>
 
             else if (currentState is RemovalState)
                 inputState = InputState.RemovalState;
-            
+
             else
                 inputState = InputState.DefaultState;
 
@@ -54,7 +54,7 @@ public class InputManager : MonoSingleton<InputManager>
 
     // Update is called once per frame
 
-    // need to implement touch and use on phone 
+    // need to implement touch and use on phone
     public void OnTouch()
     {
         Debug.Log(currentState);
@@ -190,7 +190,7 @@ public class InputManager : MonoSingleton<InputManager>
     public Vector2 GetAxis()
     {
 
-        //ControllersCheck that returns Vector2 
+        //ControllersCheck that returns Vector2
         Vector2 moveDirection = vJ.inpudDir;
         return moveDirection;
     }
@@ -233,7 +233,7 @@ public class InputManager : MonoSingleton<InputManager>
             tileSlotCache = null;
 
             }
-           
+
             TileList.Clear();
             Debug.Log("Placed");
         }
@@ -250,11 +250,9 @@ public class InputManager : MonoSingleton<InputManager>
             playerStateMachine.SwitchState(InputState.BuildState);
         }
         else
-        {
-            playerStateMachine.SwitchState(InputState.DefaultState);
-        }
-
+           currentState.ButtonB();
     }
+  
     public void SinglePressedButton(bool isButtonA)
     {
 
@@ -277,7 +275,7 @@ public class InputManager : MonoSingleton<InputManager>
                 return;
         }
 
-
+        Debug.Log("Clicked");
         if (isButtonA)
             currentState.ButtonA();
         else
