@@ -96,8 +96,8 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         inventory = Inventory.GetInstance;
         inventoryUI = InventoryUIManager._instance;
         ImportSlots();
-        AddRecipeToList();
-        InstantiateItemSlots();
+		AddRecipeToList();
+		InstantiateItemSlots();
         SelectSection("Blocks");
 
     }
@@ -205,15 +205,15 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     }
 
 
-    void AddRecipeToList()
-    {
-        foreach (RecipeSO recipe in recipes.getrecipesArr)
-        {
-            GetSection(recipe.getSection).UpdateRecipeList(recipe);
-        }
-    }
+	void AddRecipeToList()
+	{
+		foreach (RecipeSO recipe in recipes.getrecipesArr)
+		{
+			GetSection(recipe.getSection).UpdateRecipeList(recipe);
+		}
+	}
 
-    private Section GetSection(SectionEnum _section)
+	private Section GetSection(SectionEnum _section)
     {
 
         for (int j = 0; j < sections.Length; j++)

@@ -263,8 +263,8 @@ public class UIManager : MonoSingleton<UIManager>
             {
                 _uiElements[i].SetActive(false);
             }
-            inventoryManager.UpdateInventoryToUI();
-            isInventoryOpen = true;
+			inventoryManager.UpdateInventoryToUI();
+			isInventoryOpen = true;
         }
     }
 
