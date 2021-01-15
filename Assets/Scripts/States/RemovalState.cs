@@ -56,7 +56,6 @@ public class RemovalState : StateBase
         {
 
             PlayerStateMachine.GetInstance.SwitchState(InputState.BuildState);
-
         }
 
         else

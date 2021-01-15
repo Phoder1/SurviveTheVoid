@@ -43,6 +43,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         _inputManager = InputManager._instance;
         _GridManager = GridManager._instance;
         _uiManager = UIManager._instance;
+        UpdateView();
 
     }
 
