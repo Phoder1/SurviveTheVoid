@@ -36,7 +36,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 		{
             UIManager._instance.ButtonInventory();
             PlayerStateMachine.GetInstance.SwitchState(InputState.BuildState);
-            InputManager._instance.SetBuildingTile(itemCache.item as TileAbstSO);
+            (InputManager.GetCurrentState as BuildingState).SetBuildingTile(itemCache.item as TileAbstSO);
 		}
 	}
 
