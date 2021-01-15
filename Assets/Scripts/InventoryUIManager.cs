@@ -38,8 +38,24 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
             PlayerStateMachine.GetInstance.SwitchState(InputState.BuildState);
             (InputManager.GetCurrentState as BuildingState).SetBuildingTile(itemCache.item as TileAbstSO);
 
+
             UIManager._instance.BuildModeUI();
         }
+
+		
+        if(itemCache.item.GetItemType == ItemType.Consumable)
+        {
+            Debug.Log("Consumed: " + itemCache.item.getItemName);
+            inventory.RemoveItemFromInventory(0, new ItemSlot(itemCache.item,1));
+           
+
+            //check if item is on cooldown if not consume the item and start cooldown
+            // else you can't consume
+
+
+        }
+
+
 	}
 
 

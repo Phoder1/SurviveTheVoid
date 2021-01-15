@@ -10,20 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dbd0bff820f6e2249b4d2e1f1231921a, type: 3}
-  m_Name: TileStoneQuarry
+  m_Name: Coal
   m_EditorClassIdentifier: 
-  maxStackSize: 0
+  itemID: 12
+  itemName: Coal
+  maxStackSize: 20
   description: 
-  itemEnum: 2
-  sprite: {fileID: 0}
+  itemEnum: 0
+  sprite: {fileID: 21300000, guid: d8d947f0337a053429c1559b554b240b, type: 3}
   mainTileBase: {fileID: 0}
   interactionType: 2
-  tileType: 1
   isSolid: 1
   rewards:
-  - item: {fileID: 11400000, guid: 23363b482a082a744a29b4d5b83f4043, type: 2}
-    amount: 2
-  stages: []
+  - item: {fileID: 11400000}
+    amount: 3
+  stages:
+  - {fileID: 11400000, guid: 67fa51cf16cd2f04a8898004d71c18dd, type: 2}
+  - {fileID: 11400000, guid: aaf21959ca3c5374fa2db41848c2e68f, type: 2}
+  - {fileID: 11400000, guid: 3c8bb5f7c6f79fc4daf10a14cf8823e6, type: 2}
   minGrowTime: 0
   maxGrowTime: 0
   GatheringTime: 0
