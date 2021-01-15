@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 
-    public enum ItemName
-    {
+public enum ItemName
+{
     //generic
     OakLog,
     WoodenStick,
@@ -36,42 +34,53 @@ using UnityEngine;
 
 
 
-    }
+}
 
 
 
-    public enum ItemType
-    {
-        Generic,
-        Tools,
-        Consumable,
-        Building,
-        Equipable
+public enum ItemType
+{
+    Generic,
+    Tools,
+    Consumable,
+    Building,
+    Equipable
 
-    }
-
-
+}
 
 
 
-    [CreateAssetMenu(fileName = "New Generic", menuName = "Items/" + "Generic")]
-    public class ItemSO : ScriptableObject
-    {
-        [SerializeField]
-        private int maxStackSize;
-        public int getmaxStackSize => maxStackSize;
 
-        [SerializeField]
-        private string description;
-        public string getDescription => description;
 
-        [SerializeField]
-        private ItemName itemEnum;
-        public ItemName getItemEnum => itemEnum;
+[CreateAssetMenu(fileName = "New Generic", menuName = "Items/" + "Generic")]
+public class ItemSO : ScriptableObject
+{
+    [HideInInspector]
+    public int itemID;
 
-        [SerializeField]
-        private Sprite sprite;
-        public Sprite getsprite { get => sprite; }
+    [SerializeField]
+    private string itemName;
+    public string getItemName => itemName;
+
+    [SerializeField]
+    private int maxStackSize;
+    public int getmaxStackSize => maxStackSize;
+
+    [SerializeField]
+    private string description;
+    public string getDescription => description;
+
+
+
+
+
+    [SerializeField]
+    private ItemName itemEnum;
+    public ItemName getItemEnum => itemEnum;
+
+    [SerializeField]
+    private Sprite sprite;
+    public Sprite getsprite { get => sprite; }
 
 
 
@@ -90,9 +99,9 @@ using UnityEngine;
                 case ToolItemSO Tool:
                     return ItemType.Tools;
                 default:
-                    return ItemType.Generic; 
+                    return ItemType.Generic;
             }
-        } 
+        }
     }
 }
 
