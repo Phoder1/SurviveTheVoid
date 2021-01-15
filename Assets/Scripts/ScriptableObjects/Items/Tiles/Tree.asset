@@ -25,9 +25,14 @@ MonoBehaviour:
     amount: 2
   - item: {fileID: 11400000, guid: 6e3627ca283f52b4499153bb2af26248, type: 2}
     amount: 1
+  - item: {fileID: 0}
+    amount: 2
+  - item: {fileID: 0}
+    amount: 1
   stages:
   - {fileID: 11400000, guid: 4ea9cd078e7b9d64ca99a8c476addd0a, type: 2}
   - {fileID: 11400000, guid: ea80f8e67af76e44ab21f659941c74b5, type: 2}
   - {fileID: 11400000, guid: 4c4346b9a20c40c47bea99b56593e34f, type: 2}
   minGrowTime: 2
   maxGrowTime: 8
+  GatheringTime: 2

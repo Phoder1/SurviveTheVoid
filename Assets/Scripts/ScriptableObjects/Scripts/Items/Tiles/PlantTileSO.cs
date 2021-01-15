@@ -13,8 +13,10 @@ public class PlantTileSO : TileAbstSO
 
     [SerializeField] private float minGrowTime;
     [SerializeField] private float maxGrowTime;
-    public float GetMinGrowTime { get => minGrowTime; }
-    public float GetMaxGrowTime { get => maxGrowTime; }
+    [SerializeField] private float GatheringTime;
+    public float GetMinGrowTime => minGrowTime;
+    public float GetMaxGrowTime => maxGrowTime;
+    public float GetGatheringTime => GatheringTime;
 }
 public class PlantState : ITileState
 {
@@ -38,6 +40,7 @@ public class PlantState : ITileState
     public TileType GetTileType => tile.GetTileType;
 
     public bool GetIsSolid => tile.GetIsSolid;
+    public float GetGatherTime => GetGatherTime;
 
     public void GatherInteraction(Vector2Int gridPosition, TileMapLayer tileMapLayer) {
         if (reachedMaxStage) {

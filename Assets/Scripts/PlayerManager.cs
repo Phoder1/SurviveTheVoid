@@ -13,9 +13,8 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     private PlayerStateMachine _playerStateMachine;
     private GridManager _GridManager;
     private Scanner _scanner;
-    
 
-   
+
     [SerializeField] internal Camera cameraComp;
 
     private Vector2 GetCameraRealSize => new Vector2(cameraComp.orthographicSize * 2 * cameraComp.aspect, cameraComp.orthographicSize * 2);
@@ -178,6 +177,10 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     public void WalkTowards(Vector3 destination,bool ScanMod)
     {
 
+    
+
+
+
         if (ScanMod)
         {
 
@@ -185,10 +188,10 @@ public class PlayerManager : MonoSingleton<PlayerManager>
             if (_GridManager.WorldToGridPosition(transform.position, buildingLayer) != closestTile.gridPosition)
             {
 
-                transform.Translate((destination - transform.position) * (Time.fixedDeltaTime/playerStats.GetSetSpeed)); 
+                transform.Translate((destination - transform.position).normalized * Time.fixedDeltaTime/2); 
+               
 
-
-
+                
             }
 
             if (Vector2.Distance(transform.position, _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true)) < 0.3f)
@@ -202,6 +205,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         }
         else 
         {
+           
             destination *= (playerStats.GetSetSpeed * Time.deltaTime);
             currentPos = transform.position;
             nextPos = currentPos + new Vector2(destination.x,destination.y);
