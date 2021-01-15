@@ -354,6 +354,21 @@ public class UIManager : MonoSingleton<UIManager>
 
     #endregion
 
+    #region States
+    [Header("States related")]
+    [SerializeField] Text StateText;
+
+    public void UpdateUiState()
+    {
+
+    }
+
+
+
+	#endregion
+
+
+
 }
 
 
