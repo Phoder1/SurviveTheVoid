@@ -15,11 +15,11 @@ public class GameManager : MonoSingleton<GameManager>
         singletons = new ISingleton[7] {
              CameraScript._instance,
              GridManager._instance,
+             InputManager._instance,
              PlayerManager._instance,
              CraftingManager._instance,
              InventoryUIManager._instance,
-             UIManager._instance,
-             InputManager._instance
+             UIManager._instance
              
         };
 

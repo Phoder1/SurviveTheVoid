@@ -44,7 +44,6 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         _GridManager = GridManager._instance;
         _uiManager = UIManager._instance;
         UpdateView();
-
     }
 
     // Update is called once per frame
