@@ -78,7 +78,7 @@ public class Inventory
 
     public bool CheckIfEnoughSpaceInInventory(int chestID, ItemSlot item)
     {
-        if (item == null)
+        if (item == null || item.item == null)
             return false;
 
         inventoryCache = GetInventoryFromDictionary(chestID);

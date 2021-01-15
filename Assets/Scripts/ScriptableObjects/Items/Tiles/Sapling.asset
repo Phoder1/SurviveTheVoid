@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dbd0bff820f6e2249b4d2e1f1231921a, type: 3}
-  m_Name: Tree
+  m_Name: Sapling
   m_EditorClassIdentifier: 
   maxStackSize: 20
   description: A simple tree.
   itemEnum: 0
-  sprite: {fileID: 21300000, guid: 57117521a6c2a694b89c461e32eed3c6, type: 3}
+  sprite: {fileID: 21300000, guid: d7e90656936195248a6032f557321baf, type: 3}
   mainTileBase: {fileID: 11400000, guid: 4c4346b9a20c40c47bea99b56593e34f, type: 2}
   interactionType: 8
   tileType: 0
@@ -30,6 +30,8 @@ MonoBehaviour:
   - item: {fileID: 0}
     amount: 1
   stages:
+  - {fileID: 11400000, guid: 4ea9cd078e7b9d64ca99a8c476addd0a, type: 2}
+  - {fileID: 11400000, guid: ea80f8e67af76e44ab21f659941c74b5, type: 2}
   - {fileID: 11400000, guid: 4c4346b9a20c40c47bea99b56593e34f, type: 2}
   minGrowTime: 2
   maxGrowTime: 8

@@ -11,7 +11,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     [SerializeField] bool IsInventoryOn = true;
 
     [Header("Inventory Related")]
-    
+
     public GameObject[] InventorySlots;
     Image[] InventorySlotImage;
     TextMeshProUGUI[] inventorySlotText;
@@ -20,17 +20,23 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
 
     public void OnPressedInventoryButton(int buttonId)
-	{
-        ItemSlot itemCache = new ItemSlot(inventory.GetItemFromInventoryButton(0, buttonId).item,1);
+    {
+        var checkIfSlotIsItem = inventory.GetItemFromInventoryButton(0, buttonId);
 
-        if (itemCache == null)
-            return;
+
+        if (checkIfSlotIsItem == null || checkIfSlotIsItem.item == null)
+            return; 
+        
+
+        ItemSlot itemCache = new ItemSlot(checkIfSlotIsItem.item, 1);
+
+       
         
 		if (itemCache.item.GetItemType == ItemType.Building)
 		{
             UIManager._instance.ButtonInventory();
             PlayerStateMachine.GetInstance.SwitchState(InputState.BuildState);
-            InputManager._instance.SetBuildingTile(itemCache.item as TileAbstSO);
+            (InputManager.GetCurrentState as BuildingState).SetBuildingTile(itemCache.item as TileAbstSO);
 		}
 	}
 
