@@ -49,11 +49,10 @@ public class ProcessingTableTileState : ITileState
     }
 
     public void CancelEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
-        throw new System.NotImplementedException();
     }
 
     public void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
-
+        UIManager._instance.ToggleCraftingUI(tile.GetProcessorType);
     }
 
     public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer) { }
