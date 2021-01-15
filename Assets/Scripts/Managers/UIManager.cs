@@ -7,7 +7,33 @@ public class UIManager : MonoSingleton<UIManager>
     CraftingManager craftingManager;
     InventoryUIManager inventoryManager;
     // UI elements
-    public GameObject[] _uiElements;
+    [SerializeField]
+    private GameObject
+        vjMove,
+        viFight,
+        bInteract,
+        bGather,
+        bHide,
+        bTool1,
+        bTool2,
+        bTool3,
+        bTool4,
+        bTool5,
+        bMainWeapon,
+        bSwap,
+        bQuickAccess1,
+        bQuickAccess2,
+        bQuickAccess3,
+        bQuickAccess4,
+        bQuickAccess5,
+        bInventory,
+        bSettings,
+        InventoryUI,
+        CraftingUI,
+        PauseMenuUI,
+        ChestUI,
+        bCancel,
+        bRotate;
 
 
     public override void Init()
@@ -100,7 +126,7 @@ public class UIManager : MonoSingleton<UIManager>
 
     public void ToggleCraftingUI(ProcessorType _type)
     {
-        _uiElements[4].SetActive(!_uiElements[4].activeInHierarchy);
+        CraftingUI.SetActive(!CraftingUI.activeInHierarchy);
         craftingManager.GetSetProcessor = _type;
     }
 
@@ -108,10 +134,12 @@ public class UIManager : MonoSingleton<UIManager>
 
 
     #region ButtonsFunctions
+
     bool isHoldingButton = false, stopHoldingButton = false, isButtonA;
     bool isShown = true;
     bool isQuickAccessSwapped = true;
     bool isInventoryOpen = false;
+    bool isFightModeOn = false;
 
     
 
@@ -162,50 +190,54 @@ public class UIManager : MonoSingleton<UIManager>
        
         if (isShown == true)
         {
-            _uiElements[5].gameObject.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
+            bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
 
             if (isQuickAccessSwapped == true)
             {
-                for (int i = 6; i <= 12; i++)
-                {
-                    _uiElements[i].SetActive(false);
-                }
+                bTool1.SetActive(false);
+                bTool2.SetActive(false);
+                bTool3.SetActive(false);
+                bTool4.SetActive(false);
+                bTool5.SetActive(false);
+                bMainWeapon.SetActive(false);
+                bSwap.SetActive(false);
             }
             else
             {
-                for (int i = 15; i <= 19; i++)
-                {
-                    _uiElements[i].SetActive(false);
-                }
-                for (int i = 11; i <= 12; i++)
-                {
-                    _uiElements[i].SetActive(false);
-                }
+                bQuickAccess1.SetActive(false);
+                bQuickAccess2.SetActive(false);
+                bQuickAccess3.SetActive(false);
+                bQuickAccess4.SetActive(false);
+                bQuickAccess5.SetActive(false);
+                bMainWeapon.SetActive(false);
+                bSwap.SetActive(false);
             }
 
             isShown = false;
         }
         else
         {
-            _uiElements[5].gameObject.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
+            bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
 
             if (isQuickAccessSwapped == true)
             {
-                for (int i = 6; i <= 12; i++)
-                {
-                    _uiElements[i].SetActive(true);
-                }
+                bTool1.SetActive(true);
+                bTool2.SetActive(true);
+                bTool3.SetActive(true);
+                bTool4.SetActive(true);
+                bTool5.SetActive(true);
+                bMainWeapon.SetActive(true);
+                bSwap.SetActive(true);
             }
             else
             {
-                for (int i = 15; i <= 19; i++)
-                {
-                    _uiElements[i].SetActive(true);
-                }
-                for (int i = 11; i <= 12; i++)
-                {
-                    _uiElements[i].SetActive(true);
-                }
+                bQuickAccess1.SetActive(true);
+                bQuickAccess2.SetActive(true);
+                bQuickAccess3.SetActive(true);
+                bQuickAccess4.SetActive(true);
+                bQuickAccess5.SetActive(true);
+                bMainWeapon.SetActive(true);
+                bSwap.SetActive(true);
             }
 
             isShown = true;
@@ -216,27 +248,33 @@ public class UIManager : MonoSingleton<UIManager>
     {
         if (isQuickAccessSwapped == true)
         {
-            for (int i = 6; i <= 10; i++)
-            {
-                _uiElements[i].SetActive(false);
-            }
-            for (int i = 15; i <= 19; i++)
-            {
-                _uiElements[i].SetActive(true);
-            }
+            bTool1.SetActive(false);
+            bTool2.SetActive(false);
+            bTool3.SetActive(false);
+            bTool4.SetActive(false);
+            bTool5.SetActive(false);
+
+            bQuickAccess1.SetActive(true);
+            bQuickAccess2.SetActive(true);
+            bQuickAccess3.SetActive(true);
+            bQuickAccess4.SetActive(true);
+            bQuickAccess5.SetActive(true);
 
             isQuickAccessSwapped = false;
         }
         else
         {
-            for (int i = 6; i <= 10; i++)
-            {
-                _uiElements[i].SetActive(true);
-            }
-            for (int i = 15; i <= 19; i++)
-            {
-                _uiElements[i].SetActive(false);
-            }
+            bTool1.SetActive(true);
+            bTool2.SetActive(true);
+            bTool3.SetActive(true);
+            bTool4.SetActive(true);
+            bTool5.SetActive(true);
+
+            bQuickAccess1.SetActive(false);
+            bQuickAccess2.SetActive(false);
+            bQuickAccess3.SetActive(false);
+            bQuickAccess4.SetActive(false);
+            bQuickAccess5.SetActive(false);
 
             isQuickAccessSwapped = true;
         }
@@ -244,65 +282,78 @@ public class UIManager : MonoSingleton<UIManager>
 
     public void ButtonInventory()
     {
-        if (_uiElements[20].activeSelf == true)
+        if (InventoryUI.activeSelf == true)
         {
-            _uiElements[20].SetActive(false);
+            InventoryUI.SetActive(false);
 
-            for (int i = 1; i <= 3; i++)
-            {
-                _uiElements[i].SetActive(true);
-            }
+            viFight.SetActive(true);
+            bInteract.SetActive(true);
+            bGather.SetActive(true);
 
             isInventoryOpen = false;
         }
         else
         {
-            _uiElements[20].SetActive(true);
+            InventoryUI.SetActive(true);
 
-            for (int i = 1; i <= 3; i++)
-            {
-                _uiElements[i].SetActive(false);
-            }
-			inventoryManager.UpdateInventoryToUI();
+            viFight.SetActive(false);
+            bInteract.SetActive(false);
+            bGather.SetActive(false);
+
+            inventoryManager.UpdateInventoryToUI();
 			isInventoryOpen = true;
         }
     }
 
     public void ButtonFightTransition()
     {
-        _uiElements[1].transform.GetChild(0).gameObject.SetActive(false);
-        _uiElements[1].transform.GetChild(1).gameObject.SetActive(true);
+        viFight.transform.GetChild(0).gameObject.SetActive(false);
+        viFight.transform.GetChild(1).gameObject.SetActive(true);
 
-        _uiElements[3].transform.GetChild(0).gameObject.SetActive(false);
-        _uiElements[3].transform.GetChild(1).gameObject.SetActive(true);
+        bGather.transform.GetChild(0).gameObject.SetActive(false);
+        bGather.transform.GetChild(1).gameObject.SetActive(true);
+
+        isFightModeOn = true;
     }
 
     public void BottunGatherTransition()
     {
-        _uiElements[1].transform.GetChild(0).gameObject.SetActive(true);
-        _uiElements[1].transform.GetChild(1).gameObject.SetActive(false);
+        viFight.transform.GetChild(0).gameObject.SetActive(true);
+        viFight.transform.GetChild(1).gameObject.SetActive(false);
 
-        _uiElements[3].transform.GetChild(0).gameObject.SetActive(true);
-        _uiElements[3].transform.GetChild(1).gameObject.SetActive(false);
+        bGather.transform.GetChild(0).gameObject.SetActive(true);
+        bGather.transform.GetChild(1).gameObject.SetActive(false);
+
+        isFightModeOn = false;
     }
 
     public void ButtonSettings()
     {
-        if (_uiElements[21].activeSelf == false)
+        if (PauseMenuUI.activeSelf == false)
         {
-            _uiElements[21].SetActive(true);
+            PauseMenuUI.SetActive(true);
 
-            for (int i = 0; i <= 20; i++)
-            {
-                if (i == 13)
-                {
-                    _uiElements[i].SetActive(true);
-                }
-                else
-                {
-                    _uiElements[i].SetActive(false);
-                }
-            }
+            vjMove.SetActive(false);
+            viFight.SetActive(false);
+            bInteract.SetActive(false);
+            bGather.SetActive(false);
+            bHide.SetActive(false);
+            bTool1.SetActive(false);
+            bTool2.SetActive(false);
+            bTool3.SetActive(false);
+            bTool4.SetActive(false);
+            bTool5.SetActive(false);
+            bMainWeapon.SetActive(false);
+            bSwap.SetActive(false);
+            bQuickAccess1.SetActive(false);
+            bQuickAccess2.SetActive(false);
+            bQuickAccess3.SetActive(false);
+            bQuickAccess4.SetActive(false);
+            bQuickAccess5.SetActive(false);
+            bInventory.SetActive(false);
+            InventoryUI.SetActive(false);
+            CraftingUI.SetActive(false);
+            ChestUI.SetActive(false);
 
             Time.timeScale = 0f;
         }
@@ -310,52 +361,128 @@ public class UIManager : MonoSingleton<UIManager>
         {
             Time.timeScale = 1f;
 
-            for (int i = 0; i <= 20; i++)
-            {
-                if (i == 20 || i == 4 || i == 15 || i == 16 || i == 17 || i == 18 || i == 19)
-                {
-                    _uiElements[i].SetActive(false);
-                }
-                else
-                {
-                    _uiElements[i].SetActive(true);
-                }
-            }
+            PauseMenuUI.SetActive(false);
 
-            _uiElements[21].SetActive(false);
+            vjMove.SetActive(true);
+            viFight.SetActive(true);
+            bInteract.SetActive(true);
+            bGather.SetActive(true);
+            bHide.SetActive(true);
+            bTool1.SetActive(true);
+            bTool2.SetActive(true);
+            bTool3.SetActive(true);
+            bTool4.SetActive(true);
+            bTool5.SetActive(true);
+            bMainWeapon.SetActive(true);
+            bSwap.SetActive(true);
+            bInventory.SetActive(true);
 
             if (isInventoryOpen == true)
             {
-                _uiElements[20].SetActive(true);
+                InventoryUI.SetActive(true);
 
-                for (int i = 1; i <= 3; i++)
+                viFight.SetActive(false);
+                bInteract.SetActive(false);
+                bGather.SetActive(false);
+            }
+
+            if(isShown == false)
+			{
+                if (isQuickAccessSwapped == true)
                 {
-                    _uiElements[i].SetActive(false);
+                    bTool1.SetActive(false);
+                    bTool2.SetActive(false);
+                    bTool3.SetActive(false);
+                    bTool4.SetActive(false);
+                    bTool5.SetActive(false);
+                    bMainWeapon.SetActive(false);
+                    bSwap.SetActive(false);
+                }
+                else
+                {
+                    bQuickAccess1.SetActive(false);
+                    bQuickAccess2.SetActive(false);
+                    bQuickAccess3.SetActive(false);
+                    bQuickAccess4.SetActive(false);
+                    bQuickAccess5.SetActive(false);
+                    bMainWeapon.SetActive(false);
+                    bSwap.SetActive(false);
                 }
             }
 
             if (isQuickAccessSwapped == false)
             {
-                for (int i = 6; i <= 10; i++)
-                {
-                    _uiElements[i].SetActive(false);
-                }
-                for (int i = 15; i <= 19; i++)
-                {
-                    _uiElements[i].SetActive(true);
-                }
+                bTool1.SetActive(false);
+                bTool2.SetActive(false);
+                bTool3.SetActive(false);
+                bTool4.SetActive(false);
+                bTool5.SetActive(false);
+
+                bQuickAccess1.SetActive(true);
+                bQuickAccess2.SetActive(true);
+                bQuickAccess3.SetActive(true);
+                bQuickAccess4.SetActive(true);
+                bQuickAccess5.SetActive(true);
             }
             else
             {
-                for (int i = 6; i <= 10; i++)
-                {
-                    _uiElements[i].SetActive(true);
-                }
-                for (int i = 15; i <= 19; i++)
-                {
-                    _uiElements[i].SetActive(false);
-                }
+                bTool1.SetActive(true);
+                bTool2.SetActive(true);
+                bTool3.SetActive(true);
+                bTool4.SetActive(true);
+                bTool5.SetActive(true);
+
+                bQuickAccess1.SetActive(false);
+                bQuickAccess2.SetActive(false);
+                bQuickAccess3.SetActive(false);
+                bQuickAccess4.SetActive(false);
+                bQuickAccess5.SetActive(false);
             }
+
+        }
+    }
+
+    public void BuildModeUI()
+	{
+        if (isQuickAccessSwapped == true)
+        {
+            bTool1.SetActive(false);
+            bTool2.SetActive(false);
+            bTool3.SetActive(false);
+            bTool4.SetActive(false);
+            bTool5.SetActive(false);
+            bMainWeapon.SetActive(false);
+            bSwap.SetActive(false);
+        }
+        else
+        {
+            bQuickAccess1.SetActive(false);
+            bQuickAccess2.SetActive(false);
+            bQuickAccess3.SetActive(false);
+            bQuickAccess4.SetActive(false);
+            bQuickAccess5.SetActive(false);
+            bMainWeapon.SetActive(false);
+            bSwap.SetActive(false);
+        }
+        bHide.SetActive(false);
+        viFight.SetActive(false);
+        InventoryUI.SetActive(false);
+
+        bCancel.SetActive(true);
+        bRotate.SetActive(true);
+
+        bInteract.transform.GetChild(0).gameObject.SetActive(false);
+        bInteract.transform.GetChild(1).gameObject.SetActive(true);
+
+        if (isFightModeOn == false)
+        {
+            bGather.transform.GetChild(0).gameObject.SetActive(false);
+            bGather.transform.GetChild(2).gameObject.SetActive(true);
+        }
+        else
+        {
+            bGather.transform.GetChild(1).gameObject.SetActive(false);
+            bGather.transform.GetChild(2).gameObject.SetActive(true);
         }
     }
 
