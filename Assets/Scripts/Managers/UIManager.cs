@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 public class UIManager : MonoSingleton<UIManager>
@@ -15,6 +16,7 @@ public class UIManager : MonoSingleton<UIManager>
         craftingManager = CraftingManager._instance;
         inventoryManager = InventoryUIManager._instance;
         inputManager = InputManager._instance;
+        UpdateUiState(InputManager.inputState);
     }
 
 
@@ -363,13 +365,37 @@ public class UIManager : MonoSingleton<UIManager>
 
     #region States
     [Header("States related")]
-    [SerializeField] Text StateText;
+    [SerializeField] TextMeshProUGUI StateText;
 
-    public void UpdateUiState()
+    public void UpdateUiState(InputState CurrentState)
     {
-
+        switch (CurrentState)
+        {
+            case InputState.DefaultState:
+                StateText.gameObject.SetActive(false);
+                break;
+            case InputState.BuildState:
+                StateText.gameObject.SetActive(true);
+                StateText.text = "Building State";
+                break;
+            case InputState.FightState:
+                StateText.gameObject.SetActive(true);
+                StateText.text = "Fighting State";
+                break;
+            case InputState.RemovalState:
+                StateText.gameObject.SetActive(true);
+                StateText.text = "Removal State";
+                break;
+            default:
+                break;
+        }
     }
-
+    //IEnumerator BlinkTextState()
+    //{
+    //    StateText.color = Color.red;
+        
+    //    StateText.color = Color.white;
+    //}
 
 
 	#endregion
