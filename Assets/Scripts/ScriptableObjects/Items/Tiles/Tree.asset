@@ -21,9 +21,13 @@ MonoBehaviour:
   tileType: 0
   isSolid: 1
   rewards:
-  - item: {fileID: 11400000, guid: bf41b966567b68f458a7ec6ed8c79b55, type: 2}
+  - item: {fileID: 11400000, guid: 09698c5a98717bc4ea06472bb871ac49, type: 2}
     amount: 2
-  - item: {fileID: 11400000, guid: 6317b6bed700609419a7ffe65ff2b6d9, type: 2}
+  - item: {fileID: 11400000, guid: 6e3627ca283f52b4499153bb2af26248, type: 2}
+    amount: 1
+  - item: {fileID: 0}
+    amount: 2
+  - item: {fileID: 0}
     amount: 1
   stages:
   - {fileID: 11400000, guid: 4ea9cd078e7b9d64ca99a8c476addd0a, type: 2}
@@ -31,3 +35,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4c4346b9a20c40c47bea99b56593e34f, type: 2}
   minGrowTime: 2
   maxGrowTime: 8
+  GatheringTime: 2

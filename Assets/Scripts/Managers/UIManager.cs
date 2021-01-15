@@ -119,24 +119,29 @@ public class UIManager : MonoSingleton<UIManager>
     {
         if (isHoldingButton)
         {
+     
             ReleaseButton();
         }
     }
     public void ButtonPressedDown(bool _isButtonA)
     {
+        Debug.Log(_isButtonA);
         this.isButtonA = _isButtonA;
         stopHoldingButton = false;
+        isHoldingButton = true;
         inputManager.SinglePressedButton(_isButtonA);
     
     }
     public void ButtonPressedUp()
     {
+     
 
         isHoldingButton = false;
         stopHoldingButton = true;
     }
     void ReleaseButton()
     {
+    
         isHoldingButton = false;
         if (!stopHoldingButton)
         {
@@ -146,6 +151,7 @@ public class UIManager : MonoSingleton<UIManager>
     void PressButton()
     {
         isHoldingButton = true;
+     
         inputManager.HoldingButton(isButtonA);
     }
 
@@ -153,6 +159,7 @@ public class UIManager : MonoSingleton<UIManager>
 
     public void ButtonHide()
     {
+       
         if (isShown == true)
         {
             _uiElements[5].gameObject.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");

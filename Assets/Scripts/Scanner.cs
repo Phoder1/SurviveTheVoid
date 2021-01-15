@@ -23,9 +23,14 @@ namespace Assets.Scan
             buildingLayer = _buildingLayer;
             checker = _checker;
             direction = _direction;
-            for (int i = 1; i <= radius; i++) {
+            TileSlot currentTile = gridManager.GetTileFromGrid(startPosition, buildingLayer);
+            if (currentTile != null && checker.CheckTile(currentTile))
+            {
+                return new TileHit(currentTile,startPosition);
+            }
+                for (int i = 1; i <= radius; i++) {
                 TileHit tileHit = GetClosestTileInSquare(i);
-                if (tileHit.tile != null) {
+                if (tileHit != null) {
                     return tileHit;
                 }
             }
@@ -36,7 +41,7 @@ namespace Assets.Scan
         public TileHit GetClosestTileInSquare(int distanceFromCenter) {
             TileHit[] tiles = GetAllTilesInSquare(distanceFromCenter);
 
-            if (tiles == null) return null;
+            if (tiles == null || tiles.Length == 0) return null;
 
             TileHit closestTile = null;
             float shortestDistance = float.MaxValue;
@@ -50,7 +55,7 @@ namespace Assets.Scan
                 }
             }
 
-            return closestTile.tile != null ? closestTile : null;
+            return closestTile != null ? closestTile : null;
         }
         private TileHit[] GetAllTilesInSquare(int distanceFromCenter) {
             List<TileHit> tiles = new List<TileHit>();
@@ -81,13 +86,13 @@ namespace Assets.Scan
             for (int i = 0; i < numOfTiles; i++) {
                 //Check tile
                 TileSlot currentTile = gridManager.GetTileFromGrid(relativeCheckPosition + startPosition , buildingLayer);
-
                 if (currentTile != null && checker.CheckTile(currentTile))
                 {
-                    tiles.Add(new TileHit(currentTile, relativeCheckPosition));
+                    tiles.Add(new TileHit(currentTile, relativeCheckPosition + startPosition));
+
                 }
                 //Check if at corner
-                if (relativeCheckPosition.x == relativeCheckPosition.y) {
+                if (Mathf.Abs(relativeCheckPosition.x) == Mathf.Abs(relativeCheckPosition.y)) {
                     switch (currentDirection) {
                         case DirectionEnum.Up:
                             currentDirection = DirectionEnum.Right;
