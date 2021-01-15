@@ -32,8 +32,8 @@ public enum EffectType
 public class ConsumableItemSO : ItemSO
 {
 
-	public InstantEffect[] instantEffects;
-	public OverTimeEffect[] OverTimeEffects;
+	public ConsumableEffect[] instantEffects;
+	public ConsumableEffect[] OverTimeEffects;
 
 	//[SerializeField]
 	//private EffectType effectTypeType;
@@ -47,17 +47,11 @@ public class ConsumableItemSO : ItemSO
 
 
 [Serializable]
-public class InstantEffect
+public class ConsumableEffect
 {
 	public EffectType effectType;
+	public float Duration;
 	public int Amount;
 }
 
 
-[Serializable]
-public class OverTimeEffect
-{
-	public EffectType effectType;
-	public int Strength;
-	public float Duration;
-}
