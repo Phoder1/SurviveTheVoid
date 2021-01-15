@@ -298,10 +298,10 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
                     recipeMaterialSlots[i].gameObject.SetActive(true);
                 }
                 Text materialNameText = recipeMaterialSlots[i].transform.GetChild(0).GetComponent<Text>();
-                materialNameText.text = recipe.getitemCostArr[i].item.getItemEnum.ToString();
+                materialNameText.text = recipe.getitemCostArr[i].item.getItemName;
                 Text materialCostText = recipeMaterialSlots[i].transform.GetChild(1).GetComponent<Text>();
                 materialCostText.text = inventory.GetAmountOfItem(0, recipe.getitemCostArr[i]).ToString() + " / " + recipe.getitemCostArr[i].amount;
-
+                recipeMaterialSlots[i].GetComponent<Image>().sprite = recipe.getitemCostArr[i].item.getsprite;
             }
             else
             {

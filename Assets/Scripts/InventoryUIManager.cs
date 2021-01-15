@@ -40,7 +40,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 		}
         if(itemCache.item.GetItemType == ItemType.Consumable)
         {
-            Debug.Log("Consumed: " + itemCache.item.getItemEnum);
+            Debug.Log("Consumed: " + itemCache.item.getItemName);
             inventory.RemoveItemFromInventory(0, new ItemSlot(itemCache.item,1));
            
 

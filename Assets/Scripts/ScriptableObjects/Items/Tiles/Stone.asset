@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbd0bff820f6e2249b4d2e1f1231921a, type: 3}
   m_Name: Stone
   m_EditorClassIdentifier: 
-  itemID: 17
+  itemID: 19
+  itemName: Stone
   maxStackSize: 20
   description: 
   itemEnum: 2
   sprite: {fileID: 21300000, guid: 4e2b2ed5862c10c4cbaad8e1f26d65f1, type: 3}
   mainTileBase: {fileID: 0}
   interactionType: 2
-  tileType: 1
   isSolid: 1
   rewards:
   - item: {fileID: 11400000}
