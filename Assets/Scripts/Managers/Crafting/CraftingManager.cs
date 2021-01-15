@@ -55,13 +55,13 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[11], 1));
+            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[4], 1));
             ShowRecipe(selectedRecipe);
             inventoryUI.UpdateInventoryToUI();
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
-            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[8], 1));
+            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[7], 1));
             inventoryUI.UpdateInventoryToUI();
             ShowRecipe(selectedRecipe);
         }
@@ -73,7 +73,13 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         }
         if (Input.GetKeyDown(KeyCode.V))
         {
-            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[8], 1));
+            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[7], 1));
+            inventoryUI.UpdateInventoryToUI();
+            ShowRecipe(selectedRecipe);
+        }
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[0], 1));
             inventoryUI.UpdateInventoryToUI();
             ShowRecipe(selectedRecipe);
         }
@@ -96,8 +102,8 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         inventory = Inventory.GetInstance;
         inventoryUI = InventoryUIManager._instance;
         ImportSlots();
-        AddRecipeToList();
-        InstantiateItemSlots();
+		AddRecipeToList();
+		InstantiateItemSlots();
         SelectSection("Blocks");
 
     }
@@ -205,15 +211,15 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     }
 
 
-    void AddRecipeToList()
-    {
-        foreach (RecipeSO recipe in recipes.getrecipesArr)
-        {
-            GetSection(recipe.getSection).UpdateRecipeList(recipe);
-        }
-    }
+	void AddRecipeToList()
+	{
+		foreach (RecipeSO recipe in recipes.getrecipesArr)
+		{
+			GetSection(recipe.getSection).UpdateRecipeList(recipe);
+		}
+	}
 
-    private Section GetSection(SectionEnum _section)
+	private Section GetSection(SectionEnum _section)
     {
 
         for (int j = 0; j < sections.Length; j++)
@@ -298,10 +304,10 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
                     recipeMaterialSlots[i].gameObject.SetActive(true);
                 }
                 Text materialNameText = recipeMaterialSlots[i].transform.GetChild(0).GetComponent<Text>();
-                materialNameText.text = recipe.getitemCostArr[i].item.getItemEnum.ToString();
+                materialNameText.text = recipe.getitemCostArr[i].item.getItemName;
                 Text materialCostText = recipeMaterialSlots[i].transform.GetChild(1).GetComponent<Text>();
                 materialCostText.text = inventory.GetAmountOfItem(0, recipe.getitemCostArr[i]).ToString() + " / " + recipe.getitemCostArr[i].amount;
-
+                recipeMaterialSlots[i].GetComponent<Image>().sprite = recipe.getitemCostArr[i].item.getsprite;
             }
             else
             {

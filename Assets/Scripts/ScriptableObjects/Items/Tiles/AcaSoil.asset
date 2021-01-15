@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad4fb29703af1ac4e92edd55a5b9b4f5, type: 3}
   m_Name: AcaSoil
   m_EditorClassIdentifier: 
+  itemID: 10
+  itemName: Aca Soil
   maxStackSize: 20
   description: Beautiful Red colored soil.
   itemEnum: 0
   sprite: {fileID: 21300000, guid: 84ae5804c3962024c8ba18038878336f, type: 3}
   mainTileBase: {fileID: 11400000, guid: 8735f609516857844a4f3f1102f159d9, type: 2}
   interactionType: 8
-  tileType: 0
   isSolid: 1
