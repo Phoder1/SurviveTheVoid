@@ -813,13 +813,13 @@ Tilemap:
       e11: 0
       e12: 0
       e13: NaN
-      e20: -8.4215323e+37
+      e20: 418.84277
       e21: 0
-      e22: -7.121641e+37
+      e22: 417.875
       e23: 0.00000038364286
-      e30: 8.24e-43
+      e30: 5.54e-43
       e31: 0
-      e32: 8.24e-43
+      e32: 5.54e-43
       e33: 4.5904e-41
   m_TileColorArray:
   - m_RefCount: 0
@@ -837,8 +837,7 @@ Tilemap:
   - m_RefCount: 0
     m_Data: {r: -4.575278e+10, g: -4.575278e+10, b: -4.575278e+10, a: -4.575278e+10}
   - m_RefCount: 0
-    m_Data: {r: 0.0000000012678001, g: 0.0000000012678001, b: 0.0000000012678001,
-      a: 0.0000000012678001}
+    m_Data: {r: -2.8761719e+10, g: -2.8761719e+10, b: -2.8761719e+10, a: -2.8761719e+10}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -966,7 +965,7 @@ PrefabInstance:
     - target: {fileID: 6033404864412062686, guid: ec261434d51bce44fa7c7f1d01379781,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6033404865212485367, guid: ec261434d51bce44fa7c7f1d01379781,
         type: 3}
