@@ -74,9 +74,9 @@ public class ItemSO : ScriptableObject
 
 
 
-    [SerializeField]
-    private ItemName itemEnum;
-    public ItemName getItemEnum => itemEnum;
+    //[SerializeField]
+    //private ItemName itemEnum;
+    //public ItemName getItemEnum => itemEnum;
 
     [SerializeField]
     private Sprite sprite;

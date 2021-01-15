@@ -124,7 +124,7 @@ public class Inventory
         {
             for (int i = 0; i < inventoryCache.Length; i++)
             {
-                if (item.item.getItemEnum == inventoryCache[i].item.getItemEnum)
+                if (item.item.itemID == inventoryCache[i].item.itemID)
                 {
                     counter += inventoryCache[i].item.getmaxStackSize;
                 }
@@ -186,7 +186,7 @@ public class Inventory
             if (inventoryCache[i] == null)
                 continue;
 
-            if (inventoryCache[i].item.getItemEnum == item.item.getItemEnum)
+            if (inventoryCache[i].item.itemID == item.item.itemID)
             {
                 if (inventoryCache[i].amount == inventoryCache[i].item.getmaxStackSize)
                     continue;
@@ -253,7 +253,7 @@ public class Inventory
             {
                 for (int i = inventoryList.Length - 1; i >= 0; i--)
                 {
-                    if (inventoryCache[i] != null && inventoryCache[i].item.getItemEnum == item.item.getItemEnum)
+                    if (inventoryCache[i] != null && inventoryCache[i].item.itemID == item.item.itemID)
                     {
                         inventoryCache[i] = null;
                         break;
@@ -281,7 +281,7 @@ public class Inventory
             if (inventoryCache[i] == null)
                 continue;
 
-            if (inventoryCache[i].item.getItemEnum == item.item.getItemEnum)
+            if (inventoryCache[i].item.itemID == item.item.itemID)
             {
 
                 if (itemAmountCount - inventoryCache[i].amount > 0)
@@ -331,7 +331,7 @@ public class Inventory
                 break;
 
             }
-            else if (item.item.getItemEnum == inventoryCache[i].item.getItemEnum)
+            else if (item.item.itemID == inventoryCache[i].item.itemID)
             {
                 checkForItem = true;
                 break;
@@ -405,7 +405,7 @@ public class Inventory
             {
                 continue;
             }
-            if (inventoryCache[i].item.getItemEnum == item.item.getItemEnum)
+            if (inventoryCache[i].item.itemID == item.item.itemID)
             {
                 counter += inventoryList[i].amount;
                 if (counter >= item.amount)
@@ -444,7 +444,7 @@ public class Inventory
             }
             else if (item != null && inventoryCache[i] != null)
             {
-                if (item.item.getItemEnum == inventoryCache[i].item.getItemEnum)
+                if (item.item.itemID == inventoryCache[i].item.itemID)
                 {
                     counterCache += inventoryCache[i].amount;
                 }
@@ -469,7 +469,7 @@ public class Inventory
                     return i;
             }
             else
-            if (inventoryCache[i] != null && item.item.getItemEnum == inventoryCache[i].item.getItemEnum)
+            if (inventoryCache[i] != null && item.item.itemID == inventoryCache[i].item.itemID)
             {
                 return i;
             }
@@ -580,7 +580,7 @@ public class Inventory
                 Debug.Log("Inventory list in spot " + i + "is Null");
             }
             else
-                Debug.Log("Inventory list in spot " + i + " with the amount : " + inventoryCache[i].amount + " of type: " + inventoryCache[i].item.getItemEnum);
+                Debug.Log("Inventory list in spot " + i + " with the amount : " + inventoryCache[i].amount + " of type: " + inventoryCache[i].item.GetItemType);
         }
 
     }

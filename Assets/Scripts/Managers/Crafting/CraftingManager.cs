@@ -55,25 +55,31 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[0], 1));
+            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[4], 1));
             ShowRecipe(selectedRecipe);
             inventoryUI.UpdateInventoryToUI();
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
-            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[1], 1));
+            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[7], 1));
             inventoryUI.UpdateInventoryToUI();
             ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
-            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[0], 1));
+            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[4], 1));
             inventoryUI.UpdateInventoryToUI();
             ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.V))
         {
-            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[1], 1));
+            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[7], 1));
+            inventoryUI.UpdateInventoryToUI();
+            ShowRecipe(selectedRecipe);
+        }
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[0], 1));
             inventoryUI.UpdateInventoryToUI();
             ShowRecipe(selectedRecipe);
         }
