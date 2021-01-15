@@ -139,9 +139,10 @@ public class UIManager : MonoSingleton<UIManager>
 
     bool isHoldingButton = false, stopHoldingButton = false, isButtonA;
     bool isShown = true;
-    bool isQuickAccessSwapped = true;
+    bool isQuickAccessSlotsSwapped = true;
     bool isInventoryOpen = false;
     bool isFightModeOn = false;
+    bool isBuildModeOn = false;
 
     
 
@@ -185,6 +186,46 @@ public class UIManager : MonoSingleton<UIManager>
         inputManager.HoldingButton(isButtonA);
     }
 
+    void SetTools(bool turnOn)
+	{
+        if(turnOn == true)
+		{
+            bTool1.SetActive(true);
+            bTool2.SetActive(true);
+            bTool3.SetActive(true);
+            bTool4.SetActive(true);
+            bTool5.SetActive(true);
+        }
+        else
+		{
+            bTool1.SetActive(false);
+            bTool2.SetActive(false);
+            bTool3.SetActive(false);
+            bTool4.SetActive(false);
+            bTool5.SetActive(false);
+        }
+	}
+
+    void SetQuickAccessSlots(bool turnOn)
+	{
+        if (turnOn == true)
+        {
+            bQuickAccess1.SetActive(true);
+            bQuickAccess2.SetActive(true);
+            bQuickAccess3.SetActive(true);
+            bQuickAccess4.SetActive(true);
+            bQuickAccess5.SetActive(true);
+        }
+        else
+        {
+            bQuickAccess1.SetActive(false);
+            bQuickAccess2.SetActive(false);
+            bQuickAccess3.SetActive(false);
+            bQuickAccess4.SetActive(false);
+            bQuickAccess5.SetActive(false);
+        }
+    }
+
 
 
     public void ButtonHide()
@@ -194,23 +235,15 @@ public class UIManager : MonoSingleton<UIManager>
         {
             bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
 
-            if (isQuickAccessSwapped == true)
+            if (isQuickAccessSlotsSwapped == true)
             {
-                bTool1.SetActive(false);
-                bTool2.SetActive(false);
-                bTool3.SetActive(false);
-                bTool4.SetActive(false);
-                bTool5.SetActive(false);
+                SetTools(false);
                 bMainWeapon.SetActive(false);
                 bSwap.SetActive(false);
             }
             else
             {
-                bQuickAccess1.SetActive(false);
-                bQuickAccess2.SetActive(false);
-                bQuickAccess3.SetActive(false);
-                bQuickAccess4.SetActive(false);
-                bQuickAccess5.SetActive(false);
+                SetQuickAccessSlots(false);
                 bMainWeapon.SetActive(false);
                 bSwap.SetActive(false);
             }
@@ -221,23 +254,15 @@ public class UIManager : MonoSingleton<UIManager>
         {
             bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
 
-            if (isQuickAccessSwapped == true)
+            if (isQuickAccessSlotsSwapped == true)
             {
-                bTool1.SetActive(true);
-                bTool2.SetActive(true);
-                bTool3.SetActive(true);
-                bTool4.SetActive(true);
-                bTool5.SetActive(true);
+                SetTools(true);
                 bMainWeapon.SetActive(true);
                 bSwap.SetActive(true);
             }
             else
             {
-                bQuickAccess1.SetActive(true);
-                bQuickAccess2.SetActive(true);
-                bQuickAccess3.SetActive(true);
-                bQuickAccess4.SetActive(true);
-                bQuickAccess5.SetActive(true);
+                SetQuickAccessSlots(true);
                 bMainWeapon.SetActive(true);
                 bSwap.SetActive(true);
             }
@@ -248,37 +273,21 @@ public class UIManager : MonoSingleton<UIManager>
 
     public void ButtonSwap()
     {
-        if (isQuickAccessSwapped == true)
+        if (isQuickAccessSlotsSwapped == true)
         {
-            bTool1.SetActive(false);
-            bTool2.SetActive(false);
-            bTool3.SetActive(false);
-            bTool4.SetActive(false);
-            bTool5.SetActive(false);
+            SetTools(false);
 
-            bQuickAccess1.SetActive(true);
-            bQuickAccess2.SetActive(true);
-            bQuickAccess3.SetActive(true);
-            bQuickAccess4.SetActive(true);
-            bQuickAccess5.SetActive(true);
+            SetQuickAccessSlots(true);
 
-            isQuickAccessSwapped = false;
+            isQuickAccessSlotsSwapped = false;
         }
         else
         {
-            bTool1.SetActive(true);
-            bTool2.SetActive(true);
-            bTool3.SetActive(true);
-            bTool4.SetActive(true);
-            bTool5.SetActive(true);
+            SetTools(true);
 
-            bQuickAccess1.SetActive(false);
-            bQuickAccess2.SetActive(false);
-            bQuickAccess3.SetActive(false);
-            bQuickAccess4.SetActive(false);
-            bQuickAccess5.SetActive(false);
+            SetQuickAccessSlots(false);
 
-            isQuickAccessSwapped = true;
+            isQuickAccessSlotsSwapped = true;
         }
     }
 
@@ -287,10 +296,18 @@ public class UIManager : MonoSingleton<UIManager>
         if (InventoryUI.activeSelf == true)
         {
             InventoryUI.SetActive(false);
-
-            viFight.SetActive(true);
+   
             bInteract.SetActive(true);
             bGather.SetActive(true);
+
+            if(isBuildModeOn == false)
+			{
+                viFight.SetActive(true);
+            }
+            else
+			{
+                viFight.SetActive(false);
+            }
 
             isInventoryOpen = false;
         }
@@ -340,18 +357,10 @@ public class UIManager : MonoSingleton<UIManager>
             bInteract.SetActive(false);
             bGather.SetActive(false);
             bHide.SetActive(false);
-            bTool1.SetActive(false);
-            bTool2.SetActive(false);
-            bTool3.SetActive(false);
-            bTool4.SetActive(false);
-            bTool5.SetActive(false);
+            SetTools(false);
             bMainWeapon.SetActive(false);
             bSwap.SetActive(false);
-            bQuickAccess1.SetActive(false);
-            bQuickAccess2.SetActive(false);
-            bQuickAccess3.SetActive(false);
-            bQuickAccess4.SetActive(false);
-            bQuickAccess5.SetActive(false);
+            SetQuickAccessSlots(false);
             bInventory.SetActive(false);
             InventoryUI.SetActive(false);
             CraftingUI.SetActive(false);
@@ -365,21 +374,30 @@ public class UIManager : MonoSingleton<UIManager>
 
             PauseMenuUI.SetActive(false);
 
-            vjMove.SetActive(true);
-            viFight.SetActive(true);
-            bInteract.SetActive(true);
-            bGather.SetActive(true);
-            bHide.SetActive(true);
-            bTool1.SetActive(true);
-            bTool2.SetActive(true);
-            bTool3.SetActive(true);
-            bTool4.SetActive(true);
-            bTool5.SetActive(true);
-            bMainWeapon.SetActive(true);
-            bSwap.SetActive(true);
-            bInventory.SetActive(true);
+			vjMove.SetActive(true);
+			viFight.SetActive(true);
+			bInteract.SetActive(true);
+			bGather.SetActive(true);
+			bHide.SetActive(true);
+			bInventory.SetActive(true);
 
-            if (isInventoryOpen == true)
+            // Check if we was on Items and the tool bar wasn't hidden
+			if (isQuickAccessSlotsSwapped == true && isShown != false)
+			{
+                SetTools(true);
+                bMainWeapon.SetActive(true);
+                bSwap.SetActive(true);
+            }
+            // Check if we was on QASlots and the tool bar wasn't hidden
+            else if (isQuickAccessSlotsSwapped == false && isShown != false)
+			{
+                SetQuickAccessSlots(true);
+                bMainWeapon.SetActive(true);
+                bSwap.SetActive(true);
+            }			
+
+            // Check if inventory was open
+			if (isInventoryOpen == true)
             {
                 InventoryUI.SetActive(true);
 
@@ -388,84 +406,23 @@ public class UIManager : MonoSingleton<UIManager>
                 bGather.SetActive(false);
             }
 
-            if(isShown == false)
-			{
-                if (isQuickAccessSwapped == true)
-                {
-                    bTool1.SetActive(false);
-                    bTool2.SetActive(false);
-                    bTool3.SetActive(false);
-                    bTool4.SetActive(false);
-                    bTool5.SetActive(false);
-                    bMainWeapon.SetActive(false);
-                    bSwap.SetActive(false);
-                }
-                else
-                {
-                    bQuickAccess1.SetActive(false);
-                    bQuickAccess2.SetActive(false);
-                    bQuickAccess3.SetActive(false);
-                    bQuickAccess4.SetActive(false);
-                    bQuickAccess5.SetActive(false);
-                    bMainWeapon.SetActive(false);
-                    bSwap.SetActive(false);
-                }
-            }
-
-            if (isQuickAccessSwapped == false)
-            {
-                bTool1.SetActive(false);
-                bTool2.SetActive(false);
-                bTool3.SetActive(false);
-                bTool4.SetActive(false);
-                bTool5.SetActive(false);
-
-                bQuickAccess1.SetActive(true);
-                bQuickAccess2.SetActive(true);
-                bQuickAccess3.SetActive(true);
-                bQuickAccess4.SetActive(true);
-                bQuickAccess5.SetActive(true);
-            }
-            else
-            {
-                bTool1.SetActive(true);
-                bTool2.SetActive(true);
-                bTool3.SetActive(true);
-                bTool4.SetActive(true);
-                bTool5.SetActive(true);
-
-                bQuickAccess1.SetActive(false);
-                bQuickAccess2.SetActive(false);
-                bQuickAccess3.SetActive(false);
-                bQuickAccess4.SetActive(false);
-                bQuickAccess5.SetActive(false);
-            }
-
-        }
+		}
     }
 
     public void BuildModeUI()
 	{
-        if (isQuickAccessSwapped == true)
+        isBuildModeOn = true;
+
+        if (isQuickAccessSlotsSwapped == true)
         {
-            bTool1.SetActive(false);
-            bTool2.SetActive(false);
-            bTool3.SetActive(false);
-            bTool4.SetActive(false);
-            bTool5.SetActive(false);
-            bMainWeapon.SetActive(false);
-            bSwap.SetActive(false);
+            SetTools(false);
         }
         else
         {
-            bQuickAccess1.SetActive(false);
-            bQuickAccess2.SetActive(false);
-            bQuickAccess3.SetActive(false);
-            bQuickAccess4.SetActive(false);
-            bQuickAccess5.SetActive(false);
-            bMainWeapon.SetActive(false);
-            bSwap.SetActive(false);
+            SetQuickAccessSlots(false);
         }
+        bMainWeapon.SetActive(false);
+        bSwap.SetActive(false);
         bHide.SetActive(false);
         viFight.SetActive(false);
         InventoryUI.SetActive(false);
@@ -487,6 +444,18 @@ public class UIManager : MonoSingleton<UIManager>
             bGather.transform.GetChild(2).gameObject.SetActive(true);
         }
     }
+
+    public void ButtonCancel()
+	{
+        isBuildModeOn = false;
+
+
+    }
+
+    public void ButtonRotate()
+	{
+
+	}
 
     #endregion
 
