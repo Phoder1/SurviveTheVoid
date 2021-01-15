@@ -14,7 +14,8 @@ public enum SectionEnum
 public enum ProcessorType
 {
     CraftingTable,
-    Cooker
+    Cooker,
+    Furnace
 }
 
 
