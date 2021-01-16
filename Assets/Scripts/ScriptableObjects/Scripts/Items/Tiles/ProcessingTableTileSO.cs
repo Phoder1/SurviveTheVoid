@@ -62,6 +62,7 @@ public class ProcessingTableTileState : ITileState
     public bool isSpecialInteraction => tile.isSpecialInteraction;
 
 
+
     public void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
         throw new System.NotImplementedException();
     }
