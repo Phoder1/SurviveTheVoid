@@ -44,7 +44,7 @@ public class RemovalState : StateBase
         {
 
             gridManager.SetTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings, true);
-            CancelButtonChangeState(true);
+            CancelButtonChangeState(true); 
 
         }
     }
@@ -56,7 +56,6 @@ public class RemovalState : StateBase
         {
 
             PlayerStateMachine.GetInstance.SwitchState(InputState.BuildState);
-
         }
 
         else

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 public enum SectionEnum
 {
     Blocks,
@@ -25,7 +23,7 @@ public class RecipeSO : ScriptableObject
 
     [SerializeField]
     private ItemSlot[] ItemCostArr;
-    public ItemSlot[] getitemCostArr {get => ItemCostArr; }
+    public ItemSlot[] getitemCostArr { get => ItemCostArr; }
 
     [SerializeField]
     private ItemSlot outcomeItem;
@@ -52,21 +50,68 @@ public class RecipeSO : ScriptableObject
     private int CraftingTime;
     public int GetCraftingTime => CraftingTime;
 
-
-
-
-
-
-
-
-
-
-
-
     public void UpdateIfRecipeUnlocked(bool _unlocked)
     {
         isUnlocked = _unlocked;
     }
+
+
+
+
+
+
+
+    //For Multiple crafting only for the amount holder in the crafting manager!!!!
+
+    public void UpdateAmountHolder(ItemSlot[] itemCostArr,ItemSlot OutCome,int craftingTime)
+    {
+        int TempTime = craftingTime;
+
+
+        //seperating scriptable object 
+        ItemSO OutComeitemso = OutCome.item;
+        int OutComeAmount = OutCome.amount;
+        ItemSlot TempSlot = new ItemSlot(OutComeitemso, OutComeAmount);
+
+        ItemSO[] Costitemso = new ItemSO[itemCostArr.Length];
+        int[] CostAmount = new int[itemCostArr.Length];
+
+
+        
+        for (int i = 0; i < itemCostArr.Length; i++)
+        {
+            Costitemso[i] = itemCostArr[i].item;
+            CostAmount[i] = itemCostArr[i].amount;
+        }
+
+        ItemSlot[] TempArr = new ItemSlot[itemCostArr.Length];
+
+        for (int i = 0; i < TempArr.Length; i++)
+        {
+            TempArr[i] = new ItemSlot(Costitemso[i], CostAmount[i]);
+        }
+
+
+      
+
+        ItemCostArr = TempArr;
+        outcomeItem = TempSlot;
+        CraftingTime = TempTime;
+
+    } 
+
+    public void DoubleAmountOutCome(int Double)
+    {
+        outcomeItem.amount *= Double;
+        CraftingTime *= Double;
+        for (int i = 0; i < ItemCostArr.Length; i++)
+        {
+            ItemCostArr[i].amount *= Double;
+        }
+        Debug.Log("Testing Doubler: Outcome Amount: " + outcomeItem.amount + " Crafting Time: " + CraftingTime + " Amount: " + ItemCostArr[0].amount);
+    }
+
+   
 
 
 

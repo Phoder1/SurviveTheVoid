@@ -1,27 +1,58 @@
-﻿
+﻿using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerStats : MonoBehaviour
+public class PlayerStats : MonoSingleton<PlayerStats>
 {
 
-
-    int HP;
-    int hunger;
-    int EXP;
-    float speed=5;
-    int temperature;
-    int attackDMG;
+    float HP;
+    float hunger;
+    float EXP;
+    float moveSpeed;
+    float temperature;
+    float attackDMG;  
     int level;
-    public void Init()
+    float thirst;
+    float oxygen;
+    float awakeness;
+    float gatheringSpeed;
+
+    void ResetStats()
     {
-     
+        thirst = 100f;
+        hunger = 100f;
+        EXP = 0;
+        moveSpeed = 5f;
+        temperature = 50;
+        attackDMG = 5f;
+        level = 1;
+        oxygen = 100f;
+        awakeness = 100f;
+        gatheringSpeed = 2f;
+        HP = 100f;
+       
     }
 
-    public int GetSetHP { get { return HP; } set { HP = value; } }
-    public int GetSetHunger { get { return hunger; } set { hunger = value; } }
-    public int GetSetTemperature { get { return temperature; } set { temperature = value; } }
-    public int GetSetAttackDMG { get { return attackDMG; } set { attackDMG = value; } }
-    public int GetSetEXP { get { return EXP; } set { EXP = value; } }
-    public int GetSetLevel { get { return level; } set { level = value; } }
-    public float GetSetSpeed { get { return speed; } set { speed = value; } }
+    public override void Init()
+    {
+        ResetStats();
+    }
+
+    public float GetSetHP { get { return HP; } set { 
+            Debug.Log("HP is : " + HP);
+            HP = value; 
+            Debug.Log("HP is Now : " + HP); }
+    }
+    public float GetSetAwakeness { get { return awakeness; } set { awakeness = value; } }
+    public float GetSetOxygen { get { return oxygen; } set { oxygen = value; } }
+    public float GetSetThirst { get { return thirst; } set { thirst = value; } }
+    public float GetSetHunger { get { return hunger; } set { Debug.Log("Hunger is Now : " + hunger); hunger = value; Debug.Log("Hunger is Now : " + hunger); } }
+    public float GetSetTemperature { get { return temperature; } set { temperature = value; } }
+    public float GetSetAttackDMG { get { return attackDMG; } set { attackDMG = value; } }
+    public float GetSetEXP { get { return EXP; } set { EXP = value; } }
+    public int GetLevel { get { return level; } }
+    public float GetSetSpeed { get { return moveSpeed; } set { moveSpeed = value; } }
+    public float GetSetGatheringSpeed { get { return gatheringSpeed; } set { gatheringSpeed = value; } }
+
+
 }

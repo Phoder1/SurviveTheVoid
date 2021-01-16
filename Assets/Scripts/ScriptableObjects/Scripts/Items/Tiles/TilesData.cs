@@ -2,7 +2,7 @@
 using UnityEngine.Tilemaps;
 
 
-public enum InteractionType { None, Axe, Pickaxe, Hoe, Shovel, Hammer, AnyTool, Special, Any }
+public enum ToolType { Axe, Pickaxe, Hoe, Shovel, Hammer, AnyTool, Any }
 public enum TileType { Block, Gatherable, Chest, ProcessingTable, LightSource }
 #region Tile hit
 public class TileHit
@@ -21,10 +21,18 @@ public class TileHit
 public abstract class TileAbstSO : ItemSO
 {
     [SerializeField] private TileBase mainTileBase;
-    [SerializeField] private InteractionType interactionType;
     [SerializeField] private bool isSolid;
     public TileBase GetMainTileBase => mainTileBase;
-    public InteractionType GetInteractionType => interactionType;
+    public bool isSpecialInteraction {
+        get {
+            switch (GetTileType) {
+                case TileType.Block:
+                    return false;
+                default:
+                    return true;
+            }
+        }
+    }
     public TileType GetTileType {
         get {
             switch (this) {
@@ -49,13 +57,13 @@ public interface ITileState
 {
     TileBase GetMainTileBase { get; }
     TileAbstSO GetTileAbst { get; }
-    InteractionType GetInteractionType { get; }
     TileType GetTileType { get; }
     bool GetIsSolid { get; }
+    bool isSpecialInteraction { get; }
     void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer);
     void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer);
     void CancelEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer);
-    void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer);
+    void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool generation = true);
 }
 public class TileSlot : ITileState
 {
@@ -81,10 +89,18 @@ public class TileSlot : ITileState
 
         }
     }
+    public bool IsGatherable {
+        get {
+            if(tileState is GatherableState gatherable) {
+                return gatherable.GetIsGatherable;
+            }
+            return false;
+        }
+    }
+    public bool isSpecialInteraction => tileState.isSpecialInteraction;
     #region Passthrough
     public virtual TileBase GetMainTileBase => tileState.GetMainTileBase;
     public virtual TileAbstSO GetTileAbst => tileState.GetTileAbst;
-    public virtual InteractionType GetInteractionType => tileState.GetInteractionType;
     public virtual TileType GetTileType => tileState.GetTileType;
     public virtual bool GetIsSolid => tileState.GetIsSolid;
 
@@ -96,7 +112,7 @@ public class TileSlot : ITileState
     public virtual void CancelEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer)
         => tileState.CancelEvent(gridPosition, tilemapLayer);
 
-    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer)
+    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool playerAction = true)
         => tileState.Init(gridPosition, tilemapLayer);
     #endregion
 }

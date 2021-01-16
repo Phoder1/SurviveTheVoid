@@ -16,15 +16,40 @@ public class ProcessingTableTileState : ITileState
 {
     public ProcessingTableTileSO tile;
     public TimeEvent eventInstance;
-    public float craftingTimeEnd;
-    private bool isCrafting;
-    public bool IsCrafting { get => isCrafting; 
-        set => isCrafting = value;
-    }
     public ProcessingTableTileState(ProcessingTableTileSO tile) {
         this.tile = tile;
     }
+    public RecipeSO craftingRecipe;
+    private float craftingStartTime;
+    public int amount;
+    public int ItemsCrafted => Mathf.Min(Mathf.FloorToInt((Time.time - craftingStartTime) / craftingRecipe.GetCraftingTime), amount);
+    public float CraftingTimeRemaining => (craftingStartTime  + craftingRecipe.GetCraftingTime * amount) - Time.time;
+    private bool isCrafting;
+    public bool IsCrafting {
+        get => isCrafting;
+        set => isCrafting = value;
+    }
+    public void StartCrafting(RecipeSO recipe, int amount) {
+        if (isCrafting)
+            throw new System.Exception();
+        craftingRecipe = recipe;
+        craftingStartTime = Time.time;
+        this.amount = amount;
+    }
+    public void CollectItems(int numOfItems) {
+        amount -= numOfItems;
+        if(amount == 0) {
+            ResetCrafting();
+        }
+        if(amount < 0) {
+            throw new System.NotImplementedException();
+        }
+    }
+    public void ResetCrafting() {
+        isCrafting = false;
+        craftingRecipe = null;
 
+    }
     public TileBase GetMainTileBase {
         get {
             if (IsCrafting) {
@@ -37,11 +62,12 @@ public class ProcessingTableTileState : ITileState
     }
     public TileAbstSO GetTileAbst => tile;
 
-    public InteractionType GetInteractionType => throw new System.NotImplementedException();
+    public ToolType GetInteractionType => throw new System.NotImplementedException();
 
     public TileType GetTileType => throw new System.NotImplementedException();
 
-    public bool GetIsSolid => throw new System.NotImplementedException();
+    public bool GetIsSolid => tile.GetIsSolid;
+    public bool isSpecialInteraction => tile.isSpecialInteraction;
 
 
     public void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
@@ -52,9 +78,9 @@ public class ProcessingTableTileState : ITileState
     }
 
     public void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
-        UIManager._instance.ToggleCraftingUI(tile.GetProcessorType);
+        UIManager._instance.SetCraftingUIState(true,tile.GetProcessorType,this);
     }
 
-    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer) { }
+    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool playerAction = true) { }
 }
 
