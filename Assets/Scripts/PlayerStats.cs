@@ -8,9 +8,9 @@ public class PlayerStats : MonoSingleton<PlayerStats>
     float HP;
     float hunger;
     float EXP;
-    float speed = 5;
+    float moveSpeed;
     float temperature;
-    float attackDMG;
+    float attackDMG;  
     int level;
     float thirst;
     float oxygen;
@@ -19,17 +19,17 @@ public class PlayerStats : MonoSingleton<PlayerStats>
 
     void ResetStats()
     {
-        thirst = 100;
-        hunger = 50;
+        thirst = 100f;
+        hunger = 100f;
         EXP = 0;
-        speed = 5f;
+        moveSpeed = 5f;
         temperature = 50;
-        attackDMG = 20;
+        attackDMG = 5f;
         level = 1;
-        oxygen = 100;
-        awakeness = 100;
+        oxygen = 100f;
+        awakeness = 100f;
         gatheringSpeed = 2f;
-        HP = 50;
+        HP = 100f;
        
     }
 
@@ -51,7 +51,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
     public float GetSetAttackDMG { get { return attackDMG; } set { attackDMG = value; } }
     public float GetSetEXP { get { return EXP; } set { EXP = value; } }
     public int GetLevel { get { return level; } }
-    public float GetSetSpeed { get { return speed; } set { speed = value; } }
+    public float GetSetSpeed { get { return moveSpeed; } set { moveSpeed = value; } }
     public float GetSetGatheringSpeed { get { return gatheringSpeed; } set { gatheringSpeed = value; } }
 
 
