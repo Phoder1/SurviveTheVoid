@@ -341,42 +341,19 @@ public class Inventory
         return checkForItem;
     }
 
-    public bool CheckEnoughItemsForRecipe(RecipeSO recipe) //, TileSlot workBench
+    public bool CheckEnoughItemsForRecipe(RecipeSO recipe, int amount = 1) //, TileSlot workBench
     {
         bool haveAllIngridients = true;
-        
 
-        foreach (var item in recipe.getitemCostArr)
-        {
-            haveAllIngridients = haveAllIngridients && HaveEnoughOfItemFromInventory(0, item);
+
+        foreach (var item in recipe.getitemCostArr) {
+            haveAllIngridients &= HaveEnoughOfItemFromInventory(0, new ItemSlot(item.item, item.amount * amount));
             if (!haveAllIngridients)
-            {
-                haveAllIngridients = false;
                 break;
-            }
         }
 
-        if (haveAllIngridients)
-        {
-            for (int i = 0; i < recipe.getitemCostArr.Length; i++)
-            {
-                RemoveItemFromInventory(0, recipe.getitemCostArr[i]);
-            }
-
-            // workBench.add(,recipe.getoutcomeItem);
-
-
-            if (GetAmountOfItem(0, null) > 0 || GetAmountOfItem(0, recipe.getoutcomeItem) < recipe.getoutcomeItem.item.getmaxStackSize)
-            {
-                AddToInventory(0, recipe.getoutcomeItem);
-            }
-            else
-            {
-                for (int i = 0; i < recipe.getitemCostArr.Length; i++)
-                {
-                    AddToInventory(0, recipe.getitemCostArr[i]);
-                }
-            }
+        if (haveAllIngridients) {
+            //Craft(recipe);
 
         }
         else
@@ -386,6 +363,25 @@ public class Inventory
 
         return haveAllIngridients;
     }
+
+    private void Craft(RecipeSO recipe) {
+        for (int i = 0; i < recipe.getitemCostArr.Length; i++) {
+            RemoveItemFromInventory(0, recipe.getitemCostArr[i]);
+        }
+
+        // workBench.add(,recipe.getoutcomeItem);
+
+
+        if (GetAmountOfItem(0, null) > 0 || GetAmountOfItem(0, recipe.getoutcomeItem) < recipe.getoutcomeItem.item.getmaxStackSize) {
+            AddToInventory(0, recipe.getoutcomeItem);
+        }
+        else {
+            for (int i = 0; i < recipe.getitemCostArr.Length; i++) {
+                AddToInventory(0, recipe.getitemCostArr[i]);
+            }
+        }
+    }
+
 
     bool HaveEnoughOfItemFromInventory(int chestID, ItemSlot item)
     {
