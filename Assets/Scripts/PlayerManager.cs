@@ -197,7 +197,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
 
         if (ScanMod)
         {
-            float timeToHarvest = ((PlantTileSO)closestTile.tile.GetTileAbst).GetGatheringTime;
+            float timeToHarvest = 0; // ((PlantTileSO)closestTile.tile.GetTileAbst);
 
             if (_GridManager.WorldToGridPosition(transform.position, buildingLayer) != closestTile.gridPosition)
             {
