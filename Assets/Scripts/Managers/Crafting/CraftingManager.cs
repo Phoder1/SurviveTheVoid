@@ -1,5 +1,4 @@
-﻿using NUnit.Framework.Constraints;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -410,26 +409,37 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
                 }
                 else
                 {
-                    ShowRecipe(selectedRecipe);
+                    
+
+                    //if(inventory.RemoveItemFromInventory(0,new ItemSlot()))
+
 
                     inventory.RemoveItemsByRecipe(selectedRecipe, UIManager._instance.getCraftingAmount);
                     UIManager._instance.CurrentProcessTile.StartCrafting(selectedRecipe, (selectedRecipe.getoutcomeItem.amount * UIManager._instance.getCraftingAmount));
-
-
-
+                    ShowRecipe(selectedRecipe);
                 }
             }
         }
         else if (buttonState == ButtonState.Collect)
         {
             //collect items
-            inventory.AddItemsByRecipe(selectedRecipe, UIManager._instance.CurrentProcessTile.ItemsCrafted);
-            UIManager._instance.CurrentProcessTile.CollectItems(UIManager._instance.CurrentProcessTile.ItemsCrafted);
+            for (int i = UIManager._instance.CurrentProcessTile.ItemsCrafted; i > 0; i--)
+            {
+                
+                if (inventory.AddToInventory(0,new ItemSlot(selectedRecipe.getoutcomeItem.item, i * selectedRecipe.getoutcomeItem.amount)))
+                {
+                    UIManager._instance.CurrentProcessTile.CollectItems(i);
+                    break;
+                }
 
-            if (UIManager._instance.CurrentProcessTile.ItemsCrafted <= 0)
+            }
+            
+           
+
+            if (!UIManager._instance.CurrentProcessTile.IsCrafting)
             {
                 buttonState = ButtonState.CanCraft;
-                UIManager._instance.SetButtonToState(buttonState,0,0,0);
+                UIManager._instance.SetButtonToState(buttonState, 0, 0, 0);
             }
 
 

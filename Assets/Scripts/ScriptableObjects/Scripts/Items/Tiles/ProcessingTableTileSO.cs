@@ -72,6 +72,14 @@ public class ProcessingTableTileState : ITileState
             throw new System.NotImplementedException();
         }
     }
+    public void AddToQueue(int numOfItems)
+    {
+        amount += numOfItems;
+        craftingStartTime -= craftingRecipe.GetCraftingTime * numOfItems;
+       
+    }
+
+
     public void ResetCrafting()
     {
         isCrafting = false;
