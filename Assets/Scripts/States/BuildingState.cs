@@ -1,13 +1,16 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.Tilemaps;
 
 public class BuildingState : StateBase
 {
-    Vector2 touchPosition;
-    TileHit currentTileHit , newTileHit;
+    Vector2 touchPosition ;
+    TileHit currentTileHit , lastTileHit;
     TileSlot tileSlotCache;
-    bool isBuildingAttached;
-    List<Vector2Int> TileList = new List<Vector2Int>();
+    bool isBuildingAttached, canBeOnFloor , toPutOnFloor, isFloorLayer;
+    List<Vector2Int> FloorLayerTileList = new List<Vector2Int>();
+    List<Vector2Int>BuildingLayerTileList = new List<Vector2Int>();
     GridManager gridManager;
 
     public BuildingState() { gridManager = GridManager._instance; }
@@ -31,47 +34,153 @@ public class BuildingState : StateBase
             case TouchPhase.Began:
             case TouchPhase.Moved:
 
-
-                touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
-
-                currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
-                if (tileSlotCache == null || currentTileHit == null || currentTileHit.tile == null || gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) != null)
+                if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject())
                     return;
 
 
+                touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
+
+                if (Vector3.Distance(touchPosition, PlayerManager._instance.GetComponent<Transform>().position) > 5f) {
+                   // tileSlotCache = null;
+
+                    if (FloorLayerTileList.Count >= 1)
+                    {
+                        for (int i = 0; i < FloorLayerTileList.Count; i++)
+                        {
+                            gridManager.SetTile(null, FloorLayerTileList[i], TileMapLayer.Floor, false);
+                        }
+                        FloorLayerTileList.Clear();
+                    }
+
+
+                    if (BuildingLayerTileList.Count >= 1)
+                    {
+                        for (int i = 0; i < BuildingLayerTileList.Count; i++)
+                        {
+                            gridManager.SetTile(null, BuildingLayerTileList[i], TileMapLayer.Buildings, false);
+                        }
+                        BuildingLayerTileList.Clear();
+                    }
+                    return;
+                }
+
+                
+
+                currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
+
+
+                if (tileSlotCache.GetTileType != TileType.Block) { 
+                 
+                    isFloorLayer = false;
+                    canBeOnFloor = false;
+                }
+                else { 
+
+                    isFloorLayer = true;
+                    canBeOnFloor = true;
+                }
+                
+                if (currentTileHit == null)
+                    break;
+
+                if (canBeOnFloor && currentTileHit.tile != null && gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) == null)
+                {
+                    isFloorLayer = false;
+                }
+
                 isBuildingAttached = true;
 
-                if (newTileHit != null && newTileHit.gridPosition == currentTileHit.gridPosition)
+
+
+
+
+
+
+
+
+
+
+
+                if (lastTileHit != null && lastTileHit.gridPosition == currentTileHit.gridPosition)
                 {
 
-                    gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Buildings, false);
-                    if (!TileList.Contains(currentTileHit.gridPosition))
+                    if (isFloorLayer)
                     {
-                        TileList.Add(currentTileHit.gridPosition);
-                    }
-                }
-                else
-                {
-                    if (TileList.Count > 0)
-                    {
-                        foreach (var tile in TileList)
+
+                        if (canBeOnFloor)
                         {
-                            if (tile == null)
-                                continue;
 
-                            gridManager.SetTile(null, tile, TileMapLayer.Buildings, false);
+                            if (currentTileHit.tile == null)
+                            {
+                                if (!FloorLayerTileList.Contains(currentTileHit.gridPosition))
+                                    FloorLayerTileList.Add(currentTileHit.gridPosition);
+
+                                gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Floor, false);
+                                toPutOnFloor = true;
+
+                            }
                         }
-                        TileList.Clear();
+
+
+
                     }
-                    newTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
+                    else
+                    {
+
+                        if (currentTileHit.tile!= null && !isFloorLayer && !FloorLayerTileList.Contains(currentTileHit.gridPosition))
+                        {
+                        if (!BuildingLayerTileList.Contains(currentTileHit.gridPosition))
+                            BuildingLayerTileList.Add(currentTileHit.gridPosition);
+
+                            gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Buildings, false);
+                            toPutOnFloor = false;
+
+                        }
+                        
 
 
+                    }
 
-                    if (newTileHit == null || gridManager.GetTileFromGrid(newTileHit.gridPosition, TileMapLayer.Buildings) != null)
-                        gridManager.SetTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings, false);
+                    return;
 
-                    currentTileHit = newTileHit;
                 }
+
+                    if (FloorLayerTileList.Count >= 1)
+                    {
+                        for (int i = 0; i < FloorLayerTileList.Count; i++)
+                        {
+                            gridManager.SetTile(null, FloorLayerTileList[i], TileMapLayer.Floor, false);
+                        }
+                        FloorLayerTileList.Clear();
+                    }
+
+
+                    if (BuildingLayerTileList.Count >= 1)
+                    {
+                        for (int i = 0; i < BuildingLayerTileList.Count; i++)
+                        {
+                            gridManager.SetTile(null, BuildingLayerTileList[i], TileMapLayer.Buildings, false);
+                        }
+                        BuildingLayerTileList.Clear();
+                    }
+
+
+                //newTileHit = currentTileHit;
+
+
+                lastTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
+                
+
+
+
+
+                if (lastTileHit == null)
+                    break;
+
+
+
+
+
 
                 break;
         }
@@ -79,26 +188,21 @@ public class BuildingState : StateBase
 
     public void PressedConfirmBuildingButton()
     {
-        if (!isBuildingAttached || tileSlotCache == null || (currentTileHit == null && TileList.Count < 1))
+        if (!isBuildingAttached || tileSlotCache == null ||  currentTileHit.tile == null )
             return;
 
-        if (TileList.Count >= 1)
+
+        if (toPutOnFloor)
         {
-            for (int i = 0; i < TileList.Count; i++)
-            {
-                gridManager.SetTile(null, TileList[i], TileMapLayer.Buildings, true);
-            }
+                     gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Floor, true);
+
         }
-
-
-        if (currentTileHit == null || currentTileHit.gridPosition == null)
-            gridManager.SetTile(tileSlotCache, TileList[0], TileMapLayer.Buildings, true);
         else
-            gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Buildings, true);
+        {
+                  gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Buildings, true);
 
-
-
-        newTileHit = null;
+        }
+        lastTileHit = null;
 
         currentTileHit = null;
 
@@ -114,7 +218,8 @@ public class BuildingState : StateBase
             tileSlotCache = null;
         }
 
-        TileList.Clear();
+        FloorLayerTileList.Clear();
+        BuildingLayerTileList.Clear();
         Debug.Log("Placed");
 
 
@@ -125,13 +230,13 @@ public class BuildingState : StateBase
         if (Item == null)
             return;
 
-        newTileHit = null;
+        lastTileHit = null;
         currentTileHit = null;
         tileSlotCache = new TileSlot(Item);
     }
     public Vector2 GetTouchPosition => touchPosition;
     public TileHit GetCurrentTileHit => currentTileHit;
-    public TileHit GetNewTileHit => newTileHit;
+    public TileHit GetNewTileHit => lastTileHit;
     public bool GetIsBuildingAttached => isBuildingAttached;
         
 }
