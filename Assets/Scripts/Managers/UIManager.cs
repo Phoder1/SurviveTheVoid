@@ -252,7 +252,7 @@ public class UIManager : MonoSingleton<UIManager>
 	//Slider amount related
 	public void OnChangeGetCraftingAmount()
 	{
-		if(craftingManager.CurrentProcessTile != null)
+		if(craftingManager.CurrentProcessTile != null && craftingManager.selectedRecipe != null)
 		{
 			if (craftingManager.CurrentProcessTile.amount <= craftingManager.selectedRecipe.getoutcomeItem.item.getmaxStackSize)
 			{
@@ -305,7 +305,6 @@ public class UIManager : MonoSingleton<UIManager>
 		craftingManager.CurrentProcessTile = tile;
 		if (craftingManager.CurrentProcessTile.IsCrafting)
 			ShowTimeAndCollectable( tile.ItemsCrafted, tile.amount, tile.CraftingTimeRemaining);
-
 	}
 	bool IsCrafting;
 	public void ToggleMultiple()
@@ -320,7 +319,7 @@ public class UIManager : MonoSingleton<UIManager>
 				amountSlider.value = 1;
 				OnChangeGetCraftingAmount();
 			}
-			else
+			else if(craftingManager.selectedRecipe != null)
 			{
 				SliderBackGround.SetActive(!SliderBackGround.activeInHierarchy);
 				if (!SliderBackGround.activeInHierarchy)
