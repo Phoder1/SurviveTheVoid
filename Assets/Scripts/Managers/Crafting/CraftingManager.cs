@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public enum ButtonState
 {
-    Craft,
+    CanCraft,
     Collect,
     Crafting
 }
@@ -111,8 +111,8 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
         inventory = Inventory.GetInstance;
         inventoryUI = InventoryUIManager._instance;
-        buttonState = ButtonState.Craft;
-        UIManager._instance.SetButtonToState(buttonState);
+        buttonState = ButtonState.CanCraft;
+       // UIManager._instance.SetButtonToState(buttonState);
         ImportSlots();
         AddRecipeToList();
         InstantiateItemSlots();
@@ -359,13 +359,10 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
     public void AttemptToCraft()
     {
-        if (buttonState == ButtonState.Craft)
+        if (buttonState == ButtonState.CanCraft)
         {
             if (selectedRecipe != null)
             {
-               
-
-
                 if (!inventory.CheckEnoughItemsForRecipe(AmountHolder))
                 {
                     Debug.Log("Not Enough Materials");
@@ -380,10 +377,14 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         }
         else if (buttonState == ButtonState.Collect)
         {
+           //collect items
+
+
             Debug.Log("Collect your item");
         }
         else if (buttonState == ButtonState.Crafting)
         {
+            //you craft but there is no items to collect
             Debug.Log("You are still crafting");
         }
 
