@@ -1,13 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-
+public enum ButtonState
+{
+    Craft,
+    Collect,
+    Crafting
+}
 
 public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 {
+    public ButtonState buttonState;
     public ItemPackSO items;
     public RecipePackSO recipes;
     public Transform sectionHolder;
@@ -32,48 +39,51 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         }
     }
 
+
+
+
     [FormerlySerializedAs("SelectedRecipe")]
     [HideInInspector]
     public RecipeSO selectedRecipe;
 
     private Inventory inventory;
     InventoryUIManager inventoryUI;
-
+    [SerializeField] RecipeSO AmountHolder;
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            GetSetProcessor = ProcessorType.Cooker;
-        }
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            GetSetProcessor = ProcessorType.CraftingTable;
-        }
+        //if (Input.GetKeyDown(KeyCode.T))
+        //{
+        //    GetSetProcessor = ProcessorType.Cooker;
+        //}
+        //if (Input.GetKeyDown(KeyCode.Y))
+        //{
+        //    GetSetProcessor = ProcessorType.CraftingTable;
+        //}
 
 
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[4], 1));
+            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[5], 1));
             ShowRecipe(selectedRecipe);
             inventoryUI.UpdateInventoryToUI();
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
-            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[7], 1));
+            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[8], 1));
             inventoryUI.UpdateInventoryToUI();
             ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
-            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[4], 1));
+            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[5], 1));
             inventoryUI.UpdateInventoryToUI();
             ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.V))
         {
-            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[7], 1));
+            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[8], 1));
             inventoryUI.UpdateInventoryToUI();
             ShowRecipe(selectedRecipe);
         }
@@ -101,10 +111,13 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
         inventory = Inventory.GetInstance;
         inventoryUI = InventoryUIManager._instance;
+        buttonState = ButtonState.Craft;
+        UIManager._instance.SetButtonToState(buttonState);
         ImportSlots();
-		AddRecipeToList();
-		InstantiateItemSlots();
+        AddRecipeToList();
+        InstantiateItemSlots();
         SelectSection("Blocks");
+
 
     }
 
@@ -185,6 +198,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
                         GameObject instiatedSlot = Instantiate(ItemSlotPrefab, sectionHolder.GetChild(i).gameObject.transform.GetChild(0).transform);
                         instiatedSlot.transform.GetChild(0).GetComponent<Image>().sprite = section.recipeList[j].getoutcomeItem.item.getsprite;
+                        instiatedSlot.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = section.recipeList[j].getoutcomeItem.item.getItemName;
 
                         // add function to the buttons
                         int Index = j;
@@ -211,15 +225,15 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     }
 
 
-	void AddRecipeToList()
-	{
-		foreach (RecipeSO recipe in recipes.getrecipesArr)
-		{
-			GetSection(recipe.getSection).UpdateRecipeList(recipe);
-		}
-	}
+    void AddRecipeToList()
+    {
+        foreach (RecipeSO recipe in recipes.getrecipesArr)
+        {
+            GetSection(recipe.getSection).UpdateRecipeList(recipe);
+        }
+    }
 
-	private Section GetSection(SectionEnum _section)
+    private Section GetSection(SectionEnum _section)
     {
 
         for (int j = 0; j < sections.Length; j++)
@@ -303,10 +317,10 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
                 {
                     recipeMaterialSlots[i].gameObject.SetActive(true);
                 }
-                Text materialNameText = recipeMaterialSlots[i].transform.GetChild(0).GetComponent<Text>();
-                materialNameText.text = recipe.getitemCostArr[i].item.getItemName;
-                Text materialCostText = recipeMaterialSlots[i].transform.GetChild(1).GetComponent<Text>();
-                materialCostText.text = inventory.GetAmountOfItem(0, recipe.getitemCostArr[i]).ToString() + " / " + recipe.getitemCostArr[i].amount;
+                TextMeshProUGUI materialNameText = recipeMaterialSlots[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+                materialNameText.text = AmountHolder.getitemCostArr[i].item.getItemName;
+                TextMeshProUGUI materialCostText = recipeMaterialSlots[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+                materialCostText.text = inventory.GetAmountOfItem(0, AmountHolder.getitemCostArr[i]).ToString() + " / " + AmountHolder.getitemCostArr[i].amount;
                 recipeMaterialSlots[i].GetComponent<Image>().sprite = recipe.getitemCostArr[i].item.getsprite;
             }
             else
@@ -326,26 +340,53 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
     // public ResourceStruct CraftResource(Recipe recipe) { return resourceStruct; }
     bool IsCrafting;
-    public void AttemptToCraft()
-    {
-        if (!IsCrafting && selectedRecipe != null)
-        {
-            if (!inventory.CheckEnoughItemsForRecipe(selectedRecipe))
-            {
-                Debug.Log("Not Enough Materials");
-            }
-            else
-            {
-                ShowRecipe(selectedRecipe);
-                IsCrafting = true;
-                startcount = true;
-            }
 
+
+    public void UpdateMatsAmount()
+    {
+        if (selectedRecipe != null)
+        {
+            AmountHolder.UpdateAmountHolder(selectedRecipe.getitemCostArr, selectedRecipe.getoutcomeItem, selectedRecipe.GetCraftingTime);
+            AmountHolder.DoubleAmountOutCome(UIManager._instance.getCraftingAmount);
+            ShowRecipe(selectedRecipe);
         }
         else
         {
-            Debug.Log("You are crafting Currently");
+            Debug.Log("Selected recipe is null");
         }
+    }
+
+
+    public void AttemptToCraft()
+    {
+        if (buttonState == ButtonState.Craft)
+        {
+            if (selectedRecipe != null)
+            {
+               
+
+
+                if (!inventory.CheckEnoughItemsForRecipe(AmountHolder))
+                {
+                    Debug.Log("Not Enough Materials");
+                }
+                else
+                {
+                    ShowRecipe(AmountHolder);
+                    IsCrafting = true;
+                    startcount = true;
+                }
+            }
+        }
+        else if (buttonState == ButtonState.Collect)
+        {
+            Debug.Log("Collect your item");
+        }
+        else if (buttonState == ButtonState.Crafting)
+        {
+            Debug.Log("You are still crafting");
+        }
+
     }
     [SerializeField] float Timer;
     bool startcount;
@@ -444,6 +485,7 @@ public class Section
         {
             ChangeSectionSelection(value);
             isSelected = value;
+            
         }
     }
 
@@ -542,6 +584,7 @@ public class Section
         {
             CraftingManager._instance.selectedRecipe = recipeList[slotNum];
             CraftingManager._instance.ShowRecipe(recipeList[slotNum]);
+           CraftingManager._instance.UpdateMatsAmount();
         }
         else
         {
@@ -593,4 +636,8 @@ public class Section
 
 
 }
+
+
+
+
 

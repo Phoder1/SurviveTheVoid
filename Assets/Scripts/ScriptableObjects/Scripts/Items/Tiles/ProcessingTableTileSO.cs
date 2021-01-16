@@ -52,7 +52,7 @@ public class ProcessingTableTileState : ITileState
     }
 
     public void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
-        UIManager._instance.ToggleCraftingUI(tile.GetProcessorType);
+        UIManager._instance.SetCraftingUIState(true,tile.GetProcessorType,this.tile);
     }
 
     public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer) { }
