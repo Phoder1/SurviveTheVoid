@@ -665,6 +665,7 @@ public class UIManager : MonoSingleton<UIManager>
 
 	#endregion
 
+
 	#region States
 	[Header("States related")]
 	[SerializeField] TextMeshProUGUI StateText;
