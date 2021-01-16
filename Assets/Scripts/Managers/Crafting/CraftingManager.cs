@@ -308,6 +308,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     }
     public void ShowRecipe(RecipeSO recipe)
     {
+        UpdateMatsAmount();
         int matsAmount = recipe.getitemCostArr.Length;
         for (int i = 0; i < recipeMaterialSlots.Length; i++)
         {

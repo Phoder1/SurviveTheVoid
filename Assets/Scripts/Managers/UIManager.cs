@@ -207,9 +207,7 @@ public class UIManager : MonoSingleton<UIManager>
 				}
 
 			}
-
 		}
-
 	}
 
 
@@ -230,6 +228,8 @@ public class UIManager : MonoSingleton<UIManager>
 		CraftingUI.SetActive(IsActive);
 		craftingManager.GetSetProcessor = _type;
 		CurrentProcessTile = Tile;
+		//ShowTimeAndCollectable(CurrentProcessTile.CraftingTimeRemaining, CurrentProcessTile.ItemsCrafted, CurrentProcessTile.amount);
+		
 	}
 
 	#endregion
