@@ -48,14 +48,15 @@ public class ProcessingTableTileState : ITileState
     {
         get => isCrafting;
         set {
-            if (value != isCrafting)
+            if (value != isCrafting) {
+                isCrafting = value;
                 GridManager._instance.SetTile(tileSlot, gridPosition, TileMapLayer.Buildings, true);
-            isCrafting = value;
+            }
         }
     }
     public void StartCrafting(RecipeSO recipe, int amount)
     {
-        if (isCrafting)
+        if (IsCrafting)
             throw new System.Exception();
         craftingRecipe = recipe;
         craftingStartTime = Time.time;
@@ -86,7 +87,7 @@ public class ProcessingTableTileState : ITileState
 
     public void ResetCrafting()
     {
-        isCrafting = false;
+        IsCrafting = false;
         craftingRecipe = null;
 
     }
