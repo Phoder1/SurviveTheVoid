@@ -16,8 +16,11 @@ public class ProcessingTableTileState : ITileState
 {
     public ProcessingTableTileSO tile;
     public TimeEvent eventInstance;
-    public ProcessingTableTileState(ProcessingTableTileSO tile)
+    public Vector2Int gridPosition;
+    public TileSlot tileSlot;
+    public ProcessingTableTileState(ProcessingTableTileSO tile, TileSlot tileSlot)
     {
+        this.tileSlot = tileSlot;
         this.tile = tile;
     }
     public RecipeSO craftingRecipe;
@@ -34,20 +37,21 @@ public class ProcessingTableTileState : ITileState
     }
     public float CraftingTimeRemaining
     {
-        get
-        {
-
-            if (!IsCrafting) return 0;
+        get {
+            if (!IsCrafting)
+                return 0;
             return Mathf.Max((craftingStartTime + craftingRecipe.GetCraftingTime * amount) - Time.time, 0);
-
         }
-
     }
     private bool isCrafting;
     public bool IsCrafting
     {
         get => isCrafting;
-        set => isCrafting = value;
+        set {
+            if (value != isCrafting)
+                GridManager._instance.SetTile(tileSlot, gridPosition, TileMapLayer.Buildings, true);
+            isCrafting = value;
+        }
     }
     public void StartCrafting(RecipeSO recipe, int amount)
     {
@@ -122,6 +126,7 @@ public class ProcessingTableTileState : ITileState
 
     public void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer)
     {
+        this.gridPosition = gridPosition;
         UIManager._instance.SetCraftingUIState(true, tile.GetProcessorType, this);
     }
 
