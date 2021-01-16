@@ -126,10 +126,11 @@ public class ProcessingTableTileState : ITileState
 
     public void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer)
     {
-        this.gridPosition = gridPosition;
         UIManager._instance.SetCraftingUIState(true, tile.GetProcessorType, this);
     }
 
-    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool playerAction = true) { }
+    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool playerAction = true) {
+        this.gridPosition = gridPosition;
+    }
 }
 
