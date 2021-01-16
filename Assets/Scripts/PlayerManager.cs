@@ -15,7 +15,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     private Scanner _scanner;
 
 
-    [SerializeField] internal Camera cameraComp;
+    private Camera cameraComp;
 
     private Vector2 GetCameraRealSize => new Vector2(cameraComp.orthographicSize * 2 * cameraComp.aspect, cameraComp.orthographicSize * 2);
 
@@ -40,7 +40,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
 
     public override void Init()
     {
-
+        cameraComp = GetComponentInChildren<Camera>();
         buildingLayer = TileMapLayer.Buildings;
         _scanner = new Scanner();
         _inputManager = InputManager._instance;
@@ -58,7 +58,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
 
 
 
-        if (movementVector != Vector2.zero)
+        if (movementVector != Vector2.zero&&!Interracted)
         {
             FindDirection();
             WalkTowards(movementVector, false);
@@ -182,9 +182,11 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     {
         float speed = playerStats.GetSetSpeed;
         playerStats.GetSetSpeed = 0;
+        Interracted = true;
         yield return new WaitForSeconds(Time);
         playerStats.GetSetSpeed = speed;
         Tile.tile.GatherInteraction(closestTile.gridPosition, buildingLayer);
+        Interracted = false;
         closestTile = null;
         Debug.Log("TileHarvested");
 
@@ -203,11 +205,15 @@ public class PlayerManager : MonoSingleton<PlayerManager>
 
             if (_GridManager.WorldToGridPosition(transform.position, buildingLayer) != closestTile.gridPosition)
             {
-               // if (_GridManager.IsTileWalkable(nextPos, destination) || Input.GetKey(KeyCode.LeftShift))
-                //{
+                destination = (destination - transform.position).normalized * Time.fixedDeltaTime / playerStats.GetSetSpeed;
+                currentPos = transform.position;
+                nextPos = currentPos + new Vector2(destination.x, destination.y);
 
-                    transform.Translate((destination - transform.position).normalized * Time.fixedDeltaTime / playerStats.GetSetSpeed);
-                //}
+                if (_GridManager.IsTileWalkable(nextPos, destination) || Input.GetKey(KeyCode.LeftShift))
+                {
+                    
+                    transform.Translate(destination);
+                }
 
 
             }
