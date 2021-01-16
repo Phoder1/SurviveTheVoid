@@ -139,10 +139,14 @@ MonoBehaviour:
   - tile: {fileID: 11400000, guid: 73236a474193ae74fb0fa5a3fa9cb38f, type: 2}
     distance: 3000
     overlapStart: 1500
-  buildingsGeneration: [{tile: {fileID: 11400000, guid: 7dc96620b1c6f304c9f91c9ba389fe39,
-        type: 2}, chance: 0.01, distance: 2000, spread: 250, global: 1}, {tile: {
-        fileID: 11400000, guid: 6ae7fda4f7596d84e8d77af3f94f2a4f, type: 2}, chance: 0.01,
-      distance: 2000, spread: 250, global: 1}]
+  buildingsGeneration:
+  - tile: {fileID: 11400000, guid: 6ae7fda4f7596d84e8d77af3f94f2a4f, type: 2}
+    chance: 0.01
+    distance: 2000
+    spread: 250
+    global: 1
+  - {tile: {fileID: 11400000, guid: 6ae7fda4f7596d84e8d77af3f94f2a4f, type: 2}, chance: 0.01,
+    distance: 2000, spread: 250, global: 1}
 --- !u!114 &4672845829821667805
 MonoBehaviour:
   m_ObjectHideFlags: 0

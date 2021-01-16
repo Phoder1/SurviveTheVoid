@@ -1,5 +1,7 @@
 ﻿using TMPro;
+using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 public class UIManager : MonoSingleton<UIManager>
 {
@@ -35,7 +37,7 @@ public class UIManager : MonoSingleton<UIManager>
 		bCancel,
 		bRotate,
 		stateText;
-
+	bool CanCollect;
 
 	public override void Init()
 	{
@@ -49,6 +51,18 @@ public class UIManager : MonoSingleton<UIManager>
 	private void Update()
 	{
 		ButtonControls();
+
+		if (Input.GetKeyDown(KeyCode.T))
+		{
+			CraftingManager._instance.buttonState = ButtonState.Craft;
+			CanCraftState();
+		}
+		if (Input.GetKeyDown(KeyCode.Y))
+		{
+			
+			CraftingState();
+			CanCollect = !CanCollect;
+		}
 	}
 
 
@@ -56,6 +70,15 @@ public class UIManager : MonoSingleton<UIManager>
 	[Header("Crafting UI")]
 	[SerializeField] Sprite[] sectionBackGroundSprite;
 	[SerializeField] Image[] SectionBackGroundImage;
+	[SerializeField] Button CraftingButton;
+	[Header("")]
+	[SerializeField] GameObject matsHolder;
+	[SerializeField] TextMeshProUGUI craftingTimer;
+	[SerializeField] Slider amountSlider;
+	[SerializeField] TextMeshProUGUI amountText;
+	[SerializeField] int craftingAmount;
+	public int getCraftingAmount => craftingAmount;
+
 	public void OnClickSelectedSections(string _section)
 	{
 		craftingManager.SelectSection(_section);
@@ -123,12 +146,83 @@ public class UIManager : MonoSingleton<UIManager>
 
 	}
 
+	//button related
 
+	
 
-
-	public void ToggleCraftingUI(ProcessorType _type)
+	public void SetButtonToState(ButtonState CraftState)
 	{
-		CraftingUI.SetActive(!CraftingUI.activeInHierarchy);
+		switch (CraftState)
+		{
+			case ButtonState.Craft:
+				CanCraftState();
+				break;
+			case ButtonState.Collect:
+				CanCollectState();
+				break;
+			case ButtonState.Crafting:
+				CraftingState();
+				break;
+			default:
+				break;
+		}
+	}
+
+
+	public void CanCraftState()
+	{
+		CraftingButton.interactable = true;
+		CraftingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Craft";
+		matsHolder.SetActive(true);
+		craftingTimer.gameObject.SetActive(false);
+	}
+
+	public void CraftingState()
+	{
+
+		matsHolder.SetActive(false);
+		craftingTimer.gameObject.SetActive(true);
+		craftingTimer.text = "Time Remaining: 1:00 Crafted: 1/10";
+		if (CanCollect)
+		{
+			CraftingManager._instance.buttonState = ButtonState.Collect;
+			CraftingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Collect: 1/10";
+			CraftingButton.interactable = true;
+		}
+		else
+		{
+			CraftingManager._instance.buttonState = ButtonState.Crafting;
+			CraftingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Crafting";
+			CraftingButton.interactable = false;
+		}
+
+
+	}
+	public void CanCollectState()
+	{
+		matsHolder.SetActive(false);
+		craftingTimer.gameObject.SetActive(true);
+		craftingTimer.text = "Time Remaining: 0:00 Crafted: 10/10";
+
+		CraftingManager._instance.buttonState = ButtonState.Collect;
+		CraftingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Collect: 10/10";
+		CraftingButton.interactable = true;
+
+	}
+	//Slider amount related
+	public void OnChangeGetCraftingAmount()
+	{
+		craftingAmount = Mathf.RoundToInt(amountSlider.value);
+		amountText.text = "Craft: " + craftingAmount.ToString();
+		CraftingManager._instance.UpdateMatsAmount();
+	}
+
+
+
+
+	public void SetCraftingUIState(bool IsActive,ProcessorType _type,ProcessingTableTileSO Tile)
+	{
+		CraftingUI.SetActive(IsActive);
 		craftingManager.GetSetProcessor = _type;
 	}
 

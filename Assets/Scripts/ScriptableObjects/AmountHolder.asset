@@ -10,18 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0385232e857e8e446aa3c8cacfcbfb44, type: 3}
-  m_Name: RecipeStoneBlock
+  m_Name: AmountHolder
   m_EditorClassIdentifier: 
-  ItemCostArr:
-  - item: {fileID: 11400000, guid: f89a2a83765e2a147a87ce718623f51f, type: 2}
-    amount: 2
-  - item: {fileID: 11400000, guid: 15f6588093b9bde479796bc44fb85fd4, type: 2}
-    amount: 1
+  ItemCostArr: []
   outcomeItem:
-    item: {fileID: 11400000, guid: 851e3140614e87e43812086f1a46f73f, type: 2}
-    amount: 1
+    item: {fileID: 0}
+    amount: 0
   tier: 0
   section: 0
   isUnlocked: 0
   processorType: 0
-  CraftingTime: 30
+  CraftingTime: 0
