@@ -70,7 +70,7 @@ public class ProcessingTableTileState : ITileState
     }
 
     public void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
-        UIManager._instance.SetCraftingUIState(true,tile.GetProcessorType,this.tile);
+        UIManager._instance.SetCraftingUIState(true,tile.GetProcessorType,this);
     }
 
     public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool playerAction = true) { }

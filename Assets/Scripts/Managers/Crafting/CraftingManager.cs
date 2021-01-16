@@ -99,7 +99,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         }
 
 
-        StartCrafting();
+      
     }
 
 
@@ -308,6 +308,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     }
     public void ShowRecipe(RecipeSO recipe)
     {
+        UpdateMatsAmount();
         int matsAmount = recipe.getitemCostArr.Length;
         for (int i = 0; i < recipeMaterialSlots.Length; i++)
         {
@@ -329,6 +330,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
             }
 
         }
+
     }
     public void clearRecipeMat()
     {
@@ -348,7 +350,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         {
             AmountHolder.UpdateAmountHolder(selectedRecipe.getitemCostArr, selectedRecipe.getoutcomeItem, selectedRecipe.GetCraftingTime);
             AmountHolder.DoubleAmountOutCome(UIManager._instance.getCraftingAmount);
-            ShowRecipe(selectedRecipe);
+            //ShowRecipe(selectedRecipe);
         }
         else
         {
@@ -391,29 +393,6 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     }
     [SerializeField] float Timer;
     bool startcount;
-
-
-
-    void StartCrafting()
-    {
-
-        if (IsCrafting)
-        {
-            if (startcount)
-            {
-                Timer = selectedRecipe.GetCraftingTime;
-                startcount = false;
-            }
-            if (Timer > 0)
-            {
-                Timer -= Time.deltaTime;
-            }
-            else
-            {
-                IsCrafting = false;
-            }
-        }
-    }
 
 
 
