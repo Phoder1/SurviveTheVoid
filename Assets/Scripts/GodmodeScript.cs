@@ -65,7 +65,7 @@ public class GodmodeScript : MonoSingleton<GodmodeScript>
             TileMapLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? TileMapLayer.Buildings : TileMapLayer.Floor;
             TileHit hit = gridManager.GetHitFromWorldPosition(mousePos, layer);
 
-            if (hit != null
+            if (hit.tile != null
                 && hit.tile.IsGatherable) {
                 Debug.Log("Color change");
                 hit.tile.GatherInteraction(hit.gridPosition, layer);
