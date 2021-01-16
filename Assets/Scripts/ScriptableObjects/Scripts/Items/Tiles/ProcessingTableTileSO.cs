@@ -75,7 +75,7 @@ public class ProcessingTableTileState : ITileState
     public void AddToQueue(int numOfItems)
     {
         amount += numOfItems;
-        craftingStartTime -= craftingRecipe.GetCraftingTime * numOfItems;
+
        
     }
 
