@@ -139,10 +139,13 @@ public class UIManager : MonoSingleton<UIManager>
 
 	bool isHoldingButton = false, stopHoldingButton = false, isButtonA;
 	bool isShown = true;
+	bool isShownBuildTools = true;
 	bool isQuickAccessSlotsSwapped = true;
 	bool isInventoryOpen = false;
 	bool isFightModeOn = false;
 	bool isBuildModeOn = false;
+	bool isCraftTableOpen = false;
+	bool isChestOpen = false;
 
 
 
@@ -211,44 +214,67 @@ public class UIManager : MonoSingleton<UIManager>
 
 	public void ButtonHide()
 	{
-
-		if (isShown == true)
+		if (isBuildModeOn == false)
 		{
-			bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
-
-			if (isQuickAccessSlotsSwapped == true)
+			if (isShown == true)
 			{
-				SetTools(false);
-				bMainWeapon.SetActive(false);
-				bSwap.SetActive(false);
+				bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
+
+				if (isQuickAccessSlotsSwapped == true)
+				{
+					SetTools(false);
+					bMainWeapon.SetActive(false);
+					bSwap.SetActive(false);
+				}
+				else
+				{
+					SetQuickAccessSlots(false);
+					bMainWeapon.SetActive(false);
+					bSwap.SetActive(false);
+				}
+
+				isShown = false;
 			}
 			else
 			{
-				SetQuickAccessSlots(false);
-				bMainWeapon.SetActive(false);
-				bSwap.SetActive(false);
-			}
+				bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
 
-			isShown = false;
+				if (isQuickAccessSlotsSwapped == true)
+				{
+					SetTools(true);
+					bMainWeapon.SetActive(true);
+					bSwap.SetActive(true);
+				}
+				else
+				{
+					SetQuickAccessSlots(true);
+					bMainWeapon.SetActive(true);
+					bSwap.SetActive(true);
+				}
+
+				isShown = true;
+			}
 		}
 		else
 		{
-			bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
-
-			if (isQuickAccessSlotsSwapped == true)
+			if (isShownBuildTools == true)
 			{
-				SetTools(true);
-				bMainWeapon.SetActive(true);
-				bSwap.SetActive(true);
+				bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
+
+				bCancel.SetActive(false);
+				bRotate.SetActive(false);
+
+				isShownBuildTools = false;
 			}
 			else
 			{
-				SetQuickAccessSlots(true);
-				bMainWeapon.SetActive(true);
-				bSwap.SetActive(true);
-			}
+				bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
 
-			isShown = true;
+				bCancel.SetActive(true);
+				bRotate.SetActive(true);
+
+				isShownBuildTools = true;
+			}
 		}
 	}
 
@@ -343,9 +369,25 @@ public class UIManager : MonoSingleton<UIManager>
 			bSwap.SetActive(false);
 			SetQuickAccessSlots(false);
 			bInventory.SetActive(false);
-			InventoryUI.SetActive(false);
-			CraftingUI.SetActive(false);
-			ChestUI.SetActive(false);
+
+			if (isInventoryOpen == true)
+			{
+				InventoryUI.SetActive(false);
+			}
+			if (isCraftTableOpen == true)
+			{
+				CraftingUI.SetActive(false);
+			}
+			if (isChestOpen == true)
+			{
+				ChestUI.SetActive(false);
+			}
+			if (isBuildModeOn == true)
+			{
+				bCancel.SetActive(false);
+				bRotate.SetActive(false);
+				stateText.SetActive(false);
+			}
 
 			Time.timeScale = 0f;
 		}
@@ -356,21 +398,20 @@ public class UIManager : MonoSingleton<UIManager>
 			PauseMenuUI.SetActive(false);
 
 			vjMove.SetActive(true);
-			viFight.SetActive(true);
 			bInteract.SetActive(true);
 			bGather.SetActive(true);
 			bHide.SetActive(true);
 			bInventory.SetActive(true);
 
-			// Check if we was on Items and the tool bar wasn't hidden
-			if (isQuickAccessSlotsSwapped == true && isShown != false)
+			// Check if we was on Items and the tool bar wasn't hidden, also if we wasn't in build mode
+			if (isQuickAccessSlotsSwapped == true && isShown != false && isBuildModeOn != true)
 			{
 				SetTools(true);
 				bMainWeapon.SetActive(true);
 				bSwap.SetActive(true);
 			}
-			// Check if we was on QASlots and the tool bar wasn't hidden
-			else if (isQuickAccessSlotsSwapped == false && isShown != false)
+			// Check if we was on QASlots and the tool bar wasn't hidden, also if we wasn't in build mode
+			else if (isQuickAccessSlotsSwapped == false && isShown != false && isBuildModeOn != true)
 			{
 				SetQuickAccessSlots(true);
 				bMainWeapon.SetActive(true);
@@ -387,12 +428,33 @@ public class UIManager : MonoSingleton<UIManager>
 				bGather.SetActive(false);
 			}
 
+			// Check if we was in build mode
+			if (isBuildModeOn == true)
+			{
+				bCancel.SetActive(true);
+				bRotate.SetActive(true);
+				stateText.SetActive(true);
+			}
+
+			// Check if tools for build mode was hidden
+			if(isShownBuildTools == false)
+			{
+				bCancel.SetActive(false);
+				bRotate.SetActive(false);
+			}
+			
+			// Check if we wasn't in build mode and inventory closed to show Visual Icon for Fight mode
+			if(isBuildModeOn == false && isInventoryOpen != true)
+			{
+				viFight.SetActive(true);
+			}
 		}
 	}
 
 	public void BuildModeUI()
 	{
 		isBuildModeOn = true;
+		bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
 
 		if (isQuickAccessSlotsSwapped == true)
 		{
@@ -404,7 +466,6 @@ public class UIManager : MonoSingleton<UIManager>
 		}
 		bMainWeapon.SetActive(false);
 		bSwap.SetActive(false);
-		bHide.SetActive(false);
 		viFight.SetActive(false);
 		InventoryUI.SetActive(false);
 
@@ -430,17 +491,18 @@ public class UIManager : MonoSingleton<UIManager>
 	{
 		isBuildModeOn = false;
 
-		if (isQuickAccessSlotsSwapped == true)
+		if (isQuickAccessSlotsSwapped == true && isShown == true)
 		{
 			SetTools(true);
+			bMainWeapon.SetActive(true);
+			bSwap.SetActive(true);
 		}
-		else
+		else if(isQuickAccessSlotsSwapped == false && isShown == true)
 		{
 			SetQuickAccessSlots(true);
+			bMainWeapon.SetActive(true);
+			bSwap.SetActive(true);
 		}
-		bMainWeapon.SetActive(true);
-		bSwap.SetActive(true);
-		bHide.SetActive(true);
 		viFight.SetActive(true);
 
 		bCancel.SetActive(false);
@@ -465,6 +527,13 @@ public class UIManager : MonoSingleton<UIManager>
 			InventoryUI.SetActive(false);
 			bInteract.SetActive(true);
 			bGather.SetActive(true);
+
+			isInventoryOpen = false;
+		}
+
+		if(isShown == false)
+		{
+			bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
 		}
 
 		stateText.SetActive(false);
