@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
-public class Inventory 
+public class Inventory
 {
     private static Inventory _instance;
     //Inventory IInventory.GetInstance => GetInstance;
@@ -354,41 +353,31 @@ public class Inventory
         bool haveAllIngridients = true;
 
 
-        foreach (var item in recipe.getitemCostArr) {
+        foreach (var item in recipe.getitemCostArr)
+        {
             haveAllIngridients &= HaveEnoughOfItemFromInventory(0, new ItemSlot(item.item, item.amount * amount));
             if (!haveAllIngridients)
-                break;
+                return false;
         }
-
-        if (haveAllIngridients) {
-            //Craft(recipe);
-
-        }
-        else
-            Debug.Log("Cant Craft Not Enough resources");
-
 
 
         return haveAllIngridients;
     }
 
-    private void Craft(RecipeSO recipe) {
-        for (int i = 0; i < recipe.getitemCostArr.Length; i++) {
-            RemoveItemFromInventory(0, recipe.getitemCostArr[i]);
-        }
-
-        // workBench.add(,recipe.getoutcomeItem);
-
-
-        if (GetAmountOfItem(0, null) > 0 || GetAmountOfItem(0, recipe.getoutcomeItem) < recipe.getoutcomeItem.item.getmaxStackSize) {
-            AddToInventory(0, recipe.getoutcomeItem);
-        }
-        else {
-            for (int i = 0; i < recipe.getitemCostArr.Length; i++) {
-                AddToInventory(0, recipe.getitemCostArr[i]);
+    public bool RemoveItemsByRecipe(RecipeSO recipe, int Amount = 1)
+    {
+        if (CheckEnoughItemsForRecipe(recipe, Amount))
+        {
+            for (int i = 0; i < recipe.getitemCostArr.Length; i++)
+            {
+                RemoveItemFromInventory(0, new ItemSlot(recipe.getitemCostArr[i].item, recipe.getitemCostArr[i].amount * Amount));
             }
         }
+
+        return false;
+
     }
+
 
 
     bool HaveEnoughOfItemFromInventory(int chestID, ItemSlot item)
@@ -560,16 +549,16 @@ public class Inventory
         }
 
     }
-   
+
     public ItemSlot GetItemFromInventoryButton(int chestId, int buttonId)
-	{
+    {
         inventoryCache = GetInventoryFromDictionary(chestId);
         if (inventoryCache == null)
             return null;
-        
+
 
         return inventoryCache[buttonId];
-	}
+    }
 
     public void PrintInventory(int chestID)
     {
@@ -614,7 +603,8 @@ public class ItemSlot
     public ItemSO item;
     public int amount;
     public int? durability;
-    public ItemSlot(ItemSO item, int amount,int? durability = null) {
+    public ItemSlot(ItemSO item, int amount, int? durability = null)
+    {
         this.item = item;
         this.amount = amount;
         this.durability = durability;
