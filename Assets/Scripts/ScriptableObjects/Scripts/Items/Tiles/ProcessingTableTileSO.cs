@@ -15,19 +15,19 @@ public class ProcessingTableTileSO : TileAbstSO
 public class ProcessingTableTileState : ITileState
 {
     public ProcessingTableTileSO tile;
-    public RecipeSO craftingRecipe;
     public TimeEvent eventInstance;
+    public ProcessingTableTileState(ProcessingTableTileSO tile) {
+        this.tile = tile;
+    }
+    public RecipeSO craftingRecipe;
     private float craftingStartTime;
     public int amount;
-    public int ItemsCrafted => Mathf.FloorToInt((Time.time - craftingStartTime) / craftingRecipe.GetCraftingTime);
+    public int ItemsCrafted => Mathf.Min(Mathf.FloorToInt((Time.time - craftingStartTime) / craftingRecipe.GetCraftingTime), amount);
     public float CraftingTimeRemaining => (craftingStartTime  + craftingRecipe.GetCraftingTime * amount) - Time.time;
     private bool isCrafting;
     public bool IsCrafting {
         get => isCrafting;
         set => isCrafting = value;
-    }
-    public ProcessingTableTileState(ProcessingTableTileSO tile) {
-        this.tile = tile;
     }
     public void StartCrafting(RecipeSO recipe, int amount) {
         if (isCrafting)
@@ -36,12 +36,20 @@ public class ProcessingTableTileState : ITileState
         craftingStartTime = Time.time;
         this.amount = amount;
     }
-
     public void CollectItems(int numOfItems) {
         amount -= numOfItems;
+        if(amount == 0) {
+            ResetCrafting();
+        }
+        if(amount < 0) {
+            throw new System.NotImplementedException();
+        }
     }
+    public void ResetCrafting() {
+        isCrafting = false;
+        craftingRecipe = null;
 
-
+    }
     public TileBase GetMainTileBase {
         get {
             if (IsCrafting) {
