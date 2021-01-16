@@ -1214,6 +1214,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: OpenSliderButt
       objectReference: {fileID: 0}
+    - target: {fileID: 227319797, guid: ec261434d51bce44fa7c7f1d01379781, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 227319799, guid: ec261434d51bce44fa7c7f1d01379781, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ToggleMultiple
@@ -1240,11 +1244,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1371059307, guid: ec261434d51bce44fa7c7f1d01379781, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1371059308, guid: ec261434d51bce44fa7c7f1d01379781, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 610
+      objectReference: {fileID: 0}
+    - target: {fileID: 1371059308, guid: ec261434d51bce44fa7c7f1d01379781, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.000019073
+      objectReference: {fileID: 0}
+    - target: {fileID: 1371059309, guid: ec261434d51bce44fa7c7f1d01379781, type: 3}
+      propertyPath: m_text
+      value: '1:00 '
+      objectReference: {fileID: 0}
+    - target: {fileID: 1671171599, guid: ec261434d51bce44fa7c7f1d01379781, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1699375616, guid: ec261434d51bce44fa7c7f1d01379781, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 629309934292324171, guid: ec261434d51bce44fa7c7f1d01379781,
         type: 3}
@@ -1255,6 +1275,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 629309935496454479, guid: ec261434d51bce44fa7c7f1d01379781,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 629309935759496634, guid: ec261434d51bce44fa7c7f1d01379781,
         type: 3}
@@ -1330,6 +1355,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6033404864831435809, guid: ec261434d51bce44fa7c7f1d01379781,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6033404865582810845, guid: ec261434d51bce44fa7c7f1d01379781,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6033404866079681885, guid: ec261434d51bce44fa7c7f1d01379781,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6033404866369898254, guid: ec261434d51bce44fa7c7f1d01379781,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec261434d51bce44fa7c7f1d01379781, type: 3}

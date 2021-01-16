@@ -172,7 +172,6 @@ public class UIManager : MonoSingleton<UIManager>
 		switch (CraftState)
 		{
 			case ButtonState.CanCraft:
-				
 				CanCraftState();
 				break;
 			case ButtonState.Collect:
@@ -203,8 +202,8 @@ public class UIManager : MonoSingleton<UIManager>
 		CraftingButton.interactable = false;
 		matsHolder.SetActive(false);
 		craftingTimer.gameObject.SetActive(true);
-		CraftingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Crafting";
-		craftingTimer.text = "Time Remaining: " + Mathf.CeilToInt(timeCraftingRemaining) + "Crafted: " + craftedItem + "/" + AmountRemaining;
+		CraftingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = craftedItem + "/" + AmountRemaining;
+		craftingTimer.text = Mathf.CeilToInt(timeCraftingRemaining).ToString();
 	}
 	public void CanCollectState(int craftedItem, int AmountRemaining,float timeCraftingRemaining)
 	{
@@ -212,8 +211,8 @@ public class UIManager : MonoSingleton<UIManager>
 		CraftingButton.interactable = true;
 		matsHolder.SetActive(false);
 		craftingTimer.gameObject.SetActive(true);
-		CraftingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Collect";
-		craftingTimer.text = "Time Remaining: " + Mathf.CeilToInt(timeCraftingRemaining) + "Crafted: " + craftedItem + "/" + AmountRemaining;
+		CraftingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = craftedItem + "/" + AmountRemaining;
+		craftingTimer.text = Mathf.CeilToInt(timeCraftingRemaining).ToString();
 
 
 
