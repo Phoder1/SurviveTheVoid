@@ -26,19 +26,19 @@ public partial class GridManager
             }
 
         }
-        internal void SetTile(TileSlot tile, Vector2Int gridPosition, TileMapLayer buildingLayer, bool countsAsEdit = true) {
+        internal void SetTile(TileSlot tile, Vector2Int gridPosition, TileMapLayer buildingLayer, bool countsAsEdit = true, bool generation = false) {
 
             switch (buildingLayer) {
                 case TileMapLayer.Floor:
-                    SetTileByRef(tile, gridPosition, buildingLayer, countsAsEdit, ref floorArr, ref _instance.floor);
+                    SetTileByRef(tile, gridPosition, buildingLayer, countsAsEdit, ref floorArr, ref _instance.floor, generation);
                     break;
                 case TileMapLayer.Buildings:
-                    SetTileByRef(tile, gridPosition, buildingLayer, countsAsEdit, ref buildingsArr, ref _instance.buildings);
+                    SetTileByRef(tile, gridPosition, buildingLayer, countsAsEdit, ref buildingsArr, ref _instance.buildings, generation);
                     break;
             }
 
         }
-        private void SetTileByRef(TileSlot tile, Vector2Int gridPosition, TileMapLayer tilemapLayer, bool countsAsEdit, ref TileSlot[,] tileArr, ref Tilemap tilemap) {
+        private void SetTileByRef(TileSlot tile, Vector2Int gridPosition, TileMapLayer tilemapLayer, bool countsAsEdit, ref TileSlot[,] tileArr, ref Tilemap tilemap, bool generation = false) {
 
             Vector2Int chunkPosition = GridToChunkPosition(gridPosition);
             bool tileExists = tileArr != null && tileArr[chunkPosition.x, chunkPosition.y] != null;
@@ -61,15 +61,15 @@ public partial class GridManager
                 else if (!tileExists) {
                     tileCount++;
                     wasEdited |= countsAsEdit;
+                    tile.Init(gridPosition, tilemapLayer, generation);
                     tilemap.SetTile((Vector3Int)gridPosition, tile.GetMainTileBase);
                     tileArr[chunkPosition.x, chunkPosition.y] = tile;
-                    tile.Init(gridPosition, tilemapLayer);
                 }
                 else {
                     if (tile != tileArr[chunkPosition.x, chunkPosition.y]) {
                         tileArr[chunkPosition.x, chunkPosition.y].CancelEvent(gridPosition, tilemapLayer);
                         tileArr[chunkPosition.x, chunkPosition.y] = tile;
-                        tile.Init(gridPosition, tilemapLayer);
+                        tile.Init(gridPosition, tilemapLayer, generation);
                     }
                     tilemap.SetTile((Vector3Int)gridPosition, tile.GetMainTileBase);
                     wasEdited |= countsAsEdit;
@@ -105,15 +105,15 @@ public partial class GridManager
 
 
                             }
-                            SetTile(new TileSlot(tile), ChunkToGridPosition(new Vector2Int(loopX, loopY)), TileMapLayer.Floor, false);
+                            SetTile(new TileSlot(tile), ChunkToGridPosition(new Vector2Int(loopX, loopY)), TileMapLayer.Floor, false, true);
                             TileAbstSO building = ChooseBuilding(gridPosition, distance);
                             if (building != null) {
-                                SetTile(new TileSlot(building), gridPosition, TileMapLayer.Buildings, false);
+                                SetTile(new TileSlot(building), gridPosition, TileMapLayer.Buildings, false, true);
                             }
                         }
                     }
                     else if (distance <= _instance.startIslandRadius) {
-                        SetTile(new TileSlot(_instance.startIslandTile), ChunkToGridPosition(new Vector2Int(loopX, loopY)), TileMapLayer.Floor, false);
+                        SetTile(new TileSlot(_instance.startIslandTile), ChunkToGridPosition(new Vector2Int(loopX, loopY)), TileMapLayer.Floor, false, true);
                     }
                 }
             }

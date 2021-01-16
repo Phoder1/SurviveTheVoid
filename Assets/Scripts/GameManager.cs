@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoSingleton<GameManager>
 {
-    private ISingleton[] singletons;
+    public ISingleton[] singletons;
 
     // The original start that controls all other Inits
     void Start() {
@@ -12,22 +11,21 @@ public class GameManager : MonoSingleton<GameManager>
 
     }
     public override void Init() {
-        singletons = new ISingleton[7] {
+        singletons = new ISingleton[8] {
+            CameraController._instance,
              GridManager._instance,
              PlayerManager._instance,
-             CameraScript._instance,
+             GodmodeScript._instance,
              CraftingManager._instance,
              InventoryUIManager._instance,
              UIManager._instance,
              InputManager._instance
-             
+
         };
         foreach (ISingleton singleton in singletons) {
-            if(singleton != null) {
+            if (singleton != null) {
                 singleton.Init();
             }
         }
     }
-
-
 }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class CameraScript : MonoSingleton<CameraScript>
+public class GodmodeScript : MonoSingleton<GodmodeScript>
 {
     [SerializeField]
     private float scrollSpeed;
@@ -8,26 +8,18 @@ public class CameraScript : MonoSingleton<CameraScript>
     private float moveSpeed;
     private Vector2 movement;
     private float scrollMovement;
-    private Camera cameraComp;
-    private GridManager gridManager => GridManager._instance;
-    private Vector2 cameraRealSize => new Vector2(GetCameraComp.orthographicSize * 2 * GetCameraComp.aspect, GetCameraComp.orthographicSize * 2);
-    private Vector3 camCornerPosition => new Vector3(transform.position.x, transform.position.y, 0) - (Vector3)cameraRealSize / 2;
-    private Rect worldView => new Rect(_instance.camCornerPosition, _instance.cameraRealSize);
-
-    public Camera GetCameraComp {
-        get {
-            if (cameraComp == null)
-                cameraComp = Camera.main;
-            return cameraComp;
-        }
-    }
-
+    GridManager gridManager;
     private bool viewChanged;
+    CameraController cameraController;
+    Camera cameraComp;
     [SerializeField] private BlockTileSO clickTile;
-    StarsParallaxController starsCont;
+
+
     // Start is called before the first frame update
     public override void Init() {
-        starsCont = GetComponent<StarsParallaxController>();
+        gridManager = GridManager._instance;
+        cameraController = CameraController._instance;
+        cameraComp = cameraController.GetCameraComp;
     }
 
     // Update is called once per frame
@@ -45,9 +37,9 @@ public class CameraScript : MonoSingleton<CameraScript>
 
         scrollMovement = Time.deltaTime * scrollSpeed * -Input.GetAxis("Mouse ScrollWheel");
         if (scrollMovement != 0) {
-            GetCameraComp.orthographicSize += scrollMovement;
+            cameraController.ZoomOut(scrollMovement);
             viewChanged = true;
-            starsCont.UpdateViewSize();
+
         }
 
         if (Input.GetKey(KeyCode.Mouse0)) {
@@ -68,28 +60,26 @@ public class CameraScript : MonoSingleton<CameraScript>
             Debug.Log(gridManager.GetTileFromGrid(MouseGridPosition(layer), layer));
         }
         else if (Input.GetKeyDown(KeyCode.Mouse2)) {
-            Vector3 mousePos = GetCameraComp.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mousePos = cameraComp.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = 0;
             TileMapLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? TileMapLayer.Buildings : TileMapLayer.Floor;
             TileHit hit = gridManager.GetHitFromWorldPosition(mousePos, layer);
 
             if (hit != null
-                && hit.tile.GetInteractionType == InteractionType.Any) {
+                && hit.tile.IsGatherable) {
                 Debug.Log("Color change");
                 hit.tile.GatherInteraction(hit.gridPosition, layer);
             }
         }
 
         if (viewChanged) {
-            UpdateView();
+            cameraController.UpdateView();
         }
     }
     private Vector2Int MouseGridPosition(TileMapLayer buildingLayer) {
-        Vector3 mousePos = GetCameraComp.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 mousePos = cameraComp.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0;
         return gridManager.WorldToGridPosition(mousePos, buildingLayer);
     }
-    public void UpdateView() {
-        gridManager.UpdateView(worldView);
-    }
+
 }

@@ -85,7 +85,7 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
     public override void Init() {
         islandsNoise.GenerateSeed();
         buildingsRandom.GenerateSeed();
-        CameraScript._instance.UpdateView();
+        CameraController._instance.UpdateView();
         SetTile(new TileSlot(craftingTable), new Vector2Int(-7, 0), TileMapLayer.Buildings, true);
     }
 
