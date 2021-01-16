@@ -79,7 +79,7 @@ public class TileSlot : ITileState
                 tileState = new BlockState(block);
                 break;
             case ProcessingTableTileSO table:
-                tileState = new ProcessingTableTileState(table);
+                tileState = new ProcessingTableTileState(table, this);
                 break;
             case LightSourceTileSO lightSource:
                 tileState = new LightSourceTileState(lightSource);
