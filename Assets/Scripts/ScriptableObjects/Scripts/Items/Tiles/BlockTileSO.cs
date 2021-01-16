@@ -15,13 +15,13 @@ public class BlockState : ITileState
 
     public TileBase GetMainTileBase => tile.GetMainTileBase;
 
-    public InteractionType GetInteractionType => tile.GetInteractionType;
-
     public TileType GetTileType => tile.GetTileType;
 
     public bool GetIsSolid => tile.GetIsSolid;
 
     public TileAbstSO GetTileAbst => tile;
+
+    public bool isSpecialInteraction => tile.isSpecialInteraction;
 
     public void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
         Tilemap tilemap = GridManager._instance.GetTilemap(buildingLayer);
@@ -36,7 +36,7 @@ public class BlockState : ITileState
         throw new System.NotImplementedException();
     }
 
-    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer) { }
+    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool playerAction = true) { }
 }
 
 

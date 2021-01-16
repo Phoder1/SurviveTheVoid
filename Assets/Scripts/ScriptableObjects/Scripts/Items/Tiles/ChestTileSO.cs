@@ -13,10 +13,10 @@ public class ChestTileSlot : ITileState
     public ChestTileSlot(ChestTileSO tile) {
         this.tile = tile;
     }
-
+    public bool isSpecialInteraction => tile.isSpecialInteraction;
     public TileBase GetMainTileBase => throw new System.NotImplementedException();
 
-    public InteractionType GetInteractionType => throw new System.NotImplementedException();
+    public ToolType GetInteractionType => throw new System.NotImplementedException();
 
     public TileType GetTileType => throw new System.NotImplementedException();
 
@@ -36,5 +36,5 @@ public class ChestTileSlot : ITileState
         throw new System.NotImplementedException();
     }
 
-    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer) { }
+    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool playerAction = true) { }
 }

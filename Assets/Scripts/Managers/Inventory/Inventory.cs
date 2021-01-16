@@ -370,11 +370,11 @@ public class Inventory
             {
                 RemoveItemFromInventory(0, recipe.getitemCostArr[i]);
             }
-        
+
             // workBench.add(,recipe.getoutcomeItem);
 
 
-            if (GetAmountOfItem(0,null) > 0 || GetAmountOfItem(0, recipe.getoutcomeItem) < recipe.getoutcomeItem.item.getmaxStackSize)
+            if (GetAmountOfItem(0, null) > 0 || GetAmountOfItem(0, recipe.getoutcomeItem) < recipe.getoutcomeItem.item.getmaxStackSize)
             {
                 AddToInventory(0, recipe.getoutcomeItem);
             }
