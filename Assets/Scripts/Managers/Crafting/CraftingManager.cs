@@ -38,7 +38,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
         }
     }
-
+    public ProcessingTableTileState CurrentProcessTile;
 
 
 
@@ -417,20 +417,22 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
 
                     inventory.RemoveItemsByRecipe(selectedRecipe, UIManager._instance.getCraftingAmount);
-                    UIManager._instance.CurrentProcessTile.StartCrafting(selectedRecipe, (selectedRecipe.getoutcomeItem.amount * UIManager._instance.getCraftingAmount));
+                    CurrentProcessTile.StartCrafting(selectedRecipe, (selectedRecipe.getoutcomeItem.amount * UIManager._instance.getCraftingAmount));
                     ShowRecipe(selectedRecipe);
+                    UIManager._instance.OnChangeGetCraftingAmount();
                 }
             }
         }
         else if (buttonState == ButtonState.Collect)
         {
             //collect items
-            for (int i = UIManager._instance.CurrentProcessTile.ItemsCrafted; i > 0; i--)
+          
+            for (int i = CurrentProcessTile.ItemsCrafted; i > 0; i--)
             {
                 
                 if (inventory.AddToInventory(0,new ItemSlot(selectedRecipe.getoutcomeItem.item, i * selectedRecipe.getoutcomeItem.amount)))
                 {
-                    UIManager._instance.CurrentProcessTile.CollectItems(i);
+                    CurrentProcessTile.CollectItems(i);
                     break;
                 }
 
@@ -438,14 +440,14 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
             
            
 
-            if (!UIManager._instance.CurrentProcessTile.IsCrafting)
+            if (!CurrentProcessTile.IsCrafting)
             {
                 buttonState = ButtonState.CanCraft;
                 UIManager._instance.SetButtonToState(buttonState, 0, 0, 0);
             }
 
 
-
+            UIManager._instance.OnChangeGetCraftingAmount();
             Debug.Log("Collect your item");
         }
         else if (buttonState == ButtonState.Crafting)
@@ -457,6 +459,17 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         }
 
     }
+
+    public void AddToCraft()
+    {
+        if (inventory.CheckEnoughItemsForRecipe(selectedRecipe, UIManager._instance.getCraftingAmount))
+        {
+            inventory.RemoveItemsByRecipe(selectedRecipe, UIManager._instance.getCraftingAmount);
+            CurrentProcessTile.AddToQueue(UIManager._instance.getCraftingAmount);
+        }
+    }
+
+
     [SerializeField] float Timer;
     bool startcount;
 
