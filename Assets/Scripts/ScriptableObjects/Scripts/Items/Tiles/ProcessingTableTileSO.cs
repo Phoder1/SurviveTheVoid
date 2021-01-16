@@ -41,7 +41,7 @@ public class ProcessingTableTileState : ITileState
 
     public TileType GetTileType => throw new System.NotImplementedException();
 
-    public bool GetIsSolid => throw new System.NotImplementedException();
+    public bool GetIsSolid => tile.GetIsSolid;
     public bool isSpecialInteraction => tile.isSpecialInteraction;
 
 

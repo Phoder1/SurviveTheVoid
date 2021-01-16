@@ -1,17 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!4 &5435700085615291145 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 740789661912145456, guid: f03977ae04da0da44b9dd8ae12efffcd,
-    type: 3}
-  m_PrefabInstance: {fileID: 4695191901197235513}
-  m_PrefabAsset: {fileID: 0}
---- !u!20 &5435700085615291382 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 740789661912145615, guid: f03977ae04da0da44b9dd8ae12efffcd,
-    type: 3}
-  m_PrefabInstance: {fileID: 4695191901197235513}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5435700086702367932
 GameObject:
   m_ObjectHideFlags: 0
@@ -40,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 5435700086702367932}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.08, y: -0.92, z: 3}
-  m_LocalScale: {x: 5.368164, y: 5.40881, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5435700085615291145}
   m_Father: {fileID: 0}
@@ -85,12 +73,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 5eb6c2645a898a5419adff9f48571b05, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0c5bf5880d86eff48ae47bb58472ae10, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.2, y: 0.2}
+  m_Size: {x: 2.13, y: 4.28}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -192,3 +180,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f03977ae04da0da44b9dd8ae12efffcd, type: 3}
+--- !u!4 &5435700085615291145 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 740789661912145456, guid: f03977ae04da0da44b9dd8ae12efffcd,
+    type: 3}
+  m_PrefabInstance: {fileID: 4695191901197235513}
+  m_PrefabAsset: {fileID: 0}
+--- !u!20 &5435700085615291382 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 740789661912145615, guid: f03977ae04da0da44b9dd8ae12efffcd,
+    type: 3}
+  m_PrefabInstance: {fileID: 4695191901197235513}
+  m_PrefabAsset: {fileID: 0}
