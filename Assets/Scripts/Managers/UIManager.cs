@@ -61,6 +61,12 @@ public class UIManager : MonoSingleton<UIManager>
 		{
 			ShowTimeAndCollectable(0, 0, 0);
 		}
+
+		if (CraftingUI.activeInHierarchy && CurrentProcessTile != null && CurrentProcessTile.IsCrafting)
+		{
+			ShowTimeAndCollectable(CurrentProcessTile.CraftingTimeRemaining, CurrentProcessTile.ItemsCrafted, CurrentProcessTile.amount);
+		}
+
 	}
 
 
@@ -72,6 +78,7 @@ public class UIManager : MonoSingleton<UIManager>
 	[Header("")]
 	[SerializeField] GameObject matsHolder;
 	[SerializeField] TextMeshProUGUI craftingTimer;
+	[SerializeField] GameObject SliderBackGround;
 	[SerializeField] Slider amountSlider;
 	[SerializeField] TextMeshProUGUI amountText;
 	[SerializeField] int craftingAmount;
@@ -183,7 +190,7 @@ public class UIManager : MonoSingleton<UIManager>
 		CraftingButton.interactable = false;
 		matsHolder.SetActive(false);
 		craftingTimer.gameObject.SetActive(true);
-		craftingTimer.text = "Time Remaining: " + timeCraftingRemaining + "Crafted: " + craftedItem + "/" + AmountRemaining;
+		craftingTimer.text = "Time Remaining: " + Mathf.CeilToInt(timeCraftingRemaining) + "Crafted: " + craftedItem + "/" + AmountRemaining;
 	}
 	public void CanCollectState(float timeCraftingRemaining, int craftedItem, int AmountRemaining)
 	{
@@ -191,7 +198,7 @@ public class UIManager : MonoSingleton<UIManager>
 		CraftingButton.interactable = true;
 		matsHolder.SetActive(false);
 		craftingTimer.gameObject.SetActive(true);
-		craftingTimer.text = "Time Remaining: " + timeCraftingRemaining + "Crafted: " + craftedItem + "/" + AmountRemaining;
+		craftingTimer.text = "Time Remaining: " + Mathf.CeilToInt(timeCraftingRemaining) + "Crafted: " + craftedItem + "/" + AmountRemaining;
 
 
 
@@ -235,8 +242,11 @@ public class UIManager : MonoSingleton<UIManager>
 	{
 		craftingAmount = Mathf.RoundToInt(amountSlider.value);
 		amountText.text = "Craft: " + craftingAmount.ToString();
-		CraftingManager._instance.ShowRecipe(CraftingManager._instance.selectedRecipe);
-		CraftingManager._instance.UpdateMatsAmount();
+		if (craftingManager.selectedRecipe != null)
+		{
+			craftingManager.ShowRecipe(CraftingManager._instance.selectedRecipe);
+		}
+		//CraftingManager._instance.UpdateMatsAmount();
 	}
 
 
@@ -247,8 +257,39 @@ public class UIManager : MonoSingleton<UIManager>
 		CraftingUI.SetActive(IsActive);
 		craftingManager.GetSetProcessor = _type;
 		CurrentProcessTile = tile;
-		//ShowTimeAndCollectable(tile.CraftingTimeRemaining, tile.ItemsCrafted, tile.amount);
+		if (CurrentProcessTile.IsCrafting)
+			ShowTimeAndCollectable(tile.CraftingTimeRemaining, tile.ItemsCrafted, tile.amount);
 
+	}
+
+	public void ToggleMultiple()
+	{
+
+
+		SliderBackGround.SetActive(!SliderBackGround.activeInHierarchy);
+		if (!SliderBackGround.activeInHierarchy)
+		{
+			amountSlider.value = 1;
+			OnChangeGetCraftingAmount();
+		}
+
+	}
+
+	public void ResetMultiple()
+	{
+		SliderBackGround.SetActive(false);
+		amountSlider.value = 1;
+		OnChangeGetCraftingAmount();
+	}
+
+
+
+
+	public void CloseCraftingUI()
+	{
+		ResetMultiple();
+		CraftingUI.SetActive(false);
+		PlayerManager._instance.Interracted = false;
 	}
 
 	#endregion

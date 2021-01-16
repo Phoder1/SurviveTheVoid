@@ -32,7 +32,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     [SerializeField] int lookRange=5;
   
     [SerializeField] int InterractionDistance;
-    bool Interracted;
+    public bool Interracted;
 
 
 

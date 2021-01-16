@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NUnit.Framework.Constraints;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -48,7 +49,6 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
     private Inventory inventory;
     InventoryUIManager inventoryUI;
-    [SerializeField] RecipeSO AmountHolder;
 
     private void Update()
     {
@@ -99,7 +99,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         }
 
 
-      
+
     }
 
 
@@ -112,11 +112,11 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         inventory = Inventory.GetInstance;
         inventoryUI = InventoryUIManager._instance;
         buttonState = ButtonState.CanCraft;
-       // UIManager._instance.SetButtonToState(buttonState);
+        // UIManager._instance.SetButtonToState(buttonState);
         ImportSlots();
         AddRecipeToList();
         InstantiateItemSlots();
-        SelectSection("Blocks");
+        //SelectSection("Blocks");
 
 
     }
@@ -256,10 +256,16 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     {
 
         selectedSection.SelectSlot(recipe);
+
+        if (selectedRecipe != null)
+            UIManager._instance.ResetMultiple();
     }
 
     public void SelectSection(string sectionName)
     {
+        if (selectedRecipe != null)
+            UIManager._instance.ResetMultiple();
+
         foreach (Section section in sections)
         {
             if (section.name == sectionName)
@@ -319,9 +325,9 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
                     recipeMaterialSlots[i].gameObject.SetActive(true);
                 }
                 TextMeshProUGUI materialNameText = recipeMaterialSlots[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-                materialNameText.text = AmountHolder.getitemCostArr[i].item.getItemName;
+                materialNameText.text = Costitemso[i].getItemName;
                 TextMeshProUGUI materialCostText = recipeMaterialSlots[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-                materialCostText.text = inventory.GetAmountOfItem(0, AmountHolder.getitemCostArr[i]).ToString() + " / " + AmountHolder.getitemCostArr[i].amount;
+                materialCostText.text = inventory.GetAmountOfItem(0, TempArr[i]).ToString() + " / " + TempArr[i].amount;
                 recipeMaterialSlots[i].GetComponent<Image>().sprite = recipe.getitemCostArr[i].item.getsprite;
             }
             else
@@ -343,13 +349,46 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     // public ResourceStruct CraftResource(Recipe recipe) { return resourceStruct; }
     bool IsCrafting;
 
+    //updating for multiple crafting
+    ItemSO OutComeitemso;
+    int OutComeAmount;
+    ItemSlot TempSlot;
+
+    ItemSO[] Costitemso;
+    int[] CostAmount;
+    ItemSlot[] TempArr;
 
     public void UpdateMatsAmount()
     {
         if (selectedRecipe != null)
         {
-            AmountHolder.UpdateAmountHolder(selectedRecipe.getitemCostArr, selectedRecipe.getoutcomeItem, selectedRecipe.GetCraftingTime);
-            AmountHolder.DoubleAmountOutCome(UIManager._instance.getCraftingAmount);
+
+            //seperating scriptable object 
+            OutComeitemso = selectedRecipe.getoutcomeItem.item;
+            OutComeAmount = selectedRecipe.getoutcomeItem.amount;
+            TempSlot = new ItemSlot(OutComeitemso, OutComeAmount);
+
+            Costitemso = new ItemSO[selectedRecipe.getitemCostArr.Length];
+            CostAmount = new int[selectedRecipe.getitemCostArr.Length];
+
+
+
+            for (int i = 0; i < selectedRecipe.getitemCostArr.Length; i++)
+            {
+                Costitemso[i] = selectedRecipe.getitemCostArr[i].item;
+                CostAmount[i] = selectedRecipe.getitemCostArr[i].amount;
+            }
+
+            TempArr = new ItemSlot[selectedRecipe.getitemCostArr.Length];
+
+            for (int i = 0; i < TempArr.Length; i++)
+            {
+                TempArr[i] = new ItemSlot(Costitemso[i], CostAmount[i]);
+            }
+
+
+            //AmountHolder.UpdateAmountHolder(selectedRecipe.getitemCostArr, selectedRecipe.getoutcomeItem, selectedRecipe.GetCraftingTime);
+            //AmountHolder.DoubleAmountOutCome(UIManager._instance.getCraftingAmount);
             //ShowRecipe(selectedRecipe);
         }
         else
@@ -365,27 +404,32 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         {
             if (selectedRecipe != null)
             {
-                if (!inventory.CheckEnoughItemsForRecipe(AmountHolder))
+                if (!inventory.CheckEnoughItemsForRecipe(selectedRecipe))
                 {
                     Debug.Log("Not Enough Materials");
                 }
                 else
                 {
-                    ShowRecipe(AmountHolder);
-                    IsCrafting = true;
-                    startcount = true;
+                    ShowRecipe(selectedRecipe);
+
+
+                    UIManager._instance.CurrentProcessTile.StartCrafting(selectedRecipe, selectedRecipe.getoutcomeItem.amount);
+
+
                 }
             }
         }
         else if (buttonState == ButtonState.Collect)
         {
-           //collect items
-
+            //collect items
+            UIManager._instance.CurrentProcessTile.CollectItems(UIManager._instance.CurrentProcessTile.ItemsCrafted);
 
             Debug.Log("Collect your item");
         }
         else if (buttonState == ButtonState.Crafting)
         {
+
+
             //you craft but there is no items to collect
             Debug.Log("You are still crafting");
         }
@@ -465,7 +509,7 @@ public class Section
         {
             ChangeSectionSelection(value);
             isSelected = value;
-            
+
         }
     }
 
@@ -564,7 +608,7 @@ public class Section
         {
             CraftingManager._instance.selectedRecipe = recipeList[slotNum];
             CraftingManager._instance.ShowRecipe(recipeList[slotNum]);
-           CraftingManager._instance.UpdateMatsAmount();
+            CraftingManager._instance.UpdateMatsAmount();
         }
         else
         {
