@@ -33,7 +33,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
          EXPAmountToLevelUp = 100;
          maximumAmount = 100f;
     }
-
+    
     public override void Init()
     {
         ResetStats();
