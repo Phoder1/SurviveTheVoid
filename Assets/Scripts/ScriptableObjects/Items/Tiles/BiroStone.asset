@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad4fb29703af1ac4e92edd55a5b9b4f5, type: 3}
   m_Name: BiroStone
   m_EditorClassIdentifier: 
+  itemID: 11
+  itemName: Biro Stone
   maxStackSize: 20
   description: An extremely hard, white stone.
   itemEnum: 0
   sprite: {fileID: 21300000, guid: c6252a0dc9528f549ab9b07716197a1b, type: 3}
   mainTileBase: {fileID: 11400000, guid: ae0288f1bd280644aa206cccb849906f, type: 2}
   interactionType: 0
-  tileType: 0
   isSolid: 1

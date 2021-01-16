@@ -46,5 +46,6 @@ public class PlayerStateMachine
                 break;
 
         }
+        UIManager._instance.UpdateUiState(InputManager.inputState);
     }
 }

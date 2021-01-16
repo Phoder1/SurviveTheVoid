@@ -9,18 +9,25 @@ public class CameraScript : MonoSingleton<CameraScript>
     private Vector2 movement;
     private float scrollMovement;
     private Camera cameraComp;
-    private GridManager gridManager;
-    private Vector2 cameraRealSize => new Vector2(cameraComp.orthographicSize * 2 * cameraComp.aspect, cameraComp.orthographicSize * 2);
-    private Rect worldView;
+    private GridManager gridManager => GridManager._instance;
+    private Vector2 cameraRealSize => new Vector2(GetCameraComp.orthographicSize * 2 * GetCameraComp.aspect, GetCameraComp.orthographicSize * 2);
+    private Vector3 camCornerPosition => new Vector3(transform.position.x, transform.position.y, 0) - (Vector3)cameraRealSize / 2;
+    private Rect worldView => new Rect(_instance.camCornerPosition, _instance.cameraRealSize);
+
+    public Camera GetCameraComp {
+        get {
+            if (cameraComp == null)
+                cameraComp = Camera.main;
+            return cameraComp;
+        }
+    }
+
     private bool viewChanged;
     [SerializeField] private BlockTileSO clickTile;
     StarsParallaxController starsCont;
     // Start is called before the first frame update
     public override void Init() {
-        cameraComp = Camera.main;
-        gridManager = GridManager._instance;
         starsCont = GetComponent<StarsParallaxController>();
-        UpdateView();
     }
 
     // Update is called once per frame
@@ -36,9 +43,9 @@ public class CameraScript : MonoSingleton<CameraScript>
             viewChanged = true;
         }
 
-        scrollMovement = Time.deltaTime *  scrollSpeed * -Input.GetAxis("Mouse ScrollWheel");
+        scrollMovement = Time.deltaTime * scrollSpeed * -Input.GetAxis("Mouse ScrollWheel");
         if (scrollMovement != 0) {
-            cameraComp.orthographicSize += scrollMovement;
+            GetCameraComp.orthographicSize += scrollMovement;
             viewChanged = true;
             starsCont.UpdateViewSize();
         }
@@ -46,14 +53,14 @@ public class CameraScript : MonoSingleton<CameraScript>
         if (Input.GetKey(KeyCode.Mouse0)) {
             TileMapLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? TileMapLayer.Buildings : TileMapLayer.Floor;
             Vector2Int gridPosition = MouseGridPosition(TileMapLayer.Floor);
-            gridManager.SetTile(new TileSlot(clickTile), gridPosition,  layer);
+            gridManager.SetTile(new TileSlot(clickTile), gridPosition, layer);
 
 
         }
         else if (Input.GetKey(KeyCode.Mouse1)) {
             TileMapLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? TileMapLayer.Buildings : TileMapLayer.Floor;
             Vector2Int gridPosition = MouseGridPosition(layer);
-            gridManager.SetTile(null, gridPosition,  layer);
+            gridManager.SetTile(null, gridPosition, layer);
 
         }
         else if (Input.GetKeyDown(KeyCode.LeftControl)) {
@@ -61,7 +68,7 @@ public class CameraScript : MonoSingleton<CameraScript>
             Debug.Log(gridManager.GetTileFromGrid(MouseGridPosition(layer), layer));
         }
         else if (Input.GetKeyDown(KeyCode.Mouse2)) {
-            Vector3 mousePos = cameraComp.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mousePos = GetCameraComp.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = 0;
             TileMapLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? TileMapLayer.Buildings : TileMapLayer.Floor;
             TileHit hit = gridManager.GetHitFromWorldPosition(mousePos, layer);
@@ -78,14 +85,11 @@ public class CameraScript : MonoSingleton<CameraScript>
         }
     }
     private Vector2Int MouseGridPosition(TileMapLayer buildingLayer) {
-        Vector3 mousePos = cameraComp.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 mousePos = GetCameraComp.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0;
         return gridManager.WorldToGridPosition(mousePos, buildingLayer);
     }
-    private void UpdateView() {
-        Vector3 camPosition = (Vector2)transform.position;
-        camPosition -= (Vector3)cameraRealSize / 2;
-        worldView = new Rect(camPosition, cameraRealSize);
+    public void UpdateView() {
         gridManager.UpdateView(worldView);
     }
 }

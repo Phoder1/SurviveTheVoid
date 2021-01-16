@@ -3,7 +3,7 @@ using UnityEngine.Tilemaps;
 
 
 public enum InteractionType { None, Axe, Pickaxe, Hoe, Shovel, Hammer, AnyTool, Special, Any }
-public enum TileType { Block, Plant, Chest, ProcessingTable, LightSource }
+public enum TileType { Block, Gatherable, Chest, ProcessingTable, LightSource }
 #region Tile hit
 public class TileHit
 {
@@ -22,11 +22,26 @@ public abstract class TileAbstSO : ItemSO
 {
     [SerializeField] private TileBase mainTileBase;
     [SerializeField] private InteractionType interactionType;
-    [SerializeField] private TileType tileType;
     [SerializeField] private bool isSolid;
     public TileBase GetMainTileBase => mainTileBase;
     public InteractionType GetInteractionType => interactionType;
-    public TileType GetTileType => tileType;
+    public TileType GetTileType {
+        get {
+            switch (this) {
+                case GatherableTileSO plant:
+                    return TileType.Gatherable;
+                case BlockTileSO block:
+                    return TileType.Block;
+                case ProcessingTableTileSO table:
+                    return TileType.ProcessingTable;
+                case LightSourceTileSO lightSource:
+                    return TileType.LightSource;
+                default:
+                    throw new System.NotImplementedException();
+            }
+        }
+
+    }
 
     public bool GetIsSolid => isSolid;
 }
@@ -49,8 +64,8 @@ public class TileSlot : ITileState
         if (tile == null)
             throw new System.NullReferenceException();
         switch (tile) {
-            case PlantTileSO plant:
-                tileState = new PlantState(plant, this);
+            case GatherableTileSO plant:
+                tileState = new GatherableState(plant, this);
                 break;
             case BlockTileSO block:
                 tileState = new BlockState(block);

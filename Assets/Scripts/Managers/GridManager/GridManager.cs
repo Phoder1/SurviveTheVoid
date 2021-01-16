@@ -28,8 +28,7 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
     #endregion
 
     [SerializeField] private Grid grid;
-    [SerializeField] private Tilemap floor;
-    [SerializeField] private Tilemap buildings;
+    [SerializeField] private Tilemap floor, buildings;
     public Tilemap GetTilemap(TileMapLayer buildingLayer) {
         switch (buildingLayer) {
             case TileMapLayer.Floor:
@@ -40,18 +39,15 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
                 return null;
         }
     }
-    [SerializeField] float clearZoneRadius;
-    [SerializeField] float startIslandRadius;
-    [SerializeField] private TileAbstSO startIslandTile;
+    [SerializeField] float clearZoneRadius, startIslandRadius;
+    [SerializeField] private TileAbstSO startIslandTile, craftingTable;
     [SerializeField] private Noise islandsNoise;
     [SerializeField] private GridRandom buildingsRandom;
     [SerializeField] private int loadDistance;
-    [SerializeField] private float floorOffSet;
-    [SerializeField] private float buildingsOffSet;
+    [SerializeField] private float floorOffSet, buildingsOffSet;
 
 
-    private Vector2Int lastViewMin = Vector2Int.zero;
-    private Vector2Int lastViewMax = Vector2Int.zero;
+    private Vector2Int lastViewMin = Vector2Int.zero, lastViewMax = Vector2Int.zero;
 
     [SerializeField] private TileTierStruct[] floorBlocksTiers;
     [SerializeField] private BuildingGenStruct[] buildingsGeneration;
@@ -59,24 +55,18 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
     private protected struct TileTierStruct
     {
         public TileAbstSO tile;
-        public float distance;
-        public float overlapStart;
+        public float distance, overlapStart;
     }
     [System.Serializable]
     private protected struct BuildingGenStruct
     {
         public TileAbstSO tile;
-        public float chance;
-        public float distance;
+        public float chance, distance, spread;
         public bool global;
-        public float spread;
     }
 
-    private const int CHUNK_SIZE = 16;
-    private const int COLLISION_SENSITIVITY = 10;
-    private const float BUILDING_LAYER_POSITION_OFFSET = 0.5f;
-
-    private const float TOP_FACE_HEIGHT = 0.7f;
+    private const int CHUNK_SIZE = 16, COLLISION_SENSITIVITY = 10;
+    private const float BUILDING_LAYER_POSITION_OFFSET = 0.5f, TOP_FACE_HEIGHT = 0.7f;
 
     //public static GridManager GetInstance;
 
@@ -95,10 +85,11 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
     public override void Init() {
         islandsNoise.GenerateSeed();
         buildingsRandom.GenerateSeed();
+        //CameraScript._instance.UpdateView();
+        SetTile(new TileSlot(craftingTable), new Vector2Int(-7, 0), TileMapLayer.Buildings, true);
     }
 
     public void UpdateView(Rect view) {
-
         Vector2Int bottomLeft = WorldToGridPosition(new Vector2(Mathf.Min(view.min.x, view.max.x), Mathf.Min(view.min.y, view.max.y)), TileMapLayer.Floor);
         Vector2Int topRight = WorldToGridPosition(new Vector2(Mathf.Max(view.min.x, view.max.x), Mathf.Max(view.min.y, view.max.y)), TileMapLayer.Floor);
         Vector2Int topLeft = WorldToGridPosition(new Vector2(Mathf.Min(view.min.x, view.max.x), Mathf.Max(view.min.y, view.max.y)), TileMapLayer.Floor);
@@ -274,7 +265,7 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
             }
 
         }
-        return null;
+        return new TileHit(null, gridPosition);
 
     }
     public void SetTile(TileSlot tile, Vector2Int gridPosition, TileMapLayer buildingLayer, bool playerAction = true) {

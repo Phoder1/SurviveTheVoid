@@ -11,6 +11,7 @@ public class PlayerStats : MonoBehaviour
     int temperature;
     int attackDMG;
     int level;
+    float speed=2;
     public void Init()
     {
      

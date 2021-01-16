@@ -191,19 +191,21 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     public void WalkTowards(Vector3 destination,bool ScanMod)
     {
 
-
+        
 
 
 
         if (ScanMod)
         {
-            float timeToHarvest = 0; // ((PlantTileSO)closestTile.tile.GetTileAbst);
+            float timeToHarvest = 0; //((PlantTileSO)closestTile.tile.GetTileAbst).gather;
 
             if (_GridManager.WorldToGridPosition(transform.position, buildingLayer) != closestTile.gridPosition)
             {
+                if (_GridManager.IsTileWalkable(nextPos, destination) || Input.GetKey(KeyCode.LeftShift))
+                {
 
-                transform.Translate((destination - transform.position).normalized * Time.fixedDeltaTime/playerStats.GetSetSpeed);
-
+                    transform.Translate((destination - transform.position).normalized * Time.fixedDeltaTime / playerStats.GetSetSpeed);
+                }
 
             }
 
@@ -219,10 +221,12 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         {
             destination *= (playerStats.GetSetSpeed * Time.deltaTime);
             currentPos = transform.position;
-            nextPos = currentPos + new Vector2(destination.x,destination.y);
+            nextPos = currentPos + new Vector2(destination.x, destination.y);
+
+            Debug.Log(Input.GetKey(KeyCode.LeftShift));
             if (_GridManager.IsTileWalkable(nextPos, destination) || Input.GetKey(KeyCode.LeftShift))
             {
-            transform.Translate(destination);
+                transform.Translate(destination);
 
             }
         }

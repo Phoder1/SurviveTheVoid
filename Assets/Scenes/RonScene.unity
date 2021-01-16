@@ -1962,6 +1962,7 @@ MonoBehaviour:
   clearZoneRadius: 0
   startIslandRadius: 0
   startIslandTile: {fileID: 0}
+  craftingTable: {fileID: 0}
   islandsNoise:
     seed: 0
     noise: {fileID: 11400000, guid: 590e0a2ecc5c88d4fb75db0217f0a49f, type: 2}
@@ -2313,9 +2314,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 088d9b86520b6294e92d2b2038c7047e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uiElements: []
+  vjMove: {fileID: 0}
+  viFight: {fileID: 0}
+  bInteract: {fileID: 0}
+  bGather: {fileID: 0}
+  bHide: {fileID: 0}
+  bTool1: {fileID: 0}
+  bTool2: {fileID: 0}
+  bTool3: {fileID: 0}
+  bTool4: {fileID: 0}
+  bTool5: {fileID: 0}
+  bMainWeapon: {fileID: 0}
+  bSwap: {fileID: 0}
+  bQuickAccess1: {fileID: 0}
+  bQuickAccess2: {fileID: 0}
+  bQuickAccess3: {fileID: 0}
+  bQuickAccess4: {fileID: 0}
+  bQuickAccess5: {fileID: 0}
+  bInventory: {fileID: 0}
+  bSettings: {fileID: 0}
+  InventoryUI: {fileID: 0}
+  CraftingUI: {fileID: 0}
+  PauseMenuUI: {fileID: 0}
+  ChestUI: {fileID: 0}
+  bCancel: {fileID: 0}
+  bRotate: {fileID: 0}
+  stateText: {fileID: 0}
   sectionBackGroundSprite: []
   SectionBackGroundImage: []
+  StateText: {fileID: 0}
 --- !u!1 &2129712954
 GameObject:
   m_ObjectHideFlags: 0
@@ -2666,6 +2693,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5435700086702367920, guid: ee73434160860324a921a0989281f1ff,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+    - target: {fileID: 5435700086702367920, guid: ee73434160860324a921a0989281f1ff,
+        type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5435700086702367923, guid: ee73434160860324a921a0989281f1ff,
         type: 3}
       propertyPath: lookRange
@@ -2694,7 +2731,7 @@ PrefabInstance:
     - target: {fileID: 5435700086702367934, guid: ee73434160860324a921a0989281f1ff,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3
+      value: 3.5
       objectReference: {fileID: 0}
     - target: {fileID: 5435700086702367934, guid: ee73434160860324a921a0989281f1ff,
         type: 3}
