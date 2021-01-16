@@ -15,15 +15,32 @@ public class ProcessingTableTileSO : TileAbstSO
 public class ProcessingTableTileState : ITileState
 {
     public ProcessingTableTileSO tile;
+    public RecipeSO craftingRecipe;
     public TimeEvent eventInstance;
-    public float craftingTimeEnd;
+    private float craftingStartTime;
+    public int amount;
+    public int ItemsCrafted => Mathf.FloorToInt((Time.time - craftingStartTime) / craftingRecipe.GetCraftingTime);
+    public float CraftingTimeRemaining => (craftingStartTime  + craftingRecipe.GetCraftingTime * amount) - Time.time;
     private bool isCrafting;
-    public bool IsCrafting { get => isCrafting; 
+    public bool IsCrafting {
+        get => isCrafting;
         set => isCrafting = value;
     }
     public ProcessingTableTileState(ProcessingTableTileSO tile) {
         this.tile = tile;
     }
+    public void StartCrafting(RecipeSO recipe, int amount) {
+        if (isCrafting)
+            throw new System.Exception();
+        craftingRecipe = recipe;
+        craftingStartTime = Time.time;
+        this.amount = amount;
+    }
+
+    public void CollectItems(int numOfItems) {
+        amount -= numOfItems;
+    }
+
 
     public TileBase GetMainTileBase {
         get {
@@ -37,11 +54,12 @@ public class ProcessingTableTileState : ITileState
     }
     public TileAbstSO GetTileAbst => tile;
 
-    public InteractionType GetInteractionType => throw new System.NotImplementedException();
+    public ToolType GetInteractionType => throw new System.NotImplementedException();
 
     public TileType GetTileType => throw new System.NotImplementedException();
 
-    public bool GetIsSolid => throw new System.NotImplementedException();
+    public bool GetIsSolid => tile.GetIsSolid;
+    public bool isSpecialInteraction => tile.isSpecialInteraction;
 
 
     public void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
@@ -55,6 +73,6 @@ public class ProcessingTableTileState : ITileState
         UIManager._instance.SetCraftingUIState(true,tile.GetProcessorType,this.tile);
     }
 
-    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer) { }
+    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool playerAction = true) { }
 }
 

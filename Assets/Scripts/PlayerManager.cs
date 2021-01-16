@@ -161,14 +161,14 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     {
         public bool CheckTile(TileSlot tile)
         {
-            return tile.GetInteractionType != InteractionType.Special;
+            return tile.isSpecialInteraction;
         }
     }
     public class SpecialInterractionScanChecker : IChecker
     {
         public bool CheckTile(TileSlot tile)
         {
-            return tile.GetInteractionType == InteractionType.Special;
+            return tile.isSpecialInteraction;
         }
     }
     public void WalkTowards(Vector3 destination,bool ScanMod)
