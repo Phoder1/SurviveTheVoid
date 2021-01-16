@@ -17,11 +17,11 @@ public class LightSourceTileState : ITileState
     public TileBase GetMainTileBase => throw new System.NotImplementedException();
     public TileAbstSO GetTileAbst => tile;
 
-    public InteractionType GetInteractionType => throw new System.NotImplementedException();
-
     public TileType GetTileType => throw new System.NotImplementedException();
 
     public bool GetIsSolid => throw new System.NotImplementedException();
+
+    public bool isSpecialInteraction => tile.isSpecialInteraction;
 
     public void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
         throw new System.NotImplementedException();
@@ -35,5 +35,5 @@ public class LightSourceTileState : ITileState
         throw new System.NotImplementedException();
     }
 
-    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer) { }
+    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool playerAction = true) { }
 }

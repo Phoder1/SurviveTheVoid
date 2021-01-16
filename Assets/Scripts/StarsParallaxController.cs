@@ -13,6 +13,12 @@ public class StarsParallaxController : MonoBehaviour
         cameraSize = mainCamera.orthographicSize;
     }
 
+    private void OnDisable() {
+        foreach (StarsParallax stars in starsParallax) {
+            stars.mr.sharedMaterial.SetTextureOffset("_MainTex", Vector2.zero);
+        }
+    }
+
 
     private void Update() {
         foreach (StarsParallax stars in starsParallax) {

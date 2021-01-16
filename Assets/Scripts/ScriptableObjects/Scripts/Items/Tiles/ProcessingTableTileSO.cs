@@ -37,11 +37,13 @@ public class ProcessingTableTileState : ITileState
     }
     public TileAbstSO GetTileAbst => tile;
 
-    public InteractionType GetInteractionType => throw new System.NotImplementedException();
+    public ToolType GetInteractionType => throw new System.NotImplementedException();
 
     public TileType GetTileType => throw new System.NotImplementedException();
 
-    public bool GetIsSolid => throw new System.NotImplementedException();
+    public bool GetIsSolid => tile.GetIsSolid;
+    public bool isSpecialInteraction => tile.isSpecialInteraction;
+
 
 
     public void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
@@ -55,6 +57,6 @@ public class ProcessingTableTileState : ITileState
         UIManager._instance.ToggleCraftingUI(tile.GetProcessorType);
     }
 
-    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer) { }
+    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool playerAction = true) { }
 }
 
