@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce262156a784a4c439534bfe094dfdf6, type: 3}
   m_Name: ConsumableCookedMeat
   m_EditorClassIdentifier: 
+  itemID: 2
+  itemName: Cooked Meat
   maxStackSize: 20
   description: 
   itemEnum: 5
   sprite: {fileID: 21300000, guid: 1d9610081e7a2914488c88a72b0ee1e8, type: 3}
-  consumableType: 2
-  consumeAmount: 10
+  instantEffects:
+  - effectType: 1
+    Amount: 10
+  OverTimeEffects: []

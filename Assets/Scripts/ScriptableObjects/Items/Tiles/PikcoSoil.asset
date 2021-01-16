@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad4fb29703af1ac4e92edd55a5b9b4f5, type: 3}
   m_Name: PikcoSoil
   m_EditorClassIdentifier: 
+  itemID: 17
+  itemName: Pikco Soil
   maxStackSize: 20
   description: Soil rich in metals and fungus which give it it's bright, shiny blue
     color.
@@ -19,5 +21,4 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 04372b1ee3538ea42b20f4ec49ee9ba1, type: 3}
   mainTileBase: {fileID: 11400000, guid: 7ee47ce989a1f124c83d2254a609724c, type: 2}
   interactionType: 8
-  tileType: 0
   isSolid: 1

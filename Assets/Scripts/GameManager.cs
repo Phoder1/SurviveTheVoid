@@ -19,8 +19,8 @@ public class GameManager : MonoSingleton<GameManager>
              CraftingManager._instance,
              InventoryUIManager._instance,
              UIManager._instance,
-             InputManager._instance
-
+             InputManager._instance,
+             
         };
         foreach (ISingleton singleton in singletons) {
             if (singleton != null) {
