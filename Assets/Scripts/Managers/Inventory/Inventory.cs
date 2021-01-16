@@ -364,24 +364,40 @@ public class Inventory
         return haveAllIngridients;
     }
 
-    private void Craft(RecipeSO recipe) {
-        for (int i = 0; i < recipe.getitemCostArr.Length; i++) {
-            RemoveItemFromInventory(0, recipe.getitemCostArr[i]);
+    public void RemoveItemsByRecipe(RecipeSO recipe,int Amount = 1)
+    {
+
+        ItemSlot[] TempSlot = new ItemSlot[recipe.getitemCostArr.Length];
+
+        for (int i = 0; i < recipe.getitemCostArr.Length; i++)
+        {
+            TempSlot[i] = new ItemSlot(recipe.getitemCostArr[i].item, recipe.getitemCostArr[i].amount * Amount);
+
+
+            RemoveItemFromInventory(0, TempSlot[i]);
         }
 
         // workBench.add(,recipe.getoutcomeItem);
 
 
-        if (GetAmountOfItem(0, null) > 0 || GetAmountOfItem(0, recipe.getoutcomeItem) < recipe.getoutcomeItem.item.getmaxStackSize) {
-            AddToInventory(0, recipe.getoutcomeItem);
+     
+    }
+
+    public void AddItemsByRecipe(RecipeSO recipe, int Amount = 1)
+    {
+        ItemSlot TempSlot = new ItemSlot(recipe.getoutcomeItem.item, recipe.getoutcomeItem.amount * Amount);
+        if (GetAmountOfItem(0, null) > 0 || GetAmountOfItem(0, TempSlot) < TempSlot.item.getmaxStackSize)
+        {
+            AddToInventory(0, TempSlot);
         }
-        else {
-            for (int i = 0; i < recipe.getitemCostArr.Length; i++) {
+        else
+        {
+            for (int i = 0; i < recipe.getitemCostArr.Length; i++)
+            {
                 AddToInventory(0, recipe.getitemCostArr[i]);
             }
         }
     }
-
 
     bool HaveEnoughOfItemFromInventory(int chestID, ItemSlot item)
     {

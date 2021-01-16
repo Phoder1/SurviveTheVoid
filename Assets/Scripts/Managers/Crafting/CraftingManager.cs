@@ -327,7 +327,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
                 TextMeshProUGUI materialNameText = recipeMaterialSlots[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>();
                 materialNameText.text = Costitemso[i].getItemName;
                 TextMeshProUGUI materialCostText = recipeMaterialSlots[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-                materialCostText.text = inventory.GetAmountOfItem(0, TempArr[i]).ToString() + " / " + TempArr[i].amount;
+                materialCostText.text = inventory.GetAmountOfItem(0, TempArr[i]) + " / " + (TempArr[i].amount * UIManager._instance.getCraftingAmount);
                 recipeMaterialSlots[i].GetComponent<Image>().sprite = recipe.getitemCostArr[i].item.getsprite;
             }
             else
@@ -404,7 +404,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         {
             if (selectedRecipe != null)
             {
-                if (!inventory.CheckEnoughItemsForRecipe(selectedRecipe))
+                if (!inventory.CheckEnoughItemsForRecipe(selectedRecipe, UIManager._instance.getCraftingAmount))
                 {
                     Debug.Log("Not Enough Materials");
                 }
@@ -412,8 +412,9 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
                 {
                     ShowRecipe(selectedRecipe);
 
+                    inventory.RemoveItemsByRecipe(selectedRecipe, UIManager._instance.getCraftingAmount);
+                    UIManager._instance.CurrentProcessTile.StartCrafting(selectedRecipe, (selectedRecipe.getoutcomeItem.amount * UIManager._instance.getCraftingAmount));
 
-                    UIManager._instance.CurrentProcessTile.StartCrafting(selectedRecipe, selectedRecipe.getoutcomeItem.amount);
 
 
                 }
@@ -422,7 +423,16 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         else if (buttonState == ButtonState.Collect)
         {
             //collect items
+            inventory.AddItemsByRecipe(selectedRecipe, UIManager._instance.CurrentProcessTile.ItemsCrafted);
             UIManager._instance.CurrentProcessTile.CollectItems(UIManager._instance.CurrentProcessTile.ItemsCrafted);
+
+            if (UIManager._instance.CurrentProcessTile.ItemsCrafted <= 0)
+            {
+                buttonState = ButtonState.CanCraft;
+                UIManager._instance.SetButtonToState(buttonState,0,0,0);
+            }
+
+
 
             Debug.Log("Collect your item");
         }

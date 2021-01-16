@@ -23,15 +23,23 @@ public class ProcessingTableTileState : ITileState
     public RecipeSO craftingRecipe;
     private float craftingStartTime;
     public int amount;
-    public int ItemsCrafted => Mathf.Min(Mathf.FloorToInt((Time.time - craftingStartTime) / craftingRecipe.GetCraftingTime), amount);
+    public int ItemsCrafted
+    {
+        get
+        {
+            if (!IsCrafting) return 0;
+            return Mathf.Min(Mathf.FloorToInt((Time.time - craftingStartTime) / craftingRecipe.GetCraftingTime), amount);
+
+        }
+    }
     public float CraftingTimeRemaining
     {
         get
         {
 
             if (!IsCrafting) return 0;
-            return Mathf.Max( (craftingStartTime + craftingRecipe.GetCraftingTime * amount) - Time.time , 0);
-            
+            return Mathf.Max((craftingStartTime + craftingRecipe.GetCraftingTime * amount) - Time.time, 0);
+
         }
 
     }
@@ -52,7 +60,9 @@ public class ProcessingTableTileState : ITileState
     }
     public void CollectItems(int numOfItems)
     {
+
         amount -= numOfItems;
+        craftingStartTime += craftingRecipe.GetCraftingTime * numOfItems;
         if (amount == 0)
         {
             ResetCrafting();

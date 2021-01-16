@@ -64,7 +64,7 @@ public class UIManager : MonoSingleton<UIManager>
 
 		if (CraftingUI.activeInHierarchy && CurrentProcessTile != null && CurrentProcessTile.IsCrafting)
 		{
-			ShowTimeAndCollectable(CurrentProcessTile.CraftingTimeRemaining, CurrentProcessTile.ItemsCrafted, CurrentProcessTile.amount);
+			ShowTimeAndCollectable( CurrentProcessTile.ItemsCrafted, CurrentProcessTile.amount, CurrentProcessTile.CraftingTimeRemaining);
 		}
 
 	}
@@ -153,20 +153,33 @@ public class UIManager : MonoSingleton<UIManager>
 
 	//button related
 
+	public int Power(int numbah)
+	{
+		return numbah * numbah;
+	}
+
+	public int Power(int numbah,int Powah)
+	{
+		
+		return Power(numbah);
+	}
 
 
-	public void SetButtonToState(ButtonState CraftState, float timeCraftingRemaining, int craftedItem, int AmountRemaining)
+
+
+	public void SetButtonToState(ButtonState CraftState, int craftedItem, int AmountRemaining, float timeCraftingRemaining = 0)
 	{
 		switch (CraftState)
 		{
 			case ButtonState.CanCraft:
+				
 				CanCraftState();
 				break;
 			case ButtonState.Collect:
-				CanCollectState(timeCraftingRemaining, craftedItem, AmountRemaining);
+				CanCollectState( craftedItem, AmountRemaining,timeCraftingRemaining);
 				break;
 			case ButtonState.Crafting:
-				CraftingState(timeCraftingRemaining, craftedItem, AmountRemaining);
+				CraftingState(craftedItem, AmountRemaining,timeCraftingRemaining);
 				break;
 			default:
 				break;
@@ -184,20 +197,22 @@ public class UIManager : MonoSingleton<UIManager>
 		craftingTimer.text = "";
 	}
 
-	public void CraftingState(float timeCraftingRemaining, int craftedItem, int AmountRemaining)
+	public void CraftingState( int craftedItem, int AmountRemaining,float timeCraftingRemaining)
 	{
 		craftingManager.buttonState = ButtonState.Crafting;
 		CraftingButton.interactable = false;
 		matsHolder.SetActive(false);
 		craftingTimer.gameObject.SetActive(true);
+		CraftingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Crafting";
 		craftingTimer.text = "Time Remaining: " + Mathf.CeilToInt(timeCraftingRemaining) + "Crafted: " + craftedItem + "/" + AmountRemaining;
 	}
-	public void CanCollectState(float timeCraftingRemaining, int craftedItem, int AmountRemaining)
+	public void CanCollectState(int craftedItem, int AmountRemaining,float timeCraftingRemaining)
 	{
 		craftingManager.buttonState = ButtonState.Collect;
 		CraftingButton.interactable = true;
 		matsHolder.SetActive(false);
 		craftingTimer.gameObject.SetActive(true);
+		CraftingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Collect";
 		craftingTimer.text = "Time Remaining: " + Mathf.CeilToInt(timeCraftingRemaining) + "Crafted: " + craftedItem + "/" + AmountRemaining;
 
 
@@ -206,19 +221,19 @@ public class UIManager : MonoSingleton<UIManager>
 
 
 
-	public void ShowTimeAndCollectable(float timeCraftingRemaining, int craftedItem, int AmountRemaining)
+	public void ShowTimeAndCollectable(int craftedItem, int AmountRemaining,float timeCraftingRemaining)
 	{
 		if (timeCraftingRemaining <= 0)// no time
 		{
 			if (AmountRemaining <= 0 && craftedItem <= 0)// has no item to pick or any amount to craft
 			{
-				SetButtonToState(ButtonState.CanCraft, timeCraftingRemaining, craftedItem, AmountRemaining);
+				SetButtonToState(ButtonState.CanCraft, craftedItem, AmountRemaining, timeCraftingRemaining);
 			}
 			else
 			{
 				if (craftedItem > 0)// if you still have something to pick up
 				{
-					SetButtonToState(ButtonState.Collect, timeCraftingRemaining, craftedItem, AmountRemaining);
+					SetButtonToState(ButtonState.Collect,  craftedItem, AmountRemaining, timeCraftingRemaining);
 				}
 			}
 		}
@@ -226,11 +241,11 @@ public class UIManager : MonoSingleton<UIManager>
 		{
 			if (craftedItem <= 0)// if you dont have to pick any item
 			{
-				SetButtonToState(ButtonState.Crafting, timeCraftingRemaining, craftedItem, AmountRemaining);
+				SetButtonToState(ButtonState.Crafting,  craftedItem, AmountRemaining, timeCraftingRemaining);
 			}
 			else // if you have to pick any item
 			{
-				SetButtonToState(ButtonState.Collect, timeCraftingRemaining, craftedItem, AmountRemaining);
+				SetButtonToState(ButtonState.Collect, craftedItem, AmountRemaining, timeCraftingRemaining);
 			}
 		}
 	}
@@ -258,7 +273,7 @@ public class UIManager : MonoSingleton<UIManager>
 		craftingManager.GetSetProcessor = _type;
 		CurrentProcessTile = tile;
 		if (CurrentProcessTile.IsCrafting)
-			ShowTimeAndCollectable(tile.CraftingTimeRemaining, tile.ItemsCrafted, tile.amount);
+			ShowTimeAndCollectable( tile.ItemsCrafted, tile.amount, tile.CraftingTimeRemaining);
 
 	}
 
