@@ -1,26 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerStats : MonoBehaviour
+public class PlayerStats : MonoSingleton<PlayerStats>
 {
-    int HP;
-    int hunger;
-    int EXP;
+
+    float HP;
+    float hunger;
+    float EXP;
     float speed = 5;
-    int temperature;
-    int attackDMG;
+    float temperature;
+    float attackDMG;
     int level;
-    int thirst;
-    int oxygen;
-    int awakeness;
+    float thirst;
+    float oxygen;
+    float awakeness;
     float gatheringSpeed;
-    public void Init()
+
+    void ResetStats()
     {
-        ResetStats();
-    }
-    void ResetStats() {
         thirst = 100;
-        hunger = 100;
+        hunger = 50;
         EXP = 0;
         speed = 5f;
         temperature = 50;
@@ -29,45 +29,30 @@ public class PlayerStats : MonoBehaviour
         oxygen = 100;
         awakeness = 100;
         gatheringSpeed = 2f;
+        HP = 50;
+       
     }
 
+    public override void Init()
+    {
+        ResetStats();
+    }
 
-    public int GetSetHP { get { return HP; } set { HP = value; } }
-    public int GetSetAwakeness { get { return awakeness; } set { awakeness = value; } }
-    public int GetSetOxygen { get { return oxygen; } set { oxygen = value; } }
-    public int GetSetThirst { get { return thirst; } set { thirst = value; } }
-    public int GetSetHunger { get { return hunger; } set { hunger = value; } }
-    public int GetSetTemperature { get { return temperature; } set { temperature = value; } }
-    public int GetSetAttackDMG { get { return attackDMG; } set { attackDMG = value; } }
-    public int GetSetEXP { get { return EXP; } set { EXP = value; } }
-    public int GetSetLevel { get { return level; } set { level = value; } }
+    public float GetSetHP { get { return HP; } set { 
+            Debug.Log("HP is : " + HP);
+            HP = value; 
+            Debug.Log("HP is Now : " + HP); }
+    }
+    public float GetSetAwakeness { get { return awakeness; } set { awakeness = value; } }
+    public float GetSetOxygen { get { return oxygen; } set { oxygen = value; } }
+    public float GetSetThirst { get { return thirst; } set { thirst = value; } }
+    public float GetSetHunger { get { return hunger; } set { Debug.Log("Hunger is Now : " + hunger); hunger = value; Debug.Log("Hunger is Now : " + hunger); } }
+    public float GetSetTemperature { get { return temperature; } set { temperature = value; } }
+    public float GetSetAttackDMG { get { return attackDMG; } set { attackDMG = value; } }
+    public float GetSetEXP { get { return EXP; } set { EXP = value; } }
+    public int GetLevel { get { return level; } }
     public float GetSetSpeed { get { return speed; } set { speed = value; } }
     public float GetSetGatheringSpeed { get { return gatheringSpeed; } set { gatheringSpeed = value; } }
 
-
-
-
-    public class EffectHandler {
-
-        List<ConsumableEffect> ActiveEffect;
-
-        public EffectHandler() {
-            ActiveEffect = new List<ConsumableEffect>();
-        }
-
-
-        public void AddEffect(ConsumableEffect ConsumeEffect) {
-
-            if (!ActiveEffect.Contains(ConsumeEffect))
-                ActiveEffect.Add(ConsumeEffect);
-            
-
-            // add logic of not activating or removing the effect
-        }
-
-        public void RemoveEffect(ConsumableEffect ConsumeEffect) {
-            ActiveEffect.Remove(ConsumeEffect);
-        }
-    }
 
 }

@@ -55,7 +55,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[4], 1));
+            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[0], 1));
             ShowRecipe(selectedRecipe);
             inventoryUI.UpdateInventoryToUI();
         }

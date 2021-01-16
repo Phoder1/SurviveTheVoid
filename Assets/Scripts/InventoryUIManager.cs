@@ -45,13 +45,14 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 		
         if(itemCache.item.GetItemType == ItemType.Consumable)
         {
-            Debug.Log("Consumed: " + itemCache.item.getItemName);
-            inventory.RemoveItemFromInventory(0, new ItemSlot(itemCache.item,1));
-           
-
-            //check if item is on cooldown if not consume the item and start cooldown
-            // else you can't consume
-
+            if (ConsumeEffectHandler._instance.GetEffectCoolDown(itemCache.item as ConsumableItemSO))
+            {
+                if (inventory.RemoveItemFromInventory(0, new ItemSlot(itemCache.item, 1)))
+                {
+                    Debug.Log("Consumed: " + itemCache.item.getItemName);
+                    (itemCache.item as ConsumableItemSO).ApplyEffect();
+                }
+            }
 
         }
 

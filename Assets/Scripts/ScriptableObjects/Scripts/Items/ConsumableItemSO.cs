@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections;
 using UnityEngine;
 
+public enum EffectType {
+Instant, ToggleOverTime, OverTimeSmallPortion
+}
 
-
-public enum EffectType
+public enum EffectCategory
 {
 	HP, // + HP instant
 	HP_Regeneration, // + small amount of HP over duration time
@@ -32,12 +33,36 @@ public enum EffectType
 [CreateAssetMenu(fileName = "New Consumable Item", menuName = "Items/" + "Consumable")]
 public class ConsumableItemSO : ItemSO
 {
-
+	
 	public ConsumableEffect[] Effects;
+	public void ApplyEffect() {
 
+		if (Effects.Length == 0)
+			return;
+	
+
+		for (int i = 0; i < Effects.Length; i++)
+		{
+			if (Effects[i] == null)
+				continue;
+			
+			ConsumeEffectHandler._instance.StartEffect(Effects[i]);
+		}
+
+		
+	}
 }
-
-
+[Serializable]
+public class ConsumableEffect
+{
+	public EffectCategory effectCategory;
+	public EffectType effectType;
+	public bool isRelative; 
+	public bool isPresentage;
+	public int amount;
+	public float duration;
+	public float tickTime;
+}
 
 
 

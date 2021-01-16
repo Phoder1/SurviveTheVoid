@@ -232,7 +232,7 @@ public class Inventory
         return false;
     }
 
-    private void RemoveObjectFromInventory(int chestID, ItemSlot item)
+    private bool RemoveObjectFromInventory(int chestID, ItemSlot item)
     {
         if (item.amount < 0)
             item.amount *= -1;
@@ -240,11 +240,11 @@ public class Inventory
 
 
         if (item == null || item.amount <= 0)
-            return;
+            return false;
 
         inventoryCache = GetInventoryFromDictionary(chestID);
         if (inventoryCache == null)
-            return;
+            return false;
 
         // if item is not stackable
         if (item.item.getmaxStackSize == 1)
@@ -261,7 +261,7 @@ public class Inventory
                 }
             }
 
-            return;
+            return false;
         }
 
 
@@ -269,7 +269,7 @@ public class Inventory
         if (item.amount > amountIHave)
         {
             Debug.Log("You are trying To Remove : " + item.amount + " and I Have Only This Amount : " + amountIHave);
-            return;
+            return false;
         }
 
 
@@ -289,7 +289,7 @@ public class Inventory
                     itemAmountCount = itemAmountCount - inventoryCache[i].amount;
                     inventoryCache[i] = null;
                     RemoveObjectFromInventory(chestID, item);
-                    return;
+                    return true ;
                 }
                 else if (itemAmountCount - inventoryCache[i].amount == 0)
                 {
@@ -305,13 +305,21 @@ public class Inventory
 
             }
         }
+        return true;
     }
 
-    public void RemoveItemFromInventory(int chestID, ItemSlot item)
+    public bool RemoveItemFromInventory(int chestID, ItemSlot item)
     {
         itemAmountCount = item.amount;
-        RemoveObjectFromInventory(chestID, item);
+       
+        if (RemoveObjectFromInventory(chestID, item))
+        {
         inventoryUI.UpdateInventoryToUI();
+            return true;
+        }
+
+
+        return false;
     }
 
     public bool CheckInventoryForItem(int chestID, ItemSlot item)
@@ -580,7 +588,7 @@ public class Inventory
                 Debug.Log("Inventory list in spot " + i + "is Null");
             }
             else
-                Debug.Log("Inventory list in spot " + i + " with the amount : " + inventoryCache[i].amount + " of type: " + inventoryCache[i].item.GetItemType);
+                Debug.Log("Inventory list in spot " + i + " with the amount : " + inventoryCache[i].amount + " of type: " + inventoryCache[i].item.getItemName);
         }
 
     }
