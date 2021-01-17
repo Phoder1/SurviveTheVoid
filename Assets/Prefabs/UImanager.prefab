@@ -7273,7 +7273,7 @@ GameObject:
   - component: {fileID: 3303330036115559565}
   - component: {fileID: 3303330036115559564}
   m_Layer: 0
-  m_Name: Fill
+  m_Name: Water_Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7954,7 +7954,7 @@ GameObject:
   - component: {fileID: 3303330036325718904}
   - component: {fileID: 3303330036325718907}
   m_Layer: 0
-  m_Name: Fill
+  m_Name: Hp_Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8089,6 +8089,12 @@ MonoBehaviour:
   bCancel: {fileID: 358540573}
   bRotate: {fileID: 1589588351}
   stateText: {fileID: 3108493680952785529}
+  hpFill: {fileID: 3303330036325718907}
+  foodFill: {fileID: 3303330037604814074}
+  waterFill: {fileID: 3303330036115559564}
+  airFill: {fileID: 3303330037032135031}
+  sleepFill: {fileID: 3303330036797592334}
+  xpFill: {fileID: 3303330036357643770}
   sectionBackGroundSprite:
   - {fileID: 21300000, guid: e3cff251f5ab373468d19cc2beae73a4, type: 3}
   - {fileID: 21300000, guid: 10544b3a046b5d94798c51b6ce7b0ae2, type: 3}
@@ -8102,6 +8108,8 @@ MonoBehaviour:
   CraftingButton: {fileID: 6033404866369898240}
   matsHolder: {fileID: 6033404865582810845}
   craftingTimer: {fileID: 1371059309}
+  SliderBackGround: {fileID: 0}
+  MultipleButt: {fileID: 0}
   amountSlider: {fileID: 843444650}
   amountText: {fileID: 4807661}
   craftingAmount: 1
@@ -8177,7 +8185,6 @@ MonoBehaviour:
   ItemSlotPrefab: {fileID: 2458655832146661207, guid: a4ca921f8ddcf4d4d8535b9c3898c044,
     type: 3}
   selectedRecipe: {fileID: 0}
-  AmountHolder: {fileID: 11400000, guid: fd07e31eef4fb574891e50d3009ff43e, type: 2}
   Timer: 0
 --- !u!1 &3303330036341737660
 GameObject:
@@ -8266,7 +8273,7 @@ GameObject:
   - component: {fileID: 3303330036357643771}
   - component: {fileID: 3303330036357643770}
   m_Layer: 0
-  m_Name: Fill
+  m_Name: Xp_Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9421,7 +9428,7 @@ GameObject:
   - component: {fileID: 3303330036797592335}
   - component: {fileID: 3303330036797592334}
   m_Layer: 0
-  m_Name: Fill
+  m_Name: Sleep_Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9988,7 +9995,7 @@ GameObject:
   - component: {fileID: 3303330037032135028}
   - component: {fileID: 3303330037032135031}
   m_Layer: 0
-  m_Name: Fill
+  m_Name: Air_Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10676,7 +10683,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -47.30005, y: -37.3}
+  m_AnchoredPosition: {x: -47.300293, y: -37.30005}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &3303330037215079378
@@ -11477,7 +11484,7 @@ GameObject:
   - component: {fileID: 3303330037604814075}
   - component: {fileID: 3303330037604814074}
   m_Layer: 0
-  m_Name: Fill
+  m_Name: Food_Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

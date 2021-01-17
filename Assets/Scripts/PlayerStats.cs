@@ -31,7 +31,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         gatheringSpeed = 2f;
         HP = 100f;
          EXPAmountToLevelUp = 100;
-         maximumAmount = 100f;
+         GetSetMaximumAmount = 100f;
     }
     
     public override void Init()
@@ -48,9 +48,9 @@ public class PlayerStats : MonoSingleton<PlayerStats>
                 // DEAD LOGIC
                 HP = 0;
             }
-            else if(HP > maximumAmount)
+            else if(HP > GetSetMaximumAmount)
             {
-                HP = maximumAmount;
+                HP = GetSetMaximumAmount;
             }
 
 
@@ -68,9 +68,9 @@ public class PlayerStats : MonoSingleton<PlayerStats>
                 // TIRED LOGIC
                 awakeness = 0;
             }
-            else if (awakeness > maximumAmount)
+            else if (awakeness > GetSetMaximumAmount)
             {
-                awakeness = maximumAmount;
+                awakeness = GetSetMaximumAmount;
             }
         } 
     }
@@ -83,9 +83,9 @@ public class PlayerStats : MonoSingleton<PlayerStats>
                 // DEATH LOGIC
                 oxygen = 0;
             }
-            else if (oxygen > maximumAmount)
+            else if (oxygen > GetSetMaximumAmount)
             {
-                oxygen = maximumAmount;
+                oxygen = GetSetMaximumAmount;
             }
 
         } 
@@ -99,9 +99,9 @@ public class PlayerStats : MonoSingleton<PlayerStats>
                 // Thirst LOGIC
                 thirst = 0;
             }
-            else if (thirst > maximumAmount)
+            else if (thirst > GetSetMaximumAmount)
             {
-                thirst = maximumAmount;
+                thirst = GetSetMaximumAmount;
             }
         }
     }
@@ -116,9 +116,9 @@ public class PlayerStats : MonoSingleton<PlayerStats>
                 // HUNGRY LOGIC
                 hunger = 0;
             }
-            else if (hunger > maximumAmount)
+            else if (hunger > GetSetMaximumAmount)
             {
-                hunger = maximumAmount;
+                hunger = GetSetMaximumAmount;
             }
         } 
     }
@@ -131,10 +131,10 @@ public class PlayerStats : MonoSingleton<PlayerStats>
                 // COLD LOGIC
                 temperature = 0;
             }
-            else if (temperature > maximumAmount)
+            else if (temperature > GetSetMaximumAmount)
             {
                 // HOT LOGIC
-                temperature = maximumAmount;
+                temperature = GetSetMaximumAmount;
             }
         }
     }
@@ -185,6 +185,5 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         } 
     }
 
-
-
+	public float GetSetMaximumAmount { get => maximumAmount; set => maximumAmount = value; }
 }
