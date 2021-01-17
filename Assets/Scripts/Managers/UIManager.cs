@@ -64,7 +64,8 @@ public class UIManager : MonoSingleton<UIManager>
 
 		if (CraftingUI.activeInHierarchy && craftingManager.CurrentProcessTile != null && craftingManager.CurrentProcessTile.IsCrafting)
 		{
-			ShowTimeAndCollectable(craftingManager.CurrentProcessTile.ItemsCrafted, craftingManager.CurrentProcessTile.amount, craftingManager.CurrentProcessTile.CraftingTimeRemaining);
+			ShowCraftingTimer(craftingManager.CurrentProcessTile.ItemsCrafted, craftingManager.CurrentProcessTile.amount, craftingManager.CurrentProcessTile.CraftingTimeRemaining);
+			//ShowTimeAndCollectable(craftingManager.CurrentProcessTile.ItemsCrafted, craftingManager.CurrentProcessTile.amount, craftingManager.CurrentProcessTile.CraftingTimeRemaining);
 		}
 
 	}
@@ -178,6 +179,7 @@ public class UIManager : MonoSingleton<UIManager>
 
 	public void CanCraftState()
 	{
+		//update only when need
 		craftingManager.sectionHolder.gameObject.SetActive(true);
 		SliderBackGround.SetActive(false);
 		SliderBackGround.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Multiple";
@@ -191,6 +193,8 @@ public class UIManager : MonoSingleton<UIManager>
 
 	public void CraftingState( int craftedItem, int AmountRemaining,float timeCraftingRemaining)
 	{
+		//update when need
+		craftingManager.selectedRecipe = craftingManager.CurrentProcessTile.craftingRecipe;
 		craftingManager.sectionHolder.gameObject.SetActive(false);
 		SliderBackGround.SetActive(true);
 		MultipleButt.text = "Add";
@@ -199,11 +203,13 @@ public class UIManager : MonoSingleton<UIManager>
 		CraftingButton.interactable = false;
 		matsHolder.SetActive(true);
 		craftingTimer.gameObject.SetActive(true);
-		CraftingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = craftedItem + "/" + AmountRemaining;
-		craftingTimer.text = Mathf.CeilToInt(timeCraftingRemaining).ToString();
+
+
 	}
 	public void CanCollectState(int craftedItem, int AmountRemaining,float timeCraftingRemaining)
 	{
+		//update when need
+		craftingManager.selectedRecipe = craftingManager.CurrentProcessTile.craftingRecipe;
 		craftingManager.sectionHolder.gameObject.SetActive(false);
 		SliderBackGround.SetActive(true);
 		SliderBackGround.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Craft: " + craftingAmount;
@@ -212,11 +218,23 @@ public class UIManager : MonoSingleton<UIManager>
 		CraftingButton.interactable = true;
 		matsHolder.SetActive(true);
 		craftingTimer.gameObject.SetActive(true);
-		CraftingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = craftedItem + "/" + AmountRemaining;
-		craftingTimer.text = Mathf.CeilToInt(timeCraftingRemaining).ToString();
+
+
+
+
 	}
 
+	void ShowCraftingTimer(int craftedItem,int AmountRemaining,float timeCraftingRemaining)
+	{
+		//always update
+		CraftingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = craftedItem + "/" + AmountRemaining;
+		craftingTimer.text = Mathf.CeilToInt(timeCraftingRemaining).ToString();
 
+		
+			ShowTimeAndCollectable(craftedItem, AmountRemaining, timeCraftingRemaining);
+				
+
+	}
 
 	public void ShowTimeAndCollectable(int craftedItem, int AmountRemaining,float timeCraftingRemaining)
 	{

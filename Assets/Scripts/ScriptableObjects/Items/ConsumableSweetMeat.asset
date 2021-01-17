@@ -17,11 +17,18 @@ MonoBehaviour:
   maxStackSize: 20
   description: 
   sprite: {fileID: 21300000, guid: 1d9610081e7a2914488c88a72b0ee1e8, type: 3}
-  instantEffects:
-  - effectType: 1
-    Duration: 0
-    Amount: 5
-  OverTimeEffects:
-  - effectType: 2
-    Duration: 10
-    Amount: 5
+  Effects:
+  - effectCategory: 1
+    effectType: 2
+    isRelative: 0
+    isPresentage: 0
+    amount: 15
+    duration: 15
+    tickTime: 1
+  - effectCategory: 2
+    effectType: 0
+    isRelative: 0
+    isPresentage: 0
+    amount: 5
+    duration: 0
+    tickTime: 0
