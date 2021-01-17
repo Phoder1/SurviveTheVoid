@@ -182,7 +182,6 @@ public class UIManager : MonoSingleton<UIManager>
 		//update only when need
 		craftingManager.sectionHolder.gameObject.SetActive(true);
 		SliderBackGround.SetActive(false);
-		SliderBackGround.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Multiple";
 		craftingManager.buttonState = ButtonState.CanCraft;
 		CraftingButton.interactable = true;
 		CraftingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Craft";
@@ -274,7 +273,7 @@ public class UIManager : MonoSingleton<UIManager>
 		{
 			if (craftingManager.CurrentProcessTile.amount <= craftingManager.selectedRecipe.getoutcomeItem.item.getmaxStackSize)
 			{
-				SliderBackGround.SetActive(true);
+				//SliderBackGround.SetActive(true);
 				if (craftingManager.CurrentProcessTile.IsCrafting)
 				{
 					amountSlider.maxValue = craftingManager.selectedRecipe.getoutcomeItem.item.getmaxStackSize - craftingManager.CurrentProcessTile.amount;
@@ -292,14 +291,14 @@ public class UIManager : MonoSingleton<UIManager>
 					amountSlider.minValue = 1;
 				}
 			}
-			else
+			else 
 			{
-				
+				SliderBackGround.SetActive(false);
 				amountSlider.value = 0;
 				craftingAmount = 0;
 				amountSlider.maxValue = 0;
 				amountSlider.minValue = 0;
-				SliderBackGround.SetActive(false);
+
 			}
 		}
 		
