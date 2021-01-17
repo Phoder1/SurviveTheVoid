@@ -12,6 +12,7 @@ public class InputManager : MonoSingleton<InputManager>
     PlayerStateMachine playerStateMachine;
     [SerializeField] VirtualJoystick vJ;
     public static InputState inputState;
+    public Vector2 VJAxis => vJ.inpudDir;
 
  
     public override void Init()
@@ -83,13 +84,7 @@ public class InputManager : MonoSingleton<InputManager>
         }
 
     }
-    public Vector2 GetAxis()
-    {
-
-        //ControllersCheck that returns Vector2
-        Vector2 moveDirection = vJ.inpudDir;
-        return moveDirection;
-    }
+    
 
 
     public void SinglePressedButton(bool isButtonA)
@@ -113,8 +108,6 @@ public class InputManager : MonoSingleton<InputManager>
             case BuildingState z:
                 return;
         }
-
-        Debug.Log("Clicked");
         if (isButtonA)
             currentState.ButtonA();
         else

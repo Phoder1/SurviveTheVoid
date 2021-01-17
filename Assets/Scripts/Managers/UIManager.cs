@@ -366,7 +366,7 @@ public class UIManager : MonoSingleton<UIManager>
 	{
 		ResetMultiple();
 		CraftingUI.SetActive(false);
-		PlayerManager._instance.Interracted = false;
+		PlayerManager._instance.MenuClosed();
 	}
 
 	#endregion

@@ -27,6 +27,7 @@ public abstract class TileAbstSO : ItemSO
         get {
             switch (GetTileType) {
                 case TileType.Block:
+                case TileType.Gatherable:
                     return false;
                 default:
                     return true;
