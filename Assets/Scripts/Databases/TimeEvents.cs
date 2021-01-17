@@ -4,7 +4,7 @@ namespace Assets.TimeEvents
 {
     public abstract class TimeEvent
     {
-        public readonly float triggerTime;
+        public float triggerTime;
         protected bool eventTriggered = false;
 
 
@@ -18,6 +18,11 @@ namespace Assets.TimeEvents
             if (!eventTriggered) {
                 TimeManager._instance.RemoveEvent(this);
             }
+        }
+        public void UpdateTriggerTime(float triggerTime) {
+            this.triggerTime = triggerTime;
+            Cancel();
+            TimeManager._instance.AddEvent(this);
         }
     }
 }
