@@ -1,4 +1,5 @@
 ﻿using Assets.TimeEvents;
+using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -35,12 +36,19 @@ public class ProcessingTableTileState : ITileState
 
         }
     }
+    public float CraftingEndTime {
+        get {
+            if (!craftingRecipe)
+                return Time.time;
+            return craftingStartTime + craftingRecipe.GetCraftingTime * amount;
+        }
+    }
     public float CraftingTimeRemaining
     {
         get {
             if (!IsCrafting)
                 return 0;
-            return Mathf.Max((craftingStartTime + craftingRecipe.GetCraftingTime * amount) - Time.time, 0);
+            return Mathf.Max(CraftingEndTime - Time.time, 0);
         }
     }
     private bool isCrafting;
@@ -62,6 +70,7 @@ public class ProcessingTableTileState : ITileState
         craftingStartTime = Time.time;
         IsCrafting = true;
         this.amount = amount;
+        eventInstance = new TileChangeTimeEvent(CraftingEndTime, this);
     }
     public void CollectItems(int numOfItems)
     {
@@ -80,10 +89,8 @@ public class ProcessingTableTileState : ITileState
     public void AddToQueue(int numOfItems)
     {
         amount += numOfItems;
-
-       
+        eventInstance.UpdateTriggerTime(CraftingEndTime);
     }
-
 
     public void ResetCrafting()
     {
@@ -132,6 +139,18 @@ public class ProcessingTableTileState : ITileState
 
     public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool playerAction = true) {
         this.gridPosition = gridPosition;
+    }
+
+    private class TileChangeTimeEvent : TimeEvent
+    {
+        private readonly ProcessingTableTileState triggeringTile;
+        public TileChangeTimeEvent(float triggerTime, ProcessingTableTileState triggeringTile) : base(triggerTime) {
+            this.triggeringTile = triggeringTile;
+        }
+
+        public override void Trigger() {
+            triggeringTile.IsCrafting = false;
+        }
     }
 }
 
