@@ -51,16 +51,21 @@ public class ProcessingTableTileState : ITileState
             return Mathf.Max(CraftingEndTime - Time.time, 0);
         }
     }
+    private bool queueFinished;
+    public bool QueueFinished { 
+        get => queueFinished; 
+        set {
+            if(queueFinished != value) {
+                queueFinished = value;
+                GridManager._instance.SetTile(tileSlot, gridPosition, TileMapLayer.Buildings);
+            }
+        }
+    }
     private bool isCrafting;
     public bool IsCrafting
     {
         get => isCrafting;
-        set {
-            if (value != isCrafting) {
-                isCrafting = value;
-                GridManager._instance.SetTile(tileSlot, gridPosition, TileMapLayer.Buildings, true);
-            }
-        }
+        set => isCrafting = value;
     }
     public void StartCrafting(RecipeSO recipe, int amount)
     {
@@ -69,6 +74,7 @@ public class ProcessingTableTileState : ITileState
         craftingRecipe = recipe;
         craftingStartTime = Time.time;
         IsCrafting = true;
+        QueueFinished = false;
         this.amount = amount;
         eventInstance = new TileChangeTimeEvent(CraftingEndTime, this);
     }
@@ -102,7 +108,7 @@ public class ProcessingTableTileState : ITileState
     {
         get
         {
-            if (IsCrafting)
+            if (IsCrafting && !QueueFinished)
             {
                 return tile.GetWhenActiveTile;
             }
@@ -120,7 +126,6 @@ public class ProcessingTableTileState : ITileState
 
     public bool GetIsSolid => tile.GetIsSolid;
     public bool isSpecialInteraction => tile.isSpecialInteraction;
-
 
 
     public void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer)
@@ -149,7 +154,7 @@ public class ProcessingTableTileState : ITileState
         }
 
         public override void Trigger() {
-            triggeringTile.IsCrafting = false;
+            triggeringTile.QueueFinished = true;
         }
     }
 }
