@@ -87,7 +87,8 @@ public class UIManager : MonoSingleton<UIManager>
 
 		if (CraftingUI.activeInHierarchy && craftingManager.CurrentProcessTile != null && craftingManager.CurrentProcessTile.IsCrafting)
 		{
-			ShowTimeAndCollectable(craftingManager.CurrentProcessTile.ItemsCrafted, craftingManager.CurrentProcessTile.amount, craftingManager.CurrentProcessTile.CraftingTimeRemaining);
+			ShowCraftingTimer(craftingManager.CurrentProcessTile.ItemsCrafted, craftingManager.CurrentProcessTile.amount, craftingManager.CurrentProcessTile.CraftingTimeRemaining);
+			//ShowTimeAndCollectable(craftingManager.CurrentProcessTile.ItemsCrafted, craftingManager.CurrentProcessTile.amount, craftingManager.CurrentProcessTile.CraftingTimeRemaining);
 		}
 
 	}
@@ -188,10 +189,10 @@ public class UIManager : MonoSingleton<UIManager>
 				CanCraftState();
 				break;
 			case ButtonState.Collect:
-				CanCollectState( craftedItem, AmountRemaining,timeCraftingRemaining);
+				CanCollectState(craftedItem, AmountRemaining, timeCraftingRemaining);
 				break;
 			case ButtonState.Crafting:
-				CraftingState(craftedItem, AmountRemaining,timeCraftingRemaining);
+				CraftingState(craftedItem, AmountRemaining, timeCraftingRemaining);
 				break;
 			default:
 				break;
@@ -201,9 +202,9 @@ public class UIManager : MonoSingleton<UIManager>
 
 	public void CanCraftState()
 	{
+		//update only when need
 		craftingManager.sectionHolder.gameObject.SetActive(true);
 		SliderBackGround.SetActive(false);
-		SliderBackGround.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Multiple";
 		craftingManager.buttonState = ButtonState.CanCraft;
 		CraftingButton.interactable = true;
 		CraftingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Craft";
@@ -212,8 +213,10 @@ public class UIManager : MonoSingleton<UIManager>
 		craftingTimer.text = "";
 	}
 
-	public void CraftingState( int craftedItem, int AmountRemaining,float timeCraftingRemaining)
+	public void CraftingState(int craftedItem, int AmountRemaining, float timeCraftingRemaining)
 	{
+		//update when need
+		craftingManager.selectedRecipe = craftingManager.CurrentProcessTile.craftingRecipe;
 		craftingManager.sectionHolder.gameObject.SetActive(false);
 		SliderBackGround.SetActive(true);
 		MultipleButt.text = "Add";
@@ -222,11 +225,13 @@ public class UIManager : MonoSingleton<UIManager>
 		CraftingButton.interactable = false;
 		matsHolder.SetActive(true);
 		craftingTimer.gameObject.SetActive(true);
-		CraftingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = craftedItem + "/" + AmountRemaining;
-		craftingTimer.text = Mathf.CeilToInt(timeCraftingRemaining).ToString();
+
+
 	}
-	public void CanCollectState(int craftedItem, int AmountRemaining,float timeCraftingRemaining)
+	public void CanCollectState(int craftedItem, int AmountRemaining, float timeCraftingRemaining)
 	{
+		//update when need
+		craftingManager.selectedRecipe = craftingManager.CurrentProcessTile.craftingRecipe;
 		craftingManager.sectionHolder.gameObject.SetActive(false);
 		SliderBackGround.SetActive(true);
 		SliderBackGround.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Craft: " + craftingAmount;
@@ -235,13 +240,25 @@ public class UIManager : MonoSingleton<UIManager>
 		CraftingButton.interactable = true;
 		matsHolder.SetActive(true);
 		craftingTimer.gameObject.SetActive(true);
-		CraftingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = craftedItem + "/" + AmountRemaining;
-		craftingTimer.text = Mathf.CeilToInt(timeCraftingRemaining).ToString();
+
+
+
+
 	}
 
+	void ShowCraftingTimer(int craftedItem, int AmountRemaining, float timeCraftingRemaining)
+	{
+		//always update
+		CraftingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = craftedItem + "/" + AmountRemaining;
+		craftingTimer.text = Mathf.CeilToInt(timeCraftingRemaining).ToString();
 
 
-	public void ShowTimeAndCollectable(int craftedItem, int AmountRemaining,float timeCraftingRemaining)
+		ShowTimeAndCollectable(craftedItem, AmountRemaining, timeCraftingRemaining);
+
+
+	}
+
+	public void ShowTimeAndCollectable(int craftedItem, int AmountRemaining, float timeCraftingRemaining)
 	{
 		if (timeCraftingRemaining <= 0)// no time
 		{
@@ -253,7 +270,7 @@ public class UIManager : MonoSingleton<UIManager>
 			{
 				if (craftedItem > 0)// if you still have something to pick up
 				{
-					SetButtonToState(ButtonState.Collect,  craftedItem, AmountRemaining, timeCraftingRemaining);
+					SetButtonToState(ButtonState.Collect, craftedItem, AmountRemaining, timeCraftingRemaining);
 				}
 			}
 		}
@@ -261,7 +278,7 @@ public class UIManager : MonoSingleton<UIManager>
 		{
 			if (craftedItem <= 0)// if you dont have to pick any item
 			{
-				SetButtonToState(ButtonState.Crafting,  craftedItem, AmountRemaining, timeCraftingRemaining);
+				SetButtonToState(ButtonState.Crafting, craftedItem, AmountRemaining, timeCraftingRemaining);
 			}
 			else // if you have to pick any item
 			{
@@ -275,11 +292,11 @@ public class UIManager : MonoSingleton<UIManager>
 	//Slider amount related
 	public void OnChangeGetCraftingAmount()
 	{
-		if(craftingManager.CurrentProcessTile != null)
+		if (craftingManager.CurrentProcessTile != null && craftingManager.selectedRecipe != null)
 		{
 			if (craftingManager.CurrentProcessTile.amount <= craftingManager.selectedRecipe.getoutcomeItem.item.getmaxStackSize)
 			{
-				SliderBackGround.SetActive(true);
+				//SliderBackGround.SetActive(true);
 				if (craftingManager.CurrentProcessTile.IsCrafting)
 				{
 					amountSlider.maxValue = craftingManager.selectedRecipe.getoutcomeItem.item.getmaxStackSize - craftingManager.CurrentProcessTile.amount;
@@ -288,26 +305,30 @@ public class UIManager : MonoSingleton<UIManager>
 				{
 					amountSlider.maxValue = craftingManager.selectedRecipe.getoutcomeItem.item.getmaxStackSize;
 				}
-				if(craftingManager.CurrentProcessTile.amount == craftingManager.selectedRecipe.getoutcomeItem.item.getmaxStackSize)
+				if (craftingManager.CurrentProcessTile.amount == craftingManager.selectedRecipe.getoutcomeItem.item.getmaxStackSize)
 				{
+					if (craftingManager.buttonState != ButtonState.CanCraft)
+						SliderBackGround.SetActive(false);
 					amountSlider.minValue = 0;
 				}
 				else
 				{
 					amountSlider.minValue = 1;
+					if (craftingManager.buttonState != ButtonState.CanCraft)
+						SliderBackGround.SetActive(true);
 				}
 			}
 			else
 			{
-				
+				SliderBackGround.SetActive(false);
 				amountSlider.value = 0;
 				craftingAmount = 0;
 				amountSlider.maxValue = 0;
 				amountSlider.minValue = 0;
-				SliderBackGround.SetActive(false);
+
 			}
 		}
-		
+
 
 		craftingAmount = Mathf.RoundToInt(amountSlider.value);
 		amountText.text = "Craft: " + craftingAmount.ToString();
@@ -320,30 +341,29 @@ public class UIManager : MonoSingleton<UIManager>
 
 
 
-	
+
 	public void SetCraftingUIState(bool IsActive, ProcessorType _type, ProcessingTableTileState tile)
 	{
 		CraftingUI.SetActive(IsActive);
 		craftingManager.GetSetProcessor = _type;
 		craftingManager.CurrentProcessTile = tile;
 		if (craftingManager.CurrentProcessTile.IsCrafting)
-			ShowTimeAndCollectable( tile.ItemsCrafted, tile.amount, tile.CraftingTimeRemaining);
-
+			ShowTimeAndCollectable(tile.ItemsCrafted, tile.amount, tile.CraftingTimeRemaining);
 	}
 	bool IsCrafting;
 	public void ToggleMultiple()
 	{
-		if(craftingManager.CurrentProcessTile != null)
+		if (craftingManager.CurrentProcessTile != null)
 		{
 			if (craftingManager.CurrentProcessTile.IsCrafting)
 			{
-				
+
 
 				craftingManager.AddToCraft();
 				amountSlider.value = 1;
 				OnChangeGetCraftingAmount();
 			}
-			else
+			else if (craftingManager.selectedRecipe != null)
 			{
 				SliderBackGround.SetActive(!SliderBackGround.activeInHierarchy);
 				if (!SliderBackGround.activeInHierarchy)
@@ -354,7 +374,7 @@ public class UIManager : MonoSingleton<UIManager>
 			}
 		}
 
-		
+
 
 	}
 
@@ -372,7 +392,7 @@ public class UIManager : MonoSingleton<UIManager>
 	{
 		ResetMultiple();
 		CraftingUI.SetActive(false);
-		PlayerManager._instance.Interracted = false;
+		PlayerManager._instance.MenuClosed();
 	}
 
 	#endregion
@@ -680,14 +700,14 @@ public class UIManager : MonoSingleton<UIManager>
 			}
 
 			// Check if tools for build mode was hidden
-			if(isShownBuildTools == false)
+			if (isShownBuildTools == false)
 			{
 				bCancel.SetActive(false);
 				bRotate.SetActive(false);
 			}
-			
+
 			// Check if we wasn't in build mode and inventory closed to show Visual Icon for Fight mode
-			if(isBuildModeOn == false && isInventoryOpen != true)
+			if (isBuildModeOn == false && isInventoryOpen != true)
 			{
 				viFight.SetActive(true);
 			}
@@ -741,7 +761,7 @@ public class UIManager : MonoSingleton<UIManager>
 			bMainWeapon.SetActive(true);
 			bSwap.SetActive(true);
 		}
-		else if(isQuickAccessSlotsSwapped == false && isShown == true)
+		else if (isQuickAccessSlotsSwapped == false && isShown == true)
 		{
 			SetQuickAccessSlots(true);
 			bMainWeapon.SetActive(true);
@@ -775,7 +795,7 @@ public class UIManager : MonoSingleton<UIManager>
 			isInventoryOpen = false;
 		}
 
-		if(isShown == false)
+		if (isShown == false)
 		{
 			bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
 		}

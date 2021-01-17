@@ -419,6 +419,10 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
                     inventory.RemoveItemsByRecipe(selectedRecipe, UIManager._instance.getCraftingAmount);
                     CurrentProcessTile.StartCrafting(selectedRecipe, (selectedRecipe.getoutcomeItem.amount * UIManager._instance.getCraftingAmount));
                     ShowRecipe(selectedRecipe);
+                    buttonState = ButtonState.Crafting;
+                   UIManager._instance.SetButtonToState(buttonState,CurrentProcessTile.ItemsCrafted,CurrentProcessTile.amount,CurrentProcessTile.CraftingTimeRemaining);
+
+
                     UIManager._instance.OnChangeGetCraftingAmount();
                 }
             }

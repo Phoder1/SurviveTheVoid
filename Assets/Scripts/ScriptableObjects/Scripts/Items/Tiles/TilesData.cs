@@ -27,6 +27,7 @@ public abstract class TileAbstSO : ItemSO
         get {
             switch (GetTileType) {
                 case TileType.Block:
+                case TileType.Gatherable:
                     return false;
                 default:
                     return true;
@@ -79,7 +80,7 @@ public class TileSlot : ITileState
                 tileState = new BlockState(block);
                 break;
             case ProcessingTableTileSO table:
-                tileState = new ProcessingTableTileState(table);
+                tileState = new ProcessingTableTileState(table, this);
                 break;
             case LightSourceTileSO lightSource:
                 tileState = new LightSourceTileState(lightSource);

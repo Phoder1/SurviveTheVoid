@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-
-public class GameManager : MonoSingleton<GameManager>
+﻿public class GameManager : MonoSingleton<GameManager>
 {
     public ISingleton[] singletons;
 
@@ -12,8 +9,9 @@ public class GameManager : MonoSingleton<GameManager>
     }
     public override void Init() {
 
-        singletons = new ISingleton[10] {
+        singletons = new ISingleton[11] {
             CameraController._instance,
+            PlayerController._instance,
              GridManager._instance,
              PlayerManager._instance,
              GodmodeScript._instance,
