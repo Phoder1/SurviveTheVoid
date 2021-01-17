@@ -51,7 +51,7 @@ public class ProcessingTableTileState : ITileState
             return Mathf.Max(CraftingEndTime - Time.time, 0);
         }
     }
-    private bool queueFinished;
+    private bool queueFinished = true;
     public bool QueueFinished { 
         get => queueFinished; 
         set {
