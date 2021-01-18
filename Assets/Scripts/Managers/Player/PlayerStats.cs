@@ -1,189 +1,116 @@
-﻿using UnityEngine;
-using UnityEngine.Networking;
-
+﻿using System.Collections.Generic;
+using UnityEngine;
+public enum SurvivalStatType
+{
+    HP,
+    Hunger,
+    Temperature,
+    AttackDMG,
+    Thirst,
+    Oxygen,
+    Awakeness,
+}
+public enum PlayerStatType
+{
+    EXP,
+    EXPAmountToLevelUp,
+    Level,
+    MoveSpeed,
+    GatheringSpeed
+}
 public class PlayerStats : MonoSingleton<PlayerStats>
 {
-    float EXPAmountToLevelUp;
-    float maximumAmount;
-    float HP;
-    float hunger;
-    float EXP;
-    float moveSpeed;
-    float temperature;
-    float attackDMG;  
-    int level;
-    float thirst;
-    float oxygen;
-    float awakeness;
-    float gatheringSpeed;
-
-    void ResetStats()
-    {
-        thirst = 100f;
-        hunger = 100f;
-        EXP = 0;
-        moveSpeed = 5f;
-        temperature = 50;
-        attackDMG = 5f;
-        level = 1;
-        oxygen = 100f;
-        awakeness = 100f;
-        gatheringSpeed = 2f;
-        HP = 100f;
-         EXPAmountToLevelUp = 100;
-         GetSetMaximumAmount = 100f;
-    }
-    
-    public override void Init()
-    {
+    [SerializeField] SurvivalStat[] survivalStats;
+    [SerializeField] PlayerStat[] playerStats;
+    [SerializeField] ExpStat expStat;
+    private Dictionary<SurvivalStatType, SurvivalStat> survivalStatsDict;
+    private Dictionary<PlayerStatType, PlayerStat> playerStatsDict;
+    public override void Init() {
+        foreach (SurvivalStat stat in survivalStats)
+            survivalStatsDict.Add(stat.stat, stat);
+        foreach (PlayerStat stat in playerStats)
+            playerStatsDict.Add(stat.stat, stat);
+        playerStatsDict.Add(expStat.stat, expStat);
         ResetStats();
     }
 
-    public float GetSetHP { get { return HP; } set { 
-            Debug.Log("HP is : " + HP);
-            HP = value;
-
-            if (HP < 0)
-            {
-                // DEAD LOGIC
-                HP = 0;
-            }
-            else if(HP > GetSetMaximumAmount)
-            {
-                HP = GetSetMaximumAmount;
-            }
-
-
-            Debug.Log("HP is Now : " + HP); }
+    void ResetStats() {
+        foreach (SurvivalStat stat in survivalStatsDict.Values)
+            stat.Reset();
+        foreach (PlayerStat stat in playerStatsDict.Values)
+            stat.Reset();
     }
-    public float GetSetAwakeness { get { return awakeness; } set {
+    private Stat GetStat(SurvivalStatType statType) => survivalStatsDict[statType];
+    private Stat GetStat(PlayerStatType statType) => playerStatsDict[statType];
+    public float GetStatValue(SurvivalStatType statType) => GetStat(statType).GetSetValue;
+    public float GetStatValue(PlayerStatType statType) => GetStat(statType).GetSetValue;
+    public void SetStatValue(SurvivalStatType statType, float value) => GetStat(statType).GetSetValue = value;
+    public void SetStatValue(PlayerStatType statType, float value) => GetStat(statType).GetSetValue = value;
+    public void AddStatValue(SurvivalStatType statType, float value) => GetStat(statType).GetSetValue += value;
+    public void AddStatValue(PlayerStatType statType, float value) => GetStat(statType).GetSetValue += value;
+    public float GetStatMax(SurvivalStatType statType) => survivalStatsDict[statType].maxValue;
+    public void SetStatMax(SurvivalStatType statType, float value) => survivalStatsDict[statType].maxValue = value;
+    private abstract class Stat
+    {
+        public float defaultValue;
+        [SerializeField] private protected float value;
+        public abstract float GetSetValue { get; set; }
 
 
-
-            awakeness = value;
-
-
-            if (awakeness < 0)
-            {
-                // TIRED LOGIC
-                awakeness = 0;
-            }
-            else if (awakeness > GetSetMaximumAmount)
-            {
-                awakeness = GetSetMaximumAmount;
-            }
-        } 
+        public void Reset() {
+            value = defaultValue;
+        }
     }
-    public float GetSetOxygen { get { return oxygen; } set {
-            oxygen = value;
-
-
-            if (oxygen < 0)
-            {
-                // DEATH LOGIC
-                oxygen = 0;
-            }
-            else if (oxygen > GetSetMaximumAmount)
-            {
-                oxygen = GetSetMaximumAmount;
-            }
-
-        } 
-    }
-    public float GetSetThirst { get { return thirst; } set {
-            thirst = value;
-
-
-            if (thirst < 0)
-            {
-                // Thirst LOGIC
-                thirst = 0;
-            }
-            else if (thirst > GetSetMaximumAmount)
-            {
-                thirst = GetSetMaximumAmount;
+    [System.Serializable]
+    private class SurvivalStat : Stat
+    {
+        public SurvivalStatType stat;
+        public float maxValue;
+        public override float GetSetValue {
+            get => value;
+            set {
+                if (value != this.value) {
+                    this.value = Mathf.Clamp(value, 0, maxValue);
+                    UIManager._instance.UpdateSurvivalBar(stat, value);
+                }
             }
         }
     }
-    public float GetSetHunger { get { return hunger; } set { 
-            Debug.Log("Hunger is Now : " + hunger); 
-            hunger = value;
-            Debug.Log("Hunger is Now : " + hunger);
-
-
-            if (hunger < 0)
-            {
-                // HUNGRY LOGIC
-                hunger = 0;
-            }
-            else if (hunger > GetSetMaximumAmount)
-            {
-                hunger = GetSetMaximumAmount;
-            }
-        } 
-    }
-    public float GetSetTemperature { get { return temperature; } set {
-            temperature = value;
-
-
-            if (temperature < 0)
-            {
-                // COLD LOGIC
-                temperature = 0;
-            }
-            else if (temperature > GetSetMaximumAmount)
-            {
-                // HOT LOGIC
-                temperature = GetSetMaximumAmount;
+    [System.Serializable]
+    private class PlayerStat : Stat
+    {
+        public PlayerStatType stat;
+        protected PlayerStat(PlayerStatType stat) {
+            this.stat = stat;
+        }
+        
+        public override float GetSetValue {
+            get => value;
+            set {
+                this.value = Mathf.Max(value, 0);
             }
         }
     }
-    public float GetSetAttackDMG { get { return attackDMG; } set {
-            attackDMG = value;
+    [System.Serializable]
+    private class ExpStat : PlayerStat
+    {
+        protected ExpStat(PlayerStatType stat) : base(stat) {
+        }
 
-
-            if (attackDMG<= 0)
-            {
-                attackDMG = 2f;
+        public override float GetSetValue {
+            get => value;
+            set {
+                if (value != this.value) {
+                    this.value = Mathf.Max(value, 0);
+                    float XPtoLevel = _instance.GetStatValue(PlayerStatType.EXPAmountToLevelUp);
+                    if (this.value > XPtoLevel) {
+                        _instance.AddStatValue(PlayerStatType.Level, 1);
+                        this.value = this.value - XPtoLevel;
+                        _instance.AddStatValue(PlayerStatType.EXPAmountToLevelUp, XPtoLevel * 0.5f);
+                    }
+                    UIManager._instance.UpdateEXPbar();
+                }
             }
-        } 
-    }
-    public float GetSetEXP { get { return EXP; } set { 
-
-            EXP = value;
-
-            if (EXP> EXPAmountToLevelUp)
-            {
-                level++;
-                float expLeftToAddCache = EXP - EXPAmountToLevelUp;
-                EXP = 0;
-                GetSetEXP += expLeftToAddCache;
-            }
-            else if (EXP == EXPAmountToLevelUp)
-            {
-                level++;
-                EXP = 0;
-            }
-
-
         }
     }
-    public int GetLevel { get { 
-            return level;
-        }
-    }
-    public float GetSetSpeed { get { return moveSpeed; } set {
-            moveSpeed = value;
-
-            if (moveSpeed <= 0)
-                moveSpeed = 5f;
-            
-        }
-    }
-    public float GetSetGatheringSpeed { get { return gatheringSpeed; } set {
-            gatheringSpeed = value;
-        } 
-    }
-
-	public float GetSetMaximumAmount { get => maximumAmount; set => maximumAmount = value; }
 }

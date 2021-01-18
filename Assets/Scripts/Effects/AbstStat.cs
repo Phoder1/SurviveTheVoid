@@ -22,19 +22,20 @@ public class HungerStat : AbstStat
     {
         float startingTime = Time.time;
         isOnCoolDown = true;
+        PlayerStats playerStats = PlayerStats._instance;
         if (isPrecentage)
         {
-            float amountFromPrecentage= AmountFromPrecentage(PlayerStats._instance.GetSetHunger, amount) / tickTime;
+            float amountFromPrecentage= AmountFromPrecentage(playerStats.GetStatValue(SurvivalStatType.Hunger), amount) / tickTime;
             while (startingTime + duration > Time.time)
             {
 
                 if (isRelative)
-                    amountFromPrecentage = AmountFromPrecentage(PlayerStats._instance.GetSetHunger - amountFromPrecentage, amount);
+                    amountFromPrecentage = AmountFromPrecentage(playerStats.GetStatValue(SurvivalStatType.Hunger) - amountFromPrecentage, amount);
 
 
-                PlayerStats._instance.GetSetHunger += amountFromPrecentage;
+                playerStats.AddStatValue(SurvivalStatType.Hunger, amountFromPrecentage);
                 yield return new WaitForSeconds(duration / tickTime);
-                amountFromPrecentage = AmountFromPrecentage(PlayerStats._instance.GetSetHunger,amount) / tickTime;
+                amountFromPrecentage = AmountFromPrecentage(playerStats.GetStatValue(SurvivalStatType.Hunger), amount) / tickTime;
             }
         }
         else
@@ -42,7 +43,7 @@ public class HungerStat : AbstStat
 
             while (startingTime + duration > Time.time)
             {
-                PlayerStats._instance.GetSetHunger += amount / tickTime;
+                playerStats.AddStatValue(SurvivalStatType.Hunger, amount / tickTime);
                 yield return new WaitForSeconds(duration / tickTime);
             }
 
@@ -55,11 +56,10 @@ public class HungerStat : AbstStat
         isOnCoolDown = true;
 
         if (isPrecentage)
-            PlayerStats._instance.GetSetHunger += AmountFromPrecentage(PlayerStats._instance.GetSetHunger, amount);
+            PlayerStats._instance.AddStatValue(SurvivalStatType.Hunger, AmountFromPrecentage(PlayerStats._instance.GetStatValue(SurvivalStatType.Hunger), amount));
 
         else
-            PlayerStats._instance.GetSetHunger += amount;
-
+            PlayerStats._instance.AddStatValue(SurvivalStatType.Hunger, amount);
     }
 
     public override IEnumerator ToggleAmountOverTime(float amount, float duration, bool isPrecentage, bool isRelative)

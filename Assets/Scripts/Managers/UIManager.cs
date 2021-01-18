@@ -7,6 +7,7 @@ public class UIManager : MonoSingleton<UIManager>
 	InputManager inputManager;
 	CraftingManager craftingManager;
 	InventoryUIManager inventoryManager;
+	PlayerStats playerStats;
 
 	// UI elements
 	[SerializeField]
@@ -48,8 +49,7 @@ public class UIManager : MonoSingleton<UIManager>
 		sleepFill,
 		xpFill;
 
-	public  enum StatType { HP, Food, Water, Air, Sleep, XP }
-	private Dictionary<StatType, Image> barsDictionary;
+	private Dictionary<SurvivalStatType, Image> barsDictionary;
 	
 
 	bool CanCollect;
@@ -60,10 +60,11 @@ public class UIManager : MonoSingleton<UIManager>
 		inventoryManager = InventoryUIManager._instance;
 		inputManager = InputManager._instance;
 		UpdateUiState(InputManager.inputState);
+		playerStats = PlayerStats._instance;
 
-		barsDictionary = new Dictionary<StatType, Image>
+		barsDictionary = new Dictionary<SurvivalStatType, Image>
 		{
-			{StatType.HP, hpFill}, {StatType.Food, foodFill}, {StatType.Water, waterFill}, {StatType.Air, airFill}, {StatType.Sleep, sleepFill}, {StatType.XP, xpFill}
+			{SurvivalStatType.HP, hpFill}, {SurvivalStatType.Hunger, foodFill}, {SurvivalStatType.Thirst, waterFill}, {SurvivalStatType.Oxygen, airFill}, {SurvivalStatType.Awakeness, sleepFill}
 		};
 	
 	}
@@ -809,9 +810,12 @@ public class UIManager : MonoSingleton<UIManager>
 	}
 
 	// Monitors logic
-	public void UpdateSurvivalBar(StatType type, float value)
+	public void UpdateSurvivalBar(SurvivalStatType type, float value)
 	{
-		barsDictionary[type].fillAmount = Mathf.Clamp(value / PlayerStats._instance.GetSetMaximumAmount, 0, 1);
+		barsDictionary[type].fillAmount = Mathf.Clamp(value / playerStats.GetStatMax(type), 0, 1);
+	}
+	public void UpdateEXPbar() {
+		xpFill.fillAmount = Mathf.Clamp(playerStats.GetStatValue(PlayerStatType.EXP) / playerStats.GetStatValue(PlayerStatType.EXPAmountToLevelUp), 0, 1);
 	}
 
 	#endregion
