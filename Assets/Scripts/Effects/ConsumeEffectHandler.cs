@@ -23,6 +23,9 @@ public class ConsumeEffectHandler : MonoSingleton<ConsumeEffectHandler>
        {EffectCategory.Water, new Effect(playerStats.GetStat(SurvivalStatType.Thirst),3f)},
        {EffectCategory.Water_Regeneration, new Effect(playerStats.GetStat(SurvivalStatType.Thirst),3f)},
        {EffectCategory.MaxWater, new Effect(playerStats.GetStatMax(SurvivalStatType.Thirst),3f)},
+       {EffectCategory.EXP, new Effect(playerStats.GetStat(PlayerStatType.EXP),3f)},
+       {EffectCategory.Sleep, new Effect(playerStats.GetStat(SurvivalStatType.Awakeness),3f)},
+
 
         };
         StopCoroutine(SurvivalEffects());

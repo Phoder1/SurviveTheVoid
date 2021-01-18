@@ -69,7 +69,7 @@ public abstract class Stat
 
 
     public void Reset() {
-        value = defaultValue;
+        GetSetValue = defaultValue;
     }
 }
 [System.Serializable]
@@ -111,19 +111,17 @@ public class ExpStat : PlayerStat
     public override float GetSetValue {
         get => value;
         set {
-            if (value != this.value) {
-                PlayerStats playerStats = PlayerStats._instance;
-                this.value = Mathf.Max(value, 0);
-                float XPtoLevel = playerStats.GetStatValue(PlayerStatType.EXPAmountToLevelUp);
-                if (this.value >= XPtoLevel) {
-                    playerStats.AddStatValue(PlayerStatType.Level, 1);
-                    //Needs to be recursive
-                    playerStats.AddStatValue(PlayerStatType.EXPAmountToLevelUp, XPtoLevel * 0.5f);
-                    GetSetValue -= XPtoLevel;
-                }
-                else {
-                    UIManager._instance.UpdateEXPbar();
-                }
+            PlayerStats playerStats = PlayerStats._instance;
+            this.value = Mathf.Max(value, 0);
+            float XPtoLevel = playerStats.GetStatValue(PlayerStatType.EXPAmountToLevelUp);
+            if (this.value >= XPtoLevel) {
+                playerStats.AddStatValue(PlayerStatType.Level, 1);
+                //Needs to be recursive
+                playerStats.AddStatValue(PlayerStatType.EXPAmountToLevelUp, XPtoLevel * 0.5f);
+                GetSetValue -= XPtoLevel;
+            }
+            else {
+                UIManager._instance.UpdateExpAndLvlBar();
             }
         }
     }

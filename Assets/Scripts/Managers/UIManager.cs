@@ -38,6 +38,7 @@ public class UIManager : MonoSingleton<UIManager>
 		bCancel,
 		bRotate,
 		stateText;
+	[SerializeField] private TextMeshProUGUI LevelNumber;
 
 	[Header("Survival bar's fill")]
 	[SerializeField]
@@ -857,11 +858,11 @@ public class UIManager : MonoSingleton<UIManager>
 
 	// Monitors logic
 	public void UpdateSurvivalBar(SurvivalStatType type, float value)
-	{
-		barsDictionary[type].fillAmount = Mathf.Clamp(value / playerStats.GetStatMaxValue(type), 0, 1);
-	}
-	public void UpdateEXPbar() {
+		=> barsDictionary[type].fillAmount = Mathf.Clamp(value / playerStats.GetStatMaxValue(type), 0, 1);
+	
+	public void UpdateExpAndLvlBar() {
 		xpFill.fillAmount = Mathf.Clamp(playerStats.GetStatValue(PlayerStatType.EXP) / playerStats.GetStatValue(PlayerStatType.EXPAmountToLevelUp), 0, 1);
+		LevelNumber.SetText(Mathf.RoundToInt(playerStats.GetStatValue(PlayerStatType.Level)).ToString());
 	}
 
 	#endregion

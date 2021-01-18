@@ -13,12 +13,12 @@
             CameraController._instance,
             PlayerMovementHandler._instance,
              GridManager._instance,
+             UIManager._instance,
              PlayerStats._instance,
              PlayerManager._instance,
              GodmodeScript._instance,
              CraftingManager._instance,
              InventoryUIManager._instance,
-             UIManager._instance,
              InputManager._instance,
              ConsumeEffectHandler._instance
 
