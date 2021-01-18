@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0385232e857e8e446aa3c8cacfcbfb44, type: 3}
-  m_Name: RecipeFlower
+  m_Name: RecipeIronBar
   m_EditorClassIdentifier: 
   ItemCostArr:
-  - item: {fileID: 11400000, guid: 15f6588093b9bde479796bc44fb85fd4, type: 2}
-    amount: 3
+  - item: {fileID: 11400000, guid: 683dd94b90342d94385a5c66bfc82aa0, type: 2}
+    amount: 2
   outcomeItem:
-    item: {fileID: 11400000, guid: 31d30e3e08c6b214b884b28d326bd2ca, type: 2}
+    item: {fileID: 11400000, guid: 9d9e62851fc766d4c8998b400dd8868d, type: 2}
     amount: 1
   tier: 0
-  section: 2
-  isUnlocked: 1
-  processorType: 0
+  section: 0
+  isUnlocked: 0
+  processorType: 1
   CraftingTime: 10
