@@ -1,11 +1,13 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 public class UIManager : MonoSingleton<UIManager>
 {
 	InputManager inputManager;
 	CraftingManager craftingManager;
 	InventoryUIManager inventoryManager;
+
 	// UI elements
 	[SerializeField]
 	private GameObject
@@ -35,6 +37,21 @@ public class UIManager : MonoSingleton<UIManager>
 		bCancel,
 		bRotate,
 		stateText;
+
+	[Header("Survival bar's fill")]
+	[SerializeField]
+	private Image
+		hpFill,
+		foodFill,
+		waterFill,
+		airFill,
+		sleepFill,
+		xpFill;
+
+	public  enum StatType { HP, Food, Water, Air, Sleep, XP }
+	private Dictionary<StatType, Image> barsDictionary;
+	
+
 	bool CanCollect;
 
 	public override void Init()
@@ -43,6 +60,12 @@ public class UIManager : MonoSingleton<UIManager>
 		inventoryManager = InventoryUIManager._instance;
 		inputManager = InputManager._instance;
 		UpdateUiState(InputManager.inputState);
+
+		barsDictionary = new Dictionary<StatType, Image>
+		{
+			{StatType.HP, hpFill}, {StatType.Food, foodFill}, {StatType.Water, waterFill}, {StatType.Air, airFill}, {StatType.Sleep, sleepFill}, {StatType.XP, xpFill}
+		};
+	
 	}
 
 
@@ -421,7 +444,7 @@ public class UIManager : MonoSingleton<UIManager>
 	#endregion
 
 
-	#region ButtonsFunctions
+	#region ButtonsFunctionsAndMonitorsUpdate
 
 	bool isHoldingButton = false, stopHoldingButton = false, isButtonA;
 	bool isShown = true;
@@ -497,7 +520,7 @@ public class UIManager : MonoSingleton<UIManager>
 	}
 
 
-
+	// Main HUD logic
 	public void ButtonHide()
 	{
 		if (isBuildModeOn == false)
@@ -737,6 +760,7 @@ public class UIManager : MonoSingleton<UIManager>
 		}
 	}
 
+	// Build mode logic
 	public void BuildModeUI()
 	{
 		isBuildModeOn = true;
@@ -828,6 +852,12 @@ public class UIManager : MonoSingleton<UIManager>
 	public void ButtonRotate()
 	{
 
+	}
+
+	// Monitors logic
+	public void UpdateSurvivalBar(StatType type, float value)
+	{
+		barsDictionary[type].fillAmount = Mathf.Clamp(value / PlayerStats._instance.GetSetMaximumAmount, 0, 1);
 	}
 
 	#endregion
