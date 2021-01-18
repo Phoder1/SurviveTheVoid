@@ -58,10 +58,21 @@ public class ConsumableEffect
 {
 	public EffectCategory effectCategory;
 	public EffectType effectType;
+	[Header("OverTimeSmallPortion: it will Add the amount every tick time")]
+	[Header("nstant: it will Add the amount every tick time:")]
+	[Header("ToggleOverTime: Add the amount,wait the duration, remove the amount")]
+	[Header("it will update his adding from the current amount of the stat:")]
+	[Header("if Relative:")]
 	public bool isRelative; 
+	[Header(" please write the precentage like 10 = 10%, 110 = 110%:")]
+	[Header("if Precentage:")]
 	public bool isPresentage;
+	[Space (20f)]
+	[Header("Reminder to check the setting above before adding amount:")]
 	public float amount;
+	[Header("The total duration of the buff:")]
 	public float duration;
+	[Header("The time between addition of the amount:")] 
 	public float tickTime;
 }
 
