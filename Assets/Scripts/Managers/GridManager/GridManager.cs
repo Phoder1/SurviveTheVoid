@@ -68,19 +68,6 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
     private const int CHUNK_SIZE = 16, COLLISION_SENSITIVITY = 10;
     private const float BUILDING_LAYER_POSITION_OFFSET = 0.5f, TOP_FACE_HEIGHT = 0.7f;
 
-    //public static GridManager GetInstance;
-
-    //private void Awake() {
-    //    if (isActiveAndEnabled) {
-    //        if (_instance != null) {
-    //            Destroy(gameObject);
-    //        }
-    //        else {
-    //            _instance = this;
-    //        }
-    //    }
-    //}
-
 
     public override void Init() {
         islandsNoise.GenerateSeed();
@@ -274,10 +261,10 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
 
         Vector2Int chunkPos = GridToChunkCoordinates(gridPosition);
         if (TryGetChunk(chunkPos, out Chunk chunk)) {
-            chunk.SetTile(tile, gridPosition, buildingLayer, playerAction);
+            chunk.SetTile(tile, gridPosition, buildingLayer, playerAction, false);
         }
         else if (tile != null) {
-            CreateChunk(chunkPos).SetTile(tile, gridPosition, buildingLayer, playerAction);
+            CreateChunk(chunkPos).SetTile(tile, gridPosition, buildingLayer, playerAction, false);
         }
     }
 

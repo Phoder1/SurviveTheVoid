@@ -9,12 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 587b921edc753cd4e956c9bf36faa58d, type: 3}
-  m_Name: GenericUncookedMeat
+  m_Script: {fileID: 11500000, guid: ad4fb29703af1ac4e92edd55a5b9b4f5, type: 3}
+  m_Name: ClayBlock
   m_EditorClassIdentifier: 
-  itemID: 6
-  itemName: Uncooked Meat
+  itemID: 16
+  itemName: Clay Block
   maxStackSize: 20
   description: 
-  itemEnum: 4
-  sprite: {fileID: 21300000, guid: ead409d627207cf499a086a2af310146, type: 3}
+  sprite: {fileID: 21300000, guid: 0684d15838807404db94d4fb1be48a05, type: 3}
+  mainTileBase: {fileID: 11400000, guid: a36ef51d0f8e45c46bc6533b8022f0c3, type: 2}
+  isSolid: 1

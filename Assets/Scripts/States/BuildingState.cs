@@ -40,7 +40,7 @@ public class BuildingState : StateBase
 
                 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
 
-                if (Vector3.Distance(touchPosition, PlayerManager._instance.GetComponent<Transform>().position) > 5f) {
+                if (Vector3.Distance(touchPosition, PlayerManager.GetPlayerTransform.position) > 7f) {
                    // tileSlotCache = null;
 
                     if (FloorLayerTileList.Count >= 1)

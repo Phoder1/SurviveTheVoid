@@ -52,38 +52,29 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
     private void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.T))
-        //{
-        //    GetSetProcessor = ProcessorType.Cooker;
-        //}
-        //if (Input.GetKeyDown(KeyCode.Y))
-        //{
-        //    GetSetProcessor = ProcessorType.CraftingTable;
-        //}
-
 
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
 
-            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[5], 1));
+            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[6], 1));
 
             ShowRecipe(selectedRecipe);
             inventoryUI.UpdateInventoryToUI();
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
-            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[8], 1));
+            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[9], 1));
             inventoryUI.UpdateInventoryToUI();
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
-            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[5], 1));
+            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[6], 1));
             inventoryUI.UpdateInventoryToUI();
         }
         if (Input.GetKeyDown(KeyCode.V))
         {
-            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[8], 1));
+            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[9], 1));
             inventoryUI.UpdateInventoryToUI();
         }
         if (Input.GetKeyDown(KeyCode.B))
@@ -314,27 +305,29 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     public void ShowRecipe(RecipeSO recipe)
     {
         UpdateMatsAmount();
-        
-        int matsAmount = recipe.getitemCostArr.Length;
-        for (int i = 0; i < recipeMaterialSlots.Length; i++)
+        if (selectedRecipe != null)
         {
-            if (i < matsAmount)
+            int matsAmount = recipe.getitemCostArr.Length;
+            for (int i = 0; i < recipeMaterialSlots.Length; i++)
             {
-                if (!recipeMaterialSlots[i].gameObject.activeInHierarchy)
+                if (i < matsAmount)
                 {
-                    recipeMaterialSlots[i].gameObject.SetActive(true);
+                    if (!recipeMaterialSlots[i].gameObject.activeInHierarchy)
+                    {
+                        recipeMaterialSlots[i].gameObject.SetActive(true);
+                    }
+                    TextMeshProUGUI materialNameText = recipeMaterialSlots[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+                    materialNameText.text = Costitemso[i].getItemName;
+                    TextMeshProUGUI materialCostText = recipeMaterialSlots[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+                    materialCostText.text = inventory.GetAmountOfItem(0, TempArr[i]) + " / " + (TempArr[i].amount * UIManager._instance.getCraftingAmount);
+                    recipeMaterialSlots[i].GetComponent<Image>().sprite = recipe.getitemCostArr[i].item.getsprite;
                 }
-                TextMeshProUGUI materialNameText = recipeMaterialSlots[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-                materialNameText.text = Costitemso[i].getItemName;
-                TextMeshProUGUI materialCostText = recipeMaterialSlots[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-                materialCostText.text = inventory.GetAmountOfItem(0, TempArr[i]) + " / " + (TempArr[i].amount * UIManager._instance.getCraftingAmount);
-                recipeMaterialSlots[i].GetComponent<Image>().sprite = recipe.getitemCostArr[i].item.getsprite;
-            }
-            else
-            {
-                recipeMaterialSlots[i].gameObject.SetActive(false);
-            }
+                else
+                {
+                    recipeMaterialSlots[i].gameObject.SetActive(false);
+                }
 
+            }
         }
 
     }
@@ -416,7 +409,10 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
 
                     inventory.RemoveItemsByRecipe(selectedRecipe, UIManager._instance.getCraftingAmount);
-                    CurrentProcessTile.StartCrafting(selectedRecipe, (selectedRecipe.getoutcomeItem.amount * UIManager._instance.getCraftingAmount));
+
+                        CurrentProcessTile.StartCrafting(selectedRecipe, (selectedRecipe.getoutcomeItem.amount * UIManager._instance.getCraftingAmount));
+                    
+                    
                     ShowRecipe(selectedRecipe);
                     buttonState = ButtonState.Crafting;
                    UIManager._instance.SetButtonToState(buttonState,CurrentProcessTile.ItemsCrafted,CurrentProcessTile.amount,CurrentProcessTile.CraftingTimeRemaining);
@@ -433,7 +429,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
             for (int i = CurrentProcessTile.ItemsCrafted; i > 0; i--)
             {
                 
-                if (inventory.AddToInventory(0,new ItemSlot(selectedRecipe.getoutcomeItem.item, i * selectedRecipe.getoutcomeItem.amount)))
+                if (inventory.AddToInventory(0,new ItemSlot(CurrentProcessTile.craftingRecipe.getoutcomeItem.item, i * CurrentProcessTile.craftingRecipe.getoutcomeItem.amount)))
                 {
                     CurrentProcessTile.CollectItems(i);
                     break;
@@ -462,6 +458,66 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         }
 
     }
+
+    int CraftIndex;
+    public void AttemptToCraftMax()
+    {
+        CraftIndex = selectedRecipe.getoutcomeItem.item.getmaxStackSize;
+        CheckIfYouCanCraft();
+
+
+    }
+
+    void CheckIfYouCanCraft()
+    {
+        if((CraftIndex + CurrentProcessTile.amount <= selectedRecipe.getoutcomeItem.item.getmaxStackSize))
+        {
+            if (inventory.CheckEnoughItemsForRecipe(selectedRecipe, CraftIndex))
+            {
+
+                Debug.Log("Crafted: " + selectedRecipe.getoutcomeItem.item.getItemName + " Amount of: " + CraftIndex);
+
+                inventory.RemoveItemsByRecipe(selectedRecipe,  CraftIndex);
+                if (CurrentProcessTile.IsCrafting)
+                {
+                    CurrentProcessTile.AddToQueue(selectedRecipe.getoutcomeItem.amount * CraftIndex);
+                }
+                else
+                {
+                    CurrentProcessTile.StartCrafting(selectedRecipe, (selectedRecipe.getoutcomeItem.amount * CraftIndex));
+                }
+                ShowRecipe(selectedRecipe);
+                buttonState = ButtonState.Crafting;
+                UIManager._instance.SetButtonToState(buttonState, CurrentProcessTile.ItemsCrafted, CurrentProcessTile.amount, CurrentProcessTile.CraftingTimeRemaining);
+
+
+                UIManager._instance.OnChangeGetCraftingAmount();
+            }
+            else
+            {
+
+                Debug.Log("Cant craft amount of: " + CraftIndex + " Trying to check if you can craft: " + (CraftIndex - 1).ToString());
+                CraftIndex--;
+                if (CraftIndex >= 1)
+                    CheckIfYouCanCraft();
+            }
+
+        }
+        else
+        {
+            Debug.Log("Cant craft amount of: " + CraftIndex + " Trying to check if you can craft: " + (CraftIndex - 1).ToString());
+            CraftIndex--;
+            if (CraftIndex >= 1)
+                CheckIfYouCanCraft();
+
+
+
+
+        }
+
+
+    }
+
 
     public void AddToCraft()
     {
