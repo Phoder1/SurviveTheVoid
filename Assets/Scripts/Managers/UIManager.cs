@@ -72,18 +72,7 @@ public class UIManager : MonoSingleton<UIManager>
 	private void Update()
 	{
 		ButtonControls();
-		if (Input.GetKeyDown(KeyCode.T))
-		{
-			ShowTimeAndCollectable(10, 3, 10);
-		}
-		if (Input.GetKeyDown(KeyCode.Y))
-		{
-			ShowTimeAndCollectable(10, 0, 10);
-		}
-		if (Input.GetKeyDown(KeyCode.U))
-		{
-			ShowTimeAndCollectable(0, 0, 0);
-		}
+	
 
 		if (CraftingUI.activeInHierarchy && craftingManager.CurrentProcessTile != null && craftingManager.CurrentProcessTile.IsCrafting && craftingManager.CurrentProcessTile.amount > 0)
 		{
@@ -113,8 +102,11 @@ public class UIManager : MonoSingleton<UIManager>
 
 	public void OnClickSelectedSections(string _section)
 	{
-		craftingManager.SelectSection(_section);
-		HighLightSection(_section);
+		if(craftingManager.buttonState == ButtonState.CanCraft)
+		{
+			craftingManager.SelectSection(_section);
+			HighLightSection(_section);
+		}
 	}
 
 	public void OnClickSelectedRecipe(int _recipe)
@@ -444,6 +436,7 @@ public class UIManager : MonoSingleton<UIManager>
 	{
 		ResetMultiple();
 		CraftingUI.SetActive(false);
+		craftingManager.selectedRecipe = null;
 		PlayerManager._instance.MenuClosed();
 	}
 
