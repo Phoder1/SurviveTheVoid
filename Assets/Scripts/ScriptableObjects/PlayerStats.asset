@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: PlayerStats
   m_EditorClassIdentifier: 
   survivalStats:
-  - cooldown: 0
-    overtimeCooldown: 0
+  - cooldown: 3
+    overtimeCooldown: 3
     defaultValue: 100
     statType: 0
     maxStat:
-      cooldown: 0
-      overtimeCooldown: 0
+      cooldown: 3
+      overtimeCooldown: 3
       defaultValue: 100
       statType: 6
     highReactionEnabled: 0
@@ -30,13 +30,13 @@ MonoBehaviour:
     midEffectsData: []
     lowReactionEnabled: 0
     lowEffectsData: []
-  - cooldown: 0
-    overtimeCooldown: 0
+  - cooldown: 3
+    overtimeCooldown: 3
     defaultValue: 100
     statType: 1
     maxStat:
-      cooldown: 0
-      overtimeCooldown: 0
+      cooldown: 3
+      overtimeCooldown: 3
       defaultValue: 100
       statType: 7
     highReactionEnabled: 0
@@ -54,13 +54,13 @@ MonoBehaviour:
       amount: -0.5
       duration: 1e+9
       tickTime: 1
-  - cooldown: 0
-    overtimeCooldown: 0
+  - cooldown: 3
+    overtimeCooldown: 3
     defaultValue: 20
     statType: 2
     maxStat:
-      cooldown: 0
-      overtimeCooldown: 0
+      cooldown: 3
+      overtimeCooldown: 3
       defaultValue: 100
       statType: 8
     highReactionEnabled: 0
@@ -71,13 +71,13 @@ MonoBehaviour:
     midEffectsData: []
     lowReactionEnabled: 0
     lowEffectsData: []
-  - cooldown: 0
-    overtimeCooldown: 0
+  - cooldown: 3
+    overtimeCooldown: 3
     defaultValue: 100
     statType: 3
     maxStat:
-      cooldown: 0
-      overtimeCooldown: 0
+      cooldown: 3
+      overtimeCooldown: 3
       defaultValue: 100
       statType: 9
     highReactionEnabled: 0
@@ -88,13 +88,13 @@ MonoBehaviour:
     midEffectsData: []
     lowReactionEnabled: 0
     lowEffectsData: []
-  - cooldown: 0
-    overtimeCooldown: 0
+  - cooldown: 3
+    overtimeCooldown: 3
     defaultValue: 100
     statType: 4
     maxStat:
-      cooldown: 0
-      overtimeCooldown: 0
+      cooldown: 3
+      overtimeCooldown: 3
       defaultValue: 100
       statType: 10
     highReactionEnabled: 0
@@ -105,13 +105,13 @@ MonoBehaviour:
     midEffectsData: []
     lowReactionEnabled: 0
     lowEffectsData: []
-  - cooldown: 0
-    overtimeCooldown: 0
+  - cooldown: 3
+    overtimeCooldown: 3
     defaultValue: 100
     statType: 5
     maxStat:
-      cooldown: 0
-      overtimeCooldown: 0
+      cooldown: 3
+      overtimeCooldown: 3
       defaultValue: 100
       statType: 11
     highReactionEnabled: 0
@@ -129,7 +129,7 @@ MonoBehaviour:
     statType: 13
   - cooldown: 0
     overtimeCooldown: 0
-    defaultValue: 10
+    defaultValue: 1
     statType: 14
   - cooldown: 0
     overtimeCooldown: 0

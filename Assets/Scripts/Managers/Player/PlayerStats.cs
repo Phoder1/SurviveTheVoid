@@ -36,7 +36,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         foreach (PlayerStat stat in playerStatsSO.GetPlayerStats)
             StatsDict.Add(stat.statType, stat);
         StatsDict.Add(playerStatsSO.GetExpStat.statType, playerStatsSO.GetExpStat);
-        //ResetStats();
+        ResetStats();
     }
 
     void ResetStats() {
@@ -130,56 +130,56 @@ public class SurvivalStat : Stat
             if (value != this.value) {
                 this.value = Mathf.Clamp(value, 0, maxStat.GetSetValue);
                 UIManager._instance.UpdateSurvivalBar(this, value);
-                if (highReactionEnabled) {
-                    if (!highEffectsRunning && this.value >= highReactionValue)
-                        StartHighReaction();
-                    else if (highEffectsRunning && this.value < highReactionValue)
-                        StopHighReaction();
-                }
-                if (midReactionEnabled) {
-                    if (!midEffectsRunning && this.value <= midReactionValue)
-                        StartMidReaction();
-                    else if (midEffectsRunning && this.value > midReactionValue)
-                        StopMidReaction();
-                }
-                if (lowReactionEnabled) {
-                    if (!lowEffectsRunning && this.value == 0)
-                        StartLowReaction();
-                    else if (lowEffectsRunning && this.value > 0)
-                        StopLowReaction();
-                }
+                //if (highReactionEnabled) {
+                //    if (!highEffectsRunning && this.value >= highReactionValue)
+                //        StartHighReaction();
+                //    else if (highEffectsRunning && this.value < highReactionValue)
+                //        StopHighReaction();
+                //}
+                //if (midReactionEnabled) {
+                //    if (!midEffectsRunning && this.value <= midReactionValue)
+                //        StartMidReaction();
+                //    else if (midEffectsRunning && this.value > midReactionValue)
+                //        StopMidReaction();
+                //}
+                //if (lowReactionEnabled) {
+                //    if (!lowEffectsRunning && this.value == 0)
+                //        StartLowReaction();
+                //    else if (lowEffectsRunning && this.value > 0)
+                //        StopLowReaction();
+                //}
             }
         }
     }
-    //Starts when stat is lower then midReactionValue
-    private void StartHighReaction() {
-        highEffectsCoro = EffectHandler._instance.BeginAllEffects(highEffectsData, GetHighEffectsCont);
-        highEffectsRunning = true;
-    }
+    ////Starts when stat is lower then midReactionValue
+    //private void StartHighReaction() {
+    //    EffectHandler._instance.BeginAllEffects(highEffectsData, GetHighEffectsCont);
+    //    highEffectsRunning = true;
+    //}
 
-    private void StopHighReaction() {
-        EffectHandler._instance.StopAllEffects(highEffectsCoro);
-        highEffectsRunning = false;
-    }
-    //Starts when stat is lower then midReactionValue
-    private void StartMidReaction() {
-        midEffectsCoro = EffectHandler._instance.BeginAllEffects(midEffectsData, GetMidEffectsCont);
-        midEffectsRunning = true;
-    }
-    private void StopMidReaction() {
-        EffectHandler._instance.StopAllEffects(midEffectsCoro);
-        midEffectsRunning = false;
+    //private void StopHighReaction() {
+    //    EffectHandler._instance.StopAllEffects(highEffectsCont);
+    //    highEffectsRunning = false;
+    //}
+    ////Starts when stat is lower then midReactionValue
+    //private void StartMidReaction() {
+    //    EffectHandler._instance.BeginAllEffects(midEffectsData, GetMidEffectsCont);
+    //    midEffectsRunning = true;
+    //}
+    //private void StopMidReaction() {
+    //    EffectHandler._instance.StopAllEffects(midEffectsCont);
+    //    midEffectsRunning = false;
 
-    }
-    //Starts when stat is at 0
-    private void StartLowReaction() {
-        lowEffectsCoro = EffectHandler._instance.BeginAllEffects(lowEffectsData, GetLowEffectsCont);
-        lowEffectsRunning = true;
-    }
-    private void StopLowReaction() {
-        EffectHandler._instance.StopAllEffects(lowEffectsCoro);
-        lowEffectsRunning = false;
-    }
+    //}
+    ////Starts when stat is at 0
+    //private void StartLowReaction() {
+    //    EffectHandler._instance.BeginAllEffects(lowEffectsData, GetLowEffectsCont);
+    //    lowEffectsRunning = true;
+    //}
+    //private void StopLowReaction() {
+    //    EffectHandler._instance.StopAllEffects(lowEffectsCont);
+    //    lowEffectsRunning = false;
+    //}
 }
 [System.Serializable]
 public class PlayerStat : Stat

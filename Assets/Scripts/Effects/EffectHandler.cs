@@ -109,18 +109,16 @@ public class EffectHandler : MonoSingleton<EffectHandler>
             controllers[i] = GetStatController(effectsData[i]);
         return controllers;
     }
-    public Coroutine[] BeginAllConsumeableEffects(EffectData[] effectsData)
+    public void BeginAllConsumeableEffects(EffectData[] effectsData)
         => BeginAllEffects(effectsData, GetStatControllers(effectsData));
-    public Coroutine[] BeginAllEffects(EffectData[] effectsData, EffectController[] effectController) {
-        Coroutine[] coroutines = new Coroutine[effectsData.Length];
+    public void BeginAllEffects(EffectData[] effectsData, EffectController[] effectController) {
         for (int i = 0; i < effectsData.Length; i++) 
             if (effectsData[i] != null) 
-                coroutines[i] = effectController[i].Begin(effectsData[i]);
-        return coroutines;
+                effectController[i].Begin(effectsData[i]);
     }
-    public void StopAllEffects(Coroutine[] coroutines) {
-        foreach (Coroutine coroutine in coroutines)
-            StopCoroutine(coroutine);
+    public void StopAllEffects(EffectController[] effects) {
+        foreach (EffectController effect in effects)
+            effect.Stop();
     }
     public EffectController[] CreateControllers(EffectData[] effectsData, float[] coolDowns) {
         if (effectsData.Length == 0)
@@ -133,13 +131,13 @@ public class EffectHandler : MonoSingleton<EffectHandler>
     }
     public bool GetEffectCoolDown(ConsumableItemSO Item) {
 
-        if (Item == null || Item.survivalEffects.Length == 0)
+        if (Item == null || Item.Effects.Length == 0)
             return false;
 
         EffectController abstStat;
 
         bool CanUseTheItem = true;
-        foreach (var effect in Item.survivalEffects) {
+        foreach (var effect in Item.Effects) {
 
             abstStat = GetStatController(effect);
 
@@ -171,9 +169,8 @@ public class StatControllers
     public EffectController GetController(EffectType effectType) {
         switch (effectType) {
             case EffectType.Instant:
-                return valueController;
             case EffectType.ToggleOverTime:
-                return regenerationController;
+                return valueController;
             case EffectType.OverTimeSmallPortion:
                 return regenerationController;
             default:

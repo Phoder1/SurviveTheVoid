@@ -40,7 +40,7 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
         }
     }
     [SerializeField] float clearZoneRadius, startIslandRadius;
-    [SerializeField] private TileAbstSO startIslandTile, craftingTable;
+    [SerializeField] private TileAbstSO startIslandTile, craftingTable1, craftingTable2;
     [SerializeField] private Noise islandsNoise;
     [SerializeField] private GridRandom buildingsRandom;
     [SerializeField] private int loadDistance;
@@ -86,7 +86,9 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
         islandsNoise.GenerateSeed();
         buildingsRandom.GenerateSeed();
         CameraController._instance.UpdateView();
-        SetTile(new TileSlot(craftingTable), new Vector2Int(-7, 0), TileMapLayer.Buildings, true);
+        SetTile(new TileSlot(craftingTable1), new Vector2Int(-7, 0), TileMapLayer.Buildings, true);
+        SetTile(new TileSlot(craftingTable2), new Vector2Int(-6, 0), TileMapLayer.Buildings, true);
+        SetTile(new TileSlot(buildingsGeneration[0].tile), new Vector2Int(4, 0), TileMapLayer.Buildings, true);
     }
 
     public void UpdateView(Rect view) {

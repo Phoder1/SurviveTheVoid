@@ -34,11 +34,9 @@ Instant, ToggleOverTime, OverTimeSmallPortion
 [CreateAssetMenu(fileName = "New Consumable Item", menuName = "Items/" + "Consumable")]
 public class ConsumableItemSO : ItemSO
 {
-	
-	public EffectData[] survivalEffects;
-	public EffectData[] playerEffects;
+	public EffectData[] Effects;
 	public void ApplyEffect() {
-		EffectHandler._instance.BeginAllConsumeableEffects(survivalEffects);
+		EffectHandler._instance.BeginAllConsumeableEffects(Effects);
 	}
 }
 [Serializable]
