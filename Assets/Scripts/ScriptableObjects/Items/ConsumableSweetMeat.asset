@@ -18,24 +18,24 @@ MonoBehaviour:
   description: 
   sprite: {fileID: 21300000, guid: 1d9610081e7a2914488c88a72b0ee1e8, type: 3}
   Effects:
-  - effectCategory: 1
+  - effectStatType: 0
     effectType: 2
     isRelative: 0
     isPresentage: 0
     amount: 15
     duration: 15
     tickTime: 1
-  - effectCategory: 15
+  - effectStatType: 3
     effectType: 0
     isRelative: 0
     isPresentage: 0
     amount: 200
     duration: 0
     tickTime: 1
-  - effectCategory: 12
+  - effectStatType: 1
     effectType: 0
     isRelative: 0
     isPresentage: 0
-    amount: 10
+    amount: 50
     duration: 0
     tickTime: 1

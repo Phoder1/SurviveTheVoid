@@ -111,9 +111,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5435700086702367932}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8dcfb4c730fb784786126235944a532, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f096efc7d48b25449523447f54e4051, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cooldownBeforeStart: 20
 --- !u!114 &2139250269882807943
 MonoBehaviour:
   m_ObjectHideFlags: 0

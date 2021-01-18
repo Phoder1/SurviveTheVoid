@@ -59,8 +59,8 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         _GridManager = GridManager._instance;
         playerStats = PlayerStats._instance;
         playerController = PlayerMovementHandler._instance;
-        moveSpeed = playerStats.GetStat(PlayerStatType.MoveSpeed);
-        gatheringSpeed = playerStats.GetStat(PlayerStatType.GatheringSpeed);
+        moveSpeed = playerStats.GetStat(StatType.MoveSpeed);
+        gatheringSpeed = playerStats.GetStat(StatType.GatheringSpeed);
 
     }
     private void LateUpdate() {
