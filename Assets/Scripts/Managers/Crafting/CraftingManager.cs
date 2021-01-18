@@ -52,15 +52,6 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
     private void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.T))
-        //{
-        //    GetSetProcessor = ProcessorType.Cooker;
-        //}
-        //if (Input.GetKeyDown(KeyCode.Y))
-        //{
-        //    GetSetProcessor = ProcessorType.CraftingTable;
-        //}
-
 
 
         if (Input.GetKeyDown(KeyCode.Z))
@@ -317,27 +308,29 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     public void ShowRecipe(RecipeSO recipe)
     {
         UpdateMatsAmount();
-        
-        int matsAmount = recipe.getitemCostArr.Length;
-        for (int i = 0; i < recipeMaterialSlots.Length; i++)
+        if (selectedRecipe != null)
         {
-            if (i < matsAmount)
+            int matsAmount = recipe.getitemCostArr.Length;
+            for (int i = 0; i < recipeMaterialSlots.Length; i++)
             {
-                if (!recipeMaterialSlots[i].gameObject.activeInHierarchy)
+                if (i < matsAmount)
                 {
-                    recipeMaterialSlots[i].gameObject.SetActive(true);
+                    if (!recipeMaterialSlots[i].gameObject.activeInHierarchy)
+                    {
+                        recipeMaterialSlots[i].gameObject.SetActive(true);
+                    }
+                    TextMeshProUGUI materialNameText = recipeMaterialSlots[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+                    materialNameText.text = Costitemso[i].getItemName;
+                    TextMeshProUGUI materialCostText = recipeMaterialSlots[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+                    materialCostText.text = inventory.GetAmountOfItem(0, TempArr[i]) + " / " + (TempArr[i].amount * UIManager._instance.getCraftingAmount);
+                    recipeMaterialSlots[i].GetComponent<Image>().sprite = recipe.getitemCostArr[i].item.getsprite;
                 }
-                TextMeshProUGUI materialNameText = recipeMaterialSlots[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-                materialNameText.text = Costitemso[i].getItemName;
-                TextMeshProUGUI materialCostText = recipeMaterialSlots[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-                materialCostText.text = inventory.GetAmountOfItem(0, TempArr[i]) + " / " + (TempArr[i].amount * UIManager._instance.getCraftingAmount);
-                recipeMaterialSlots[i].GetComponent<Image>().sprite = recipe.getitemCostArr[i].item.getsprite;
-            }
-            else
-            {
-                recipeMaterialSlots[i].gameObject.SetActive(false);
-            }
+                else
+                {
+                    recipeMaterialSlots[i].gameObject.SetActive(false);
+                }
 
+            }
         }
 
     }
@@ -439,7 +432,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
             for (int i = CurrentProcessTile.ItemsCrafted; i > 0; i--)
             {
                 
-                if (inventory.AddToInventory(0,new ItemSlot(selectedRecipe.getoutcomeItem.item, i * selectedRecipe.getoutcomeItem.amount)))
+                if (inventory.AddToInventory(0,new ItemSlot(CurrentProcessTile.craftingRecipe.getoutcomeItem.item, i * CurrentProcessTile.craftingRecipe.getoutcomeItem.amount)))
                 {
                     CurrentProcessTile.CollectItems(i);
                     break;

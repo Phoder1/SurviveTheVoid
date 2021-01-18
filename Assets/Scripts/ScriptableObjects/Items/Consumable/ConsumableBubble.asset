@@ -12,13 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce262156a784a4c439534bfe094dfdf6, type: 3}
   m_Name: ConsumableBubble
   m_EditorClassIdentifier: 
-  itemID: 1
+  itemID: 3
   itemName: Bubble
   maxStackSize: 20
   description: Breath an oxygen from a bubble
-  itemEnum: 8
   sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  instantEffects:
-  - effectType: 4
-    Amount: 10
-  OverTimeEffects: []
+  Effects: []
