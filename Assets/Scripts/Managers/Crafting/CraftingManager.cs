@@ -66,26 +66,26 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         if (Input.GetKeyDown(KeyCode.Z))
         {
 
-            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[5], 1));
+            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[6], 1));
 
             ShowRecipe(selectedRecipe);
             inventoryUI.UpdateInventoryToUI();
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
-            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[8], 1));
+            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[9], 1));
             inventoryUI.UpdateInventoryToUI();
             ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
-            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[5], 1));
+            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[6], 1));
             inventoryUI.UpdateInventoryToUI();
             ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.V))
         {
-            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[8], 1));
+            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[9], 1));
             inventoryUI.UpdateInventoryToUI();
             ShowRecipe(selectedRecipe);
         }
@@ -419,7 +419,10 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
 
                     inventory.RemoveItemsByRecipe(selectedRecipe, UIManager._instance.getCraftingAmount);
-                    CurrentProcessTile.StartCrafting(selectedRecipe, (selectedRecipe.getoutcomeItem.amount * UIManager._instance.getCraftingAmount));
+
+                        CurrentProcessTile.StartCrafting(selectedRecipe, (selectedRecipe.getoutcomeItem.amount * UIManager._instance.getCraftingAmount));
+                    
+                    
                     ShowRecipe(selectedRecipe);
                     buttonState = ButtonState.Crafting;
                    UIManager._instance.SetButtonToState(buttonState,CurrentProcessTile.ItemsCrafted,CurrentProcessTile.amount,CurrentProcessTile.CraftingTimeRemaining);
@@ -465,6 +468,66 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         }
 
     }
+
+    int CraftIndex;
+    public void AttemptToCraftMax()
+    {
+        CraftIndex = selectedRecipe.getoutcomeItem.item.getmaxStackSize;
+        CheckIfYouCanCraft();
+
+
+    }
+
+    void CheckIfYouCanCraft()
+    {
+        if((CraftIndex + CurrentProcessTile.amount <= selectedRecipe.getoutcomeItem.item.getmaxStackSize))
+        {
+            if (inventory.CheckEnoughItemsForRecipe(selectedRecipe, CraftIndex))
+            {
+
+                Debug.Log("Crafted: " + selectedRecipe.getoutcomeItem.item.getItemName + " Amount of: " + CraftIndex);
+
+                inventory.RemoveItemsByRecipe(selectedRecipe,  CraftIndex);
+                if (CurrentProcessTile.IsCrafting)
+                {
+                    CurrentProcessTile.AddToQueue(selectedRecipe.getoutcomeItem.amount * CraftIndex);
+                }
+                else
+                {
+                    CurrentProcessTile.StartCrafting(selectedRecipe, (selectedRecipe.getoutcomeItem.amount * CraftIndex));
+                }
+                ShowRecipe(selectedRecipe);
+                buttonState = ButtonState.Crafting;
+                UIManager._instance.SetButtonToState(buttonState, CurrentProcessTile.ItemsCrafted, CurrentProcessTile.amount, CurrentProcessTile.CraftingTimeRemaining);
+
+
+                UIManager._instance.OnChangeGetCraftingAmount();
+            }
+            else
+            {
+
+                Debug.Log("Cant craft amount of: " + CraftIndex + " Trying to check if you can craft: " + (CraftIndex - 1).ToString());
+                CraftIndex--;
+                if (CraftIndex >= 1)
+                    CheckIfYouCanCraft();
+            }
+
+        }
+        else
+        {
+            Debug.Log("Cant craft amount of: " + CraftIndex + " Trying to check if you can craft: " + (CraftIndex - 1).ToString());
+            CraftIndex--;
+            if (CraftIndex >= 1)
+                CheckIfYouCanCraft();
+
+
+
+
+        }
+
+
+    }
+
 
     public void AddToCraft()
     {

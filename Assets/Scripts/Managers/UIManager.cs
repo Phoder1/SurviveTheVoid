@@ -98,7 +98,7 @@ public class UIManager : MonoSingleton<UIManager>
 	[Header("Crafting UI")]
 	[SerializeField] Sprite[] sectionBackGroundSprite;
 	[SerializeField] Image[] SectionBackGroundImage;
-	[SerializeField] Button CraftingButton;
+	[SerializeField] TextMeshProUGUI CraftingButtonText;
 	[Header("")]
 	[SerializeField] GameObject matsHolder;
 	[SerializeField] TextMeshProUGUI craftingTimer;
@@ -125,6 +125,12 @@ public class UIManager : MonoSingleton<UIManager>
 	public void OnClickCraftButton()
 	{
 		craftingManager.AttemptToCraft();
+		Debug.Log("Short Click");
+	}
+	public void OnLongClickCraftButton()
+	{
+		craftingManager.AttemptToCraftMax();
+		Debug.Log("Craft the max you can");
 	}
 
 	public void HighLightSection(string _section)
@@ -213,8 +219,8 @@ public class UIManager : MonoSingleton<UIManager>
 		craftingManager.sectionHolder.gameObject.SetActive(true);
 		SliderBackGround.SetActive(false);
 		craftingManager.buttonState = ButtonState.CanCraft;
-		CraftingButton.interactable = true;
-		CraftingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Craft";
+		//CraftingButton.interactable = true;
+		CraftingButtonText.text = "Craft";
 		MultipleButt.text = "Multiple";
 		matsHolder.SetActive(true);
 		craftingTimer.text = "";
@@ -234,7 +240,7 @@ public class UIManager : MonoSingleton<UIManager>
 		MultipleButt.text = "Add";
 		amountText.text = "Craft: " + craftingAmount;
 		craftingManager.buttonState = ButtonState.Crafting;
-		CraftingButton.interactable = false;
+		//CraftingButton.interactable = false;
 		matsHolder.SetActive(true);
 		CurrentRecipeOutSprite.sprite = craftingManager.selectedRecipe.getoutcomeItem.item.getsprite;
 
@@ -251,7 +257,7 @@ public class UIManager : MonoSingleton<UIManager>
 		amountText.text = "Craft: " + craftingAmount;
 		MultipleButt.text = "Add";
 		craftingManager.buttonState = ButtonState.Collect;
-		CraftingButton.interactable = true;
+		//CraftingButton.interactable = true;
 		matsHolder.SetActive(true);
 		CurrentRecipeOutSprite.sprite = craftingManager.selectedRecipe.getoutcomeItem.item.getsprite;
 
@@ -261,10 +267,10 @@ public class UIManager : MonoSingleton<UIManager>
 
 	void ShowCraftingTimer(int craftedItem, int AmountRemaining, float timeCraftingRemaining)
 	{
-		int Test = 0;
+
 
 		//always update
-		CraftingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = craftedItem + "/" + AmountRemaining;
+		CraftingButtonText.text = craftedItem + "/" + AmountRemaining;
 		craftingTimer.text = Mathf.CeilToInt(timeCraftingRemaining).ToString();
 
 
