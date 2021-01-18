@@ -8561,6 +8561,12 @@ MonoBehaviour:
   bCancel: {fileID: 358540573}
   bRotate: {fileID: 1589588351}
   stateText: {fileID: 3108493680952785529}
+  hpFill: {fileID: 3303330036325718907}
+  foodFill: {fileID: 3303330037604814074}
+  waterFill: {fileID: 3303330036115559564}
+  airFill: {fileID: 3303330037032135031}
+  sleepFill: {fileID: 3303330036797592334}
+  xpFill: {fileID: 3303330036357643770}
   sectionBackGroundSprite:
   - {fileID: 21300000, guid: e3cff251f5ab373468d19cc2beae73a4, type: 3}
   - {fileID: 21300000, guid: 10544b3a046b5d94798c51b6ce7b0ae2, type: 3}
@@ -13581,7 +13587,7 @@ PrefabInstance:
     - target: {fileID: 2006403632734524231, guid: 60eff25f79fd9c642b8f10c335fd2ff2,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 1198.907
       objectReference: {fileID: 0}
     - target: {fileID: 2006403632734524231, guid: 60eff25f79fd9c642b8f10c335fd2ff2,
         type: 3}
@@ -13661,12 +13667,12 @@ PrefabInstance:
     - target: {fileID: 2006403633129589174, guid: 60eff25f79fd9c642b8f10c335fd2ff2,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2006403633129589174, guid: 60eff25f79fd9c642b8f10c335fd2ff2,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2006403633316206222, guid: 60eff25f79fd9c642b8f10c335fd2ff2,
         type: 3}
@@ -14183,7 +14189,7 @@ PrefabInstance:
     - target: {fileID: 4672795458882852131, guid: 60eff25f79fd9c642b8f10c335fd2ff2,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4672795458882852140, guid: 60eff25f79fd9c642b8f10c335fd2ff2,
         type: 3}
