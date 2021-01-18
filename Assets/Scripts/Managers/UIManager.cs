@@ -7,6 +7,7 @@ public class UIManager : MonoSingleton<UIManager>
 	InputManager inputManager;
 	CraftingManager craftingManager;
 	InventoryUIManager inventoryManager;
+	PlayerStats playerStats;
 
 	// UI elements
 	[SerializeField]
@@ -37,6 +38,7 @@ public class UIManager : MonoSingleton<UIManager>
 		bCancel,
 		bRotate,
 		stateText;
+	[SerializeField] private TextMeshProUGUI levelNumber;
 
 	[Header("Survival bar's fill")]
 	[SerializeField]
@@ -55,6 +57,7 @@ public class UIManager : MonoSingleton<UIManager>
 
 	public override void Init()
 	{
+		playerStats = PlayerStats._instance;
 		craftingManager = CraftingManager._instance;
 		inventoryManager = InventoryUIManager._instance;
 		inputManager = InputManager._instance;
@@ -860,7 +863,7 @@ public class UIManager : MonoSingleton<UIManager>
 
     public void UpdateExpAndLvlBar() {
         xpFill.fillAmount = Mathf.Clamp(playerStats.GetStatValue(StatType.EXP) / playerStats.GetStatValue(StatType.EXPAmountToLevelUp), 0, 1);
-        LevelNumber.SetText(Mathf.RoundToInt(playerStats.GetStatValue(StatType.Level)).ToString());
+        levelNumber.SetText(Mathf.RoundToInt(playerStats.GetStatValue(StatType.Level)).ToString());
     }
 
 	#endregion
