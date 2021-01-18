@@ -60,6 +60,7 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                     Reset();
                 }
 
+                if(pointerDownTimer >= (requiredHoldTime / 5))
                 fillImage.fillAmount = pointerDownTimer / requiredHoldTime;
             }
 
