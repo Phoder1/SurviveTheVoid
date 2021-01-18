@@ -12,6 +12,13 @@ public enum SurvivalStatType
 }
 public enum PlayerStatType
 {
+    MaxHP,
+    MaxHunger,
+    MaxTemperature,
+    MaxAttackDMG,
+    MaxThirst,
+    MaxOxygen,
+    MaxAwakeness,
     EXP,
     EXPAmountToLevelUp,
     Level,
@@ -20,17 +27,19 @@ public enum PlayerStatType
 }
 public class PlayerStats : MonoSingleton<PlayerStats>
 {
-    [SerializeField] SurvivalStat[] survivalStats;
-    [SerializeField] PlayerStat[] playerStats;
-    [SerializeField] ExpStat expStat;
+    [SerializeField] private PlayerStatsSO playerStatsSO;
     private Dictionary<SurvivalStatType, SurvivalStat> survivalStatsDict;
     private Dictionary<PlayerStatType, PlayerStat> playerStatsDict;
     public override void Init() {
-        foreach (SurvivalStat stat in survivalStats)
-            survivalStatsDict.Add(stat.stat, stat);
-        foreach (PlayerStat stat in playerStats)
-            playerStatsDict.Add(stat.stat, stat);
-        playerStatsDict.Add(expStat.stat, expStat);
+        survivalStatsDict = new Dictionary<SurvivalStatType, SurvivalStat>();
+        foreach (SurvivalStat stat in playerStatsSO.GetSurvivalStats)
+            survivalStatsDict.Add(stat.statType, stat);
+        playerStatsDict = new Dictionary<PlayerStatType, PlayerStat>();
+        foreach (SurvivalStat stat in playerStatsSO.GetSurvivalStats)
+            playerStatsDict.Add(stat.maxStat.statType, stat.maxStat);
+        foreach (PlayerStat stat in playerStatsSO.GetPlayerStats)
+            playerStatsDict.Add(stat.statType, stat);
+        playerStatsDict.Add(playerStatsSO.GetExpStat.statType, playerStatsSO.GetExpStat);
         ResetStats();
     }
 
@@ -40,74 +49,79 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         foreach (PlayerStat stat in playerStatsDict.Values)
             stat.Reset();
     }
-    private Stat GetStat(SurvivalStatType statType) => survivalStatsDict[statType];
-    private Stat GetStat(PlayerStatType statType) => playerStatsDict[statType];
+    public Stat GetStat(SurvivalStatType statType) => survivalStatsDict[statType];
+    public Stat GetStat(PlayerStatType statType) => playerStatsDict[statType];
+    public Stat GetStatMax(SurvivalStatType statType) => survivalStatsDict[statType].maxStat;
     public float GetStatValue(SurvivalStatType statType) => GetStat(statType).GetSetValue;
     public float GetStatValue(PlayerStatType statType) => GetStat(statType).GetSetValue;
     public void SetStatValue(SurvivalStatType statType, float value) => GetStat(statType).GetSetValue = value;
     public void SetStatValue(PlayerStatType statType, float value) => GetStat(statType).GetSetValue = value;
     public void AddStatValue(SurvivalStatType statType, float value) => GetStat(statType).GetSetValue += value;
     public void AddStatValue(PlayerStatType statType, float value) => GetStat(statType).GetSetValue += value;
-    public float GetStatMax(SurvivalStatType statType) => survivalStatsDict[statType].maxValue;
-    public void SetStatMax(SurvivalStatType statType, float value) => survivalStatsDict[statType].maxValue = value;
-    private abstract class Stat
-    {
-        public float defaultValue;
-        [SerializeField] private protected float value;
-        public abstract float GetSetValue { get; set; }
+    public float GetStatMaxValue(SurvivalStatType statType) => GetStatMax(statType).GetSetValue;
+    public void SetStatMaxValue(SurvivalStatType statType, float value) => GetStatMax(statType).GetSetValue = value;
+}
+public abstract class Stat
+{
+    public float defaultValue;
+    private protected float value;
+    public abstract float GetSetValue { get; set; }
 
 
-        public void Reset() {
-            value = defaultValue;
-        }
+    public void Reset() {
+        value = defaultValue;
     }
-    [System.Serializable]
-    private class SurvivalStat : Stat
-    {
-        public SurvivalStatType stat;
-        public float maxValue;
-        public override float GetSetValue {
-            get => value;
-            set {
-                if (value != this.value) {
-                    this.value = Mathf.Clamp(value, 0, maxValue);
-                    UIManager._instance.UpdateSurvivalBar(stat, value);
-                }
+}
+[System.Serializable]
+public class SurvivalStat : Stat
+{
+    public SurvivalStatType statType;
+    public PlayerStat maxStat;
+    public override float GetSetValue {
+        get => value;
+        set {
+            if (value != this.value) {
+                this.value = Mathf.Clamp(value, 0, maxStat.GetSetValue);
+                UIManager._instance.UpdateSurvivalBar(statType, value);
             }
         }
     }
-    [System.Serializable]
-    private class PlayerStat : Stat
-    {
-        public PlayerStatType stat;
-        protected PlayerStat(PlayerStatType stat) {
-            this.stat = stat;
+}
+[System.Serializable]
+public class PlayerStat : Stat
+{
+    public PlayerStatType statType;
+    protected PlayerStat(PlayerStatType stat) {
+        this.statType = stat;
+    }
+
+    public override float GetSetValue {
+        get => value;
+        set {
+            this.value = Mathf.Max(value, 0);
         }
-        
-        public override float GetSetValue {
-            get => value;
-            set {
+    }
+}
+[System.Serializable]
+public class ExpStat : PlayerStat
+{
+    protected ExpStat(PlayerStatType stat) : base(stat) {
+    }
+
+    public override float GetSetValue {
+        get => value;
+        set {
+            if (value != this.value) {
+                PlayerStats playerStats = PlayerStats._instance;
                 this.value = Mathf.Max(value, 0);
-            }
-        }
-    }
-    [System.Serializable]
-    private class ExpStat : PlayerStat
-    {
-        protected ExpStat(PlayerStatType stat) : base(stat) {
-        }
-
-        public override float GetSetValue {
-            get => value;
-            set {
-                if (value != this.value) {
-                    this.value = Mathf.Max(value, 0);
-                    float XPtoLevel = _instance.GetStatValue(PlayerStatType.EXPAmountToLevelUp);
-                    if (this.value > XPtoLevel) {
-                        _instance.AddStatValue(PlayerStatType.Level, 1);
-                        this.value = this.value - XPtoLevel;
-                        _instance.AddStatValue(PlayerStatType.EXPAmountToLevelUp, XPtoLevel * 0.5f);
-                    }
+                float XPtoLevel = playerStats.GetStatValue(PlayerStatType.EXPAmountToLevelUp);
+                if (this.value >= XPtoLevel) {
+                    playerStats.AddStatValue(PlayerStatType.Level, 1);
+                    //Needs to be recursive
+                    playerStats.AddStatValue(PlayerStatType.EXPAmountToLevelUp, XPtoLevel * 0.5f);
+                    GetSetValue -= XPtoLevel;
+                }
+                else {
                     UIManager._instance.UpdateEXPbar();
                 }
             }

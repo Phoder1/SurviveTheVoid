@@ -11,15 +11,15 @@
 
         singletons = new ISingleton[11] {
             CameraController._instance,
-            PlayerController._instance,
+            PlayerMovementHandler._instance,
              GridManager._instance,
+             PlayerStats._instance,
              PlayerManager._instance,
              GodmodeScript._instance,
              CraftingManager._instance,
              InventoryUIManager._instance,
              UIManager._instance,
              InputManager._instance,
-              PlayerStats._instance,
              ConsumeEffectHandler._instance
 
         };

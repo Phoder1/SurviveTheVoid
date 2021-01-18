@@ -7,24 +7,29 @@ using UnityEngine;
 
 public class ConsumeEffectHandler : MonoSingleton<ConsumeEffectHandler>
 {
-
-    static Dictionary<EffectCategory, AbstStat> StatEffectDict;
+    PlayerStats playerStats;
+    static Dictionary<EffectCategory, Effect> StatEffectDict;
 
     public override void Init()
     {
-        StatEffectDict = new Dictionary<EffectCategory, AbstStat>() {
-       {EffectCategory.Food, new HungerStat()},
-       {EffectCategory.Food_Poisoning, new HungerStat()},
-       {EffectCategory.HP, new HPStat()},
-       {EffectCategory.HP_Regeneration, new HPStat()},
-       {EffectCategory.Thirst, new ThirstStat()},
-       {EffectCategory.Water, new ThirstStat()}
+        playerStats = PlayerStats._instance;
+        StatEffectDict = new Dictionary<EffectCategory, Effect>() {
+       {EffectCategory.Food, new Effect(playerStats.GetStat(SurvivalStatType.Hunger),3f)},
+       {EffectCategory.Food_Regeneration, new Effect(playerStats.GetStat(SurvivalStatType.Hunger),3f)},
+       {EffectCategory.MaxFood, new Effect(playerStats.GetStatMax(SurvivalStatType.Hunger),3f)},
+       {EffectCategory.HP, new Effect(playerStats.GetStat(SurvivalStatType.HP),3f)},
+       {EffectCategory.HP_Regeneration, new Effect(playerStats.GetStat(SurvivalStatType.HP),3f)},
+       {EffectCategory.MaxHP, new Effect(playerStats.GetStatMax(SurvivalStatType.HP),3f)},
+       {EffectCategory.Water, new Effect(playerStats.GetStat(SurvivalStatType.Thirst),3f)},
+       {EffectCategory.Water_Regeneration, new Effect(playerStats.GetStat(SurvivalStatType.Thirst),3f)},
+       {EffectCategory.MaxWater, new Effect(playerStats.GetStatMax(SurvivalStatType.Thirst),3f)},
 
         };
+        SurvivalEffects();
     }
-    public static AbstStat GetAbstStat(ConsumableEffect effect) {
+    public static Effect GetAbstStat(ConsumableEffect effect) {
 
-        if (StatEffectDict.TryGetValue(effect.effectCategory, out AbstStat effectStatAbst))
+        if (StatEffectDict.TryGetValue(effect.effectCategory, out Effect effectStatAbst))
             return effectStatAbst;
 
         else
@@ -37,7 +42,7 @@ public class ConsumeEffectHandler : MonoSingleton<ConsumeEffectHandler>
             return false;
 
 
-        AbstStat abstStat;
+        Effect abstStat;
 
         bool CanUseTheItem = true;
         foreach (var effect in Item.Effects)
@@ -63,7 +68,7 @@ public class ConsumeEffectHandler : MonoSingleton<ConsumeEffectHandler>
     public void StartEffect(ConsumableEffect effect)
     {
 
-        AbstStat effectCache = GetAbstStat(effect);
+        Effect effectCache = GetAbstStat(effect);
 
         if (effectCache == null || effectCache.isOnCoolDown)
             return;
@@ -93,12 +98,6 @@ public class ConsumeEffectHandler : MonoSingleton<ConsumeEffectHandler>
 
     }
 
-
-    private void Start()
-    {
-        SurvivalEffects();
-    }
-
     void SurvivalEffects() {
 
         ConsumableEffect hungerEffect = new ConsumableEffect() {
@@ -111,7 +110,7 @@ public class ConsumeEffectHandler : MonoSingleton<ConsumeEffectHandler>
           
         };
         ConsumableEffect thirstEffect = new ConsumableEffect() {
-            effectCategory = EffectCategory.Thirst,
+            effectCategory = EffectCategory.Water_Regeneration,
             isPresentage = false,
             isRelative = false,
             amount = 0.5f,
@@ -129,16 +128,16 @@ public class ConsumeEffectHandler : MonoSingleton<ConsumeEffectHandler>
             duration = Mathf.Infinity
         };
 
-        AbstStat worldEffect;
-        worldEffect = new HungerStat();
+        Effect worldEffect;
+        worldEffect = new Effect(playerStats.GetStat(SurvivalStatType.Hunger), 3f);
         StopCoroutine(worldEffect.AddEffectOverTime(hungerEffect.amount, hungerEffect.duration, hungerEffect.tickTime, hungerEffect.isPresentage, hungerEffect.isRelative));
         StartCoroutine(worldEffect.AddEffectOverTime(hungerEffect.amount, hungerEffect.duration, hungerEffect.tickTime, hungerEffect.isPresentage, hungerEffect.isRelative));
 
-        worldEffect = new ThirstStat();
+        worldEffect = new Effect(playerStats.GetStat(SurvivalStatType.Thirst), 3f);
         StopCoroutine(worldEffect.AddEffectOverTime(thirstEffect.amount, thirstEffect.duration, thirstEffect.tickTime, thirstEffect.isPresentage, thirstEffect.isRelative));
         StartCoroutine(worldEffect.AddEffectOverTime(thirstEffect.amount, thirstEffect.duration, thirstEffect.tickTime, thirstEffect.isPresentage, thirstEffect.isRelative));
 
-        worldEffect = new OxygenStat();
+        worldEffect = new Effect(playerStats.GetStat(SurvivalStatType.Oxygen), 3f);
         StopCoroutine(worldEffect.AddEffectOverTime(oxygenEffect.amount, oxygenEffect.duration, oxygenEffect.tickTime, oxygenEffect.isPresentage, oxygenEffect.isRelative));
         StartCoroutine(worldEffect.AddEffectOverTime(oxygenEffect.amount, oxygenEffect.duration, oxygenEffect.tickTime, oxygenEffect.isPresentage, oxygenEffect.isRelative));
 
@@ -148,9 +147,9 @@ public class ConsumeEffectHandler : MonoSingleton<ConsumeEffectHandler>
 
     public class ResetCooldown : TimeEvent
     {
-        public AbstStat statCache;
+        public Effect statCache;
 
-        public ResetCooldown(float triggerTime , AbstStat _statCache) : base(triggerTime)
+        public ResetCooldown(float triggerTime , Effect _statCache) : base(triggerTime)
         {
             statCache = _statCache;
         }

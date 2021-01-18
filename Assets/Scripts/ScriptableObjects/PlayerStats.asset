@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9e69da5ebe39ee47bb33ca47a09887d, type: 3}
+  m_Name: PlayerStats
+  m_EditorClassIdentifier: 
+  survivalStats:
+  - defaultValue: 100
+    statType: 0
+    maxStat:
+      defaultValue: 100
+      statType: 0
+  - defaultValue: 100
+    statType: 1
+    maxStat:
+      defaultValue: 100
+      statType: 1
+  - defaultValue: 20
+    statType: 2
+    maxStat:
+      defaultValue: 100
+      statType: 2
+  - defaultValue: 100
+    statType: 3
+    maxStat:
+      defaultValue: 100
+      statType: 3
+  - defaultValue: 100
+    statType: 4
+    maxStat:
+      defaultValue: 100
+      statType: 4
+  - defaultValue: 100
+    statType: 5
+    maxStat:
+      defaultValue: 100
+      statType: 5
+  - defaultValue: 100
+    statType: 6
+    maxStat:
+      defaultValue: 100
+      statType: 6
+  playerStats:
+  - defaultValue: 1
+    statType: 11
+  - defaultValue: 10
+    statType: 8
+  - defaultValue: 1
+    statType: 9
+  - defaultValue: 1
+    statType: 10
+  expStat:
+    defaultValue: 0
+    statType: 7

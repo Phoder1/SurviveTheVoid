@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoSingleton<PlayerController>
+public class PlayerMovementHandler : MonoSingleton<PlayerMovementHandler>
 {
     CameraController cameraController;
     GridManager gridManager;

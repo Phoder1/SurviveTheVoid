@@ -812,7 +812,7 @@ public class UIManager : MonoSingleton<UIManager>
 	// Monitors logic
 	public void UpdateSurvivalBar(SurvivalStatType type, float value)
 	{
-		barsDictionary[type].fillAmount = Mathf.Clamp(value / playerStats.GetStatMax(type), 0, 1);
+		barsDictionary[type].fillAmount = Mathf.Clamp(value / playerStats.GetStatMaxValue(type), 0, 1);
 	}
 	public void UpdateEXPbar() {
 		xpFill.fillAmount = Mathf.Clamp(playerStats.GetStatValue(PlayerStatType.EXP) / playerStats.GetStatValue(PlayerStatType.EXPAmountToLevelUp), 0, 1);

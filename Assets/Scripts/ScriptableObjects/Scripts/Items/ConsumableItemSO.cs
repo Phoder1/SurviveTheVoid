@@ -9,25 +9,26 @@ public enum EffectCategory
 {
 	HP, // + HP instant
 	HP_Regeneration, // + small amount of HP over duration time
+	MaxHP, // HP maximum
 	Food,  // + Hunger instant
+	Food_Regeneration, // - small amount of hunger over duration time
+	MaxFood,
 	Water, // + Thirst instant
+	Water_Regeneration, // - Thirst instant
+	MaxWater,
 	Air, // + oxygen instant
+	Air_Regeneration, // - small amount of oxygen over duration time
+	MaxAir,
 	Sleep, // + instant awakeness
+	Sleep_Regeneration, // - small amount of awakeness over duration time
+	MaxSleep,
 	EXP, // + EXP instant
-	Speed, // + speed instant over duration time
-	Slow, // - speed instant over duration time
+	MovementSpeed, // + speed instant over duration time
 	Strength, // + attackDMG instant over duration time
-	Weakness, // - attackDMG instant over duration time
-	Gathering, // + gatheringSpeed instant over duration of time
+	GatheringSpeed, // + gatheringSpeed instant over duration of time
 	Defence, // + 
-	Poison, // - small amount of HP over duration time
-	Light, // + 
-	Flight, // + Special ability
-	Food_Poisoning, // - small amount of hunger over duration time , 
-	Thirst, // - Thirst instant
-	Fatigue, // - small amount of awakeness over duration time
-	Panting // - small amount of oxygen over duration time 
-
+	Light, // + Special abillity
+	Flight, // + Special abillity
 }
 
 [CreateAssetMenu(fileName = "New Consumable Item", menuName = "Items/" + "Consumable")]
