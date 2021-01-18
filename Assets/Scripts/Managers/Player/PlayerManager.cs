@@ -6,7 +6,8 @@ using UnityEngine;
 public class PlayerManager : MonoSingleton<PlayerManager>
 {
     private PlayerStats playerStats;
-
+    private static Transform playerTransfrom;
+       
     private InputManager _inputManager;
     private GridManager _GridManager;
     private Scanner _scanner;
@@ -29,6 +30,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     private bool specialWasPressed;
     private bool anyInteracted;
     Coroutine gatherCoroutine = null;
+  
     private DirectionEnum MovementDir {
         get {
             float angle = Vector2.SignedAngle(_inputManager.VJAxis, Vector2.up);
@@ -47,7 +49,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
             }
         }
     }
-
+    public static Transform GetPlayerTransform => playerTransfrom;
 
     public override void Init() {
 
@@ -57,6 +59,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         _GridManager = GridManager._instance;
         playerStats = PlayerStats._instance;
         playerController = PlayerController._instance;
+        playerTransfrom = GetComponent<Transform>();
     }
     private void LateUpdate() {
         if (!anyInteracted) {
