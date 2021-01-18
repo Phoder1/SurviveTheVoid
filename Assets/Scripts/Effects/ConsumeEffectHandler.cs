@@ -10,12 +10,6 @@ public class ConsumeEffectHandler : MonoSingleton<ConsumeEffectHandler>
 
     static Dictionary<EffectCategory, AbstStat> StatEffectDict;
 
-
-    /// <summary>
-    /// no more than one class to category
-    /// use the same class
-    /// static
-    /// </summary>
     public override void Init()
     {
         StatEffectDict = new Dictionary<EffectCategory, AbstStat>() {
@@ -66,10 +60,6 @@ public class ConsumeEffectHandler : MonoSingleton<ConsumeEffectHandler>
         return CanUseTheItem;
 
     }
-    
-    
-    
-    
     public void StartEffect(ConsumableEffect effect)
     {
 
@@ -87,9 +77,11 @@ public class ConsumeEffectHandler : MonoSingleton<ConsumeEffectHandler>
                 effectCache.AddFixedAmount(effect.amount, effect.isPresentage);
                 break;
             case EffectType.ToggleOverTime:
+                StopCoroutine(effectCache.ToggleAmountOverTime(effect.amount, effect.duration, effect.isPresentage, effect.isRelative));
                 StartCoroutine(effectCache.ToggleAmountOverTime(effect.amount, effect.duration , effect.isPresentage, effect.isRelative));
                 break;
             case EffectType.OverTimeSmallPortion:
+                StopCoroutine(effectCache.AddEffectOverTime(effect.amount, effect.duration, effect.tickTime, effect.isPresentage, effect.isRelative));
                 StartCoroutine(effectCache.AddEffectOverTime(effect.amount, effect.duration , effect.tickTime, effect.isPresentage,effect.isRelative));
                
                 break;
@@ -101,7 +93,58 @@ public class ConsumeEffectHandler : MonoSingleton<ConsumeEffectHandler>
 
     }
 
-   
+
+    private void Start()
+    {
+        SurvivalEffects();
+    }
+
+    void SurvivalEffects() {
+
+        ConsumableEffect hungerEffect = new ConsumableEffect() {
+            effectCategory = EffectCategory.Food,
+            isPresentage = false,
+            isRelative = false,
+            amount = 0.5f,
+            tickTime = 0.5f,
+            duration = Mathf.Infinity
+          
+        };
+        ConsumableEffect thirstEffect = new ConsumableEffect() {
+            effectCategory = EffectCategory.Thirst,
+            isPresentage = false,
+            isRelative = false,
+            amount = 0.5f,
+            tickTime = 0.5f,
+            duration = Mathf.Infinity
+           
+        };
+        ConsumableEffect oxygenEffect = new ConsumableEffect()
+        {
+            effectCategory = EffectCategory.Air,
+            isPresentage = false,
+            isRelative = false,
+            amount = 0.5f,
+            tickTime = 0.5f,
+            duration = Mathf.Infinity
+        };
+
+        AbstStat worldEffect;
+        worldEffect = new HungerStat();
+        StopCoroutine(worldEffect.AddEffectOverTime(hungerEffect.amount, hungerEffect.duration, hungerEffect.tickTime, hungerEffect.isPresentage, hungerEffect.isRelative));
+        StartCoroutine(worldEffect.AddEffectOverTime(hungerEffect.amount, hungerEffect.duration, hungerEffect.tickTime, hungerEffect.isPresentage, hungerEffect.isRelative));
+
+        worldEffect = new ThirstStat();
+        StopCoroutine(worldEffect.AddEffectOverTime(thirstEffect.amount, thirstEffect.duration, thirstEffect.tickTime, thirstEffect.isPresentage, thirstEffect.isRelative));
+        StartCoroutine(worldEffect.AddEffectOverTime(thirstEffect.amount, thirstEffect.duration, thirstEffect.tickTime, thirstEffect.isPresentage, thirstEffect.isRelative));
+
+        worldEffect = new OxygenStat();
+        StopCoroutine(worldEffect.AddEffectOverTime(oxygenEffect.amount, oxygenEffect.duration, oxygenEffect.tickTime, oxygenEffect.isPresentage, oxygenEffect.isRelative));
+        StartCoroutine(worldEffect.AddEffectOverTime(oxygenEffect.amount, oxygenEffect.duration, oxygenEffect.tickTime, oxygenEffect.isPresentage, oxygenEffect.isRelative));
+
+
+    }
+
 
     public class ResetCooldown : TimeEvent
     {

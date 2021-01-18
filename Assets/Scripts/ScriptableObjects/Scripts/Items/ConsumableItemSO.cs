@@ -59,7 +59,7 @@ public class ConsumableEffect
 	public EffectType effectType;
 	public bool isRelative; 
 	public bool isPresentage;
-	public int amount;
+	public float amount;
 	public float duration;
 	public float tickTime;
 }
