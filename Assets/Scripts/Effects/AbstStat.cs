@@ -233,3 +233,73 @@ public class HPStat : AbstStat
         }
     }
 }
+public class OxygenStat : AbstStat
+{
+    public override IEnumerator AddEffectOverTime(float amount, float duration, float tickTime, bool isPrecentage, bool isRelative)
+    {
+        float startingTime = Time.time;
+        isOnCoolDown = true;
+        if (isPrecentage)
+        {
+
+            float amountFromPrecentage = AmountFromPrecentage(PlayerStats._instance.GetSetOxygen, amount) / tickTime;
+            while (startingTime + duration > Time.time)
+            {
+
+                if (isRelative)
+                    amountFromPrecentage = AmountFromPrecentage(PlayerStats._instance.GetSetOxygen - amountFromPrecentage, amount);
+
+                PlayerStats._instance.GetSetHP += AmountFromPrecentage(PlayerStats._instance.GetSetOxygen, amount) / tickTime;
+                yield return new WaitForSeconds(duration / tickTime);
+                amountFromPrecentage = AmountFromPrecentage(PlayerStats._instance.GetSetOxygen, amount) / tickTime;
+            }
+        }
+        else
+        {
+
+            while (startingTime + duration > Time.time)
+            {
+                PlayerStats._instance.GetSetOxygen += amount / tickTime;
+                yield return new WaitForSeconds(duration / tickTime);
+            }
+        }
+
+
+    }
+
+    public override void AddFixedAmount(float amount, bool isPrecentage)
+    {
+        isOnCoolDown = true;
+
+        if (isPrecentage)
+            PlayerStats._instance.GetSetOxygen += AmountFromPrecentage(PlayerStats._instance.GetSetOxygen, amount);
+
+        else
+            PlayerStats._instance.GetSetOxygen += amount;
+    }
+
+    public override IEnumerator ToggleAmountOverTime(float amount, float duration, bool isPrecentage, bool isRelative)
+    {
+        isOnCoolDown = true;
+
+        float amountFromPrecentage = AmountFromPrecentage(PlayerStats._instance.GetSetOxygen, amount);
+
+        if (isPrecentage)
+        {
+            PlayerStats._instance.GetSetOxygen += amountFromPrecentage;
+            yield return new WaitForSeconds(duration);
+
+            if (isRelative)
+                amountFromPrecentage = AmountFromPrecentage(PlayerStats._instance.GetSetOxygen - amountFromPrecentage, amount);
+
+            PlayerStats._instance.GetSetOxygen += -amountFromPrecentage;
+        }
+        else
+        {
+            PlayerStats._instance.GetSetOxygen += amount;
+            yield return new WaitForSeconds(duration);
+            PlayerStats._instance.GetSetOxygen += -amount;
+
+        }
+    }
+}
