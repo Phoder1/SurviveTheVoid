@@ -47,8 +47,6 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     // Update is called once per frame
     void Update()
     {
-        if (CraftingManager._instance.buttonState == ButtonState.CanCraft)
-        {
 
 
             if (pointerDown)
@@ -66,7 +64,7 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             }
 
 
-        }
+        
 
 
     }

@@ -265,7 +265,7 @@ public class Inventory
 
 
         int amountIHave = GetAmountOfItem(chestID, item);
-        if (item.amount > amountIHave)
+        if (itemAmountCount > amountIHave)
         {
             Debug.Log("You are trying To Remove : " + item.amount + " and I Have Only This Amount : " + amountIHave);
             return false;
