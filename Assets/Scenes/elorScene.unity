@@ -294,6 +294,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b4f1293ec7bd4645b3ecccfbc64604b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1687905378 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8057516166701267294, guid: ec261434d51bce44fa7c7f1d01379781,
+    type: 3}
+  m_PrefabInstance: {fileID: 3303330037997937118}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1757418854
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -689,7 +701,7 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0.037365794, y: 0.025490284, z: 0}
+  m_ChunkCullingBounds: {x: 0.0058823824, y: 0.025490284, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 3
@@ -5215,6 +5227,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 629309934292324171, guid: ec261434d51bce44fa7c7f1d01379781,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 629309934292324171, guid: ec261434d51bce44fa7c7f1d01379781,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 629309935759496634, guid: ec261434d51bce44fa7c7f1d01379781,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1198.907
+      objectReference: {fileID: 0}
     - target: {fileID: 3303330036332173220, guid: ec261434d51bce44fa7c7f1d01379781,
         type: 3}
       propertyPath: m_RootOrder
@@ -5270,10 +5297,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3303330036332173221, guid: ec261434d51bce44fa7c7f1d01379781,
+        type: 3}
+      propertyPath: CraftingButtonText
+      value: 
+      objectReference: {fileID: 1687905378}
     - target: {fileID: 3303330036332173223, guid: ec261434d51bce44fa7c7f1d01379781,
         type: 3}
       propertyPath: m_Name
       value: UImanager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6033404864412062686, guid: ec261434d51bce44fa7c7f1d01379781,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec261434d51bce44fa7c7f1d01379781, type: 3}

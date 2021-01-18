@@ -66,26 +66,26 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         if (Input.GetKeyDown(KeyCode.Z))
         {
 
-            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[5], 1));
+            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[6], 1));
 
             ShowRecipe(selectedRecipe);
             inventoryUI.UpdateInventoryToUI();
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
-            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[8], 1));
+            inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[9], 1));
             inventoryUI.UpdateInventoryToUI();
             ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
-            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[5], 1));
+            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[6], 1));
             inventoryUI.UpdateInventoryToUI();
             ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.V))
         {
-            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[8], 1));
+            inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[9], 1));
             inventoryUI.UpdateInventoryToUI();
             ShowRecipe(selectedRecipe);
         }
@@ -465,6 +465,43 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         }
 
     }
+
+    int CraftIndex;
+    public void AttemptToCraftMax()
+    {
+        CraftIndex = selectedRecipe.getoutcomeItem.item.getmaxStackSize;
+        CheckIfYouCanCraft();
+
+
+    }
+
+    void CheckIfYouCanCraft()
+    {
+        
+        if (inventory.CheckEnoughItemsForRecipe(selectedRecipe, CraftIndex))
+        {
+            Debug.Log("Crafted: " + selectedRecipe.getoutcomeItem.item.getItemName + " Amount of: " + CraftIndex);
+
+            inventory.RemoveItemsByRecipe(selectedRecipe, CraftIndex);
+            CurrentProcessTile.StartCrafting(selectedRecipe, (selectedRecipe.getoutcomeItem.amount * CraftIndex));
+            ShowRecipe(selectedRecipe);
+            buttonState = ButtonState.Crafting;
+            UIManager._instance.SetButtonToState(buttonState, CurrentProcessTile.ItemsCrafted, CurrentProcessTile.amount, CurrentProcessTile.CraftingTimeRemaining);
+
+
+            UIManager._instance.OnChangeGetCraftingAmount();
+        }
+        else
+        {
+            Debug.Log("Cant craft amount of: " + CraftIndex + " Trying to check if you can craft: " + (CraftIndex - 1).ToString());
+            CraftIndex--;
+            if(CraftIndex >= 1)
+            CheckIfYouCanCraft();
+        }
+
+
+    }
+
 
     public void AddToCraft()
     {
