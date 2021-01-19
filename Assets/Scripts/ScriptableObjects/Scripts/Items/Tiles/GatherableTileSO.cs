@@ -80,10 +80,12 @@ public class GatherableState : ITileState
     public void GatherInteraction(Vector2Int gridPosition, TileMapLayer tileMapLayer) {
         if (GetIsGatherable) {
             Debug.Log("Tried gathering");
-            if (tile.GetStages[currentStage].GetDestroyOnGather)
+            if (tile.GetStages[currentStage].GetDestroyOnGather || currentStage == 0)
                 GridManager._instance.SetTile(null, gridPosition, tileMapLayer, true);
             else {
                 currentStage--;
+                if (!reachedMaxStage)
+                    InitEvent(gridPosition, tileMapLayer);
                 GridManager._instance.SetTile(tileSlot, gridPosition, tileMapLayer, true);
             }
 
