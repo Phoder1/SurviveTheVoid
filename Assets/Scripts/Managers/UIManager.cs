@@ -36,7 +36,8 @@ public class UIManager : MonoSingleton<UIManager>
 		ChestUI,
 		bCancel,
 		bRotate,
-		stateText;
+		stateText,
+		xpBar;
 
 	[Header("Survival bar's fill")]
 	[SerializeField]
@@ -366,7 +367,7 @@ public class UIManager : MonoSingleton<UIManager>
 
 	public void SetCraftingUIState(bool IsActive, ProcessorType _type, ProcessingTableTileState tile)
 	{
-		CraftingUI.SetActive(IsActive);
+		CraftingScreenUI();
 		craftingManager.buttonState = ButtonState.Openining;
 		craftingManager.GetSetProcessor = _type;
 		craftingManager.CurrentProcessTile = tile;
@@ -432,10 +433,10 @@ public class UIManager : MonoSingleton<UIManager>
 
 
 
-	public void CloseCraftingUI()
+	public void ButtonCloseCraftingUI()
 	{
 		ResetMultiple();
-		CraftingUI.SetActive(false);
+		CloseCraftScreen();
 		craftingManager.selectedRecipe = null;
 		PlayerManager._instance.MenuClosed();
 	}
@@ -452,7 +453,6 @@ public class UIManager : MonoSingleton<UIManager>
 	bool isInventoryOpen = false;
 	bool isFightModeOn = false;
 	bool isBuildModeOn = false;
-	bool isCraftTableOpen = false;
 	bool isChestOpen = false;
 
 
@@ -682,10 +682,6 @@ public class UIManager : MonoSingleton<UIManager>
 			{
 				InventoryUI.SetActive(false);
 			}
-			if (isCraftTableOpen == true)
-			{
-				CraftingUI.SetActive(false);
-			}
 			if (isChestOpen == true)
 			{
 				ChestUI.SetActive(false);
@@ -759,6 +755,7 @@ public class UIManager : MonoSingleton<UIManager>
 		}
 	}
 
+
 	// Build mode logic
 	public void BuildModeUI()
 	{
@@ -798,6 +795,7 @@ public class UIManager : MonoSingleton<UIManager>
 
 	public void ButtonCancel()
 	{
+		PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
 		isBuildModeOn = false;
 
 		if (isQuickAccessSlotsSwapped == true && isShown == true)
@@ -852,6 +850,63 @@ public class UIManager : MonoSingleton<UIManager>
 	{
 
 	}
+
+
+	// Crafting screen logic
+	public void CraftingScreenUI()
+	{
+		CraftingUI.SetActive(true);
+
+		if (isQuickAccessSlotsSwapped == true && isShown != false)
+		{
+			SetTools(false);
+			bMainWeapon.SetActive(false);
+			bSwap.SetActive(false);
+		}
+		else if (isQuickAccessSlotsSwapped == false && isShown != false)
+		{
+			SetQuickAccessSlots(false);
+			bMainWeapon.SetActive(false);
+			bSwap.SetActive(false);
+		}
+
+		bHide.SetActive(false);
+		bInventory.SetActive(false);
+		bSettings.SetActive(false);
+		vjMove.SetActive(false);
+		//bInteract.SetActive(false);
+		bGather.SetActive(false);
+		viFight.SetActive(false);
+		xpBar.SetActive(false);
+	}
+
+	public void CloseCraftScreen()
+	{
+		CraftingUI.SetActive(false);
+
+		if (isQuickAccessSlotsSwapped == true && isShown != false)
+		{
+			SetTools(true);
+			bMainWeapon.SetActive(true);
+			bSwap.SetActive(true);
+		}
+		else if (isQuickAccessSlotsSwapped == false && isShown != false)
+		{
+			SetQuickAccessSlots(true);
+			bMainWeapon.SetActive(true);
+			bSwap.SetActive(true);
+		}
+
+		bHide.SetActive(true);
+		bInventory.SetActive(true);
+		bSettings.SetActive(true);
+		vjMove.SetActive(true);
+		//bInteract.SetActive(true);
+		bGather.SetActive(true);
+		viFight.SetActive(true);
+		xpBar.SetActive(true);
+	}
+
 
 	// Monitors logic
 	public void UpdateSurvivalBar(StatType type, float value)

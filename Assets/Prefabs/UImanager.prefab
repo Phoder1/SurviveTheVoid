@@ -593,7 +593,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3303330036332173221}
-        m_MethodName: CloseCraftingUI
+        m_MethodName: ButtonCloseCraftingUI
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9077,6 +9077,7 @@ MonoBehaviour:
   bCancel: {fileID: 358540573}
   bRotate: {fileID: 1589588351}
   stateText: {fileID: 3108493680952785529}
+  xpBar: {fileID: 3303330037844728889}
   hpFill: {fileID: 3303330036325718907}
   foodFill: {fileID: 3303330037604814074}
   waterFill: {fileID: 3303330036115559564}
@@ -11730,7 +11731,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -47.30005, y: -37.30005}
+  m_AnchoredPosition: {x: -47.300293, y: -37.30005}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &3303330037215079378
@@ -15236,7 +15237,7 @@ PrefabInstance:
     - target: {fileID: 4672795458882852140, guid: 60eff25f79fd9c642b8f10c335fd2ff2,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 87.245
+      value: 87.24512
       objectReference: {fileID: 0}
     - target: {fileID: 4672795458882852140, guid: 60eff25f79fd9c642b8f10c335fd2ff2,
         type: 3}
