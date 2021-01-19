@@ -22,14 +22,7 @@ MonoBehaviour:
       overtimeCooldown: 3
       defaultValue: 100
       statType: 6
-    highReactionEnabled: 0
-    highReactionValue: 0
-    highEffectsData: []
-    midReactionEnabled: 0
-    midReactionValue: 0
-    midEffectsData: []
-    lowReactionEnabled: 0
-    lowEffectsData: []
+    reactions: []
   - cooldown: 3
     overtimeCooldown: 3
     defaultValue: 100
@@ -39,21 +32,15 @@ MonoBehaviour:
       overtimeCooldown: 3
       defaultValue: 100
       statType: 7
-    highReactionEnabled: 0
-    highReactionValue: 0
-    highEffectsData: []
-    midReactionEnabled: 0
-    midReactionValue: 0
-    midEffectsData: []
-    lowReactionEnabled: 1
-    lowEffectsData:
-    - effectStatType: 0
-      effectType: 2
-      isRelative: 0
-      isPresentage: 0
-      amount: -0.5
-      duration: 1e+9
-      tickTime: 1
+    reactions:
+    - isPercentage: 0
+      checkSmaller: 0
+      reactionStartValue: 0
+      effectsData: []
+    - isPercentage: 0
+      checkSmaller: 0
+      reactionStartValue: 0
+      effectsData: []
   - cooldown: 3
     overtimeCooldown: 3
     defaultValue: 20
@@ -63,14 +50,7 @@ MonoBehaviour:
       overtimeCooldown: 3
       defaultValue: 100
       statType: 8
-    highReactionEnabled: 0
-    highReactionValue: 0
-    highEffectsData: []
-    midReactionEnabled: 0
-    midReactionValue: 0
-    midEffectsData: []
-    lowReactionEnabled: 0
-    lowEffectsData: []
+    reactions: []
   - cooldown: 3
     overtimeCooldown: 3
     defaultValue: 100
@@ -80,14 +60,7 @@ MonoBehaviour:
       overtimeCooldown: 3
       defaultValue: 100
       statType: 9
-    highReactionEnabled: 0
-    highReactionValue: 0
-    highEffectsData: []
-    midReactionEnabled: 0
-    midReactionValue: 0
-    midEffectsData: []
-    lowReactionEnabled: 0
-    lowEffectsData: []
+    reactions: []
   - cooldown: 3
     overtimeCooldown: 3
     defaultValue: 100
@@ -97,14 +70,7 @@ MonoBehaviour:
       overtimeCooldown: 3
       defaultValue: 100
       statType: 10
-    highReactionEnabled: 0
-    highReactionValue: 0
-    highEffectsData: []
-    midReactionEnabled: 0
-    midReactionValue: 0
-    midEffectsData: []
-    lowReactionEnabled: 0
-    lowEffectsData: []
+    reactions: []
   - cooldown: 3
     overtimeCooldown: 3
     defaultValue: 100
@@ -114,14 +80,7 @@ MonoBehaviour:
       overtimeCooldown: 3
       defaultValue: 100
       statType: 11
-    highReactionEnabled: 0
-    highReactionValue: 0
-    highEffectsData: []
-    midReactionEnabled: 0
-    midReactionValue: 0
-    midEffectsData: []
-    lowReactionEnabled: 0
-    lowEffectsData: []
+    reactions: []
   playerStats:
   - cooldown: 0
     overtimeCooldown: 0

@@ -74,54 +74,8 @@ public class SurvivalStat : Stat
 {
     public StatType statType;
     public PlayerStat maxStat;
-    [Header("High reaction activates above certain percentage")]
-    [SerializeField] private bool highReactionEnabled;
-    [Header("Value in precentage:")]
-    [SerializeField] private float highReactionValue;
-    [SerializeField] private EffectData[] highEffectsData;
-    private EffectController[] highEffectsCont;
-    private bool highEffectsRunning;
-    private EffectController[] GetHighEffectsCont {
-        get {
-            if (highEffectsCont == null) {
+    [SerializeField] private Reaction[] reactions;
 
-                highEffectsCont = EffectHandler._instance.CreateControllers(highEffectsData, new float[highEffectsData.Length]);
-            }
-            return highEffectsCont;
-        }
-    }
-
-    [Header("Mid reaction activates below a fixed value")]
-    [SerializeField] private bool midReactionEnabled;
-    [Header("Fixed value:")]
-    [SerializeField] private float midReactionValue;
-    [SerializeField] private EffectData[] midEffectsData;
-    private EffectController[] midEffectsCont;
-    private EffectController[] GetMidEffectsCont {
-        get {
-            if (midEffectsCont == null) {
-                midEffectsCont = EffectHandler._instance.CreateControllers(midEffectsData, new float[midEffectsData.Length]);
-            }
-            return midEffectsCont;
-        }
-    }
-    private bool midEffectsRunning;
-
-
-    [Header("Low reaction activates When value at 0")]
-    [SerializeField] private bool lowReactionEnabled;
-    [SerializeField] EffectData[] lowEffectsData;
-    private EffectController[] lowEffectsCont;
-    private EffectController[] GetLowEffectsCont {
-        get {
-            if (lowEffectsCont == null) {
-
-                lowEffectsCont = EffectHandler._instance.CreateControllers(lowEffectsData, new float[lowEffectsData.Length]);
-            }
-            return lowEffectsCont;
-        }
-    }
-    private bool lowEffectsRunning;
 
 
     public override float GetSetValue {
@@ -130,56 +84,51 @@ public class SurvivalStat : Stat
             if (value != this.value) {
                 this.value = Mathf.Clamp(value, 0, maxStat.GetSetValue);
                 UIManager._instance.UpdateSurvivalBar(this, value);
-                //if (highReactionEnabled) {
-                //    if (!highEffectsRunning && this.value >= highReactionValue)
-                //        StartHighReaction();
-                //    else if (highEffectsRunning && this.value < highReactionValue)
-                //        StopHighReaction();
-                //}
-                //if (midReactionEnabled) {
-                //    if (!midEffectsRunning && this.value <= midReactionValue)
-                //        StartMidReaction();
-                //    else if (midEffectsRunning && this.value > midReactionValue)
-                //        StopMidReaction();
-                //}
-                //if (lowReactionEnabled) {
-                //    if (!lowEffectsRunning && this.value == 0)
-                //        StartLowReaction();
-                //    else if (lowEffectsRunning && this.value > 0)
-                //        StopLowReaction();
-                //}
+                //foreach (Reaction reaction in reactions)
+                //    reaction.CheckIfReactionEligible(GetSetValue, maxStat.GetSetValue);
             }
         }
     }
-    ////Starts when stat is lower then midReactionValue
-    //private void StartHighReaction() {
-    //    EffectHandler._instance.BeginAllEffects(highEffectsData, GetHighEffectsCont);
-    //    highEffectsRunning = true;
-    //}
+    [System.Serializable]
+    private class Reaction
+    {
+        [SerializeField] private bool isPercentage, checkSmaller;
+        [SerializeField] private float reactionStartValue;
+        [SerializeField] private EffectData[] effectsData;
+        private EffectController[] effectsCont;
+        private bool effectsRunning;
+        private EffectController[] GetEffectsCont {
+            get {
+                if (effectsCont == null) {
+                    effectsCont = EffectHandler._instance.CreateControllers(effectsData, new float[effectsData.Length]);
+                }
+                return effectsCont;
+            }
+        }
+        public bool CheckIfReactionEligible(float value, float maxValue) {
+            float tempValueCheck = reactionStartValue;
+            if (isPercentage) {
+                tempValueCheck = maxValue * (reactionStartValue / 100);
+            }
+            if ((checkSmaller && value < tempValueCheck) || (!checkSmaller && value > tempValueCheck)) {
+                if (!effectsRunning)
+                    StartReaction();
+            }else {
+                if (effectsRunning)
+                    StopReaction();
+            }
+            return false;
+        }
+        private  void StartReaction() {
+            EffectHandler._instance.BeginAllEffects(effectsData, effectsCont);
+            effectsRunning = true;
+        }
+        private void StopReaction() {
+            EffectHandler._instance.StopAllEffects(effectsCont);
+            effectsRunning = false;
 
-    //private void StopHighReaction() {
-    //    EffectHandler._instance.StopAllEffects(highEffectsCont);
-    //    highEffectsRunning = false;
-    //}
-    ////Starts when stat is lower then midReactionValue
-    //private void StartMidReaction() {
-    //    EffectHandler._instance.BeginAllEffects(midEffectsData, GetMidEffectsCont);
-    //    midEffectsRunning = true;
-    //}
-    //private void StopMidReaction() {
-    //    EffectHandler._instance.StopAllEffects(midEffectsCont);
-    //    midEffectsRunning = false;
-
-    //}
-    ////Starts when stat is at 0
-    //private void StartLowReaction() {
-    //    EffectHandler._instance.BeginAllEffects(lowEffectsData, GetLowEffectsCont);
-    //    lowEffectsRunning = true;
-    //}
-    //private void StopLowReaction() {
-    //    EffectHandler._instance.StopAllEffects(lowEffectsCont);
-    //    lowEffectsRunning = false;
-    //}
+        }
+    }
 }
 [System.Serializable]
 public class PlayerStat : Stat
