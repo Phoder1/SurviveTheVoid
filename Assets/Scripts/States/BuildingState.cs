@@ -47,7 +47,7 @@ public class BuildingState : StateBase
                     {
                         for (int i = 0; i < FloorLayerTileList.Count; i++)
                         {
-                            gridManager.SetTile(null, FloorLayerTileList[i], TileMapLayer.Floor, false);
+                            gridManager.SetDummyTile(null, FloorLayerTileList[i], TileMapLayer.Floor);
                         }
                         FloorLayerTileList.Clear();
                     }
@@ -57,7 +57,7 @@ public class BuildingState : StateBase
                     {
                         for (int i = 0; i < BuildingLayerTileList.Count; i++)
                         {
-                            gridManager.SetTile(null, BuildingLayerTileList[i], TileMapLayer.Buildings, false);
+                            gridManager.SetDummyTile(null, BuildingLayerTileList[i], TileMapLayer.Buildings);
                         }
                         BuildingLayerTileList.Clear();
                     }
@@ -115,7 +115,7 @@ public class BuildingState : StateBase
                                 if (!FloorLayerTileList.Contains(currentTileHit.gridPosition))
                                     FloorLayerTileList.Add(currentTileHit.gridPosition);
 
-                                gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Floor, false);
+                                gridManager.SetDummyTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Floor);
                                 toPutOnFloor = true;
 
                             }
@@ -132,7 +132,7 @@ public class BuildingState : StateBase
                         if (!BuildingLayerTileList.Contains(currentTileHit.gridPosition))
                             BuildingLayerTileList.Add(currentTileHit.gridPosition);
 
-                            gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Buildings, false);
+                            gridManager.SetDummyTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Buildings);
                             toPutOnFloor = false;
 
                         }
@@ -149,7 +149,7 @@ public class BuildingState : StateBase
                     {
                         for (int i = 0; i < FloorLayerTileList.Count; i++)
                         {
-                            gridManager.SetTile(null, FloorLayerTileList[i], TileMapLayer.Floor, false);
+                            gridManager.SetDummyTile(null, FloorLayerTileList[i], TileMapLayer.Floor);
                         }
                         FloorLayerTileList.Clear();
                     }
@@ -159,7 +159,7 @@ public class BuildingState : StateBase
                     {
                         for (int i = 0; i < BuildingLayerTileList.Count; i++)
                         {
-                            gridManager.SetTile(null, BuildingLayerTileList[i], TileMapLayer.Buildings, false);
+                            gridManager.SetDummyTile(null, BuildingLayerTileList[i], TileMapLayer.Buildings);
                         }
                         BuildingLayerTileList.Clear();
                     }
@@ -215,6 +215,7 @@ public class BuildingState : StateBase
         else
         {
             PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
+            UIManager._instance.ButtonCancel();
             tileSlotCache = null;
         }
 

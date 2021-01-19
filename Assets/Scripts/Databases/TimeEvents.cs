@@ -14,7 +14,7 @@ namespace Assets.TimeEvents
         }
 
         public abstract void Trigger();
-        public void Cancel() {
+        public virtual void Cancel() {
             if (!eventTriggered) {
                 TimeManager._instance.RemoveEvent(this);
             }

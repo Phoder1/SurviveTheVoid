@@ -114,10 +114,11 @@ MonoBehaviour:
   grid: {fileID: 0}
   floor: {fileID: 0}
   buildings: {fileID: 0}
-  clearZoneRadius: 40
+  clearZoneRadius: 27.5
   startIslandRadius: 10
   startIslandTile: {fileID: 11400000, guid: 641ea8fb1feee234ea2766c9833153c2, type: 2}
-  craftingTable: {fileID: 11400000, guid: 69c50874c803acc40b259094d81f0619, type: 2}
+  craftingTable1: {fileID: 11400000, guid: 69c50874c803acc40b259094d81f0619, type: 2}
+  craftingTable2: {fileID: 11400000, guid: 8ea548a2c682f27479dd1a078a7962ce, type: 2}
   islandsNoise:
     seed: 0
     noise: {fileID: 11400000, guid: 590e0a2ecc5c88d4fb75db0217f0a49f, type: 2}
