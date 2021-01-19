@@ -34,13 +34,16 @@ MonoBehaviour:
       statType: 7
     reactions:
     - isPercentage: 0
-      checkSmaller: 0
-      reactionStartValue: 0
-      effectsData: []
-    - isPercentage: 0
-      checkSmaller: 0
-      reactionStartValue: 0
-      effectsData: []
+      checkSmaller: 1
+      reactionStartValue: 5
+      effectsData:
+      - effectStatType: 0
+        effectType: 2
+        isRelative: 0
+        isPresentage: 0
+        amount: 2
+        duration: 1e+10
+        tickTime: 0.5
   - cooldown: 3
     overtimeCooldown: 3
     defaultValue: 20
