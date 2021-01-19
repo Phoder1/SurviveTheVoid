@@ -22,11 +22,12 @@ public class GatherableTileSO : TileAbstSO
 public class GrowthStage
 {
     [SerializeField] private TileBase stageTile;
-    [SerializeField] private bool isGatherable;
+    [SerializeField] private bool isGatherable, destroyOnGather;
     [SerializeField] private Drop[] drops;
 
     public TileBase GetStageTile => stageTile;
     public bool GetIsGatherable => isGatherable;
+    public bool GetDestroyOnGather => destroyOnGather;
     public Drop[] GetDrops => drops;
 }
 [System.Serializable]
@@ -77,16 +78,21 @@ public class GatherableState : ITileState
     public bool GetIsGatherable => tile.GetStages[currentStage].GetIsGatherable;
 
     public void GatherInteraction(Vector2Int gridPosition, TileMapLayer tileMapLayer) {
-        if (reachedMaxStage) {
+        if (GetIsGatherable) {
             Debug.Log("Tried gathering");
-            GridManager._instance.SetTile(null, gridPosition, tileMapLayer, true);
+            if (tile.GetStages[currentStage].GetDestroyOnGather)
+                GridManager._instance.SetTile(null, gridPosition, tileMapLayer, true);
+            else {
+                currentStage--;
+                GridManager._instance.SetTile(tileSlot, gridPosition, tileMapLayer, true);
+            }
+
             Inventory inventory = Inventory.GetInstance;
             foreach (Drop drop in tile.GetStages[currentStage].GetDrops) {
                 if (Random.value <= drop.GetChance) {
                     inventory.AddToInventory(0, new ItemSlot(drop.GetItem, Random.Range(drop.GetMinAmount, drop.GetMaxAmount)));
                 }
             }
-            inventory.PrintInventory(0);
         }
     }
 
