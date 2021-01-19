@@ -215,6 +215,7 @@ public class BuildingState : StateBase
         else
         {
             PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
+            UIManager._instance.ButtonCancel();
             tileSlotCache = null;
         }
 
