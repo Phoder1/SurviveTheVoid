@@ -1,7 +1,7 @@
-﻿using TMPro;
+﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 public class UIManager : MonoSingleton<UIManager>
 {
 	InputManager inputManager;
@@ -49,9 +49,9 @@ public class UIManager : MonoSingleton<UIManager>
 		sleepFill,
 		xpFill;
 
-	public  enum StatType { HP, Food, Water, Air, Sleep, XP }
+	public enum StatType { HP, Food, Water, Air, Sleep, XP }
 	private Dictionary<StatType, Image> barsDictionary;
-	
+
 
 	bool CanCollect;
 
@@ -66,14 +66,14 @@ public class UIManager : MonoSingleton<UIManager>
 		{
 			{StatType.HP, hpFill}, {StatType.Food, foodFill}, {StatType.Water, waterFill}, {StatType.Air, airFill}, {StatType.Sleep, sleepFill}, {StatType.XP, xpFill}
 		};
-	
+
 	}
 
 
 	private void Update()
 	{
 		ButtonControls();
-	
+
 
 		if (CraftingUI.activeInHierarchy && craftingManager.CurrentProcessTile != null && craftingManager.CurrentProcessTile.IsCrafting && craftingManager.CurrentProcessTile.amount > 0)
 		{
@@ -103,7 +103,7 @@ public class UIManager : MonoSingleton<UIManager>
 
 	public void OnClickSelectedSections(string _section)
 	{
-		if(craftingManager.buttonState == ButtonState.CanCraft)
+		if (craftingManager.buttonState == ButtonState.CanCraft)
 		{
 			craftingManager.SelectSection(_section);
 			HighLightSection(_section);
@@ -377,7 +377,7 @@ public class UIManager : MonoSingleton<UIManager>
 		ShowTimeAndCollectable(tile.ItemsCrafted, tile.amount, tile.CraftingTimeRemaining);
 		if (craftingManager.CurrentProcessTile.IsCrafting)
 		{
-			
+
 		}
 		else
 		{
@@ -403,7 +403,7 @@ public class UIManager : MonoSingleton<UIManager>
 			if (craftingManager.CurrentProcessTile.IsCrafting)
 			{
 
-				
+
 				craftingManager.AddToCraft();
 				amountSlider.value = 1;
 				OnChangeGetCraftingAmount();
@@ -459,9 +459,8 @@ public class UIManager : MonoSingleton<UIManager>
 
 	void ButtonControls()
 	{
-		if (isHoldingButton)
+		if (isHoldingButton && bInteract.activeInHierarchy == true)
 		{
-
 			ReleaseButton();
 		}
 	}
@@ -492,9 +491,12 @@ public class UIManager : MonoSingleton<UIManager>
 	}
 	void PressButton()
 	{
-		isHoldingButton = true;
+		if (bInteract.activeInHierarchy == true)
+		{
+			isHoldingButton = true;
 
-		inputManager.HoldingButton(isButtonA);
+			inputManager.HoldingButton(isButtonA);
+		}
 	}
 
 	void SetTools(bool turnOn)
@@ -874,7 +876,8 @@ public class UIManager : MonoSingleton<UIManager>
 		bInventory.SetActive(false);
 		bSettings.SetActive(false);
 		vjMove.SetActive(false);
-		//bInteract.SetActive(false);
+		bInteract.SetActive(false);
+		ButtonPressedUp();
 		bGather.SetActive(false);
 		viFight.SetActive(false);
 		xpBar.SetActive(false);
@@ -901,7 +904,7 @@ public class UIManager : MonoSingleton<UIManager>
 		bInventory.SetActive(true);
 		bSettings.SetActive(true);
 		vjMove.SetActive(true);
-		//bInteract.SetActive(true);
+		bInteract.SetActive(true);
 		bGather.SetActive(true);
 		viFight.SetActive(true);
 		xpBar.SetActive(true);
