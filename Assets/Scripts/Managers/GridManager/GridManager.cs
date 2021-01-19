@@ -75,7 +75,9 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
         CameraController._instance.UpdateView();
         SetTile(new TileSlot(craftingTable1), new Vector2Int(-7, 0), TileMapLayer.Buildings, true);
         SetTile(new TileSlot(craftingTable2), new Vector2Int(-6, 0), TileMapLayer.Buildings, true);
-        SetTile(new TileSlot(buildingsGeneration[0].tile), new Vector2Int(4, 0), TileMapLayer.Buildings, true);
+        TileSlot tree = new TileSlot(buildingsGeneration[0].tile);
+        tree.Init(new Vector2Int(4, 0), TileMapLayer.Buildings, true);
+        SetTile(tree, new Vector2Int(4, 0), TileMapLayer.Buildings, true);
     }
 
     public void UpdateView(Rect view) {
@@ -163,8 +165,7 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
             }
         }
     }
-    public Vector3 GridToWorldPosition(Vector2Int gridPosition, TileMapLayer buildingLayer, bool getCenter)
-    {
+    public Vector3 GridToWorldPosition(Vector2Int gridPosition, TileMapLayer buildingLayer, bool getCenter) {
         Vector3 position = GetTilemap(buildingLayer).CellToWorld((Vector3Int)gridPosition);
         position += Vector3.up * ((buildingLayer == TileMapLayer.Buildings ? BUILDING_LAYER_POSITION_OFFSET : 0f) + (getCenter ? TOP_FACE_HEIGHT / 2 : 0f));
         return position;
@@ -176,10 +177,10 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
             return true;
         bool moveLegal = true;
         TileSlot floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + movementVector + movementVector.normalized * floorOffSet, TileMapLayer.Floor), TileMapLayer.Floor);
-        TileSlot buildingTile = GetTileFromGrid(WorldToGridPosition(worldPosition + movementVector + movementVector.normalized * buildingsOffSet , TileMapLayer.Buildings), TileMapLayer.Buildings);
+        TileSlot buildingTile = GetTileFromGrid(WorldToGridPosition(worldPosition + movementVector + movementVector.normalized * buildingsOffSet, TileMapLayer.Buildings), TileMapLayer.Buildings);
         moveLegal &= floorTile != null && !(buildingTile != null && buildingTile.GetIsSolid);
-        if (!moveLegal) 
-            return moveLegal;        
+        if (!moveLegal)
+            return moveLegal;
         Quaternion rotationLeft = Quaternion.Euler(0, 0, 75f / COLLISION_SENSITIVITY);
         Quaternion rotationRight = Quaternion.Euler(0, 0, -75f / COLLISION_SENSITIVITY);
         Vector2 leftMovementVector = movementVector + movementVector.normalized * floorOffSet;
@@ -212,7 +213,7 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
         GetTilemap(tileMapLayer).RemoveTileFlags((Vector3Int)gridposition, TileFlags.LockColor);
         GetTilemap(tileMapLayer).SetColor((Vector3Int)gridposition, color);
     }
-    public void ResetTileColor(Vector2Int gridposition, TileMapLayer tileMapLayer) => SetTileColor(gridposition, tileMapLayer, Color.white);    
+    public void ResetTileColor(Vector2Int gridposition, TileMapLayer tileMapLayer) => SetTileColor(gridposition, tileMapLayer, Color.white);
 
 
     public TileSlot GetTileFromWorld(Vector2 worldPosition, TileMapLayer buildingLayer) => GetTileFromGrid(WorldToGridPosition(worldPosition, buildingLayer), buildingLayer);
@@ -265,6 +266,18 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
         }
         else if (tile != null) {
             CreateChunk(chunkPos).SetTile(tile, gridPosition, buildingLayer, playerAction, false);
+        }
+    }
+
+    public void SetDummyTile(TileSlot tile, Vector2Int gridPosition, TileMapLayer buildingLayer) {
+        Tilemap tilemap = GetTilemap(buildingLayer);
+        if (GetTileFromGrid(gridPosition,buildingLayer) == null) {
+            if (tile == null) {
+                tilemap.SetTile((Vector3Int)gridPosition, null);
+            }
+            else {
+                GetTilemap(buildingLayer).SetTile((Vector3Int)gridPosition, tile.GetMainTileBase);
+            }
         }
     }
 

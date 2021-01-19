@@ -64,7 +64,7 @@ public interface ITileState
     void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer);
     void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer);
     void CancelEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer);
-    void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool generation = true);
+    void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool generation = false);
 }
 public class TileSlot : ITileState
 {
@@ -113,8 +113,8 @@ public class TileSlot : ITileState
     public virtual void CancelEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer)
         => tileState.CancelEvent(gridPosition, tilemapLayer);
 
-    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool playerAction = true)
-        => tileState.Init(gridPosition, tilemapLayer);
+    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool generation = false)
+        => tileState.Init(gridPosition, tilemapLayer, generation);
     #endregion
 }
 

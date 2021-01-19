@@ -105,8 +105,9 @@ public class GatherableState : ITileState
         }
     }
     public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool generation = false) {
-        if (generation)
+        if (generation) {
             currentStage = StagesCount - 1;
+        }
         if (eventInstance == null && tile.GetStages.Length > 1 && !reachedMaxStage)
             InitEvent(gridPosition, tilemapLayer);
     }
