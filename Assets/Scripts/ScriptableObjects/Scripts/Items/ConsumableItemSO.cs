@@ -5,57 +5,44 @@ public enum EffectType {
 Instant, ToggleOverTime, OverTimeSmallPortion
 }
 
-public enum EffectCategory
-{
-	HP, // + HP instant
-	HP_Regeneration, // + small amount of HP over duration time
-	Food,  // + Hunger instant
-	Water, // + Thirst instant
-	Air, // + oxygen instant
-	Sleep, // + instant awakeness
-	EXP, // + EXP instant
-	Speed, // + speed instant over duration time
-	Slow, // - speed instant over duration time
-	Strength, // + attackDMG instant over duration time
-	Weakness, // - attackDMG instant over duration time
-	Gathering, // + gatheringSpeed instant over duration of time
-	Defence, // + 
-	Poison, // - small amount of HP over duration time
-	Light, // + 
-	Flight, // + Special ability
-	Food_Poisoning, // - small amount of hunger over duration time , 
-	Thirst, // - Thirst instant
-	Fatigue, // - small amount of awakeness over duration time
-	Panting // - small amount of oxygen over duration time 
-
-}
+//public enum EffectCategory
+//{
+//	HP, // + HP instant
+//	HP_Regeneration, // + small amount of HP over duration time
+//	MaxHP, // HP maximum
+//	Food,  // + Hunger instant
+//	Food_Regeneration, // - small amount of hunger over duration time
+//	MaxFood,
+//	Water, // + Thirst instant
+//	Water_Regeneration, // - Thirst instant
+//	MaxWater,
+//	Air, // + oxygen instant
+//	Air_Regeneration, // - small amount of oxygen over duration time
+//	MaxAir,
+//	Sleep, // + instant awakeness
+//	Sleep_Regeneration, // - small amount of awakeness over duration time
+//	MaxSleep,
+//	EXP, // + EXP instant
+//	MovementSpeed, // + speed instant over duration time
+//	Strength, // + attackDMG instant over duration time
+//	GatheringSpeed, // + gatheringSpeed instant over duration of time
+//	Defence, // + 
+//	Light, // + Special abillity
+//	Flight, // + Special abillity
+//}
 
 [CreateAssetMenu(fileName = "New Consumable Item", menuName = "Items/" + "Consumable")]
 public class ConsumableItemSO : ItemSO
 {
-	
-	public ConsumableEffect[] Effects;
+	public EffectData[] Effects;
 	public void ApplyEffect() {
-
-		if (Effects.Length == 0)
-			return;
-	
-
-		for (int i = 0; i < Effects.Length; i++)
-		{
-			if (Effects[i] == null)
-				continue;
-			
-			ConsumeEffectHandler._instance.StartEffect(Effects[i]);
-		}
-
-		
+		EffectHandler._instance.BeginAllConsumeableEffects(Effects);
 	}
 }
 [Serializable]
-public class ConsumableEffect
+public class EffectData
 {
-	public EffectCategory effectCategory;
+	public StatType effectStatType;
 	public EffectType effectType;
 	[Header("OverTimeSmallPortion: it will Add the amount every tick time")]
 	[Header("nstant: it will Add the amount every tick time:")]

@@ -66,19 +66,16 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         {
             inventory.AddToInventory(0, new ItemSlot(items.getitemsArr[9], 1));
             inventoryUI.UpdateInventoryToUI();
-            ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
             inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[6], 1));
             inventoryUI.UpdateInventoryToUI();
-            ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.V))
         {
             inventory.RemoveItemFromInventory(0, new ItemSlot(items.getitemsArr[9], 1));
             inventoryUI.UpdateInventoryToUI();
-            ShowRecipe(selectedRecipe);
         }
         if (Input.GetKeyDown(KeyCode.B))
         {

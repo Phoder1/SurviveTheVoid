@@ -51,7 +51,7 @@ public class InputManager : MonoSingleton<InputManager>
             Touch[] touch = new Touch[3];
 
 
-            Debug.Log(Input.touchCount);
+
             for (int i = 0; i < Input.touchCount; i++)
             {
                 if (i >= touch.Length)

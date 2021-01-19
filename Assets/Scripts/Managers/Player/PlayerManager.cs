@@ -11,7 +11,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     private InputManager _inputManager;
     private GridManager _GridManager;
     private Scanner _scanner;
-    private PlayerController playerController;
+    private PlayerMovementHandler playerController;
     private TileMapLayer buildingLayer;
 
     [SerializeField] float baseSpeed;
@@ -29,6 +29,8 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     private bool gatherWasPressed;
     private bool specialWasPressed;
     private bool anyInteracted;
+    private Stat moveSpeed;
+    private Stat gatheringSpeed;
     Coroutine gatherCoroutine = null;
   
     private DirectionEnum MovementDir {
@@ -58,12 +60,14 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         _inputManager = InputManager._instance;
         _GridManager = GridManager._instance;
         playerStats = PlayerStats._instance;
-        playerController = PlayerController._instance;
-        playerTransfrom = GetComponent<Transform>();
+        playerController = PlayerMovementHandler._instance;
+        moveSpeed = playerStats.GetStat(StatType.MoveSpeed);
+        gatheringSpeed = playerStats.GetStat(StatType.GatheringSpeed);
+        playerTransfrom = transform;
     }
     private void LateUpdate() {
         if (!anyInteracted) {
-            Vector2 movementVector = _inputManager.VJAxis * Time.deltaTime * baseSpeed * playerStats.GetSetSpeed;
+            Vector2 movementVector = _inputManager.VJAxis * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue;
             if (movementVector != Vector2.zero) {
                 playerController.Move(movementVector);
             }
@@ -104,7 +108,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
             destination.z = transform.position.z;
             float distance = Vector2.Distance(transform.position, destination);
             if (distance > InterractionDistance) {
-                playerController.Move(Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * playerStats.GetSetSpeed, distance));
+                playerController.Move(Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue, distance));
             }
             else {
                 if (SpecialInteract) {
@@ -122,7 +126,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     }
     IEnumerator HarvestTile(TileHit tileHit) {
         if (tileHit.tile.GetTileAbst is GatherableTileSO gatherable) {
-            yield return new WaitForSeconds(gatherable.GetGatheringTime / playerStats.GetSetGatheringSpeed);
+            yield return new WaitForSeconds(gatherable.GetGatheringTime / gatheringSpeed.GetSetValue);
             tileHit.tile.GatherInteraction(tileHit.gridPosition, buildingLayer);
             Debug.Log("TileHarvested");
         }

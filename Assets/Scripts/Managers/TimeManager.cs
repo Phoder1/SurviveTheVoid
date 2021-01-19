@@ -44,6 +44,8 @@ public class TimeManager : MonoBehaviour {
     }
 
     public void RemoveEvent(TimeEvent eventToRemove) {
+        if (timedEventsList.Count == 0)
+            return;
         LinkedListNode<TimeEvent> currentNode = timedEventsList.First;
         while(currentNode.Value != eventToRemove) {
             currentNode = currentNode.Next;
