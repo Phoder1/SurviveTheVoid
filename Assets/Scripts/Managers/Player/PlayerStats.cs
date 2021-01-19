@@ -81,12 +81,12 @@ public class SurvivalStat : Stat
     public override float GetSetValue {
         get => value;
         set {
-            if (value != this.value) {
+
                 this.value = Mathf.Clamp(value, 0, maxStat.GetSetValue);
                 UIManager._instance.UpdateSurvivalBar(this, value);
                 //foreach (Reaction reaction in reactions)
                 //    reaction.CheckIfReactionEligible(GetSetValue, maxStat.GetSetValue);
-            }
+            
         }
     }
     [System.Serializable]
