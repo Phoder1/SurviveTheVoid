@@ -136,8 +136,7 @@ public class TileGrowEvent : TimeEvent
         this.tileMapLayer = tileMapLayer;
     }
 
-    public override void Trigger() {
-        eventTriggered = true;
+    protected override void TriggerBehaviour() {
         ((GatherableState)triggeringTile.tileState).Grow(eventPosition, tileMapLayer);
 
     }

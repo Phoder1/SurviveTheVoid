@@ -21,40 +21,28 @@ public class TimeManager : MonoBehaviour {
             while (timedEventsList.First.Value.triggerTime <= Time.time) {
                 TimeEvent triggeredEvent = timedEventsList.First.Value;
                 triggeredEvent.Trigger();
-                if(timedEventsList.First.Value == triggeredEvent) {
-                    timedEventsList.RemoveFirst();
-                }
                 if(timedEventsList.Count == 0) { break; }
             }
         }
     }
 
-    public void AddEvent(TimeEvent timedEvent) {
+    public LinkedListNode<TimeEvent> AddEvent(TimeEvent timedEvent) {
         float eventTriggerTime = timedEvent.triggerTime;
         if (timedEventsList.Count > 0 && eventTriggerTime > timedEventsList.First.Value.triggerTime) {
             LinkedListNode<TimeEvent> currentNode = timedEventsList.Last;
             while (currentNode != timedEventsList.First && eventTriggerTime < currentNode.Value.triggerTime) {
                 currentNode = currentNode.Previous;
             }
-            timedEventsList.AddAfter(currentNode, timedEvent);
+            return timedEventsList.AddAfter(currentNode, timedEvent);
         }
         else {
-            timedEventsList.AddFirst(timedEvent);
+            return timedEventsList.AddFirst(timedEvent);
         }
     }
 
-    public void RemoveEvent(TimeEvent eventToRemove) {
-        if (timedEventsList.Count == 0)
+    public void RemoveEvent(LinkedListNode<TimeEvent> eventToRemove) {
+        if(eventToRemove == null || timedEventsList.Count == 0)
             return;
-        LinkedListNode<TimeEvent> currentNode = timedEventsList.First;
-        while(currentNode.Value != eventToRemove) {
-            currentNode = currentNode.Next;
-            if(currentNode == timedEventsList.Last) {
-                break;
-            }
-        }
-        if(currentNode.Value == eventToRemove) {
-            timedEventsList.Remove(currentNode);
-        }
+        timedEventsList.Remove(eventToRemove);
     }
 }

@@ -8,6 +8,7 @@ public abstract class MonoSingleton<T> : MonoBehaviour,ISingleton where T : Comp
     public static T _instance;
 
     public virtual void Awake() {
+        //StopAllCoroutines();
         if (isActiveAndEnabled) {
             if (_instance == null) {
                     _instance = this as T;

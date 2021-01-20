@@ -1,28 +1,40 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
 
 namespace Assets.TimeEvents
 {
     public abstract class TimeEvent
     {
+        LinkedListNode<TimeEvent> node;
         public float triggerTime;
-        protected bool eventTriggered = false;
 
 
         public TimeEvent(float triggerTime) {
-            this.triggerTime = triggerTime;
-            TimeManager._instance.AddEvent(this);
+            Init(triggerTime);
         }
 
-        public abstract void Trigger();
-        public virtual void Cancel() {
-            if (!eventTriggered) {
-                TimeManager._instance.RemoveEvent(this);
+        private void Init(float triggerTime) {
+            this.triggerTime = triggerTime;
+            node = TimeManager._instance.AddEvent(this);
+        }
+        public void Trigger() {
+            TriggerBehaviour();
+            Remove();
+        }
+        protected abstract void TriggerBehaviour();
+        public void Cancel() {
+            OnCancel();
+            Remove();
+        }
+        protected virtual void OnCancel() { }
+        private void Remove() {
+            if (node != null) {
+                TimeManager._instance.RemoveEvent(node);
+                node = null;
             }
         }
         public void UpdateTriggerTime(float triggerTime) {
-            this.triggerTime = triggerTime;
-            Cancel();
-            TimeManager._instance.AddEvent(this);
+            Remove();
+            Init(triggerTime);
         }
     }
 }

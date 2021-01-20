@@ -52,7 +52,7 @@ public class EffectData
 	public bool isRelative; 
 	[Header(" please write the precentage like 10 = 10%, 110 = 110%:")]
 	[Header("if Precentage:")]
-	public bool isPresentage;
+	public bool isPrecentage;
 	[Space (20f)]
 	[Header("Reminder to check the setting above before adding amount:")]
 	public float amount;

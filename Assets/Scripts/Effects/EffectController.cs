@@ -6,37 +6,25 @@ using UnityEngine;
 public class EffectController
 {
     TimeEvent ToggleEvent;
-    EffectData overtimeEffectData;
+    Coroutine overtimeEffectCoro;
     public Stat stat;
     public bool isOnCoolDown = false;
     public readonly float cooldown;
     private float value { get => stat.GetSetValue; set => stat.GetSetValue = value; }
-    public void Stop() {
-        if (ToggleEvent != null) {
-            ToggleEvent.Cancel();
-            ToggleEvent = null;
-        }
-        if (overtimeEffectData != null) {
-            EffectHandler._instance.StartCoroutine(AddEffectOverTime(overtimeEffectData));
-        }
-    }
     public EffectController(Stat stat, float cooldown) {
         this.stat = stat;
         this.cooldown = cooldown;
     }
-    public float AmountFromPrecentage(float amountOfStat, float precentage) => amountOfStat * precentage / 100f;
+    private float AmountFromPrecentage(float amountOfStat, float precentage) => amountOfStat * precentage / 100f;
     // instantly add/remove fixed amount 
-    public void AddFixedAmount(EffectData data) {
-        isOnCoolDown = true;
-        value += (data.isPresentage) ? AmountFromPrecentage(value, data.amount) : data.amount;
+    private void AddFixedAmount(EffectData data) {
+        value += (data.isPrecentage) ? AmountFromPrecentage(value, data.amount) : data.amount;
     }
     //  Add/remove fixed amount -> wait -> return to previous State
-    public void ToggleAmountOverTime(EffectData data) {
+    private void ToggleAmountOverTime(EffectData data) {
         float amount = data.amount,
             duration = data.duration;
-        bool isPrecentage = data.isPresentage,
-            isRelative = data.isRelative;
-        isOnCoolDown = true;
+        bool isPrecentage = data.isPrecentage;
 
         if (isPrecentage) {
             float amountFromPrecentage = AmountFromPrecentage(value, amount);
@@ -50,15 +38,13 @@ public class EffectController
 
     }
     // Add/remove small amount -> wait -> return to previous State
-    public IEnumerator AddEffectOverTime(EffectData data) {
-        overtimeEffectData = data;
+    private IEnumerator AddEffectOverTime(EffectData data) {
         float amount = data.amount,
     duration = data.duration,
     tickTime = data.tickTime;
-        bool isPrecentage = data.isPresentage,
+        bool isPrecentage = data.isPrecentage,
             isRelative = data.isRelative;
         float startingTime = Time.time;
-        isOnCoolDown = true;
         if (isPrecentage) {
             float amountFromPrecentage = AmountFromPrecentage(value, amount) / tickTime;
             while (startingTime + duration > Time.time) {
@@ -83,6 +69,7 @@ public class EffectController
 
     }
     public void Begin(EffectData effectData) {
+        Stop();
         EffectHandler effectHandler = EffectHandler._instance;
 
         if (isOnCoolDown)
@@ -91,7 +78,10 @@ public class EffectController
         if (effectData.tickTime == 0)
             effectData.tickTime = 1f;
 
-        new ResetCooldown(Time.time + this.cooldown, this);
+        if (cooldown != 0) {
+            isOnCoolDown = true;
+            new ResetCooldown(Time.time + cooldown, this);
+        }
         switch (effectData.effectType) {
             case EffectType.Instant:
                 AddFixedAmount(effectData);
@@ -101,13 +91,23 @@ public class EffectController
                 this.ToggleAmountOverTime(effectData);
                 break;
             case EffectType.OverTimeSmallPortion:
-                effectHandler.StopCoroutine(this.AddEffectOverTime(effectData));
-                effectHandler.StartCoroutine(this.AddEffectOverTime(effectData));
+
+                overtimeEffectCoro = effectHandler.StartCoroutine(AddEffectOverTime(effectData));
                 break;
             default:
                 return;
         }
 
+    }
+    public void Stop() {
+        if (ToggleEvent != null) {
+            ToggleEvent.Cancel();
+            ToggleEvent = null;
+        }
+        if (overtimeEffectCoro != null) {
+            EffectHandler._instance.StopCoroutine(overtimeEffectCoro);
+            overtimeEffectCoro = null;
+        }
     }
 
     public class ResetCooldown : TimeEvent
@@ -119,7 +119,7 @@ public class EffectController
             statCache = _statCache;
         }
 
-        public override void Trigger() {
+        protected override void TriggerBehaviour() {
             statCache.isOnCoolDown = false;
         }
     }
@@ -135,13 +135,12 @@ public class EffectController
             this.amountFromPrecentage = amountFromPrecentage;
         }
 
-        public override void Cancel() {
-            base.Cancel();
-            Trigger();
+        protected override void OnCancel() {
+            TriggerBehaviour();
         }
 
-        public override void Trigger() {
-            if (data.isPresentage) {
+        protected override void TriggerBehaviour() {
+            if (data.isPrecentage) {
                 if (data.isRelative)
                     amountFromPrecentage = triggeringEffect.AmountFromPrecentage(triggeringEffect.value - amountFromPrecentage, data.amount);
 

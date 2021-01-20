@@ -8,10 +8,9 @@ public class EffectHandler : MonoSingleton<EffectHandler>
 {
 
     PlayerStats playerStats;
-    static Dictionary<StatType, StatControllers> StatsEffectsDict;
+    static Dictionary<StatType, StatControllers> ConsumablesEffectsDict;
     [SerializeField] float cooldownBeforeStart;
     public override void Init() {
-        StopAllCoroutines();
         playerStats = PlayerStats._instance;
         
         FillDictionary();
@@ -21,13 +20,31 @@ public class EffectHandler : MonoSingleton<EffectHandler>
     }
 
     private void FillDictionary() {
-        StatsEffectsDict = new Dictionary<StatType, StatControllers>();
-        foreach (StatType statType in Enum.GetValues(typeof(StatType))) {
-            Stat stat = playerStats.GetStat(statType);
-            StatsEffectsDict.Add(statType,
-                new StatControllers(new EffectController(stat, stat.cooldown), new EffectController(stat, stat.overtimeCooldown)));
-        }
+        ConsumablesEffectsDict = new Dictionary<StatType, StatControllers>();
+
+        AddToDict(StatType.HP, 3, 3);
+        AddToDict(StatType.MaxHP, 3, 3);
+        AddToDict(StatType.Food, 3, 3);
+        AddToDict(StatType.MaxFood, 3, 3);
+        AddToDict(StatType.Water, 3, 3);
+        AddToDict(StatType.MaxWater, 3, 3);
+        AddToDict(StatType.Air, 3, 3);
+        AddToDict(StatType.MaxAir, 3, 3);
+        AddToDict(StatType.Sleep, 3, 3);
+        AddToDict(StatType.MaxSleep, 3, 3);
+        AddToDict(StatType.Temperature, 3, 3);
+        AddToDict(StatType.Level, 3, 3);
+        AddToDict(StatType.EXP, 3, 3);
+        AddToDict(StatType.EXPtoNextLevel, 3, 3);
+        AddToDict(StatType.MoveSpeed, 3, 3);
+        AddToDict(StatType.AttackDMG, 3, 3);
+        AddToDict(StatType.GatheringSpeed, 3, 3);
     }
+    private void AddToDict(StatType statType, float cooldown, float overtimeCooldown) {
+        Stat stat = playerStats.GetStat(statType);
+        ConsumablesEffectsDict.Add(statType, new StatControllers(new EffectController(stat, cooldown), new EffectController(stat, overtimeCooldown)));
+    }
+
 
     IEnumerator SurvivalEffects() {
 
@@ -35,7 +52,8 @@ public class EffectHandler : MonoSingleton<EffectHandler>
 
         EffectData hungerEffect = new EffectData() {
             effectStatType = StatType.Food,
-            isPresentage = false,
+            effectType = EffectType.OverTimeSmallPortion,
+            isPrecentage = false,
             isRelative = false,
             amount = -0.5f,
             tickTime = 1f,
@@ -43,7 +61,8 @@ public class EffectHandler : MonoSingleton<EffectHandler>
         };
         EffectData thirstEffect = new EffectData() {
             effectStatType = StatType.Water,
-            isPresentage = false,
+            effectType = EffectType.OverTimeSmallPortion,
+            isPrecentage = false,
             isRelative = false,
             amount = -0.5f,
             tickTime = 1f,
@@ -51,7 +70,8 @@ public class EffectHandler : MonoSingleton<EffectHandler>
         };
         EffectData oxygenEffect = new EffectData() {
             effectStatType = StatType.Air,
-            isPresentage = false,
+            effectType = EffectType.OverTimeSmallPortion,
+            isPrecentage = false,
             isRelative = false,
             amount = -0.5f,
             tickTime = 1f,
@@ -59,7 +79,8 @@ public class EffectHandler : MonoSingleton<EffectHandler>
         };
         EffectData sleepEffect = new EffectData() {
             effectStatType = StatType.Sleep,
-            isPresentage = false,
+            effectType = EffectType.OverTimeSmallPortion,
+            isPrecentage = false,
             isRelative = false,
             amount = -0.5f,
             tickTime = 1f,
@@ -78,26 +99,22 @@ public class EffectHandler : MonoSingleton<EffectHandler>
 
 
         worldEffect = new EffectController(playerStats.GetStat(StatType.Food), 3f);
-        StopCoroutine(worldEffect.AddEffectOverTime(hungerEffect));
-        StartCoroutine(worldEffect.AddEffectOverTime(hungerEffect));
+        worldEffect.Begin(hungerEffect);
 
         worldEffect = new EffectController(playerStats.GetStat(StatType.Water), 3f);
-        StopCoroutine(worldEffect.AddEffectOverTime(thirstEffect));
-        StartCoroutine(worldEffect.AddEffectOverTime(thirstEffect));
+        worldEffect.Begin(thirstEffect);
 
         worldEffect = new EffectController(playerStats.GetStat(StatType.Air), 3f);
-        StopCoroutine(worldEffect.AddEffectOverTime(oxygenEffect));
-        StartCoroutine(worldEffect.AddEffectOverTime(oxygenEffect));
+        worldEffect.Begin(oxygenEffect);
 
         worldEffect = new EffectController(playerStats.GetStat(StatType.Sleep), 3f);
-        StopCoroutine(worldEffect.AddEffectOverTime(sleepEffect));
-        StartCoroutine(worldEffect.AddEffectOverTime(sleepEffect));
+        worldEffect.Begin(sleepEffect);
 
     }
 
 
     public static EffectController GetStatController(EffectData effect) {
-        if (StatsEffectsDict.TryGetValue(effect.effectStatType, out StatControllers effectControllers)) 
+        if (ConsumablesEffectsDict.TryGetValue(effect.effectStatType, out StatControllers effectControllers)) 
             return effectControllers.GetController(effect.effectType);
         return null;
     }
