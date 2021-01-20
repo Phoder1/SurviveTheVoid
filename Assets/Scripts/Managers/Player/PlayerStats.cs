@@ -84,18 +84,18 @@ public class PlayerStats : MonoSingleton<PlayerStats>
     private void AddReactions() {
         EffectData hpLoseEffect = new EffectData() {
             effectStatType = StatType.HP,
-            effectType = EffectType.OverTimeSmallPortion,
-            isPrecentage = false,
-            isRelative = false,
+            effectType = EffectType.OverTime,
+            inPercentage = false,
+            isRelativeToMax = false,
             amount = -1f,
             tickTime = 1f,
             duration = Mathf.Infinity
         };
         EffectData hpRegenEffect = new EffectData() {
             effectStatType = StatType.HP,
-            effectType = EffectType.OverTimeSmallPortion,
-            isPrecentage = false,
-            isRelative = false,
+            effectType = EffectType.OverTime,
+            inPercentage = false,
+            isRelativeToMax = false,
             amount = 1f,
             tickTime = 1f,
             duration = Mathf.Infinity
@@ -184,16 +184,16 @@ public class ExpStat : Stat
 
 public class Reaction
 {
-    private bool isPercentage, checkSmaller;
-    private float reactionStartValue;
+    private bool triggerInPercentage, triggerIfSmaller;
+    private float reactionTriggerValue;
     private EffectData[] effectsData;
     private EffectController[] effectsCont;
-    private bool effectsRunning;
+    private bool reactionRunning;
 
-    public Reaction(bool isPercentage, bool checkSmaller, float reactionStartValue, EffectData[] effectsData) {
-        this.isPercentage = isPercentage;
-        this.checkSmaller = checkSmaller;
-        this.reactionStartValue = reactionStartValue;
+    public Reaction(bool triggerInPercentage, bool triggerIfSmaller, float reactionTriggerValue, EffectData[] effectsData) {
+        this.triggerInPercentage = triggerInPercentage;
+        this.triggerIfSmaller = triggerIfSmaller;
+        this.reactionTriggerValue = reactionTriggerValue;
         this.effectsData = effectsData;
     }
 
@@ -206,27 +206,27 @@ public class Reaction
         }
     }
     public bool CheckIfReactionEligible(Stat stat) {
-        float tempValueCheck = reactionStartValue;
-        if (isPercentage && stat.GetIsCapped) {
-            tempValueCheck = stat.maxStat.GetSetValue * (reactionStartValue / 100);
+        float tempValueCheck = reactionTriggerValue;
+        if (triggerInPercentage && stat.GetIsCapped) {
+            tempValueCheck = stat.maxStat.GetSetValue * (reactionTriggerValue / 100);
         }
-        if ((checkSmaller && stat.GetSetValue <= tempValueCheck) || (!checkSmaller && stat.GetSetValue >= tempValueCheck)) {
-            if (!effectsRunning)
+        if ((triggerIfSmaller && stat.GetSetValue <= tempValueCheck) || (!triggerIfSmaller && stat.GetSetValue >= tempValueCheck)) {
+            if (!reactionRunning)
                 StartReaction();
         }
         else {
-            if (effectsRunning)
+            if (reactionRunning)
                 StopReaction();
         }
         return false;
     }
     private void StartReaction() {
         EffectHandler._instance.BeginAllEffects(effectsData, GetEffectsCont);
-        effectsRunning = true;
+        reactionRunning = true;
     }
     private void StopReaction() {
         EffectHandler._instance.StopAllEffects(GetEffectsCont);
-        effectsRunning = false;
+        reactionRunning = false;
 
     }
 }

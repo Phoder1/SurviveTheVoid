@@ -15,68 +15,48 @@ public class EffectController
         this.stat = stat;
         this.cooldown = cooldown;
     }
-    private float AmountFromPrecentage(float amountOfStat, float precentage) => amountOfStat * precentage / 100f;
+    private float AmountFromPercentage(float amountOfStat, float precentage, bool isRelativeToMax) => ((isRelativeToMax && stat.GetIsCapped) ? stat.maxStat.GetSetValue : amountOfStat) * precentage / 100f;
     // instantly add/remove fixed amount 
     private void AddFixedAmount(EffectData data) {
-        value += (data.isPrecentage) ? AmountFromPrecentage(value, data.amount) : data.amount;
+        value += (data.inPercentage) ? AmountFromPercentage(value, data.amount, data.isRelativeToMax) : data.amount;
     }
     //  Add/remove fixed amount -> wait -> return to previous State
     private void ToggleAmountOverTime(EffectData data) {
-        float amount = data.amount,
-            duration = data.duration;
-        bool isPrecentage = data.isPrecentage;
+        float toggleAmount = data.amount;
+        if (data.inPercentage) {
+            toggleAmount = AmountFromPercentage(value, data.amount, data.isRelativeToMax);
 
-        if (isPrecentage) {
-            float amountFromPrecentage = AmountFromPrecentage(value, amount);
-
-            value += amountFromPrecentage;
+            value += toggleAmount;
         }
         else {
-            value += amount;
+            value += toggleAmount;
         }
-        ToggleEvent = new ToggleTimeEvent(Time.time + duration, this, data, AmountFromPrecentage(value, amount));
+        ToggleEvent = new ToggleTimeEvent(Time.time + data.duration, this, toggleAmount);
 
     }
     // Add/remove small amount -> wait -> return to previous State
     private IEnumerator AddEffectOverTime(EffectData data) {
-        float amount = data.amount,
-    duration = data.duration,
-    tickTime = data.tickTime;
-        bool isPrecentage = data.isPrecentage,
-            isRelative = data.isRelative;
         float startingTime = Time.time;
-        if (isPrecentage) {
-            float amountFromPrecentage = AmountFromPrecentage(value, amount) / tickTime;
-            while (startingTime + duration > Time.time) {
-
-                if (isRelative)
-                    amountFromPrecentage = AmountFromPrecentage(value - amountFromPrecentage, amount);
-
-
-                value += amountFromPrecentage;
-                yield return new WaitForSeconds(duration / tickTime);
-                amountFromPrecentage = AmountFromPrecentage(value, amount) / tickTime;
+        if (data.inPercentage) {
+            while (startingTime + data.duration > Time.time) {
+                value += (Mathf.Pow((1+(data.amount/100)),data.tickTime) - 1) * ((data.isRelativeToMax && stat.GetIsCapped) ? stat.maxStat.GetSetValue : value);
+                yield return new WaitForSeconds(data.tickTime);
             }
         }
         else {
-
-            while (startingTime + duration > Time.time) {
-                value += amount;
-                yield return new WaitForSeconds(tickTime);
+            while (startingTime + data.duration > Time.time) {
+                value += data.amount;
+                yield return new WaitForSeconds(data.tickTime);
             }
 
         }
-
     }
     public void Begin(EffectData effectData) {
-        Stop();
-        EffectHandler effectHandler = EffectHandler._instance;
-
         if (isOnCoolDown)
             return;
-
+        Stop();
         if (effectData.tickTime == 0)
-            effectData.tickTime = 1f;
+            effectData.tickTime = 0.03f;
 
         if (cooldown != 0) {
             isOnCoolDown = true;
@@ -86,13 +66,13 @@ public class EffectController
             case EffectType.Instant:
                 AddFixedAmount(effectData);
                 return;
-            case EffectType.ToggleOverTime:
+            case EffectType.Toggle:
                 this.ToggleAmountOverTime(effectData);
                 this.ToggleAmountOverTime(effectData);
                 break;
-            case EffectType.OverTimeSmallPortion:
+            case EffectType.OverTime:
 
-                overtimeEffectCoro = effectHandler.StartCoroutine(AddEffectOverTime(effectData));
+                overtimeEffectCoro = EffectHandler._instance.StartCoroutine(AddEffectOverTime(effectData));
                 break;
             default:
                 return;
@@ -127,30 +107,19 @@ public class EffectController
     public class ToggleTimeEvent : TimeEvent
     {
         private EffectController triggeringEffect;
-        private EffectData data;
-        float amountFromPrecentage;
-        public ToggleTimeEvent(float triggerTime, EffectController triggeringEffect, EffectData data, float amountFromPrecentage) : base(triggerTime) {
+        float toggleAmount;
+        public ToggleTimeEvent(float triggerTime, EffectController triggeringEffect, float toggleAmount) : base(triggerTime) {
             this.triggeringEffect = triggeringEffect;
-            this.data = data;
-            this.amountFromPrecentage = amountFromPrecentage;
+            this.toggleAmount = toggleAmount;
         }
 
         protected override void OnCancel() {
             TriggerBehaviour();
         }
 
-        protected override void TriggerBehaviour() {
-            if (data.isPrecentage) {
-                if (data.isRelative)
-                    amountFromPrecentage = triggeringEffect.AmountFromPrecentage(triggeringEffect.value - amountFromPrecentage, data.amount);
+        protected override void TriggerBehaviour()
+            => triggeringEffect.value -= toggleAmount;
 
-                triggeringEffect.value += -amountFromPrecentage;
-
-            }
-            else {
-                triggeringEffect.value += -data.amount;
-            }
-        }
 
     }
 }

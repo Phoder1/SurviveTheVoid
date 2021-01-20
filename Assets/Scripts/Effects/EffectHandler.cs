@@ -52,36 +52,36 @@ public class EffectHandler : MonoSingleton<EffectHandler>
 
         EffectData hungerEffect = new EffectData() {
             effectStatType = StatType.Food,
-            effectType = EffectType.OverTimeSmallPortion,
-            isPrecentage = false,
-            isRelative = false,
+            effectType = EffectType.OverTime,
+            inPercentage = false,
+            isRelativeToMax = false,
             amount = -0.5f,
             tickTime = 1f,
             duration = Mathf.Infinity
         };
         EffectData thirstEffect = new EffectData() {
             effectStatType = StatType.Water,
-            effectType = EffectType.OverTimeSmallPortion,
-            isPrecentage = false,
-            isRelative = false,
+            effectType = EffectType.OverTime,
+            inPercentage = false,
+            isRelativeToMax = false,
             amount = -0.5f,
             tickTime = 1f,
             duration = Mathf.Infinity
         };
         EffectData oxygenEffect = new EffectData() {
             effectStatType = StatType.Air,
-            effectType = EffectType.OverTimeSmallPortion,
-            isPrecentage = false,
-            isRelative = false,
+            effectType = EffectType.OverTime,
+            inPercentage = false,
+            isRelativeToMax = false,
             amount = -0.5f,
             tickTime = 1f,
             duration = Mathf.Infinity
         };
         EffectData sleepEffect = new EffectData() {
             effectStatType = StatType.Sleep,
-            effectType = EffectType.OverTimeSmallPortion,
-            isPrecentage = false,
-            isRelative = false,
+            effectType = EffectType.OverTime,
+            inPercentage = false,
+            isRelativeToMax = false,
             amount = -0.5f,
             tickTime = 1f,
             duration = Mathf.Infinity
@@ -186,9 +186,9 @@ public class StatControllers
     public EffectController GetController(EffectType effectType) {
         switch (effectType) {
             case EffectType.Instant:
-            case EffectType.ToggleOverTime:
+            case EffectType.Toggle:
                 return valueController;
-            case EffectType.OverTimeSmallPortion:
+            case EffectType.OverTime:
                 return regenerationController;
             default:
                 return null;
