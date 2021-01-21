@@ -20,21 +20,22 @@ public class RemovalState : StateBase
         {
             case TouchPhase.Began:
             case TouchPhase.Moved:
-
+            case TouchPhase.Stationary:
 
                 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
 
                 currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Buildings);
-
+                gridManager.SetDummyTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings);
                 if (currentTileHit == null || currentTileHit.tile == null || gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) == null)
                     return;
                 Debug.Log("Found!");
-                tileSlotCache = currentTileHit.tile;
+                
                 break;
         }
     }
     public void ConfirmRemoval()
     {
+        tileSlotCache = currentTileHit.tile;
         if (tileSlotCache == null)
             return;
 
@@ -44,7 +45,7 @@ public class RemovalState : StateBase
         {
 
             gridManager.SetTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings, true);
-            CancelButtonChangeState(true); 
+            CancelButtonChangeState(true);
 
         }
     }
@@ -52,7 +53,7 @@ public class RemovalState : StateBase
 
     public void CancelButtonChangeState(bool _cameFromBuildingState)
     {
-        if (_cameFromBuildingState)
+        if (_cameFromBuildingState && Input.GetMouseButton(0))
         {
 
             PlayerStateMachine.GetInstance.SwitchState(InputState.BuildState);
@@ -60,6 +61,26 @@ public class RemovalState : StateBase
 
         else
             ButtonB();
+    }
+
+
+    public override void MousePos()
+    {
+        touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Buildings);
+
+        if (currentTileHit == null || currentTileHit.tile == null || gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) == null)
+            return;
+        Debug.Log("Found!");
+        tileSlotCache = currentTileHit.tile;
+
+        if (Input.GetMouseButtonDown(0))
+        {  
+            ConfirmRemoval();
+
+          
+        }
     }
 }
 

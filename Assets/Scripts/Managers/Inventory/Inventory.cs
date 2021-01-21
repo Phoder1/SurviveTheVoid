@@ -215,6 +215,7 @@ public class Inventory
 
     }
 
+
     public bool AddToInventory(int chestID, ItemSlot item)
     {
         if (item == null)
@@ -378,7 +379,19 @@ public class Inventory
 
     }
 
+    public void RemoveItemFromButton(int buttonID, int chestID) {
 
+
+        inventoryCache = GetInventoryFromDictionary(chestID);
+        if (inventoryCache == null)
+            return;
+
+        if (buttonID<0 || buttonID >= inventoryCache.Length)
+            return;
+        
+
+        inventoryCache[buttonID] = null;
+    }
 
     bool HaveEnoughOfItemFromInventory(int chestID, ItemSlot item)
     {
@@ -490,15 +503,20 @@ public class Inventory
 
     public void ChangeBetweenItems(int firstChestID, int secondChestID, int drag, int drop)
     {
-
+     
         inventoryCache = GetInventoryFromDictionary(firstChestID);
-        if (inventoryCache == null)
+        if (inventoryCache == null )
             return;
+        if (drag < 0 || drag >= inventoryCache.Length)
+            return;
+
 
         if (firstChestID != secondChestID)
         {
             var inventoryCacheTwo = GetInventoryFromDictionary(secondChestID);
             if (inventoryCacheTwo == null)
+                return;
+            if (drop < 0 || drop >= inventoryCacheTwo.Length)
                 return;
 
             if (inventoryCache[drag] == null && inventoryCacheTwo[drop] == null)
@@ -556,6 +574,8 @@ public class Inventory
         if (inventoryCache == null)
             return null;
 
+        if (buttonId < 0 || buttonId >= inventoryCache.Length)
+            return null;
 
         return inventoryCache[buttonId];
     }
@@ -596,6 +616,8 @@ public interface IInventory
     void MakeInventoryBigger(int _newSize, int chestID);
     void PrintInventory(int chestID);
     void RemoveItemFromInventory(int chestID, ItemSlot item);
+
+  
 }
 [Serializable]
 public class ItemSlot
