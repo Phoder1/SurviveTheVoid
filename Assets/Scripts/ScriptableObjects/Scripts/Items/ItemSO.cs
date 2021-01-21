@@ -67,6 +67,7 @@ public class ItemSO : ScriptableObject
     public int getmaxStackSize => maxStackSize;
 
     [SerializeField]
+    [TextArea]
     private string description;
     public string getDescription => description;
 

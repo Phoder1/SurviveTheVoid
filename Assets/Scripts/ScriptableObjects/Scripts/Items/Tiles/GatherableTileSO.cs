@@ -92,7 +92,7 @@ public class GatherableState : ITileState
             Inventory inventory = Inventory.GetInstance;
             foreach (Drop drop in tile.GetStages[currentStage].GetDrops) {
                 if (Random.value <= drop.GetChance) {
-                    inventory.AddToInventory(0, new ItemSlot(drop.GetItem, Random.Range(drop.GetMinAmount, drop.GetMaxAmount)));
+                    inventory.AddToInventory(0, new ItemSlot(drop.GetItem, Random.Range(drop.GetMinAmount, drop.GetMaxAmount + 1)));
                 }
             }
         }
@@ -136,8 +136,7 @@ public class TileGrowEvent : TimeEvent
         this.tileMapLayer = tileMapLayer;
     }
 
-    public override void Trigger() {
-        eventTriggered = true;
+    protected override void TriggerBehaviour() {
         ((GatherableState)triggeringTile.tileState).Grow(eventPosition, tileMapLayer);
 
     }

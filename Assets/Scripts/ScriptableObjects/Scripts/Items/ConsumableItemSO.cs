@@ -2,7 +2,7 @@
 using UnityEngine;
 
 public enum EffectType {
-Instant, ToggleOverTime, OverTimeSmallPortion
+Instant, Toggle, OverTime
 }
 
 //public enum EffectCategory
@@ -43,22 +43,30 @@ public class ConsumableItemSO : ItemSO
 public class EffectData
 {
 	public StatType effectStatType;
+	[Tooltip("OVERTIME: it will Add the amount every tick time\n" +
+		"INSTANT: it will Add the amount once\n" +
+		"TOGGLE: Add the amount, wait the duration, remove the amount.")]
 	public EffectType effectType;
-	[Header("OverTimeSmallPortion: it will Add the amount every tick time")]
-	[Header("nstant: it will Add the amount every tick time:")]
-	[Header("ToggleOverTime: Add the amount,wait the duration, remove the amount")]
-	[Header("it will update his adding from the current amount of the stat:")]
-	[Header("if Relative:")]
-	public bool isRelative; 
-	[Header(" please write the precentage like 10 = 10%, 110 = 110%:")]
-	[Header("if Precentage:")]
-	public bool isPresentage;
+	//[Header("OverTime: it will Add the amount every tick time")]
+	//[Header("Instant: it will Add the amount once")]
+	//[Header("Toggle: Add the amount, wait the duration, remove the amount")]
+	//[Space]
+	//[Header(" please write the precentage like :")]
+	//[Header("if Precentage:")]
+	[Tooltip("Whether to use a fixed amount in precentage.")]
+	
+	public bool inPercentage;
+	[Tooltip("Whether to use precentage relative to max amount.")]
+	public bool isRelativeToMax; 
 	[Space (20f)]
-	[Header("Reminder to check the setting above before adding amount:")]
+	[Tooltip("If was set to percentage make sure to use whole numbers:\n" +
+		"(10 = 10%, 110 = 110%)\n" +
+		"In % per second, not per tick")]
 	public float amount;
-	[Header("The total duration of the buff:")]
+	[Tooltip("The total duration of the effect.")]
 	public float duration;
-	[Header("The time between addition of the amount:")] 
+	[Tooltip("The time between additions of the amount, when set to overtime.")] 
+	[Min(0.03f)]
 	public float tickTime;
 }
 

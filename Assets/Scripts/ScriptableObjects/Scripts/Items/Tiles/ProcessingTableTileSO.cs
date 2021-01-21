@@ -153,7 +153,7 @@ public class ProcessingTableTileState : ITileState
             this.triggeringTile = triggeringTile;
         }
 
-        public override void Trigger() {
+        protected override void TriggerBehaviour() {
             triggeringTile.QueueFinished = true;
         }
     }

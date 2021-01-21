@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 8e42919010a8e894f8b3aabc4a85ef98, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 02173e8e9c72a1a43898236f187ba36b, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -121,6 +121,18 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &723800478 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3303330037062540053, guid: ec261434d51bce44fa7c7f1d01379781,
+    type: 3}
+  m_PrefabInstance: {fileID: 3303330037997937118}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b4f1293ec7bd4645b3ecccfbc64604b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &784351265
 GameObject:
   m_ObjectHideFlags: 0
@@ -211,14 +223,15 @@ PrefabInstance:
       objectReference: {fileID: 2338764766995168549}
     - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}
-      propertyPath: clearZoneRadius
-      value: 30
-      objectReference: {fileID: 0}
+      propertyPath: buildingsGeneration.Array.data[0].tile
+      value: 
+      objectReference: {fileID: 11400000, guid: c6b05abe6e18247418febc2852ac01d6,
+        type: 2}
     - target: {fileID: 4043660047941272735, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}
       propertyPath: vJ
       value: 
-      objectReference: {fileID: 1212365515}
+      objectReference: {fileID: 723800478}
     - target: {fileID: 6828253403587073456, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}
       propertyPath: m_Name
@@ -281,18 +294,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f0d45ae4df922940b20a49049c2d1e0, type: 3}
---- !u!114 &1212365515 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3303330037062540053, guid: ec261434d51bce44fa7c7f1d01379781,
-    type: 3}
-  m_PrefabInstance: {fileID: 3303330037997937118}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b4f1293ec7bd4645b3ecccfbc64604b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1757418854
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -300,11 +301,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5435700086702367923, guid: ee73434160860324a921a0989281f1ff,
-        type: 3}
-      propertyPath: baseSpeed
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 5435700086702367932, guid: ee73434160860324a921a0989281f1ff,
         type: 3}
       propertyPath: m_Name
@@ -921,21 +917,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UImanager
-      objectReference: {fileID: 0}
-    - target: {fileID: 3303330037215079382, guid: ec261434d51bce44fa7c7f1d01379781,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -47.299805
-      objectReference: {fileID: 0}
-    - target: {fileID: 3303330037215079382, guid: ec261434d51bce44fa7c7f1d01379781,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -37.300293
-      objectReference: {fileID: 0}
-    - target: {fileID: 6033404864412062673, guid: ec261434d51bce44fa7c7f1d01379781,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 87.24512
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec261434d51bce44fa7c7f1d01379781, type: 3}

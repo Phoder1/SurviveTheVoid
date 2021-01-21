@@ -807,14 +807,14 @@ public class UIManager : MonoSingleton<UIManager>
 
 
     // Monitors logic
-    public void UpdateSurvivalBar(SurvivalStat stat, float value) {
-        if (barsDictionary.TryGetValue(stat.statType, out Image image))
-            image.fillAmount = Mathf.Clamp(value / stat.maxStat.GetSetValue, 0, 1);
+    public void UpdateSurvivalBar(Stat stat, float value) {
+        if (barsDictionary.TryGetValue(stat.statType, out Image image) && stat.GetIsCapped)
+            image.fillAmount = Mathf.Clamp( value  / stat.maxStat.GetSetValue, 0, 1);
     }
 
     public void UpdateExpAndLvlBar() {
-        xpFill.fillAmount = Mathf.Clamp(playerStats.GetStatValue(StatType.EXP) / playerStats.GetStatValue(StatType.EXPAmountToLevelUp), 0, 1);
-        levelNumber.SetText(Mathf.RoundToInt(playerStats.GetStatValue(StatType.Level)).ToString());
+        xpFill.fillAmount = Mathf.Clamp(playerStats.GetStat(StatType.EXP).GetSetValue / playerStats.GetStat(StatType.EXPtoNextLevel).GetSetValue, 0, 1);
+        levelNumber.SetText(Mathf.RoundToInt(playerStats.GetStat(StatType.Level).GetSetValue).ToString());
     }
 
     #endregion

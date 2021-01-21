@@ -19,16 +19,16 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 1d9610081e7a2914488c88a72b0ee1e8, type: 3}
   Effects:
   - effectStatType: 12
+    effectType: 2
+    inPercentage: 1
+    isRelativeToMax: 1
+    amount: 10
+    duration: 60
+    tickTime: 0.03
+  - effectStatType: 2
     effectType: 0
-    isRelative: 0
-    isPresentage: 0
-    amount: 200
-    duration: 0
-    tickTime: 0
-  - effectStatType: 1
-    effectType: 0
-    isRelative: 0
-    isPresentage: 0
+    inPercentage: 0
+    isRelativeToMax: 0
     amount: 20
     duration: 0
-    tickTime: 0
+    tickTime: 1
