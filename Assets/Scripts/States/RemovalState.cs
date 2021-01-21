@@ -53,7 +53,7 @@ public class RemovalState : StateBase
 
     public void CancelButtonChangeState(bool _cameFromBuildingState)
     {
-        if (_cameFromBuildingState)
+        if (_cameFromBuildingState && Input.GetMouseButton(0))
         {
 
             PlayerStateMachine.GetInstance.SwitchState(InputState.BuildState);
@@ -75,10 +75,11 @@ public class RemovalState : StateBase
         Debug.Log("Found!");
         tileSlotCache = currentTileHit.tile;
 
-        if (Input.GetMouseButton(0))
-        {
+        if (Input.GetMouseButtonDown(0))
+        {  
             ConfirmRemoval();
 
+          
         }
     }
 }
