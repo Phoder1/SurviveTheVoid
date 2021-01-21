@@ -19,6 +19,7 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: c6ccb43f9cb4f9544b443892957c13ba, type: 3}
   mainTileBase: {fileID: 11400000, guid: 4ea9cd078e7b9d64ca99a8c476addd0a, type: 2}
   isSolid: 1
+  isAirSource: 1
   stages:
   - stageTile: {fileID: 11400000, guid: 4ea9cd078e7b9d64ca99a8c476addd0a, type: 2}
     isGatherable: 0

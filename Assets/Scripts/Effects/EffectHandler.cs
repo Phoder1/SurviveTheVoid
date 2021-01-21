@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -12,9 +11,9 @@ public class EffectHandler : MonoSingleton<EffectHandler>
     [SerializeField] float cooldownBeforeStart;
     public override void Init() {
         playerStats = PlayerStats._instance;
-        
+
         FillDictionary();
-        
+
         StopCoroutine(SurvivalEffects());
         StartCoroutine(SurvivalEffects());
     }
@@ -50,42 +49,10 @@ public class EffectHandler : MonoSingleton<EffectHandler>
 
         //Declartion of Effects
 
-        EffectData hungerEffect = new EffectData() {
-            effectStatType = StatType.Food,
-            effectType = EffectType.OverTime,
-            inPercentage = false,
-            isRelativeToMax = false,
-            amount = -0.5f,
-            tickTime = 1f,
-            duration = Mathf.Infinity
-        };
-        EffectData thirstEffect = new EffectData() {
-            effectStatType = StatType.Water,
-            effectType = EffectType.OverTime,
-            inPercentage = false,
-            isRelativeToMax = false,
-            amount = -0.5f,
-            tickTime = 1f,
-            duration = Mathf.Infinity
-        };
-        EffectData oxygenEffect = new EffectData() {
-            effectStatType = StatType.Air,
-            effectType = EffectType.OverTime,
-            inPercentage = false,
-            isRelativeToMax = false,
-            amount = -0.5f,
-            tickTime = 1f,
-            duration = Mathf.Infinity
-        };
-        EffectData sleepEffect = new EffectData() {
-            effectStatType = StatType.Sleep,
-            effectType = EffectType.OverTime,
-            inPercentage = false,
-            isRelativeToMax = false,
-            amount = -0.5f,
-            tickTime = 1f,
-            duration = Mathf.Infinity
-        };
+        EffectData hungerEffect = new EffectData( StatType.Food, EffectType.OverTime, -0.5f, Mathf.Infinity, 1f, false, false );
+        EffectData thirstEffect =  new EffectData(StatType.Water, EffectType.OverTime, -0.5f, Mathf.Infinity, 1f, false, false);
+        EffectData oxygenEffect =  new EffectData(StatType.Air, EffectType.OverTime, -0.5f, Mathf.Infinity, 1f, false, false);
+        EffectData sleepEffect = new EffectData(StatType.Sleep, EffectType.OverTime, -0.5f, Mathf.Infinity, 1f, false, false);
 
 
         yield return new WaitForSeconds(cooldownBeforeStart);
@@ -114,7 +81,7 @@ public class EffectHandler : MonoSingleton<EffectHandler>
 
 
     public static EffectController GetStatController(EffectData effect) {
-        if (ConsumablesEffectsDict.TryGetValue(effect.effectStatType, out StatControllers effectControllers)) 
+        if (ConsumablesEffectsDict.TryGetValue(effect.effectStatType, out StatControllers effectControllers))
             return effectControllers.GetController(effect.effectType);
         return null;
     }
@@ -122,15 +89,15 @@ public class EffectHandler : MonoSingleton<EffectHandler>
         if (effectsData.Length == 0)
             return null;
         EffectController[] controllers = new EffectController[effectsData.Length];
-        for (int i = 0; i < effectsData.Length; i++) 
+        for (int i = 0; i < effectsData.Length; i++)
             controllers[i] = GetStatController(effectsData[i]);
         return controllers;
     }
     public void BeginAllConsumeableEffects(EffectData[] effectsData)
         => BeginAllEffects(effectsData, GetStatControllers(effectsData));
     public void BeginAllEffects(EffectData[] effectsData, EffectController[] effectController) {
-        for (int i = 0; i < effectsData.Length; i++) 
-            if (effectsData[i] != null) 
+        for (int i = 0; i < effectsData.Length; i++)
+            if (effectsData[i] != null)
                 effectController[i].Begin(effectsData[i]);
     }
     public void StopAllEffects(EffectController[] effects) {
@@ -141,8 +108,8 @@ public class EffectHandler : MonoSingleton<EffectHandler>
         if (effectsData.Length == 0)
             return null;
         PlayerStats playerStats = PlayerStats._instance;
-        EffectController[]  controllers = new EffectController[effectsData.Length];
-        for (int i = 0; i < effectsData.Length; i++) 
+        EffectController[] controllers = new EffectController[effectsData.Length];
+        for (int i = 0; i < effectsData.Length; i++)
             controllers[i] = new EffectController(playerStats.GetStat(effectsData[i].effectStatType), coolDowns[i]);
         return controllers;
     }
