@@ -380,9 +380,14 @@ public class Inventory
 
     public void RemoveItemFromButton(int buttonID, int chestID) {
 
+
         inventoryCache = GetInventoryFromDictionary(chestID);
         if (inventoryCache == null)
             return;
+
+        if (buttonID<0 || buttonID >= inventoryCache.Length)
+            return;
+        
 
         inventoryCache[buttonID] = null;
     }
@@ -501,11 +506,16 @@ public class Inventory
         inventoryCache = GetInventoryFromDictionary(firstChestID);
         if (inventoryCache == null )
             return;
+        if (drag < 0 || drag >= inventoryCache.Length)
+            return;
+
 
         if (firstChestID != secondChestID)
         {
             var inventoryCacheTwo = GetInventoryFromDictionary(secondChestID);
             if (inventoryCacheTwo == null)
+                return;
+            if (drop < 0 || drop >= inventoryCacheTwo.Length)
                 return;
 
             if (inventoryCache[drag] == null && inventoryCacheTwo[drop] == null)
@@ -563,6 +573,8 @@ public class Inventory
         if (inventoryCache == null)
             return null;
 
+        if (buttonId < 0 || buttonId >= inventoryCache.Length)
+            return null;
 
         return inventoryCache[buttonId];
     }
