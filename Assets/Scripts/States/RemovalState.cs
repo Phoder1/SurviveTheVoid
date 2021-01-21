@@ -20,21 +20,22 @@ public class RemovalState : StateBase
         {
             case TouchPhase.Began:
             case TouchPhase.Moved:
-
+            case TouchPhase.Stationary:
 
                 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
 
                 currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Buildings);
-
+                gridManager.SetDummyTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings);
                 if (currentTileHit == null || currentTileHit.tile == null || gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) == null)
                     return;
                 Debug.Log("Found!");
-                tileSlotCache = currentTileHit.tile;
+                
                 break;
         }
     }
     public void ConfirmRemoval()
     {
+        tileSlotCache = currentTileHit.tile;
         if (tileSlotCache == null)
             return;
 

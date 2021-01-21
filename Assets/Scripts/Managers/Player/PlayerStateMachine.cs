@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 using UnityEngine;
+using UnityEngine.Rendering;
+
 public enum InputState { DefaultState, BuildState, FightState , RemovalState };
 public class PlayerStateMachine 
 {
@@ -26,6 +28,11 @@ public class PlayerStateMachine
     public void SwitchState(InputState newState)
     {
                UnityEngine.Debug.Log(newState);
+
+        if (InputManager.GetCurrentState is BuildingState )
+            (InputManager.GetCurrentState as BuildingState).ResetBeforeChangeStates();
+        
+
         switch (newState)
         {
             case InputState.DefaultState:
