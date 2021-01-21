@@ -45,7 +45,7 @@ public class EffectController
         }
         else {
             while (startingTime + data.duration > Time.time) {
-                value += data.amount;
+                value += data.amount*data.tickTime;
                 yield return new WaitForSeconds(data.tickTime);
             }
 

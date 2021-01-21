@@ -51,7 +51,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         maxStat = AddToDict(StatType.MaxWater, 100);
         AddToDict(StatType.Water, 100, maxStat);
         //Air
-        maxStat = AddToDict(StatType.MaxAir, 100);
+        maxStat = AddToDict(StatType.MaxAir, 200);
         AddToDict(StatType.Air, 100, maxStat);
         //Sleep
         maxStat = AddToDict(StatType.MaxSleep, 100);
@@ -82,24 +82,9 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         return stat;
     }
     private void AddReactions() {
-        EffectData hpLoseEffect = new EffectData() {
-            effectStatType = StatType.HP,
-            effectType = EffectType.OverTime,
-            inPercentage = false,
-            isRelativeToMax = false,
-            amount = -1f,
-            tickTime = 1f,
-            duration = Mathf.Infinity
-        };
-        EffectData hpRegenEffect = new EffectData() {
-            effectStatType = StatType.HP,
-            effectType = EffectType.OverTime,
-            inPercentage = false,
-            isRelativeToMax = false,
-            amount = 1f,
-            tickTime = 1f,
-            duration = Mathf.Infinity
-        };
+        EffectData hpLoseEffect = new EffectData(StatType.HP, EffectType.OverTime, -1f, Mathf.Infinity, 1f, false, false);
+        EffectData hpRegenEffect = new EffectData(StatType.HP, EffectType.OverTime, 1f, Mathf.Infinity, 1f, false, false);
+
         AddReaction(StatType.Food, true, true, 4, new EffectData[1] { hpLoseEffect });
         AddReaction(StatType.Food, true, false, 95, new EffectData[1] { hpRegenEffect });
     }

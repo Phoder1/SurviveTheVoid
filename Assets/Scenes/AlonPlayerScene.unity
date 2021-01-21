@@ -221,12 +221,6 @@ PrefabInstance:
       propertyPath: buildings
       value: 
       objectReference: {fileID: 2338764766995168549}
-    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
-        type: 3}
-      propertyPath: buildingsGeneration.Array.data[0].tile
-      value: 
-      objectReference: {fileID: 11400000, guid: c6b05abe6e18247418febc2852ac01d6,
-        type: 2}
     - target: {fileID: 4043660047941272735, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}
       propertyPath: vJ
@@ -310,6 +304,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5435700086702367923, guid: ee73434160860324a921a0989281f1ff,
+        type: 3}
+      propertyPath: airLookRange
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5435700086702367932, guid: ee73434160860324a921a0989281f1ff,
         type: 3}
