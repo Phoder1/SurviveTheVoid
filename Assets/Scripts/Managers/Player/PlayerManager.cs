@@ -1,5 +1,4 @@
 ﻿using Assets.Scan;
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -7,7 +6,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
 {
     private PlayerStats playerStats;
     private static Transform playerTransfrom;
-       
+
     private InputManager _inputManager;
     private GridManager _GridManager;
     private Scanner _scanner;
@@ -32,7 +31,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     private Stat moveSpeed;
     private Stat gatheringSpeed;
     Coroutine gatherCoroutine = null;
-  
+
     private DirectionEnum MovementDir {
         get {
             float angle = Vector2.SignedAngle(_inputManager.VJAxis, Vector2.up);
@@ -74,12 +73,17 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         }
         if (specialWasPressed != specialButton) {
             specialButton = specialWasPressed;
+            if (!specialButton)
+                closestTile = null;
         }
         if (gatherWasPressed != gatherButton) {
             gatherButton = gatherWasPressed;
-            if (!gatherButton && gatherCoroutine != null) {
-                StopCoroutine(gatherCoroutine);
-                gatherCoroutine = null;
+            if (!gatherButton) {
+                if (gatherCoroutine != null) {
+                    StopCoroutine(gatherCoroutine);
+                    gatherCoroutine = null;
+                }
+                closestTile = null;
             }
         }
         gatherWasPressed = false;
@@ -92,14 +96,13 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         return _scanner.Scan(currentPosOnGrid, MovementDir, lookRange, buildingLayer, checkType);
     }
     public void ImplementInteraction(bool SpecialInteract) {
+        gatherWasPressed = true;
         if (closestTile == null) {
             if (SpecialInteract) {
                 closestTile = Scan(new SpecialInterractionScanChecker());
-                specialWasPressed = true;
             }
             else {
                 closestTile = Scan(new GatheringScanChecker());
-                gatherWasPressed = true;
             }
         }
         else {

@@ -13,24 +13,16 @@ public class StarsParallaxController : MonoBehaviour
         cameraSize = mainCamera.orthographicSize;
     }
 
-    private void OnDisable() {
-        foreach (StarsParallax stars in starsParallax) {
-            stars.mr.sharedMaterial.SetTextureOffset("_MainTex", Vector2.zero);
-        }
-    }
-
 
     private void Update() {
         foreach (StarsParallax stars in starsParallax) {
-            stars.offset += new Vector2(stars.speed * Time.deltaTime, 0f);
-
-            stars.mr.sharedMaterial.SetTextureOffset("_MainTex", stars.offset);
+            stars.gameobject.transform.rotation *= Quaternion.Euler(new Vector3(0,0,stars.speed));
         }
     }
 
     public void UpdateViewSize() {
         foreach (StarsParallax stars in starsParallax) {
-            stars.mr.transform.localScale *= mainCamera.orthographicSize / cameraSize;
+            stars.gameobject.transform.localScale *= mainCamera.orthographicSize / cameraSize;
         }
         cameraSize = mainCamera.orthographicSize;
     }
@@ -39,8 +31,7 @@ public class StarsParallaxController : MonoBehaviour
     [System.Serializable]
     private class StarsParallax
     {
-        [SerializeField] internal MeshRenderer mr;
-        [Range(0.001f, 0.01f)]
+        [SerializeField] internal GameObject gameobject;
         [SerializeField] internal float speed;
         internal Vector2 offset = Vector2.zero;
     }
