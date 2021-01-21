@@ -36,12 +36,15 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     private const float treeCheckInterval = 0.5f;
     private Vector2Int lastPosition;
     private Vector2Int currentPosOnGrid;
+    public Vector2Int GetCurrentPosOnGrid => currentPosOnGrid;
     private EffectController airRegenCont;
     private EffectData airRegenData;
     bool playerMoved;
 
-    private DirectionEnum movementDirection;
+    private DirectionEnum gridMovementDirection;
     public static Transform GetPlayerTransform => playerTransfrom;
+
+    public DirectionEnum GetMovementDirection => gridMovementDirection;
 
     public override void Init() {
 
@@ -60,7 +63,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     private void Update() {
         lastPosition = currentPosOnGrid;
         currentPosOnGrid = gridManager.WorldToGridPosition((Vector2)transform.position, TileMapLayer.Floor);
-        UpdateDirection();
+        UpdateGridDirection();
         playerMoved = lastPosition != currentPosOnGrid;
         CheckForTrees();
     }
@@ -70,6 +73,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     private void LateUpdate() {
         if (!anyInteracted) {
             Vector2 movementVector = inputManager.VJAxis * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue;
+            movementVector.y *= 0.5f;
             if (movementVector != Vector2.zero) {
                 playerController.Move(movementVector);
             }
@@ -99,7 +103,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
             lastTreeCheckTime = Time.time;
             if (currentPosOnGrid != lastCheckPosition) {
                 lastCheckPosition = currentPosOnGrid;
-                TileHit hit = scanner.Scan(currentPosOnGrid, movementDirection, airLookRange, TileMapLayer.Buildings, new AirSourcesScanChecker());
+                TileHit hit = scanner.Scan(currentPosOnGrid, gridMovementDirection, airLookRange, TileMapLayer.Buildings, new AirSourcesScanChecker());
                 if (hit != null) {
                     airRegenCont.Begin(airRegenData);
                 }
@@ -111,7 +115,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     }
 
     public TileHit Scan(IChecker checkType) {
-        return scanner.Scan(currentPosOnGrid, movementDirection, interactionLookRange, buildingLayer, checkType);
+        return scanner.Scan(currentPosOnGrid, gridMovementDirection, interactionLookRange, buildingLayer, checkType);
     }
     public void ImplementInteraction(bool SpecialInteract) {
         gatherWasPressed = true;
@@ -158,24 +162,25 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         SpecialInterracted = false;
         closestTile = null;
     }
-    private void UpdateDirection() {
-        float angle = Vector2.SignedAngle(inputManager.VJAxis, Vector2.up);
+    private void UpdateGridDirection() {
+        float angle = Vector2.SignedAngle(inputManager.VJAxis, new Vector2(-0.25f,0.25f));
         int direction = Mathf.RoundToInt(angle / 90);
         switch (direction) {
             case 0:
-                movementDirection = DirectionEnum.Up;
+                gridMovementDirection = DirectionEnum.Up;
                 break;
             case 1:
-                movementDirection = DirectionEnum.Right;
+                gridMovementDirection = DirectionEnum.Right;
                 break;
             case -1:
-                movementDirection = DirectionEnum.Left;
+                gridMovementDirection = DirectionEnum.Left;
                 break;
             case 2:
-                movementDirection = DirectionEnum.Down;
+            case -2:
+                gridMovementDirection = DirectionEnum.Down;
                 break;
             default:
-                movementDirection = DirectionEnum.Down;
+                gridMovementDirection = DirectionEnum.Down;
                 break;
         }
     }
