@@ -82,6 +82,29 @@ public class InputManager : MonoSingleton<InputManager>
                 }
             }
         }
+        else
+        {
+
+            switch (inputState)
+            {
+                case InputState.DefaultState:
+              
+                    break;
+                case InputState.BuildState:
+                    currentState.MousePos();
+
+                    break;
+                case InputState.FightState:
+                    // fightState
+                    break;
+                case InputState.RemovalState:
+                    currentState.MousePos();
+                    break;
+                default:
+                    break;
+            }
+
+        }
 
     }
     
