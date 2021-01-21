@@ -14,8 +14,8 @@ public class UIManager : MonoSingleton<UIManager>
     private GameObject
         vjMove,
         viFight,
-        bInteract,
-        bGather,
+        bInteractA,
+        bGatherB,
         bHide,
         bTool1,
         bTool2,
@@ -410,12 +410,13 @@ public class UIManager : MonoSingleton<UIManager>
     bool isInventoryOpen = false;
     bool isFightModeOn = false;
     bool isBuildModeOn = false;
+    bool isRemoveModeOn = false;
     bool isChestOpen = false;
 
 
 
     void ButtonControls() {
-        if (isHoldingButton && bInteract.activeInHierarchy == true) {
+        if (isHoldingButton && bInteractA.activeInHierarchy == true) {
             ReleaseButton();
         }
     }
@@ -441,7 +442,7 @@ public class UIManager : MonoSingleton<UIManager>
         }
     }
     void PressButton() {
-        if (bInteract.activeInHierarchy == true) {
+        if (bInteractA.activeInHierarchy == true) {
             isHoldingButton = true;
 
             inputManager.HoldingButton(isButtonA);
@@ -457,7 +458,6 @@ public class UIManager : MonoSingleton<UIManager>
         bTool5.SetActive(turnOn);
 
     }
-
     void SetQuickAccessSlots(bool turnOn) {
 
         bQuickAccess1.SetActive(turnOn);
@@ -470,7 +470,7 @@ public class UIManager : MonoSingleton<UIManager>
 
     // Main HUD logic
     public void ButtonHide() {
-        if (isBuildModeOn == false) {
+        if (isBuildModeOn == false && isRemoveModeOn == false) {
             if (isShown == true) {
                 bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
 
@@ -504,7 +504,8 @@ public class UIManager : MonoSingleton<UIManager>
                 isShown = true;
             }
         }
-        else {
+        else if (isBuildModeOn == true || isRemoveModeOn == true)
+        {
             if (isShownBuildTools == true) {
                 bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
 
@@ -545,8 +546,8 @@ public class UIManager : MonoSingleton<UIManager>
         if (InventoryUI.activeSelf == true) {
             InventoryUI.SetActive(false);
 
-            bInteract.SetActive(true);
-            bGather.SetActive(true);
+            bInteractA.SetActive(true);
+            bGatherB.SetActive(true);
 
             if (isBuildModeOn == false) {
                 viFight.SetActive(true);
@@ -561,8 +562,8 @@ public class UIManager : MonoSingleton<UIManager>
             InventoryUI.SetActive(true);
 
             viFight.SetActive(false);
-            bInteract.SetActive(false);
-            bGather.SetActive(false);
+            bInteractA.SetActive(false);
+            bGatherB.SetActive(false);
 
             inventoryManager.UpdateInventoryToUI();
             isInventoryOpen = true;
@@ -573,8 +574,8 @@ public class UIManager : MonoSingleton<UIManager>
         viFight.transform.GetChild(0).gameObject.SetActive(false);
         viFight.transform.GetChild(1).gameObject.SetActive(true);
 
-        bGather.transform.GetChild(0).gameObject.SetActive(false);
-        bGather.transform.GetChild(1).gameObject.SetActive(true);
+        bGatherB.transform.GetChild(0).gameObject.SetActive(false);
+        bGatherB.transform.GetChild(1).gameObject.SetActive(true);
 
         isFightModeOn = true;
     }
@@ -583,20 +584,21 @@ public class UIManager : MonoSingleton<UIManager>
         viFight.transform.GetChild(0).gameObject.SetActive(true);
         viFight.transform.GetChild(1).gameObject.SetActive(false);
 
-        bGather.transform.GetChild(0).gameObject.SetActive(true);
-        bGather.transform.GetChild(1).gameObject.SetActive(false);
+        bGatherB.transform.GetChild(0).gameObject.SetActive(true);
+        bGatherB.transform.GetChild(1).gameObject.SetActive(false);
 
         isFightModeOn = false;
     }
 
-    public void ButtonSettings() {
+    public void ButtonSettings() 
+    {
         if (PauseMenuUI.activeSelf == false) {
             PauseMenuUI.SetActive(true);
 
             vjMove.SetActive(false);
             viFight.SetActive(false);
-            bInteract.SetActive(false);
-            bGather.SetActive(false);
+            bInteractA.SetActive(false);
+            bGatherB.SetActive(false);
             bHide.SetActive(false);
             SetTools(false);
             bMainWeapon.SetActive(false);
@@ -624,8 +626,8 @@ public class UIManager : MonoSingleton<UIManager>
             PauseMenuUI.SetActive(false);
 
             vjMove.SetActive(true);
-            bInteract.SetActive(true);
-            bGather.SetActive(true);
+            bInteractA.SetActive(true);
+            bGatherB.SetActive(true);
             bHide.SetActive(true);
             bInventory.SetActive(true);
 
@@ -647,8 +649,8 @@ public class UIManager : MonoSingleton<UIManager>
                 InventoryUI.SetActive(true);
 
                 viFight.SetActive(false);
-                bInteract.SetActive(false);
-                bGather.SetActive(false);
+                bInteractA.SetActive(false);
+                bGatherB.SetActive(false);
             }
 
             // Check if we was in build mode
@@ -691,67 +693,98 @@ public class UIManager : MonoSingleton<UIManager>
         bCancel.SetActive(true);
         bRotate.SetActive(true);
 
-        bInteract.transform.GetChild(0).gameObject.SetActive(false);
-        bInteract.transform.GetChild(1).gameObject.SetActive(true);
+        bInteractA.transform.GetChild(0).gameObject.SetActive(false);
+        bInteractA.transform.GetChild(1).gameObject.SetActive(true);
 
         if (isFightModeOn == false) {
-            bGather.transform.GetChild(0).gameObject.SetActive(false);
-            bGather.transform.GetChild(2).gameObject.SetActive(true);
+            bGatherB.transform.GetChild(0).gameObject.SetActive(false);
+            bGatherB.transform.GetChild(2).gameObject.SetActive(true);
         }
         else {
-            bGather.transform.GetChild(1).gameObject.SetActive(false);
-            bGather.transform.GetChild(2).gameObject.SetActive(true);
+            bGatherB.transform.GetChild(1).gameObject.SetActive(false);
+            bGatherB.transform.GetChild(2).gameObject.SetActive(true);
         }
     }
 
-    public void ButtonCancel() {
-        PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
+    public void ButtonCancel() 
+    {
+        if (isBuildModeOn == true)
+        {
+            PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
+            isBuildModeOn = false;
+
+            if (isQuickAccessSlotsSwapped == true && isShown == true)
+            {
+                SetTools(true);
+                bMainWeapon.SetActive(true);
+                bSwap.SetActive(true);
+            }
+            else if (isQuickAccessSlotsSwapped == false && isShown == true)
+            {
+                SetQuickAccessSlots(true);
+                bMainWeapon.SetActive(true);
+                bSwap.SetActive(true);
+            }
+            viFight.SetActive(true);
+
+            bCancel.SetActive(false);
+            bRotate.SetActive(false);
+
+            bInteractA.transform.GetChild(0).gameObject.SetActive(true);
+            bInteractA.transform.GetChild(1).gameObject.SetActive(false);
+
+            if (isFightModeOn == false)
+            {
+                bGatherB.transform.GetChild(0).gameObject.SetActive(true);
+                bGatherB.transform.GetChild(2).gameObject.SetActive(false);
+            }
+            else
+            {
+                bGatherB.transform.GetChild(1).gameObject.SetActive(true);
+                bGatherB.transform.GetChild(2).gameObject.SetActive(false);
+            }
+
+            if (InventoryUI.activeSelf == true)
+            {
+                InventoryUI.SetActive(false);
+                bInteractA.SetActive(true);
+                bGatherB.SetActive(true);
+
+                isInventoryOpen = false;
+            }
+
+            if (isShown == false)
+            {
+                bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
+            }
+
+            stateText.SetActive(false);
+        }
+        else if (isRemoveModeOn == true)
+		{
+            isRemoveModeOn = false;
+            isBuildModeOn = true;
+
+            bInteractA.SetActive(true);
+            bInventory.SetActive(true);
+
+
+            PlayerStateMachine.GetInstance.SwitchState(InputState.BuildState);
+        }
+    }
+
+    public void ButtonRotate() 
+    {
+
+    }
+
+    public void RemoveStateOn()
+	{
         isBuildModeOn = false;
+        isRemoveModeOn = true;
 
-        if (isQuickAccessSlotsSwapped == true && isShown == true) {
-            SetTools(true);
-            bMainWeapon.SetActive(true);
-            bSwap.SetActive(true);
-        }
-        else if (isQuickAccessSlotsSwapped == false && isShown == true) {
-            SetQuickAccessSlots(true);
-            bMainWeapon.SetActive(true);
-            bSwap.SetActive(true);
-        }
-        viFight.SetActive(true);
-
-        bCancel.SetActive(false);
-        bRotate.SetActive(false);
-
-        bInteract.transform.GetChild(0).gameObject.SetActive(true);
-        bInteract.transform.GetChild(1).gameObject.SetActive(false);
-
-        if (isFightModeOn == false) {
-            bGather.transform.GetChild(0).gameObject.SetActive(true);
-            bGather.transform.GetChild(2).gameObject.SetActive(false);
-        }
-        else {
-            bGather.transform.GetChild(1).gameObject.SetActive(true);
-            bGather.transform.GetChild(2).gameObject.SetActive(false);
-        }
-
-        if (InventoryUI.activeSelf == true) {
-            InventoryUI.SetActive(false);
-            bInteract.SetActive(true);
-            bGather.SetActive(true);
-
-            isInventoryOpen = false;
-        }
-
-        if (isShown == false) {
-            bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
-        }
-
-        stateText.SetActive(false);
-    }
-
-    public void ButtonRotate() {
-
+        bInteractA.SetActive(false);
+        bInventory.SetActive(false);
     }
 
 
@@ -774,9 +807,9 @@ public class UIManager : MonoSingleton<UIManager>
         bInventory.SetActive(false);
         bSettings.SetActive(false);
         vjMove.SetActive(false);
-        bInteract.SetActive(false);
+        bInteractA.SetActive(false);
         ButtonPressedUp();
-        bGather.SetActive(false);
+        bGatherB.SetActive(false);
         viFight.SetActive(false);
         xpBar.SetActive(false);
     }
@@ -799,8 +832,8 @@ public class UIManager : MonoSingleton<UIManager>
         bInventory.SetActive(true);
         bSettings.SetActive(true);
         vjMove.SetActive(true);
-        bInteract.SetActive(true);
-        bGather.SetActive(true);
+        bInteractA.SetActive(true);
+        bGatherB.SetActive(true);
         viFight.SetActive(true);
         xpBar.SetActive(true);
     }
@@ -832,6 +865,7 @@ public class UIManager : MonoSingleton<UIManager>
             case InputState.BuildState:
                 StateText.gameObject.SetActive(true);
                 StateText.text = "Building State";
+                BuildModeUI();
                 break;
             case InputState.FightState:
                 StateText.gameObject.SetActive(true);
@@ -840,6 +874,7 @@ public class UIManager : MonoSingleton<UIManager>
             case InputState.RemovalState:
                 StateText.gameObject.SetActive(true);
                 StateText.text = "Removal State";
+                RemoveStateOn();
                 break;
             default:
                 break;
