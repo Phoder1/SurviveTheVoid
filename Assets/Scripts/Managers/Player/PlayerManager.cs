@@ -33,7 +33,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     Coroutine gatherCoroutine = null;
     private Vector2Int lastCheckPosition = new Vector2Int(int.MaxValue,int.MaxValue);
     private float lastTreeCheckTime = 0;
-    private const float treeCheckInterval = 1f;
+    private const float treeCheckInterval = 0.5f;
     private Vector2Int lastPosition;
     private Vector2Int currentPosOnGrid;
     private EffectController airRegenCont;
@@ -55,7 +55,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         gatheringSpeed = playerStats.GetStat(StatType.GatheringSpeed);
         playerTransfrom = transform;
         airRegenCont = new EffectController(playerStats.GetStat(StatType.Air), 2);
-        airRegenData = new EffectData(StatType.Air, EffectType.OverTime, 10f, Mathf.Infinity, 0.03f, false, false);
+        airRegenData = new EffectData(StatType.Air, EffectType.OverTime, 10f, Mathf.Infinity, 0.5f, false, false);
     }
     private void Update() {
         lastPosition = currentPosOnGrid;
