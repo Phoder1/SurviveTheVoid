@@ -809,7 +809,7 @@ public class UIManager : MonoSingleton<UIManager>
     // Monitors logic
     public void UpdateSurvivalBar(Stat stat, float value) {
         if (barsDictionary.TryGetValue(stat.statType, out Image image) && stat.GetIsCapped)
-            image.fillAmount = Mathf.Clamp(value / stat.maxStat.GetSetValue, 0, 1);
+            image.fillAmount = Mathf.Clamp( value  / stat.maxStat.GetSetValue, 0, 1);
     }
 
     public void UpdateExpAndLvlBar() {

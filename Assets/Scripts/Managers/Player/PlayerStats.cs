@@ -46,7 +46,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         AddToDict(StatType.HP, 100, maxStat);
         //Food
         maxStat = AddToDict(StatType.MaxFood, 100);
-        AddToDict(StatType.Food, 0, maxStat);
+        AddToDict(StatType.Food, 100, maxStat);
         //Water
         maxStat = AddToDict(StatType.MaxWater, 100);
         AddToDict(StatType.Water, 100, maxStat);
@@ -100,7 +100,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
             tickTime = 1f,
             duration = Mathf.Infinity
         };
-        AddReaction(StatType.Food, false, true, 0, new EffectData[1] { hpLoseEffect });
+        AddReaction(StatType.Food, true, true, 4, new EffectData[1] { hpLoseEffect });
         AddReaction(StatType.Food, true, false, 95, new EffectData[1] { hpRegenEffect });
     }
     private void AddReaction(StatType statType, bool isPrecentage, bool checkSmaller, float reactionStartValue, EffectData[] effectsData) {
