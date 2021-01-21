@@ -137,5 +137,24 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
     }
 
+    public void OnLongInventoryPress(int buttonId)
+    {
+        var checkIfSlotIsItem = inventory.GetItemFromInventoryButton(0, buttonId);
+
+
+        if (checkIfSlotIsItem == null || checkIfSlotIsItem.item == null)
+            return;
+
+
+        ItemSlot itemCache = new ItemSlot(checkIfSlotIsItem.item, 1);
+
+
+        Debug.Log("Holding now: " + itemCache.item.getItemName);
+
+
+    }
+
+
+
 
 }

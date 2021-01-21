@@ -11,6 +11,8 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public float requiredHoldTime;
 
+    private const float minimumHoldAmount = 5;
+
     public UnityEvent onLongClick;
     public UnityEvent onShortClick;
 
@@ -49,23 +51,28 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
 
 
-            if (pointerDown)
+        if (pointerDown)
+        {
+            pointerDownTimer += Time.deltaTime;
+            if (pointerDownTimer >= requiredHoldTime)
             {
-                pointerDownTimer += Time.deltaTime;
-                if (pointerDownTimer >= requiredHoldTime)
-                {
-                    if (onLongClick != null)
-                        onLongClick.Invoke();
+                if (onLongClick != null)
+                    onLongClick.Invoke();
 
-                    Reset();
-                }
-
-                if(pointerDownTimer >= (requiredHoldTime / 5))
-                fillImage.fillAmount = pointerDownTimer / requiredHoldTime;
+                Reset();
             }
 
+            if (fillImage != null)
+            {
 
-        
+
+                if (pointerDownTimer >= (requiredHoldTime / minimumHoldAmount))
+                    fillImage.fillAmount = (pointerDownTimer - (requiredHoldTime / minimumHoldAmount)) / (requiredHoldTime - (requiredHoldTime / minimumHoldAmount));
+            }
+        }
+
+
+
 
 
     }
@@ -74,6 +81,7 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         pointerDown = false;
         pointerDownTimer = 0;
+        if(fillImage != null)
         fillImage.fillAmount = pointerDownTimer / requiredHoldTime;
     }
 

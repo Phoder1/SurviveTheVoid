@@ -34,14 +34,22 @@ MonoBehaviour:
     drops:
     - item: {fileID: 11400000}
       Chance: 1
-      minAmount: 2
-      maxAmount: 4
+      minAmount: 1
+      maxAmount: 1
     - item: {fileID: 11400000, guid: 6e3627ca283f52b4499153bb2af26248, type: 2}
       Chance: 1
       minAmount: 1
       maxAmount: 3
     - item: {fileID: 11400000, guid: 09698c5a98717bc4ea06472bb871ac49, type: 2}
       Chance: 0.5
+      minAmount: 1
+      maxAmount: 3
+    - item: {fileID: 11400000}
+      Chance: 0.5
+      minAmount: 1
+      maxAmount: 1
+    - item: {fileID: 11400000, guid: 15f6588093b9bde479796bc44fb85fd4, type: 2}
+      Chance: 1
       minAmount: 1
       maxAmount: 3
   toolType: 0
