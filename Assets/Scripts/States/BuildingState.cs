@@ -6,6 +6,7 @@ using UnityEngine.Tilemaps;
 
 public class BuildingState : StateBase
 {
+<<<<<<< HEAD
     Vector2 touchPosition;
     TileHit currentTileHit;
     TileSlot tileSlotCache;
@@ -15,6 +16,17 @@ public class BuildingState : StateBase
     GridManager gridManager;
     int amountOfTheSameBuilding;
     public BuildingState() { gridManager = GridManager._instance; amountOfTheSameBuilding = 0; }
+=======
+    Vector2 touchPosition ;
+    TileHit currentTileHit;
+    TileSlot tileSlotCache;
+    bool isBuildingAttached, currentlyPlacedOnFloor , wasFloorLayer;
+
+    Vector2Int[] Position = new Vector2Int[3];
+    GridManager gridManager;
+    int amountOfCurrentItem;
+    public BuildingState() { amountOfCurrentItem = 0; gridManager = GridManager._instance; }
+>>>>>>> master
 
     public override void ButtonA()
     {
@@ -42,9 +54,18 @@ public class BuildingState : StateBase
 
 
                 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
+                 
 
 
+<<<<<<< HEAD
                 CheckPosition();
+=======
+
+
+                CheckPosition(touchPosition);
+          
+
+>>>>>>> master
 
 
                 break;
@@ -73,13 +94,13 @@ public class BuildingState : StateBase
         Position[2] = new Vector2Int(Position[1].x, Position[1].y);
     }
 
-    private void CheckPosition()
+    private void CheckPosition(Vector2 worldPos)
     {
 
-        if (Position[0] == gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor).gridPosition)
+        if (Position[0] == gridManager.GetHitFromWorldPosition(worldPos, TileMapLayer.Floor).gridPosition)
             return;
 
-        currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
+        currentTileHit = gridManager.GetHitFromWorldPosition(worldPos, TileMapLayer.Floor);
 
         Position[0] = new Vector2Int(currentTileHit.gridPosition.x, currentTileHit.gridPosition.y);
 
@@ -88,7 +109,7 @@ public class BuildingState : StateBase
 
         // there is a block on the floor
         // check if there is no a block above it 
-        if (currentTileHit.tile != null && gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Buildings).tile == null)
+        if (currentTileHit.tile != null && gridManager.GetHitFromWorldPosition(worldPos, TileMapLayer.Buildings).tile == null)
         {
 
             RemovePreviousTile();
@@ -97,7 +118,7 @@ public class BuildingState : StateBase
         }
         else if (currentlyPlacedOnFloor)
         {
-            if (currentTileHit.tile == null && gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Buildings).tile == null)
+            if (currentTileHit.tile == null && gridManager.GetHitFromWorldPosition(worldPos, TileMapLayer.Buildings).tile == null)
             {
 
 
@@ -134,17 +155,31 @@ public class BuildingState : StateBase
 
     public void PressedConfirmBuildingButton()
     {
-        if (!isBuildingAttached || tileSlotCache == null)
+        if (!isBuildingAttached || tileSlotCache == null || currentTileHit==null)
             return;
 
         if (wasFloorLayer)
         {
-            gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Floor, true);
+            gridManager.SetTile(tileSlotCache, Position[2], TileMapLayer.Floor, true);
         }
         else
         {
-            gridManager.SetTile(tileSlotCache, currentTileHit.gridPosition, TileMapLayer.Buildings, true);
+            gridManager.SetTile(tileSlotCache,Position[2], TileMapLayer.Buildings, true);
         }
+        var itemSlotCache = new ItemSlot(tileSlotCache.GetTileAbst, 1);
+        Inventory.GetInstance.RemoveItemFromInventory(0, itemSlotCache);
+        amountOfCurrentItem--;
+        if (amountOfCurrentItem >= 1)
+        {
+            SetBuildingTile(itemSlotCache.item as TileAbstSO);
+        }
+        else
+        {
+            PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
+            UIManager._instance.ButtonCancel();
+            tileSlotCache = null;
+        }
+<<<<<<< HEAD
         var itemSlotCache = new ItemSlot(tileSlotCache.GetTileAbst, 1);
         Inventory.GetInstance.RemoveItemFromInventory(0, itemSlotCache);
         amountOfTheSameBuilding--;
@@ -163,6 +198,8 @@ public class BuildingState : StateBase
 
 
 
+=======
+>>>>>>> master
 
     }
     public void SetBuildingTile(TileAbstSO Item)
@@ -171,7 +208,10 @@ public class BuildingState : StateBase
         if (Item == null)
             return;
         tileSlotCache = new TileSlot(Item);
+        if (amountOfCurrentItem<=0)
+        amountOfCurrentItem= Inventory.GetInstance.GetAmountOfItem(0, new ItemSlot(Item, 1));
 
+        
 
         currentlyPlacedOnFloor = tileSlotCache.GetTileType == TileType.Block;
         if (amountOfTheSameBuilding == 0)
@@ -184,9 +224,20 @@ public class BuildingState : StateBase
     public TileHit GetCurrentTileHit => currentTileHit;
 
     public bool GetIsBuildingAttached => isBuildingAttached;
+<<<<<<< HEAD
     public void ResetBeforeChangeStates()
     {
 
         RemovePreviousTile();
+=======
+    public override void MousePos()
+    {
+        CheckPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+
+        if (Input.GetMouseButton(0))
+        {
+            PressedConfirmBuildingButton();
+        }
+>>>>>>> master
     }
 }

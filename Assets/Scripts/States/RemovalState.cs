@@ -45,7 +45,7 @@ public class RemovalState : StateBase
         {
 
             gridManager.SetTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings, true);
-            CancelButtonChangeState(true); 
+            CancelButtonChangeState(true);
 
         }
     }
@@ -61,6 +61,25 @@ public class RemovalState : StateBase
 
         else
             ButtonB();
+    }
+
+
+    public override void MousePos()
+    {
+        touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Buildings);
+
+        if (currentTileHit == null || currentTileHit.tile == null || gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) == null)
+            return;
+        Debug.Log("Found!");
+        tileSlotCache = currentTileHit.tile;
+
+        if (Input.GetMouseButton(0))
+        {
+            ConfirmRemoval();
+
+        }
     }
 }
 
