@@ -378,7 +378,14 @@ public class Inventory
 
     }
 
+    public void RemoveItemFromButton(int buttonID, int chestID) {
 
+        inventoryCache = GetInventoryFromDictionary(chestID);
+        if (inventoryCache == null)
+            return;
+
+        inventoryCache[buttonID] = null;
+    }
 
     bool HaveEnoughOfItemFromInventory(int chestID, ItemSlot item)
     {
@@ -490,9 +497,9 @@ public class Inventory
 
     public void ChangeBetweenItems(int firstChestID, int secondChestID, int drag, int drop)
     {
-
+     
         inventoryCache = GetInventoryFromDictionary(firstChestID);
-        if (inventoryCache == null)
+        if (inventoryCache == null )
             return;
 
         if (firstChestID != secondChestID)
@@ -596,6 +603,8 @@ public interface IInventory
     void MakeInventoryBigger(int _newSize, int chestID);
     void PrintInventory(int chestID);
     void RemoveItemFromInventory(int chestID, ItemSlot item);
+
+  
 }
 [Serializable]
 public class ItemSlot
