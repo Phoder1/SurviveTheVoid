@@ -612,7 +612,7 @@ public class UIManager : MonoSingleton<UIManager>
             if (isChestOpen == true) {
                 ChestUI.SetActive(false);
             }
-            if (isBuildModeOn == true) {
+            if (isBuildModeOn == true || isRemoveModeOn == true) {
                 bCancel.SetActive(false);
                 bRotate.SetActive(false);
                 stateText.SetActive(false);
@@ -626,19 +626,24 @@ public class UIManager : MonoSingleton<UIManager>
             PauseMenuUI.SetActive(false);
 
             vjMove.SetActive(true);
-            bInteractA.SetActive(true);
             bGatherB.SetActive(true);
             bHide.SetActive(true);
-            bInventory.SetActive(true);
 
-            // Check if we was on Items and the tool bar wasn't hidden, also if we wasn't in build mode
-            if (isQuickAccessSlotsSwapped == true && isShown != false && isBuildModeOn != true) {
+            // Check if we was in remove mode
+            if(isRemoveModeOn == false)
+			{
+                bInventory.SetActive(true);
+                bInteractA.SetActive(true);
+            }
+
+            // Check if we was on Items and the tool bar wasn't hidden, also if we wasn't in build or remove mode
+            if (isQuickAccessSlotsSwapped == true && isShown != false && isBuildModeOn != true && isRemoveModeOn != true) {
                 SetTools(true);
                 bMainWeapon.SetActive(true);
                 bSwap.SetActive(true);
             }
-            // Check if we was on QASlots and the tool bar wasn't hidden, also if we wasn't in build mode
-            else if (isQuickAccessSlotsSwapped == false && isShown != false && isBuildModeOn != true) {
+            // Check if we was on QASlots and the tool bar wasn't hidden, also if we wasn't in build or remove mode
+            else if (isQuickAccessSlotsSwapped == false && isShown != false && isBuildModeOn != true && isRemoveModeOn != true) {
                 SetQuickAccessSlots(true);
                 bMainWeapon.SetActive(true);
                 bSwap.SetActive(true);
@@ -653,8 +658,8 @@ public class UIManager : MonoSingleton<UIManager>
                 bGatherB.SetActive(false);
             }
 
-            // Check if we was in build mode
-            if (isBuildModeOn == true) {
+            // Check if we was in build or remove mode
+            if (isBuildModeOn == true || isRemoveModeOn == true) {
                 bCancel.SetActive(true);
                 bRotate.SetActive(true);
                 stateText.SetActive(true);
@@ -666,8 +671,8 @@ public class UIManager : MonoSingleton<UIManager>
                 bRotate.SetActive(false);
             }
 
-            // Check if we wasn't in build mode and inventory closed to show Visual Icon for Fight mode
-            if (isBuildModeOn == false && isInventoryOpen != true) {
+            // Check if we wasn't in build or remove mode and inventory closed to show Visual Icon for Fight mode
+            if (isBuildModeOn == false && isRemoveModeOn == false && isInventoryOpen != true) {
                 viFight.SetActive(true);
             }
         }
