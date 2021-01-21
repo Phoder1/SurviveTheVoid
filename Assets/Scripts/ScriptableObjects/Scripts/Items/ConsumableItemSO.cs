@@ -68,6 +68,16 @@ public class EffectData
 	[Tooltip("The time between additions of the amount, when set to overtime.")] 
 	[Min(0.03f)]
 	public float tickTime;
+
+    public EffectData(StatType effectStatType, EffectType effectType, float amount, float duration, float tickTime, bool inPercentage = false, bool isRelativeToMax = true) {
+        this.effectStatType = effectStatType;
+        this.effectType = effectType;
+        this.inPercentage = inPercentage;
+        this.isRelativeToMax = isRelativeToMax;
+        this.amount = amount;
+        this.duration = duration;
+        this.tickTime = tickTime;
+    }
 }
 
 
