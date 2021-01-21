@@ -77,16 +77,16 @@ public class GatherableState : ITileState
     public bool isSpecialInteraction => tile.isSpecialInteraction;
     public bool GetIsGatherable => tile.GetStages[currentStage].GetIsGatherable;
 
-    public void GatherInteraction(Vector2Int gridPosition, TileMapLayer tileMapLayer) {
+    public void GatherInteraction(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
         if (GetIsGatherable) {
             Debug.Log("Tried gathering");
             if (tile.GetStages[currentStage].GetDestroyOnGather || currentStage == 0)
-                GridManager._instance.SetTile(null, gridPosition, tileMapLayer, true);
+                Remove(gridPosition, tilemapLayer);
             else {
                 currentStage--;
                 if (!reachedMaxStage)
-                    InitEvent(gridPosition, tileMapLayer);
-                GridManager._instance.SetTile(tileSlot, gridPosition, tileMapLayer, true);
+                    InitEvent(gridPosition, tilemapLayer);
+                GridManager._instance.SetTile(tileSlot, gridPosition, tilemapLayer, true);
             }
 
             Inventory inventory = Inventory.GetInstance;
@@ -97,7 +97,10 @@ public class GatherableState : ITileState
             }
         }
     }
-
+    private void Remove(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
+        CancelEvent(gridPosition, tilemapLayer);
+        GridManager._instance.SetTile(null, gridPosition, tilemapLayer, true);
+    }
     public void CancelEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
         if (eventInstance != null)
             eventInstance.Cancel();
@@ -119,8 +122,10 @@ public class GatherableState : ITileState
         if (eventInstance == null && tile.GetStages.Length > 1 && !reachedMaxStage)
             InitEvent(gridPosition, tilemapLayer);
     }
-    private void InitEvent(Vector2Int gridPosition, TileMapLayer tileMapLayer) {
-        eventInstance = new TileGrowEvent(Time.time + Random.Range(tile.GetMinGrowTime, tile.GetMaxGrowTime), tileSlot, gridPosition, tileMapLayer);
+    private void InitEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
+        if (eventInstance != null)
+            CancelEvent(gridPosition, tilemapLayer);
+        eventInstance = new TileGrowEvent(Time.time + Random.Range(tile.GetMinGrowTime, tile.GetMaxGrowTime), tileSlot, gridPosition, tilemapLayer);
     }
 
 
