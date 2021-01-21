@@ -198,6 +198,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         IsHoldingItem = false;
         DraggedItem = -1;
         DroppedItem = -1;
+        UpdateInventoryToUI();
     }
     public void SwapItems()
     {
@@ -209,7 +210,8 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     }
     public void DeleteItem(int buttonId)
     {
-        inventory.RemoveItemFromInventory(0, inventory.GetItemFromInventoryButton(0, buttonId));
+        inventory.RemoveItemFromButton(buttonId, 0);
+        ResetSwap();
     }
 
 
