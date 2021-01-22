@@ -8,7 +8,7 @@
 
     }
     public override void Init() {
-        singletons = new ISingleton[11] {
+        singletons = new ISingleton[12] {
             CameraController._instance,
             PlayerMovementHandler._instance,
              GridManager._instance,
@@ -19,7 +19,8 @@
              GodmodeScript._instance,
              CraftingManager._instance,
              InventoryUIManager._instance,
-             EffectHandler._instance
+             EffectHandler._instance,
+             ConsumeablesHandler._instance
 
         };
 
