@@ -72,15 +72,14 @@ public class RemovalState : StateBase
 
         if (currentTileHit == null || currentTileHit.tile == null || gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) == null)
             return;
-        Debug.Log("Found!");
+
         tileSlotCache = currentTileHit.tile;
 
         if (Input.GetMouseButtonDown(0))
-        {  
             ConfirmRemoval();
 
           
-        }
+        
     }
 }
 
