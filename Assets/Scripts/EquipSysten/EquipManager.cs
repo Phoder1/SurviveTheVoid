@@ -93,6 +93,7 @@ public abstract  class EquipAbst
         SetEquipedItem = _equipedItem;
         // apply effect
         // updateUI
+
     }
 
     public void UnEquipItem()
@@ -106,10 +107,12 @@ public abstract  class EquipAbst
             Inventory.GetInstance.AddToInventory(0, equipedItem);
 
 
-        
+
         equipedItem = null;
- // Cancel Effect
-   // updateUI
+        // Cancel Effect
+        // updateUI
+
+
     }
 
     public int? GetItemDurability => equipedItem.durability;

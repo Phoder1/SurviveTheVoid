@@ -198,6 +198,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
         DraggedItem = -1;
         DroppedItem = -1;
+        DraggedIntoBar = -1;
     }
     public void SwapItems()
     {
@@ -226,58 +227,195 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     #endregion
 
     #region Equip
-    [Header("Equip Related")]
-    // 0 = head, 1 = Chest, 2 = Legging, 3 = Gloves, 4 = Shoes
-    public Image[] EquipSlots;
-    public int EquipIndex;
-    // public GearItemSO[] EquippedSlots;
+    //[Header("Equip Related")]
+    //// 0 = head, 1 = Chest, 2 = Legging, 3 = Gloves, 4 = Shoes
+    //public Image[] EquipSlots;
+    //public int EquipIndex;
+    //// public GearItemSO[] EquippedSlots;
 
-    public void UpdateEquipUI(GearItemSO Gear, Sprite GearSprite)
-    {
-        switch (Gear.GetGearTpye)
-        {
-            case GearItemSO.GearType.None:
-                break;
-            case GearItemSO.GearType.Helmet:
-                EquipSlots[0].sprite = GearSprite;
-                break;
-            case GearItemSO.GearType.Chest:
-                EquipSlots[1].sprite = GearSprite;
-                break;
-            case GearItemSO.GearType.Gloves:
-                EquipSlots[2].sprite = GearSprite;
-                break;
-            case GearItemSO.GearType.Legging:
-                EquipSlots[3].sprite = GearSprite;
-                break;
-            case GearItemSO.GearType.Shoes:
-                EquipSlots[4].sprite = GearSprite;
-                break;
-            default:
-                break;
-        }
-    }
+    //public void UpdateEquipUI(ItemSO Gear, Sprite GearSprite)
+    //{
+    //    switch (Gear.GetEquipType)
+    //    {
+    //        case EquipType.NotEquip:
+    //            break;
+    //        case EquipType.Helmet:
+    //            EquipSlots[0].sprite = GearSprite;
+    //            break;
+    //        case EquipType.Top:
+    //            EquipSlots[1].sprite = GearSprite;
+    //            break;
+    //        case EquipType.Bottom:
+    //            EquipSlots[2].sprite = GearSprite;
+    //            break;
+    //        case EquipType.Boots:
+    //            EquipSlots[3].sprite = GearSprite;
+    //            break;
+    //        case EquipType.Gloves:
+    //            EquipSlots[4].sprite = GearSprite;
+    //            break;
+    //        default:
+    //            break;
+    //    }
 
-    public void Test(int EquipmentSlot)
-    {
 
-        if (DraggedItem >= 0)
-        {
-            var checkIfSlotIsItem = Inventory.GetInstance.GetItemFromInventoryButton(0, EquipmentSlot);
+    //switch (Gear.GetEquipType)
+    //{
+    //    case GearItemSO.GearType.None:
+    //        break;
+    //    case GearItemSO.GearType.Helmet:
+    //        EquipSlots[0].sprite = GearSprite;
+    //        break;
+    //    case GearItemSO.GearType.Chest:
+    //        EquipSlots[1].sprite = GearSprite;
+    //        break;
+    //    case GearItemSO.GearType.Gloves:
+    //        EquipSlots[2].sprite = GearSprite;
+    //        break;
+    //    case GearItemSO.GearType.Legging:
+    //        EquipSlots[3].sprite = GearSprite;
+    //        break;
+    //    case GearItemSO.GearType.Shoes:
+    //        EquipSlots[4].sprite = GearSprite;
+    //        break;
+    //    default:
+    //        break;
+    //}
+    //}
 
-            if (EquipManager.GetInstance.EquipItem(EquipmentSlot, checkIfSlotIsItem))
-            {
-                Debug.Log("Equipping: " + checkIfSlotIsItem.item.getItemName);
-            }
-            else
-            {
-                Debug.Log("this is not the right spot to place it");
-            }
-        }
+    //public void Test(int EquipmentSlot)
+    //{
 
-    }
+    //    if (DraggedItem >= 0)
+    //    {
+    //        var checkIfSlotIsItem = Inventory.GetInstance.GetItemFromInventoryButton(0, EquipmentSlot);
+
+    //        if (EquipManager.GetInstance.EquipItem(EquipmentSlot, checkIfSlotIsItem))
+    //        {
+    //            Debug.Log("Equipping: " + checkIfSlotIsItem.item.getItemName);
+    //        }
+    //        else
+    //        {
+    //            Debug.Log("this is not the right spot to place it");
+    //            ResetSwap();
+    //        }
+
+    //    }
+
+
+
+
+
+    //}
 
 
     #endregion
 
+    #region HotKey
+    [Header("HotKey Related")]
+    //public ConsumableHotBar[] HotBars;
+    //public TextMeshProUGUI[] HotBarsSlotsAmount;
+    public int DraggedIntoBar;
+
+    public int HotKeyDragged;
+    public int HotKeyDraggedInto;
+
+    //public ItemSlot GetItem(int ButtonId)
+    //{
+    //    var checkIfSlotIsItem = Inventory.GetInstance.GetItemFromInventoryButton(0, ButtonId);
+    //    return checkIfSlotIsItem;
+    //}
+
+    //public bool GetConsumableToHotKey(ItemSlot Consumable, int Bar)
+    //{
+    //    if (Consumable.item.GetItemType == ItemType.Consumable && !HotBars[Bar].HasItem)
+    //    {
+    //        HotBars[Bar].ItemHolder = Consumable;
+    //        inventory.RemoveItemFromButton(DraggedItem, 0);
+    //        HotBars[Bar].HasItem = true;
+    //        HotBars[Bar].ShowEquippedConsumable();
+    //        UpdateSlots(Bar);
+    //        ResetSwap();
+    //        UpdateInventoryToUI();
+    //        return true;
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("you can't drag that type into the hotkeys only consumables!");
+    //        ResetSwap();
+    //    }
+
+    //    return false;
+
+    //}
+
+    //public void UpdateSlots(int Bar)
+    //{
+    //    if (HotBars[Bar].ItemHolder != null  && HotBars[Bar].ItemHolder.amount > 0)
+    //    {
+    //        HotBars[Bar].ShowEquippedConsumable();
+    //        HotBarsSlotsAmount[Bar].text = HotBars[Bar].ItemHolder.amount.ToString();
+    //    }
+    //    else
+    //    {
+    //        HotBarsSlotsAmount[Bar].text = "";
+    //        HotBars[Bar].NoConsumableEquipped();
+    //    }
+    //}
+
+    //public void OnPressedHotKey(int ButtonId)
+    //{
+    //    if (HotBars[ButtonId].ItemHolder.item.GetItemType == ItemType.Consumable)
+    //    {
+    //        if (EffectHandler._instance.GetEffectCoolDown(HotBars[ButtonId].ItemHolder.item as ConsumableItemSO))
+    //        {
+    //                HotBars[ButtonId].ItemHolder.amount -= 1;
+    //                Debug.Log("Consumed: " + HotBars[ButtonId].ItemHolder.item.getItemName);
+    //                (HotBars[ButtonId].ItemHolder.item as ConsumableItemSO).ApplyEffect();
+    //            if(HotBars[ButtonId].ItemHolder.amount == 0)
+    //            {
+    //                HotBars[ButtonId].ItemHolder.item = null;
+    //            }
+    //            UpdateSlots(ButtonId);
+    //        }
+
+    //    }
+    //}
+
+    //public void SwapBetweenKeys(int FirstHotKey,int SecondHotKey)
+    //{
+    //    ItemSlot TempItem = HotBars[FirstHotKey].ItemHolder;
+    //    HotBars[FirstHotKey].ItemHolder = HotBars[SecondHotKey].ItemHolder;
+    //    HotBars[SecondHotKey].ItemHolder = TempItem;
+    //    HotBars[FirstHotKey].IsDraggingThis = false;
+    //    HotBars[SecondHotKey].IsDraggingThis = false;
+
+
+    //    UpdateSlots(FirstHotKey);
+    //    UpdateSlots(SecondHotKey);
+
+    //}
+
+    //public void SwapBetweenKeyToInventory(int KeySlot,int InventorySlot)
+    //{
+    //    ItemSlot checkIfSlotIsItem = Inventory.GetInstance.GetItemFromInventoryButton(0, InventorySlot);
+
+    //    if (checkIfSlotIsItem != null)
+    //    {
+    //        if (checkIfSlotIsItem.item.GetItemType != ItemType.Consumable)
+    //        {
+    //            Debug.Log("Can switch with item who is not consumable");
+    //        }
+    //    }
+    //    else if (checkIfSlotIsItem == null)
+    //    {
+    //        inventory.AddToInventory(0, HotBars[KeySlot].ItemHolder);
+    //        HotBars[KeySlot].ItemHolder = null;
+    //        UpdateSlots(KeySlot);
+    //    }
+    //}
+
+
+
+    #endregion
 }

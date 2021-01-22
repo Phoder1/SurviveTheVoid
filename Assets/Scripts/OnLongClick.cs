@@ -29,6 +29,9 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     [SerializeField]
     private Image fillImage;
+    public int InventorySlotIndex;
+
+
 
     public int DraggedItem;
     bool IsDragged;
@@ -63,10 +66,13 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             {
                 InventoryUIManager._instance.DeleteItem(InventoryUIManager._instance.DraggedItem);
             }
-            else if (InventoryUIManager._instance.EquipIndex >= 0)
-            {
-                InventoryUIManager._instance.Test(EquipmentSlot);
-            }
+            //else if (InventoryUIManager._instance.EquipIndex >= 0)
+            //{
+            //    InventoryUIManager._instance.Test(EquipmentSlot);
+            //}else if (InventoryUIManager._instance.DraggedIntoBar >= 0 && InventoryUIManager._instance.GetConsumableToHotKey(InventoryUIManager._instance.GetItem(InventoryUIManager._instance.DraggedItem), InventoryUIManager._instance.DraggedIntoBar))
+            //{
+               
+            //}
             else
             {
                 InventoryUIManager._instance.ResetSwap();
@@ -81,10 +87,10 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
         if(clickType == ClickType.Equip)
         {
-            if(InventoryUIManager._instance.EquipIndex >= 0)
-            {
-                InventoryUIManager._instance.Test(EquipmentSlot);
-            }
+            //if(InventoryUIManager._instance.EquipIndex >= 0)
+            //{
+            //    InventoryUIManager._instance.Test(EquipmentSlot);
+            //}
         }
 
 
@@ -163,7 +169,7 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
         if (clickType == ClickType.Equip)
         {
-            InventoryUIManager._instance.EquipIndex = -1;
+            //InventoryUIManager._instance.EquipIndex = -1;
             DraggedInto = false;
         }
 
@@ -180,12 +186,18 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             {
                 onDropItem.Invoke();
             }
+            //else if(InventoryUIManager._instance.HotKeyDragged >= 0)
+            //{
+            //    InventoryUIManager._instance.DroppedItem = InventorySlotIndex;
+            //}
+
+
         }
         if (clickType == ClickType.Equip)
         {
             if (InventoryUIManager._instance.DraggedItem >= 0)
             {
-                InventoryUIManager._instance.EquipIndex = EquipmentSlot;
+                //InventoryUIManager._instance.EquipIndex = EquipmentSlot;
                 DraggedInto = true;
             }
 
