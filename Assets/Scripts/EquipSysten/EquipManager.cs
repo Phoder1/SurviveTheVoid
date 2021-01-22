@@ -70,7 +70,7 @@ public class EquipManager
         gearItemCache= (equipSlots[buttonID].item as GearItemSO);
 
         for (int i = 0; i < gearItemCache.effectDatas.Length; i++)
-            effectHandler.BeginAllConsumeableEffects(gearItemCache.effectDatas);
+            //effectHandler(gearItemCache.effectDatas);
 
         // apply ui
         InventoryUIManager._instance.UpdateInventoryToUI();
@@ -90,7 +90,7 @@ public class EquipManager
         // disable effect
         gearItemCache = (equipSlots[buttonID].item as GearItemSO);
         for (int i = 0; i < gearItemCache.effectDatas.Length; i++)
-            effectHandler.StopAllEffects(EffectHandler.GetStatControllers(gearItemCache.effectDatas)); 
+            //effectHandler.StopAllEffects(EffectHandler.GetStatControllers(gearItemCache.effectDatas)); 
 
 
         equipSlots[buttonID] = null;
