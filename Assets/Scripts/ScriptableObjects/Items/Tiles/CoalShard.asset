@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30b7874b8e5eab142871768f1d102839, type: 3}
+  m_Name: CoalShard
+  m_EditorClassIdentifier: 
+  itemID: 0
+  itemName: Coal Shard
+  maxStackSize: 20
+  description: 
+  sprite: {fileID: 21300000, guid: ea332612fcf856942b4729c8305da3ca, type: 3}
+  mainTileBase: {fileID: 11400000, guid: 67fa51cf16cd2f04a8898004d71c18dd, type: 2}
+  isSolid: 1
+  isAirSource: 0
+  stages:
+  - stageTile: {fileID: 11400000, guid: 67fa51cf16cd2f04a8898004d71c18dd, type: 2}
+    isGatherable: 1
+    destroyOnGather: 1
+    drops:
+    - item: {fileID: 11400000, guid: 4133f645eb9dd76458d7303af391b871, type: 2}
+      Chance: 1
+      minAmount: 1
+      maxAmount: 2
+  - stageTile: {fileID: 11400000, guid: aaf21959ca3c5374fa2db41848c2e68f, type: 2}
+    isGatherable: 1
+    destroyOnGather: 0
+    drops:
+    - item: {fileID: 11400000, guid: 4133f645eb9dd76458d7303af391b871, type: 2}
+      Chance: 1
+      minAmount: 1
+      maxAmount: 2
+    - item: {fileID: 11400000, guid: 4133f645eb9dd76458d7303af391b871, type: 2}
+      Chance: 1
+      minAmount: 1
+      maxAmount: 3
+  - stageTile: {fileID: 11400000, guid: 3c8bb5f7c6f79fc4daf10a14cf8823e6, type: 2}
+    isGatherable: 1
+    destroyOnGather: 0
+    drops:
+    - item: {fileID: 11400000, guid: 4133f645eb9dd76458d7303af391b871, type: 2}
+      Chance: 1
+      minAmount: 2
+      maxAmount: 3
+    - item: {fileID: 11400000, guid: 4133f645eb9dd76458d7303af391b871, type: 2}
+      Chance: 1
+      minAmount: 1
+      maxAmount: 3
+    - item: {fileID: 11400000}
+      Chance: 0.2
+      minAmount: 1
+      maxAmount: 1
+  toolType: 1
+  minGrowTime: 10
+  maxGrowTime: 20
+  GatheringTime: 4

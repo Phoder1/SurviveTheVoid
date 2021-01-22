@@ -19,7 +19,19 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
     Inventory inventory;
     public Inventory GetInventory => inventory;
+
+
+    [Header("Slots Related")]
     public Color SlotColor;
+    public Image TrashCanBackGround;
+
+    public override void Init()
+    {
+        inventory = Inventory.GetInstance;
+    }
+
+
+
 
 
 
@@ -83,10 +95,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         }
     }
 
-    public override void Init()
-    {
-        inventory = Inventory.GetInstance;
-    }
+
 
     public void UpdateInventoryToUI()
     {
@@ -160,27 +169,28 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     public void GetDroppedItem(int buttonId)
     {
         if (DraggedItem != buttonId)
-            DroppedItem = buttonId;
-
-        for (int i = 0; i < InventorySlots.Length; i++)
         {
-            if (i == DroppedItem)
-            {
-                InventorySlots[i].GetComponent<Image>().color = Color.yellow;
-            }
-            else if (i != DraggedItem)
-            {
-                InventorySlots[i].GetComponent<Image>().color = SlotColor;
-            }
+            DroppedItem = buttonId;
+            HightLightDrop(buttonId);
         }
+      
 
     }
+
+    public void HightLightDrop(int buttonId)
+    {
+        InventorySlots[buttonId].GetComponent<Image>().color = Color.yellow;
+    }
+
+
     public void CancelDropHighLight(int buttonId)
     {
         if (buttonId >= 0)
         {
             InventorySlots[DroppedItem].GetComponent<Image>().color = SlotColor;
-            ResetSwap();
+            DroppedItem = -1;
+            UpdateInventoryToUI(); 
+            //ResetSwap();
         }
     }
 
@@ -198,7 +208,6 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         IsHoldingItem = false;
         DraggedItem = -1;
         DroppedItem = -1;
-        UpdateInventoryToUI();
     }
     public void SwapItems()
     {
@@ -211,10 +220,17 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     public void DeleteItem(int buttonId)
     {
         inventory.RemoveItemFromButton(buttonId, 0);
+        UpdateInventoryToUI();
         ResetSwap();
     }
 
-
-
+    public void HighLightTrashCan()
+    {
+        TrashCanBackGround.color = Color.red;
+    }
+    public void RemoveTrashHighLight()
+    {
+        TrashCanBackGround.color = SlotColor;
+    }
 
 }

@@ -30,7 +30,7 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private Image fillImage;
 
     public int DraggedItem;
-
+    bool IsDragged;
 
 
 
@@ -42,15 +42,17 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public void OnPointerUp(PointerEventData evendata)
     {
 
-        if (pointerDownTimer < requiredHoldTime && pointerDown && onShortClick != null)
+        if (pointerDownTimer < requiredHoldTime && pointerDown && onShortClick != null && !IsDragged)
         {
             onShortClick.Invoke();
         }
         if(clickType == ClickType.Inventory)
         {
-            if (InventoryUIManager._instance.DraggedItem != -1 && InventoryUIManager._instance.DroppedItem != -1)
+            if (InventoryUIManager._instance.DraggedItem != -1 && InventoryUIManager._instance.DroppedItem != -1 && !InventoryUIManager._instance.IsDragginToTrash)
             {
                 InventoryUIManager._instance.SwapItems();
+
+
             }else if (InventoryUIManager._instance.IsDragginToTrash)
             {
                 InventoryUIManager._instance.DeleteItem(InventoryUIManager._instance.DraggedItem);
@@ -87,13 +89,14 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                     onLongClick.Invoke();
 
                 Reset();
-            }else if (pointerDownTimer >= requiredHoldTime && clickType == ClickType.Inventory)
+            }
+            else if (pointerDownTimer >= requiredHoldTime && clickType == ClickType.Inventory && !IsDragged)
             {
                 if (onLongClick != null)
                     onLongClick.Invoke();
 
 
-
+                
                 //Debug.Log(DraggedItem.item.getItemName);
             }
 
@@ -118,6 +121,7 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         pointerDownTimer = 0;
         if (fillImage != null)
             fillImage.fillAmount = pointerDownTimer / requiredHoldTime;
+        IsDragged = false;
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -126,6 +130,14 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
         if(clickType == ClickType.Inventory)
         {
+              if(pointerDown)
+            {
+                IsDragged = true;
+                onLongClick.Invoke();
+                //Debug.Log("Test");
+            }
+
+
 
             InventoryUIManager._instance.CancelDropHighLight(InventoryUIManager._instance.DroppedItem);
 
@@ -138,11 +150,13 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public void OnPointerEnter(PointerEventData eventData)
     {
         DraggedItem = InventoryUIManager._instance.DraggedItem;
-            if (InventoryUIManager._instance.IsHoldingItem && InventoryUIManager._instance.DraggedItem != InventoryUIManager._instance.DroppedItem)
-            {
-                onDropItem.Invoke();
-            }
-        
+
+
+        if (    InventoryUIManager._instance.DraggedItem != InventoryUIManager._instance.DroppedItem)
+        {
+            onDropItem.Invoke();
+        }
+
     }
 }
 
