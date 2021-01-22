@@ -29,22 +29,12 @@ public class GearItemSO : ItemSO
 
 
 
-    EquipStats[] equipstats;
-
-    ///  MAXHP , MAXAIR 
-    ///   HP    ,  Air 
-    ///  AttackDMG , MovementSpeed , GatheringSpeed
-    ///   isPrecentage
+    public EquipStats[] equipstats;
 
 }
 
 public class EquipStats {
-
-
-
-
-
-
-
-
+    public StatType statType;
+    public bool isPercentage;
+     public float amount;
 }
