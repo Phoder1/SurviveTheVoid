@@ -297,15 +297,19 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     {
         ItemSlot DraggedTemp = inventory.GetItemFromInventoryButton(TakingFromInventory,DraggedItem);
         ItemSlot DroppedTemp = inventory.GetItemFromInventoryButton(LookingAtInventory, DroppedOn);
-       if(DraggedTemp.item.GetItemType == ItemType.Consumable && LookingAtInventory == 1)
+        if (DroppedTemp == null && DraggedTemp.item.GetItemType == ItemType.Consumable)
         {
             inventory.ChangeBetweenItems(TakingFromInventory, LookingAtInventory, DraggedItem, DroppedOn);
         }
-        else if(DraggedTemp.item.GetItemType != ItemType.Consumable && LookingAtInventory == 1)
+        else if (DraggedTemp.item.GetItemType == ItemType.Consumable && LookingAtInventory == 1)
+        {
+            inventory.ChangeBetweenItems(TakingFromInventory, LookingAtInventory, DraggedItem, DroppedOn);
+        }
+        else if (DraggedTemp.item.GetItemType != ItemType.Consumable && LookingAtInventory == 1 || DroppedTemp.item.GetItemType != ItemType.Consumable && TakingFromInventory == 1)
         {
             Debug.Log("Cant Drag Non Consumable items into hotkeys");
         }
-        else if(LookingAtInventory == 0)
+        else
         {
             inventory.ChangeBetweenItems(TakingFromInventory, LookingAtInventory, DraggedItem, DroppedOn);
         }
