@@ -1,5 +1,7 @@
 ﻿
 using System.Runtime.InteropServices.WindowsRuntime;
+using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class EquipManager
 {
@@ -78,12 +80,12 @@ public class EquipManager
 
         equipSlotCache = null;
     }
-    public void UnEquipItem(int buttonID)
+    public void UnEquipItem(int buttonID , int secondButtonID)
     {
         if (equipSlots[buttonID] == null)
             return;
 
-
+        inventory.ChangeBetweenItems(0,2 , )
         inventory.AddToInventory(0, equipSlots[buttonID]);
 
 

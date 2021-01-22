@@ -29,7 +29,22 @@ public class GearItemSO : ItemSO
 
 
 
-    public EffectData[] effectDatas;
+    EquipStats[] equipstats;
+
+    ///  MAXHP , MAXAIR 
+    ///   HP    ,  Air 
+    ///  AttackDMG , MovementSpeed , GatheringSpeed
+    ///   isPrecentage
 
 }
 
+public class EquipStats {
+
+
+
+
+
+
+
+
+}
