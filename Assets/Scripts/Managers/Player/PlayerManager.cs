@@ -31,7 +31,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     private Stat moveSpeed;
     private Stat gatheringSpeed;
     Coroutine gatherCoroutine = null;
-    private Vector2Int lastCheckPosition = new Vector2Int(int.MaxValue,int.MaxValue);
+    private Vector2Int lastCheckPosition = new Vector2Int(int.MaxValue, int.MaxValue);
     private float lastTreeCheckTime = 0;
     private const float treeCheckInterval = 0.5f;
     private Vector2Int lastPosition;
@@ -68,16 +68,16 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         CheckForTrees();
     }
 
+    private void FixedUpdate() {
+        Vector2 movementVector = inputManager.VJAxis * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue;
+        movementVector.y *= 0.5f;
+        if (movementVector != Vector2.zero) {
+            playerController.Move(movementVector);
+        }
+    }
 
 
     private void LateUpdate() {
-        if (!anyInteracted) {
-            Vector2 movementVector = inputManager.VJAxis * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue;
-            movementVector.y *= 0.5f;
-            if (movementVector != Vector2.zero) {
-                playerController.Move(movementVector);
-            }
-        }
         if (specialWasPressed != specialButton) {
             specialButton = specialWasPressed;
             if (!specialButton)
@@ -128,7 +128,6 @@ public class PlayerManager : MonoSingleton<PlayerManager>
             }
         }
         else {
-            anyInteracted = true;
             Vector3 destination = gridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true);
             destination.z = transform.position.z;
             float distance = Vector2.Distance(transform.position, destination);
@@ -163,7 +162,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         closestTile = null;
     }
     private void UpdateGridDirection() {
-        float angle = Vector2.SignedAngle(inputManager.VJAxis, new Vector2(-0.25f,0.25f));
+        float angle = Vector2.SignedAngle(inputManager.VJAxis, new Vector2(-0.25f, 0.25f));
         int direction = Mathf.RoundToInt(angle / 90);
         switch (direction) {
             case 0:
