@@ -24,24 +24,44 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     public override void Init()
     {
         inventory = Inventory.GetInstance;
+        HotKeysInventory = inventory.GetInventoryFromDictionary(1);
+        
     }
 
     // Update is called once per frame
-  
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            inventory.AddToInventory(1,new ItemSlot(CraftingManager._instance.items.getitemsArr[0],5));
+            UpdateHotKeysToUI();
+        }
+    }
 
 
 
     #region Inventory Slots
 
     //public boolean = setactive of all inventory,  only update inventory after this boolean is true, if false dont update
+    [SerializeField]
+    int LookingAtInventory;
+    [SerializeField]
+    int TakingFromInventory;
 
+    public void WhatInventory(int id)
+    {
+        LookingAtInventory = id;
+    }
+    public void TakingFrom(int id)
+    {
+        TakingFromInventory = id;
+    }
 
-
-    
 
     public void OnPressedInventoryButton(int buttonId)
     {
-        var checkIfSlotIsItem = inventory.GetItemFromInventoryButton(0, buttonId);
+        Debug.Log("Short press");
+        var checkIfSlotIsItem = inventory.GetItemFromInventoryButton(LookingAtInventory, buttonId);
 
 
         if (checkIfSlotIsItem == null || checkIfSlotIsItem.item == null)
@@ -64,7 +84,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         {
             if (EffectHandler._instance.GetEffectCoolDown(itemCache.item as ConsumableItemSO))
             {
-                if (inventory.RemoveItemFromInventory(0, new ItemSlot(itemCache.item, 1)))
+                if (inventory.RemoveItemFromInventory(LookingAtInventory, new ItemSlot(itemCache.item, 1)))
                 {
                     Debug.Log("Consumed: " + itemCache.item.getItemName);
                     (itemCache.item as ConsumableItemSO).ApplyEffect();
@@ -75,6 +95,10 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
 
     }
+
+
+
+
 
     public void UpdateInventoryToUI()
     {
@@ -196,6 +220,9 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         DraggedItem = -1;
         DroppedItem = -1;
         DraggedIntoBar = -1;
+        HotKeyDragged = -1;
+        LookingAtInventory = -1;
+        TakingFromInventory = -1;
     }
     public void SwapItems()
     {
@@ -242,16 +269,50 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     #region HotKey
     [Header("HotKey Related")]
     public int DraggedIntoBar;
-
     public int HotKeyDragged;
     public int HotKeyDraggedInto;
-
+    ItemSlot[] HotKeysInventory;
+    public ConsumableHotBar[] ConsumableHotKey;
     
+
+
     public void UpdateHotKeysToUI()
     {
         //update hotkeys
-
+        for (int i = 0; i < HotKeysInventory.Length; i++)
+        {
+            if(HotKeysInventory[i] != null)
+            {
+                ConsumableHotKey[i].ShowEquippedConsumable(HotKeysInventory[i]);
+            }
+            else
+            {
+                ConsumableHotKey[i].NoConsumableEquipped();
+            }
+        }
         UpdateInventoryToUI();
+    }
+
+    public void SwitchKeyInventory(int DraggedItem,int DroppedOn)
+    {
+        ItemSlot DraggedTemp = inventory.GetItemFromInventoryButton(TakingFromInventory,DraggedItem);
+        ItemSlot DroppedTemp = inventory.GetItemFromInventoryButton(LookingAtInventory, DroppedOn);
+       if(DraggedTemp.item.GetItemType == ItemType.Consumable && LookingAtInventory == 1)
+        {
+            inventory.ChangeBetweenItems(TakingFromInventory, LookingAtInventory, DraggedItem, DroppedOn);
+        }
+        else if(DraggedTemp.item.GetItemType != ItemType.Consumable && LookingAtInventory == 1)
+        {
+            Debug.Log("Cant Drag Non Consumable items into hotkeys");
+        }
+        else if(LookingAtInventory == 0)
+        {
+            inventory.ChangeBetweenItems(TakingFromInventory, LookingAtInventory, DraggedItem, DroppedOn);
+        }
+
+
+        ResetSwap();
+        UpdateHotKeysToUI();
     }
 
 

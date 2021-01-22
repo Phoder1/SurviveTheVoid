@@ -9,12 +9,11 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public enum ClickType
     {
         Crafting,
-        Inventory,
-        Equip
+        Inventory
     }
 
     public ClickType clickType;
-
+    public int ChestId;
     private bool pointerDown;
     private float pointerDownTimer;
     private bool ShortClick;
@@ -29,17 +28,12 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     [SerializeField]
     private Image fillImage;
-    public int InventorySlotIndex;
-
-
 
     public int DraggedItem;
+    [SerializeField]
     bool IsDragged;
 
-    [SerializeField]
-    int EquipmentSlot;
-    [SerializeField]
-    bool DraggedInto;
+
 
     public void OnPointerDown(PointerEventData evenData)
     {
@@ -51,7 +45,6 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
         if (pointerDownTimer < requiredHoldTime && pointerDown && onShortClick != null && !IsDragged)
         {
-            if(onShortClick != null)
             onShortClick.Invoke();
         }
         if (clickType == ClickType.Inventory)
@@ -66,31 +59,21 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             {
                 InventoryUIManager._instance.DeleteItem(InventoryUIManager._instance.DraggedItem);
             }
-            //else if (InventoryUIManager._instance.EquipIndex >= 0)
-            //{
-            //    InventoryUIManager._instance.Test(EquipmentSlot);
-            //}else if (InventoryUIManager._instance.DraggedIntoBar >= 0 && InventoryUIManager._instance.GetConsumableToHotKey(InventoryUIManager._instance.GetItem(InventoryUIManager._instance.DraggedItem), InventoryUIManager._instance.DraggedIntoBar))
-            //{
-               
-            //}
+            else if (InventoryUIManager._instance.DraggedIntoBar >= 0 && InventoryUIManager._instance.DraggedItem >= 0)
+            {
+
+                InventoryUIManager._instance.SwitchKeyInventory(InventoryUIManager._instance.DraggedItem, InventoryUIManager._instance.DraggedIntoBar);
+            }
             else
             {
                 InventoryUIManager._instance.ResetSwap();
             }
-           
 
 
 
 
 
             DraggedItem = -1;
-        }
-        if(clickType == ClickType.Equip)
-        {
-            //if(InventoryUIManager._instance.EquipIndex >= 0)
-            //{
-            //    InventoryUIManager._instance.Test(EquipmentSlot);
-            //}
         }
 
 
@@ -133,7 +116,7 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             }
         }
 
-       
+
 
 
 
@@ -161,47 +144,34 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 //Debug.Log("Test");
             }
 
-
+            InventoryUIManager._instance.WhatInventory(-1);
 
             InventoryUIManager._instance.CancelDropHighLight(InventoryUIManager._instance.DroppedItem);
 
             DraggedItem = -1;
         }
-        if (clickType == ClickType.Equip)
-        {
-            //InventoryUIManager._instance.EquipIndex = -1;
-            DraggedInto = false;
-        }
+
 
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (clickType == ClickType.Inventory)
+        DraggedItem = InventoryUIManager._instance.DraggedItem;
+
+       
+
+        if (InventoryUIManager._instance.DraggedItem != InventoryUIManager._instance.DroppedItem)
         {
-
-
-            DraggedItem = InventoryUIManager._instance.DraggedItem;
-            if (InventoryUIManager._instance.DraggedItem != InventoryUIManager._instance.DroppedItem)
-            {
-                onDropItem.Invoke();
-            }
-            //else if(InventoryUIManager._instance.HotKeyDragged >= 0)
-            //{
-            //    InventoryUIManager._instance.DroppedItem = InventorySlotIndex;
-            //}
-
-
+            InventoryUIManager._instance.WhatInventory(ChestId);
+            onDropItem.Invoke();
         }
-        if (clickType == ClickType.Equip)
+
+        if(InventoryUIManager._instance.HotKeyDragged >= 0)
         {
-            if (InventoryUIManager._instance.DraggedItem >= 0)
-            {
-                //InventoryUIManager._instance.EquipIndex = EquipmentSlot;
-                DraggedInto = true;
-            }
-
+            onDropItem.Invoke();
+            InventoryUIManager._instance.WhatInventory(ChestId);
         }
+
 
     }
 }
