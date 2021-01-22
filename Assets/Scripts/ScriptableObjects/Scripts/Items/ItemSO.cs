@@ -24,19 +24,17 @@ public enum ItemName
     WoodenHoe
     //Gear
 
-
-
-
-
-
-
-
-
-
-
 }
 
-
+public enum EquipType 
+{
+    NotEquip,
+    Helmet,
+    Top,
+    Bottom,
+    Boots,
+    Gloves
+};
 
 public enum ItemType
 {
@@ -71,9 +69,21 @@ public class ItemSO : ScriptableObject
     private string description;
     public string getDescription => description;
 
+    [SerializeField]
+    EquipType equipType;
 
+    [SerializeField]
+    public EquipType GetEquipType {
+        get {
 
+            if (GetItemType  != ItemType.Equipable)
+                equipType = EquipType.NotEquip;
+            
 
+            return equipType;
+        }
+    
+    }
 
     //[SerializeField]
     //private ItemName itemEnum;
