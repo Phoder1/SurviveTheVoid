@@ -1,4 +1,5 @@
 ﻿using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +18,9 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     TextMeshProUGUI[] inventorySlotText;
 
     Inventory inventory;
+    public Inventory GetInventory => inventory;
+    public Color SlotColor;
+
 
 
     public void OnPressedInventoryButton(int buttonId)
@@ -25,22 +29,22 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
 
         if (checkIfSlotIsItem == null || checkIfSlotIsItem.item == null)
-            return; 
-        
+            return;
+
 
         ItemSlot itemCache = new ItemSlot(checkIfSlotIsItem.item, 1);
 
-       
-        
-		if (itemCache.item.GetItemType == ItemType.Building)
-		{
+
+
+        if (itemCache.item.GetItemType == ItemType.Building)
+        {
             UIManager._instance.ButtonInventory();
             PlayerStateMachine.GetInstance.SwitchState(InputState.BuildState);
             (InputManager.GetCurrentState as BuildingState).SetBuildingTile(itemCache.item as TileAbstSO);
         }
 
-		
-        if(itemCache.item.GetItemType == ItemType.Consumable)
+
+        if (itemCache.item.GetItemType == ItemType.Consumable)
         {
             if (EffectHandler._instance.GetEffectCoolDown(itemCache.item as ConsumableItemSO))
             {
@@ -54,7 +58,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         }
 
 
-	}
+    }
 
 
 
@@ -62,8 +66,8 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.P))
-        UpdateInventory();
+        if (Input.GetKeyDown(KeyCode.P))
+            UpdateInventory();
     }
 
     //public boolean = setactive of all inventory,  only update inventory after this boolean is true, if false dont update
@@ -100,7 +104,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
                 InventorySlotImage[i].sprite = inventory.GetInventory[i].item.getsprite;
 
-               UpdateInventorySlotAmountUI(i, inventory.GetInventory[i].amount,true);
+                UpdateInventorySlotAmountUI(i, inventory.GetInventory[i].amount, true);
             }
             else
             {
@@ -116,12 +120,12 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         }
     }
 
-    void SetInventorySlotActive(int Index,bool IsActive)
+    void SetInventorySlotActive(int Index, bool IsActive)
     {
         InventorySlotImage[Index].gameObject.SetActive(IsActive);
         inventorySlotText[Index].gameObject.SetActive(IsActive);
     }
-    void UpdateInventorySlotAmountUI(int Index,int Amount,bool IsItemExist)
+    void UpdateInventorySlotAmountUI(int Index, int Amount, bool IsItemExist)
     {
         if (IsItemExist && Amount > 1)
         {
@@ -133,6 +137,81 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         }
 
     }
+
+
+    public int DraggedItem;
+    public int DroppedItem;
+
+    public void OnLongInventoryPress(int buttonId)
+    {
+        if(inventory.GetItemFromInventoryButton(0,buttonId) != null && !IsHoldingItem)
+        {
+            Debug.Log("holding Item");
+            IsHoldingItem = true;
+            DraggedItem = buttonId;
+            InventorySlots[buttonId].GetComponent<Image>().color = Color.yellow;
+        }
+
+
+    }
+    public void GetDroppedItem(int buttonId)
+    {
+        if (DraggedItem != buttonId)
+            DroppedItem = buttonId;
+
+        for (int i = 0; i < InventorySlots.Length; i++)
+        {
+            if (i == DroppedItem)
+            {
+                InventorySlots[i].GetComponent<Image>().color = Color.yellow;
+            }
+            else if (i != DraggedItem)
+            {
+                InventorySlots[i].GetComponent<Image>().color = SlotColor;
+            }
+        }
+
+    }
+    public void CancelDropHighLight(int buttonId)
+    {
+        if (buttonId >= 0)
+        {
+            InventorySlots[DroppedItem].GetComponent<Image>().color = SlotColor;
+            ResetSwap();
+        }
+    }
+
+    [HideInInspector]
+    public bool IsHoldingItem;
+    [HideInInspector]
+    public bool IsDragginToTrash;
+
+    public void ResetSwap()
+    {
+        if (DraggedItem >= 0)
+            InventorySlots[DraggedItem].GetComponent<Image>().color = SlotColor;
+        if (DroppedItem >= 0)
+            InventorySlots[DroppedItem].GetComponent<Image>().color = SlotColor;
+        IsHoldingItem = false;
+        DraggedItem = -1;
+        DroppedItem = -1;
+        UpdateInventoryToUI();
+    }
+    public void SwapItems()
+    {
+        //new Color(190, 99, 22);
+
+        inventory.ChangeBetweenItems(0, 0, DraggedItem, DroppedItem);
+        UpdateInventoryToUI();
+        ResetSwap();
+    }
+    public void DeleteItem(int buttonId)
+    {
+        inventory.RemoveItemFromButton(buttonId, 0);
+        ResetSwap();
+    }
+
+
 
 
 }

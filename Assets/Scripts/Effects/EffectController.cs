@@ -52,7 +52,7 @@ public class EffectController
         }
     }
     public void Begin(EffectData effectData) {
-        if (isOnCoolDown)
+        if (effectData.effectStatType == StatType.None || isOnCoolDown)
             return;
         Stop();
         if (effectData.tickTime == 0)
