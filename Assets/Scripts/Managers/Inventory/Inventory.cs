@@ -15,6 +15,7 @@ public class Inventory
             if (_instance == null)
             {
                 _instance = new Inventory();
+                var x = EquipManager.GetInstance;
             }
 
             return _instance;
@@ -53,6 +54,7 @@ public class Inventory
         GetNewIDForChest(5);
         GetNewIDForChest(5);
             inventoryUI = InventoryUIManager._instance;
+     
     }
 
 

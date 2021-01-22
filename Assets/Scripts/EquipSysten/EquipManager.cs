@@ -1,15 +1,10 @@
-﻿
-using NUnit.Framework.Internal.Commands;
-using System;
-using System.Collections.Generic;
-
-public class EquipManager
+﻿public class EquipManager
 {
     Inventory inventory;
     PlayerStats playerStats;
     static EquipManager _instance;
-    ItemSlot equipSlotCache, toEquip;
- 
+    ItemSlot equipSlotCache;
+
     ItemSlot[] equipSlots;
     // 0 helmet
     // 1 Chest
@@ -31,40 +26,40 @@ public class EquipManager
     }
     EquipManager()
     {
-        equipSlots = inventory.GetInventoryFromDictionary(2); 
-        equipSlotCache = null;
-    
-        playerStats = PlayerStats._instance;
         inventory = Inventory.GetInstance;
+        equipSlots = inventory.GetInventoryFromDictionary(2);
+        equipSlotCache = null;
+
+        playerStats = PlayerStats._instance;
     }
 
-
-
-    public bool CheckEquip(int firstButtonID,int chestID,int? secondButtonID = null,int secondChestID = 2)
+    public bool CheckEquip(int firstButtonID, int chestID, int? secondButtonID = null, int secondChestID = 2)
     {
-        if (chestID == 2  && secondChestID == 2) { 
-          UnEquipItem(firstButtonID);
+        if (chestID == 2 && secondChestID == 2)
+        {
+            UnEquipItem(firstButtonID);
             return true;
-        }else if (chestID != 2 && secondChestID != 2)
-            return false; 
-        
-     
+        }
+        else if (chestID != 2 && secondChestID != 2)
+            return false;
+
+        equipSlotCache = null;
 
         if (secondButtonID == null)
         {
-               toEquip = inventory.GetItemFromInventoryButton(chestID, firstButtonID);
-            if (toEquip == null || toEquip.item == null)
+            equipSlotCache = inventory.GetItemFromInventoryButton(chestID, firstButtonID);
+            if (equipSlotCache == null || equipSlotCache.item == null)
                 return false;
 
 
-            if (!(toEquip.item is GearItemSO) || firstButtonID < 0 || firstButtonID >= equipSlots.Length)
+            if (!(equipSlotCache.item is GearItemSO) || firstButtonID < 0)
                 return false;
 
-            EquipItem(firstButtonID, toEquip);
+            EquipItem(chestID, firstButtonID);
             return true;
         }
 
-   
+
 
 
 
@@ -76,7 +71,6 @@ public class EquipManager
 
 
     }
-
     private void SwapItemsInEquip(int firstButtonID, int chestID, int secondButtonID, int secondChestID)
     {
 
@@ -95,38 +89,39 @@ public class EquipManager
         inventory.ChangeBetweenItems(firstButtonID, chestID, secondButtonID, secondChestID);
 
     }
-
-    public void EquipItem(int index, ItemSlot item)
+    private void EquipItem(int chestID, int buttonID)
     {
 
-        equipSlotCache = item;// might need to do new itemSlot()
+
+
+
+        int index = GetEquipSlotIndex((equipSlotCache.item as GearItemSO).GetEquipType);
         if (equipSlots[index] != null)
-        {
             UnEquipItem(index);
-        }
+        else
+            inventory.GetInventoryFromDictionary(chestID)[buttonID] = null;
+
 
 
         equipSlots[index] = equipSlotCache;
 
 
-        
-      ApplyStats((equipSlots[index].item as GearItemSO));
 
-       
+        ApplyStats((equipSlots[index].item as GearItemSO));
+
+
         InventoryUIManager._instance.UpdateInventoryToUI();
 
 
         equipSlotCache = null;
     }
-
-  
-    public void UnEquipItem(int buttonID)
+    private void UnEquipItem(int buttonID)
     {
         if (equipSlots[buttonID] == null)
             return;
 
 
-     inventory.AddToInventory(0, equipSlots[buttonID]);
+        inventory.AddToInventory(0, equipSlots[buttonID]);
 
         RemoveStats((equipSlots[buttonID].item as GearItemSO));
 
@@ -136,7 +131,7 @@ public class EquipManager
     public void LowerDurabilityOfEquipItem(EquipType equipType, int amount)
     {
 
-        if ( amount == 0)
+        if (amount == 0)
             return;
 
 
@@ -147,18 +142,18 @@ public class EquipManager
 
         if (amount < 0)
             amount *= -1;
-      
 
-        if (equipSlotCache.durability - amount <=0)
+
+        if (equipSlotCache.durability - amount <= 0)
             UnEquipItem(GetEquipSlotIndex(equipType));
 
 
         equipSlotCache.durability -= amount;
 
     }
+    public int? GetEquipDurability(EquipType equipType)
+    {
 
-    public int? GetEquipDurability(EquipType equipType) {
-    
         equipSlotCache = equipSlots[GetEquipSlotIndex(equipType)];
 
         if (equipSlotCache == null)
@@ -188,7 +183,7 @@ public class EquipManager
         }
         return 0;
     }
-   void RemoveStats(GearItemSO equip)
+    void RemoveStats(GearItemSO equip)
     {
         if (equip.equipstats.Length <= 0)
             return;
@@ -199,7 +194,7 @@ public class EquipManager
             {
                 playerStats.AddToStatValue(equip.equipstats[i].statType, -playerStats.GetStatValue(equip.equipstats[i].statType) * equip.equipstats[i].amount / 100);
                 continue;
-             }
+            }
 
 
             playerStats.AddToStatValue(equip.equipstats[i].statType, -equip.equipstats[i].amount);
@@ -208,22 +203,24 @@ public class EquipManager
 
 
     }
-    void ApplyStats(GearItemSO equip) {
+    void ApplyStats(GearItemSO equip)
+    {
 
 
         if (equip.equipstats.Length <= 0)
             return;
-        
+
         for (int i = 0; i < equip.equipstats.Length; i++)
         {
-            if (equip.equipstats[i].isPercentage) {
+            if (equip.equipstats[i].isPercentage)
+            {
                 playerStats.AddToStatValue(equip.equipstats[i].statType, playerStats.GetStatValue(equip.equipstats[i].statType) * equip.equipstats[i].amount / 100);
                 continue;
             }
-            
+
             playerStats.AddToStatValue(equip.equipstats[i].statType, equip.equipstats[i].amount);
         }
-        
+
 
     }
 }

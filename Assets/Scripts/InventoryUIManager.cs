@@ -68,6 +68,10 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
             }
 
         }
+        if (itemCache.item.GetItemType == ItemType.Equipable)
+        {
+            EquipManager.GetInstance.CheckEquip(buttonId, 0);
+        }
 
 
     }

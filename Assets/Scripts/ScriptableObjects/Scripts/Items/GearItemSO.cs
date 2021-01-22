@@ -1,4 +1,5 @@
 ﻿
+using System;
 using UnityEngine;
 
 
@@ -32,7 +33,7 @@ public class GearItemSO : ItemSO
     public EquipStats[] equipstats;
 
 }
-
+[Serializable]
 public class EquipStats {
     public StatType statType;
     public bool isPercentage;
