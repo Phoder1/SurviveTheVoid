@@ -18,10 +18,10 @@ MonoBehaviour:
   description: The forbidden fruit
   sprite: {fileID: 21300000, guid: 4e8fe5706a43b624598ccd69e39361d6, type: 3}
   Effects:
-  - effectCategory: 2
+  - effectStatType: 2
     effectType: 2
-    isRelative: 0
-    isPresentage: 0
+    inPercentage: 0
+    isRelativeToMax: 0
     amount: 10
     duration: 5
     tickTime: 5
