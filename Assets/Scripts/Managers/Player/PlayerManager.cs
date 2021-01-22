@@ -16,8 +16,9 @@ public class PlayerManager : MonoSingleton<PlayerManager>
 
     [SerializeField] float baseSpeed;
     [SerializeField] int lookRange = 5;
-
+    [SerializeField] PlayerGFX _playerGFX;
     [SerializeField] float InterractionDistance;
+   
 
     TileHit closestTile;
 
@@ -52,7 +53,9 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     public static Transform GetPlayerTransform => playerTransfrom;
 
     public override void Init() {
-
+       _playerGFX = GetComponent<PlayerGFX>();
+       _playerGFX._anim = GetComponent<Animator>();
+        
         buildingLayer = TileMapLayer.Buildings;
         _scanner = new Scanner();
         _inputManager = InputManager._instance;
@@ -66,6 +69,12 @@ public class PlayerManager : MonoSingleton<PlayerManager>
             Vector2 movementVector = _inputManager.VJAxis * Time.deltaTime * baseSpeed * playerStats.GetSetSpeed;
             if (movementVector != Vector2.zero) {
                 playerController.Move(movementVector);
+                _playerGFX.Walk(true,movementVector);
+
+            }
+            else
+            {
+                _playerGFX.Walk(false,null);
             }
         }
         if (specialWasPressed != specialButton) {
@@ -81,6 +90,8 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         gatherWasPressed = false;
         specialWasPressed = false;
         anyInteracted = false;
+
+       
     }
 
     public TileHit Scan(IChecker checkType) {
@@ -105,6 +116,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
             float distance = Vector2.Distance(transform.position, destination);
             if (distance > InterractionDistance) {
                 playerController.Move(Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * playerStats.GetSetSpeed, distance));
+                _playerGFX.Walk(true, Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * playerStats.GetSetSpeed, distance));
             }
             else {
                 if (SpecialInteract) {
@@ -133,6 +145,13 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         SpecialInterracted = false;
         closestTile = null;
     }
+
+    public void playerDeath()
+    {
+
+    }
+
+
     public class GatheringScanChecker : IChecker
     {
         public bool CheckTile(TileSlot tile) {
@@ -145,5 +164,6 @@ public class PlayerManager : MonoSingleton<PlayerManager>
             return tile.isSpecialInteraction;
         }
     }
+    
 
 }
