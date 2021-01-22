@@ -11,19 +11,20 @@ public class PlayerMovementHandler : MonoSingleton<PlayerMovementHandler>
     Vector2Int currentGridPos;
     Vector2 gridMoveVector;
 
-    private float tileRealSize = Mathf.Sin(Mathf.Atan(Mathf.Deg2Rad * 0.5f));
-    private Vector2 realGridAxisVector;
-    DirectionEnum worldMovementDirection;
+    bool moved;
     public override void Init() {
         cameraController = CameraController._instance;
         gridManager = GridManager._instance;
         Debug.Log(GridToUnityVector(new Vector2(1, 1)));
     }
     public void Move(Vector2 moveVector) {
+        moved = false;
         gridMoveVector = UnityToGridVector(moveVector);
         currentGridPos = gridManager.WorldToGridPosition((Vector2)transform.position, TileMapLayer.Floor);
         MoveOnY();
         MoveOnX();
+        if(moved)
+            UpdateView();
     }
 
     private void MoveOnY() {
@@ -33,7 +34,7 @@ public class PlayerMovementHandler : MonoSingleton<PlayerMovementHandler>
         }
         if (gridMoveVector.y > 0) {
             if (CheckTilesOnPos(tileLeftCorner(transform.position, playerColliderSize) + UnityVectorOnGridY) && CheckTilesOnPos(tileTopCorner(transform.position, playerColliderSize) + UnityVectorOnGridY)) {
-                transform.position += (Vector3)UnityVectorOnGridY;
+                ApplyMove(UnityVectorOnGridY);
             }
             //else {
             //    Vector2 nextTilePos = gridManager.GridToWorldPosition(currentGridPos + Vector2Int.up, TileMapLayer.Floor, true);
@@ -45,7 +46,7 @@ public class PlayerMovementHandler : MonoSingleton<PlayerMovementHandler>
         }
         else {
             if (CheckTilesOnPos(tileBottomCorner(transform.position, playerColliderSize) + UnityVectorOnGridY) && CheckTilesOnPos(tileRightCorner(transform.position, playerColliderSize) + UnityVectorOnGridY)) {
-                transform.position += (Vector3)UnityVectorOnGridY;
+                ApplyMove(UnityVectorOnGridY);
             }
             //else {
             //    Vector2 nextGridPos = UnityToGridVector(transform.position + (Vector3)UnityVectorOnGridY);
@@ -61,7 +62,7 @@ public class PlayerMovementHandler : MonoSingleton<PlayerMovementHandler>
         }
         if (gridMoveVector.x > 0) {
             if (CheckTilesOnPos(tileRightCorner(transform.position, playerColliderSize) + UnityVectorOnGridX) && CheckTilesOnPos(tileTopCorner(transform.position, playerColliderSize) + UnityVectorOnGridX)) {
-                transform.position += (Vector3)UnityVectorOnGridX;
+                ApplyMove(UnityVectorOnGridX);
             }
             //else {
             //    Vector2 nextGridPos = UnityToGridVector(transform.position + (Vector3)UnityVectorOnGridX);
@@ -72,7 +73,7 @@ public class PlayerMovementHandler : MonoSingleton<PlayerMovementHandler>
         }
         else {
             if (CheckTilesOnPos(tileBottomCorner(transform.position, playerColliderSize) + UnityVectorOnGridX) && CheckTilesOnPos(tileLeftCorner(transform.position, playerColliderSize) + UnityVectorOnGridX)) {
-                transform.position += (Vector3)UnityVectorOnGridX;
+               ApplyMove(UnityVectorOnGridX);
             }
             //else {
             //    Vector2 nextGridPos = UnityToGridVector(transform.position + (Vector3)UnityVectorOnGridX);
@@ -81,8 +82,13 @@ public class PlayerMovementHandler : MonoSingleton<PlayerMovementHandler>
             //}
         }
     }
+    private void ApplyMove(Vector2 vector) => ApplyMove((Vector3)vector);
+    private void ApplyMove(Vector3 vector) {
+        transform.position += vector;
+        moved = true;
+    }
 
-    private Vector2 UnityToGridVector(Vector2 vector) => new Vector2(2 * vector.x + vector.y, -2 * vector.x + vector.y);
+        private Vector2 UnityToGridVector(Vector2 vector) => new Vector2(2 * vector.x + vector.y, -2 * vector.x + vector.y);
     private Vector2 GridToUnityVector(Vector2 vector) => new Vector2(0.125f * vector.x - 0.125f * vector.y, 0.25f * vector.x + 0.25f * vector.y);
     private bool CheckTilesOnPos(Vector2 pos) {
         Vector2Int gridPos = gridManager.WorldToGridPosition(pos, TileMapLayer.Floor);
