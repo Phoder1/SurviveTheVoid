@@ -12,8 +12,6 @@ public class EffectHandler : MonoSingleton<EffectHandler>
     public override void Init() {
         playerStats = PlayerStats._instance;
 
-        
-
         StopCoroutine(SurvivalEffects());
         StartCoroutine(SurvivalEffects());
     }

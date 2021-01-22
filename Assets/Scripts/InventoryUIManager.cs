@@ -58,7 +58,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
         if (itemCache.item.GetItemType == ItemType.Consumable)
         {
-            if (EffectHandler._instance.GetEffectCoolDown(itemCache.item as ConsumableItemSO))
+            if (ConsumeablesHandler._instance.GetEffectCoolDown(itemCache.item as ConsumableItemSO))
             {
                 if (inventory.RemoveItemFromInventory(0, new ItemSlot(itemCache.item, 1)))
                 {
