@@ -9,7 +9,8 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public enum ClickType
     {
         Crafting,
-        Inventory
+        Inventory,
+        Equip
     }
 
     public ClickType clickType;
@@ -32,7 +33,10 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public int DraggedItem;
     bool IsDragged;
 
-
+    [SerializeField]
+    int EquipmentSlot;
+    [SerializeField]
+    bool DraggedInto;
 
     public void OnPointerDown(PointerEventData evenData)
     {
@@ -44,29 +48,43 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
         if (pointerDownTimer < requiredHoldTime && pointerDown && onShortClick != null && !IsDragged)
         {
+            if(onShortClick != null)
             onShortClick.Invoke();
         }
-        if(clickType == ClickType.Inventory)
+        if (clickType == ClickType.Inventory)
         {
             if (InventoryUIManager._instance.DraggedItem != -1 && InventoryUIManager._instance.DroppedItem != -1 && !InventoryUIManager._instance.IsDragginToTrash)
             {
                 InventoryUIManager._instance.SwapItems();
 
 
-            }else if (InventoryUIManager._instance.IsDragginToTrash)
+            }
+            else if (InventoryUIManager._instance.IsDragginToTrash)
             {
                 InventoryUIManager._instance.DeleteItem(InventoryUIManager._instance.DraggedItem);
+            }
+            else if (InventoryUIManager._instance.EquipIndex >= 0)
+            {
+                InventoryUIManager._instance.Test(EquipmentSlot);
             }
             else
             {
                 InventoryUIManager._instance.ResetSwap();
             }
+           
 
 
 
 
 
             DraggedItem = -1;
+        }
+        if(clickType == ClickType.Equip)
+        {
+            if(InventoryUIManager._instance.EquipIndex >= 0)
+            {
+                InventoryUIManager._instance.Test(EquipmentSlot);
+            }
         }
 
 
@@ -96,7 +114,7 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                     onLongClick.Invoke();
 
 
-                
+
                 //Debug.Log(DraggedItem.item.getItemName);
             }
 
@@ -109,7 +127,7 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             }
         }
 
-
+       
 
 
 
@@ -128,9 +146,9 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
 
 
-        if(clickType == ClickType.Inventory)
+        if (clickType == ClickType.Inventory)
         {
-              if(pointerDown)
+            if (pointerDown)
             {
                 IsDragged = true;
                 onLongClick.Invoke();
@@ -143,18 +161,34 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
             DraggedItem = -1;
         }
-
+        if (clickType == ClickType.Equip)
+        {
+            InventoryUIManager._instance.EquipIndex = -1;
+            DraggedInto = false;
+        }
 
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        DraggedItem = InventoryUIManager._instance.DraggedItem;
-
-
-        if (    InventoryUIManager._instance.DraggedItem != InventoryUIManager._instance.DroppedItem)
+        if (clickType == ClickType.Inventory)
         {
-            onDropItem.Invoke();
+
+
+            DraggedItem = InventoryUIManager._instance.DraggedItem;
+            if (InventoryUIManager._instance.DraggedItem != InventoryUIManager._instance.DroppedItem)
+            {
+                onDropItem.Invoke();
+            }
+        }
+        if (clickType == ClickType.Equip)
+        {
+            if (InventoryUIManager._instance.DraggedItem >= 0)
+            {
+                InventoryUIManager._instance.EquipIndex = EquipmentSlot;
+                DraggedInto = true;
+            }
+
         }
 
     }

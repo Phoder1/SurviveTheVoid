@@ -1,14 +1,10 @@
 ﻿using TMPro;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 {
-    [Header("Equip Related")]
-    // 0 = head, 1 = Chest, 2 = Legging, 3 = Gloves, 4 = Shoes
-    public Image[] EquipSlots;
-    public GearItemSO[] EquippedSlots;
+
     [SerializeField] bool IsInventoryOn = true;
 
     [Header("Inventory Related")]
@@ -24,16 +20,34 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     [Header("Slots Related")]
     public Color SlotColor;
     public Image TrashCanBackGround;
-
+    public bool IsDragging;
     public override void Init()
     {
         inventory = Inventory.GetInstance;
     }
 
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+            UpdateInventory();
+    }
 
 
 
+    #region Inventory Slots
 
+    //public boolean = setactive of all inventory,  only update inventory after this boolean is true, if false dont update
+
+
+
+    public void UpdateInventory()
+    {
+        if (IsInventoryOn)
+        {
+            UpdateInventoryToUI();
+        }
+    }
 
     public void OnPressedInventoryButton(int buttonId)
     {
@@ -71,28 +85,6 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
 
     }
-
-
-
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-            UpdateInventory();
-    }
-
-    //public boolean = setactive of all inventory,  only update inventory after this boolean is true, if false dont update
-
-    public void UpdateInventory()
-    {
-        if (IsInventoryOn)
-        {
-            UpdateInventoryToUI();
-        }
-    }
-
-
 
     public void UpdateInventoryToUI()
     {
@@ -153,7 +145,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
     public void OnLongInventoryPress(int buttonId)
     {
-        if(inventory.GetItemFromInventoryButton(0,buttonId) != null && !IsHoldingItem)
+        if (inventory.GetItemFromInventoryButton(0, buttonId) != null && !IsHoldingItem)
         {
             Debug.Log("holding Item");
             IsHoldingItem = true;
@@ -170,7 +162,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
             DroppedItem = buttonId;
             HightLightDrop(buttonId);
         }
-      
+
 
     }
 
@@ -186,7 +178,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         {
             InventorySlots[DroppedItem].GetComponent<Image>().color = SlotColor;
             DroppedItem = -1;
-            UpdateInventoryToUI(); 
+            UpdateInventoryToUI();
             //ResetSwap();
         }
     }
@@ -198,11 +190,12 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
     public void ResetSwap()
     {
+        IsHoldingItem = false;
         if (DraggedItem >= 0)
             InventorySlots[DraggedItem].GetComponent<Image>().color = SlotColor;
         if (DroppedItem >= 0)
             InventorySlots[DroppedItem].GetComponent<Image>().color = SlotColor;
-        IsHoldingItem = false;
+
         DraggedItem = -1;
         DroppedItem = -1;
     }
@@ -229,5 +222,62 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     {
         TrashCanBackGround.color = SlotColor;
     }
+
+    #endregion
+
+    #region Equip
+    [Header("Equip Related")]
+    // 0 = head, 1 = Chest, 2 = Legging, 3 = Gloves, 4 = Shoes
+    public Image[] EquipSlots;
+    public int EquipIndex;
+    // public GearItemSO[] EquippedSlots;
+
+    public void UpdateEquipUI(GearItemSO Gear, Sprite GearSprite)
+    {
+        switch (Gear.GetGearTpye)
+        {
+            case GearItemSO.GearType.None:
+                break;
+            case GearItemSO.GearType.Helmet:
+                EquipSlots[0].sprite = GearSprite;
+                break;
+            case GearItemSO.GearType.Chest:
+                EquipSlots[1].sprite = GearSprite;
+                break;
+            case GearItemSO.GearType.Gloves:
+                EquipSlots[2].sprite = GearSprite;
+                break;
+            case GearItemSO.GearType.Legging:
+                EquipSlots[3].sprite = GearSprite;
+                break;
+            case GearItemSO.GearType.Shoes:
+                EquipSlots[4].sprite = GearSprite;
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void Test(int EquipmentSlot)
+    {
+
+        if (DraggedItem >= 0)
+        {
+            var checkIfSlotIsItem = Inventory.GetInstance.GetItemFromInventoryButton(0, EquipmentSlot);
+
+            if (EquipManager.GetInstance.EquipItem(EquipmentSlot, checkIfSlotIsItem))
+            {
+                Debug.Log("Equipping: " + checkIfSlotIsItem.item.getItemName);
+            }
+            else
+            {
+                Debug.Log("this is not the right spot to place it");
+            }
+        }
+
+    }
+
+
+    #endregion
 
 }

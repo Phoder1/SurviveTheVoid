@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 public class EquipManager
 {
@@ -87,8 +88,7 @@ public abstract  class EquipAbst
         }
 
 
-
-        Inventory.GetInstance.AddToInventory(0, GetEquipedItem);
+        //Inventory.GetInstance.AddToInventory(0, GetEquipedItem);
 
         SetEquipedItem = _equipedItem;
         // apply effect

@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e76a88f55714548bb59252d769c07b, type: 3}
   m_Name: New Gear Item
   m_EditorClassIdentifier: 
-  itemID: 0
+  itemID: 4
   itemName: Hat
   maxStackSize: 1
   description: 
+  equipType: 1
   sprite: {fileID: 21300000, guid: e64a00bbec9e2d749a904e470824d42f, type: 3}
   gearType: 1
   maxDurability: 25
