@@ -37,7 +37,10 @@ public class Inventory
 
     Dictionary<int, ItemSlot[]> inventoryDict;
     // 0 = > player's inventory
-    //1+ = > local inventory chests
+    //1  = > Hot Keys
+    //2+ = > Equips
+    //3? = > tools
+    //3+ = > local inventory chests
 
 
 
@@ -47,7 +50,9 @@ public class Inventory
         inventoryList = new ItemSlot[maxCapacityOfItemsInList];
         inventoryDict = new Dictionary<int, ItemSlot[]>();
         inventoryDict.Add(amountOfIDChests, inventoryList);
-        inventoryUI = InventoryUIManager._instance;
+        GetNewIDForChest(5);
+        GetNewIDForChest(5);
+            inventoryUI = InventoryUIManager._instance;
     }
 
 
@@ -484,10 +489,10 @@ public class Inventory
         Debug.Log("You Dont Have This Item In Your Inventory");
         return 0;
     }
-    public int GetNewIDForChest()
+    public int GetNewIDForChest(int amountOfCapacity)
     {
         amountOfIDChests++;
-        CreateNewInventory(amountOfIDChests);
+        CreateNewInventory(amountOfIDChests , amountOfCapacity);
         return amountOfIDChests;
     }
     public ItemSlot[] GetInventoryFromDictionary(int id)
@@ -499,7 +504,7 @@ public class Inventory
         return inventoryCache;
     }
 
-    public void CreateNewInventory(int chestId) => inventoryDict.Add(chestId, new ItemSlot[maxCapacityOfItemsInChest]);
+    public void CreateNewInventory(int chestId, int amountOfCapacity) => inventoryDict.Add(chestId, new ItemSlot[amountOfCapacity]);
 
     public void ChangeBetweenItems(int firstChestID, int secondChestID, int drag, int drop)
     {

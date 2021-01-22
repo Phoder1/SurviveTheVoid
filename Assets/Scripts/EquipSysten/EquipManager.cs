@@ -1,10 +1,19 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿
+using System.Runtime.InteropServices.WindowsRuntime;
 
 public class EquipManager
 {
-    Dictionary<int, EquipAbst> equipDict;
+    Inventory inventory;
+    EffectHandler effectHandler;
     static EquipManager _instance;
+    ItemSlot equipSlotCache;
+    GearItemSO gearItemCache;
+    ItemSlot[] equipSlots;
+    // 0 helmet
+    // 1 Chest
+    // 2 Legging
+    // 3 Gloves
+    // 4 Shoes
 
 
     public static EquipManager GetInstance
@@ -20,147 +29,128 @@ public class EquipManager
     }
     EquipManager()
     {
-        equipDict = new Dictionary<int, EquipAbst>();
-        equipDict[0] = new HelmetEquip();
-        equipDict[1] = new TopEquip();
-        equipDict[2] = new BottomEquip();
-        equipDict[3] = new GlovesEquip();
-        equipDict[4] = new BootsEquip();
+        equipSlots = inventory.GetInventoryFromDictionary(2);
+        equipSlotCache = null;
+        gearItemCache = null;
+        effectHandler = EffectHandler._instance;
+        inventory = Inventory.GetInstance;
     }
 
 
 
-
-
-    public bool EquipItem(int buttonID, ItemSlot item)
+    public bool CheckEquip(int buttonID, ItemSlot _equipedItem)
     {
-        if (!equipDict.TryGetValue(buttonID, out var equip))
+        if (_equipedItem == null || _equipedItem.item == null)
             return false;
 
-        return equip.CheckedEquip(item);
-    }
-    public void UnEquipItem(int buttonID)
-    {
-        if (!equipDict.TryGetValue(buttonID, out var item))
-            return;
 
-        item.UnEquipItem();
-    }
-}
-
-
-public abstract  class EquipAbst 
-{
-    EquipType type;
-
-    ItemSlot equipedItem;
-    public bool CheckEnoughDurability(int amountToRemove)
-    {
-
-        if (equipedItem == null)
+        if (!(_equipedItem.item is GearItemSO) || buttonID < 0 || buttonID >= equipSlots.Length)
             return false;
 
-        if (equipedItem.durability - amountToRemove > 0)
-            return true;
-
-
-        UnEquipItem();
-        return false;
-
-    }
-
-    public bool CheckedEquip(ItemSlot _equipedItem)
-    {
-        if (_equipedItem == null || _equipedItem.item == null|| _equipedItem.item.GetEquipType != type)
-            return false;
-
-        EquipItem(_equipedItem);
+        EquipItem(buttonID, _equipedItem);
         return true;
     }
 
-    void EquipItem(ItemSlot _equipedItem) {
 
+    public void EquipItem(int buttonID, ItemSlot item)
+    {
 
-        if (equipedItem == null)
+        equipSlotCache = item;// might need to do new itemSlot()
+        if (equipSlots[buttonID] != null)
         {
-            SetEquipedItem = _equipedItem;
-            return;
+            inventory.RemoveItemFromInventory(0, item);
+            UnEquipItem(buttonID);
         }
 
 
-        //Inventory.GetInstance.AddToInventory(0, GetEquipedItem);
+        equipSlots[buttonID] = equipSlotCache;
 
-        SetEquipedItem = _equipedItem;
-        // apply effect
-        // updateUI
 
+        
+        gearItemCache= (equipSlots[buttonID].item as GearItemSO);
+
+        for (int i = 0; i < gearItemCache.effectDatas.Length; i++)
+            effectHandler.BeginAllConsumeableEffects(gearItemCache.effectDatas);
+
+        // apply ui
+        InventoryUIManager._instance.UpdateInventoryToUI();
+
+
+        equipSlotCache = null;
     }
-
-    public void UnEquipItem()
+    public void UnEquipItem(int buttonID)
     {
-        if (equipedItem == null)
+        if (equipSlots[buttonID] == null)
             return;
 
-       
 
-        if (equipedItem.durability > 0)
-            Inventory.GetInstance.AddToInventory(0, equipedItem);
+        inventory.AddToInventory(0, equipSlots[buttonID]);
 
 
+        // disable effect
+        gearItemCache = (equipSlots[buttonID].item as GearItemSO);
+        for (int i = 0; i < gearItemCache.effectDatas.Length; i++)
+            effectHandler.StopAllEffects(EffectHandler.GetStatControllers(gearItemCache.effectDatas)); 
 
-        equipedItem = null;
-        // Cancel Effect
-        // updateUI
 
-
+        equipSlots[buttonID] = null;
+        InventoryUIManager._instance.UpdateInventoryToUI();
     }
-
-    public int? GetItemDurability => equipedItem.durability;
-    public EquipType SetEquipType { set { type = value; } }
-    public ItemSlot GetEquipedItem => equipedItem;
-    public ItemSlot SetEquipedItem { set { equipedItem = value; } }
-}
-
-
-public class HelmetEquip : EquipAbst
-{
-
-    public HelmetEquip()
+    public void LowerDurabilityOfEquipItem(EquipType equipType, int amount)
     {
-         this.SetEquipType = EquipType.Helmet;
+
+        if ( amount == 0)
+            return;
+
+
+        equipSlotCache = equipSlots[GetEquipSlot(equipType)];
+
+        if (equipSlotCache == null)
+            return;
+
+        if (amount < 0)
+            amount *= -1;
+
+
+        if (equipSlotCache.durability - amount <=0)
+            UnEquipItem(GetEquipSlot(equipType));
+
+
+        equipSlotCache.durability -= amount;
+
     }
-}
 
+    public int? GetEquipDurability(EquipType equipType) {
+    
+        equipSlotCache = equipSlots[GetEquipSlot(equipType)];
 
-public class TopEquip : EquipAbst
-{
+        if (equipSlotCache == null)
+            return null;
 
-    public TopEquip()
+        return equipSlotCache.durability;
+
+    }
+
+    private int GetEquipSlot(EquipType equipType)
     {
-        this.SetEquipType = EquipType.Top;
-    }
-}
-public class BottomEquip : EquipAbst
-{
+        switch (equipType)
+        {
+            case EquipType.Helmet:
+                return 0;
 
-    public BottomEquip()
-    {
-        this.SetEquipType = EquipType.Bottom; 
-    }
-}
-public class GlovesEquip: EquipAbst
-{
+            case EquipType.Chest:
+                return 1;
 
-    public GlovesEquip()
-    {
-        this.SetEquipType = EquipType.Gloves;
-    }
-}
-public class BootsEquip : EquipAbst
-{
+            case EquipType.Legging:
+                return 2;
 
-    public BootsEquip()
-    {
-        this.SetEquipType = EquipType.Boots;
+            case EquipType.Gloves:
+                return 3;
+
+            case EquipType.Shoes:
+                return 4;
+        }
+        return 0;
     }
+  
 }
