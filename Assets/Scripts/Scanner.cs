@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+public enum DirectionEnum { Up, Down, Left, Right }
 namespace Assets.Scan
 {
-    public enum DirectionEnum { Up, Down, Left, Right }
     public class Scanner
     {
         private readonly GridManager gridManager;
@@ -24,11 +24,10 @@ namespace Assets.Scan
             checker = _checker;
             direction = _direction;
             TileSlot currentTile = gridManager.GetTileFromGrid(startPosition, buildingLayer);
-            if (currentTile != null && checker.CheckTile(currentTile))
-            {
-                return new TileHit(currentTile,startPosition);
+            if (currentTile != null && checker.CheckTile(currentTile)) {
+                return new TileHit(currentTile, startPosition);
             }
-                for (int i = 1; i <= radius; i++) {
+            for (int i = 1; i <= radius; i++) {
                 TileHit tileHit = GetClosestTileInSquare(i);
                 if (tileHit != null) {
                     return tileHit;
@@ -41,12 +40,12 @@ namespace Assets.Scan
         public TileHit GetClosestTileInSquare(int distanceFromCenter) {
             TileHit[] tiles = GetAllTilesInSquare(distanceFromCenter);
 
-            if (tiles == null || tiles.Length == 0) return null;
+            if (tiles == null || tiles.Length == 0)
+                return null;
 
             TileHit closestTile = null;
             float shortestDistance = float.MaxValue;
-            foreach (TileHit tile in tiles)
-            {
+            foreach (TileHit tile in tiles) {
                 float distance;
                 if ((distance = Vector2Int.Distance(tile.gridPosition, startPosition)) < shortestDistance) {
                     closestTile = tile;
@@ -80,14 +79,13 @@ namespace Assets.Scan
                     break;
             }
 
-            
+
 
             DirectionEnum currentDirection = direction;
             for (int i = 0; i < numOfTiles; i++) {
                 //Check tile
-                TileSlot currentTile = gridManager.GetTileFromGrid(relativeCheckPosition + startPosition , buildingLayer);
-                if (currentTile != null && checker.CheckTile(currentTile))
-                {
+                TileSlot currentTile = gridManager.GetTileFromGrid(relativeCheckPosition + startPosition, buildingLayer);
+                if (currentTile != null && checker.CheckTile(currentTile)) {
                     tiles.Add(new TileHit(currentTile, relativeCheckPosition + startPosition));
 
                 }

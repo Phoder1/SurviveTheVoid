@@ -51,7 +51,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         maxStat = AddToDict(StatType.MaxWater, 100);
         AddToDict(StatType.Water, 100, maxStat);
         //Air
-        maxStat = AddToDict(StatType.MaxAir, 200);
+        maxStat = AddToDict(StatType.MaxAir, 100);
         AddToDict(StatType.Air, 100, maxStat);
         //Sleep
         maxStat = AddToDict(StatType.MaxSleep, 100);

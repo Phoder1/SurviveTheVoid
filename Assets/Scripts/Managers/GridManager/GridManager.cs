@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public enum TileMapLayer { Floor, Buildings }
-public partial class GridManager : MonoSingleton<GridManager>, IGridManager
+public partial class GridManager : MonoSingleton<GridManager>
 {
     //Debug Chunks (Disable when not needed, very heavy on performance):
     #region Debug
@@ -172,31 +172,6 @@ public partial class GridManager : MonoSingleton<GridManager>, IGridManager
     }
     public Vector2Int WorldToGridPosition(Vector3 worldPosition, TileMapLayer buildingLayer)
         => (Vector2Int)GetTilemap(buildingLayer).WorldToCell(worldPosition - Vector3.up * (buildingLayer == TileMapLayer.Buildings ? BUILDING_LAYER_POSITION_OFFSET : 0f));
-    public bool IsTileWalkable(Vector2 worldPosition, Vector2 movementVector) {
-        if (movementVector == Vector2.zero || movementVector.magnitude < 0.01f)
-            return true;
-        bool moveLegal = true;
-        TileSlot floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + movementVector + movementVector.normalized * floorOffSet, TileMapLayer.Floor), TileMapLayer.Floor);
-        TileSlot buildingTile = GetTileFromGrid(WorldToGridPosition(worldPosition + movementVector + movementVector.normalized * buildingsOffSet, TileMapLayer.Buildings), TileMapLayer.Buildings);
-        moveLegal &= floorTile != null && !(buildingTile != null && buildingTile.GetIsSolid);
-        if (!moveLegal)
-            return moveLegal;
-        Quaternion rotationLeft = Quaternion.Euler(0, 0, 75f / COLLISION_SENSITIVITY);
-        Quaternion rotationRight = Quaternion.Euler(0, 0, -75f / COLLISION_SENSITIVITY);
-        Vector2 leftMovementVector = movementVector + movementVector.normalized * floorOffSet;
-        Vector2 rightMovementVector = movementVector + movementVector.normalized * floorOffSet;
-        for (int i = 0; i < COLLISION_SENSITIVITY && moveLegal; i++) {
-            leftMovementVector = rotationLeft * leftMovementVector;
-            floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + leftMovementVector, TileMapLayer.Floor), TileMapLayer.Floor);
-            buildingTile = GetTileFromGrid(WorldToGridPosition(worldPosition + leftMovementVector, TileMapLayer.Buildings), TileMapLayer.Buildings);
-            moveLegal &= floorTile != null && !(buildingTile != null && buildingTile.GetIsSolid);
-            rightMovementVector = rotationRight * rightMovementVector;
-            floorTile = GetTileFromGrid(WorldToGridPosition(worldPosition + rightMovementVector, TileMapLayer.Floor), TileMapLayer.Floor);
-            buildingTile = GetTileFromGrid(WorldToGridPosition(worldPosition + leftMovementVector, TileMapLayer.Buildings), TileMapLayer.Buildings);
-            moveLegal &= floorTile != null && !(buildingTile != null && buildingTile.GetIsSolid);
-        }
-        return moveLegal;
-    }
 
     public TileSlot GetTileFromGrid(Vector2Int gridPosition, TileMapLayer buildingLayer) {
 
