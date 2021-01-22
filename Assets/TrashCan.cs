@@ -13,13 +13,14 @@ public class TrashCan : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
         {
             IsDragginOnTrashCan = true;
             InventoryUIManager._instance.IsDragginToTrash = true;
-            Debug.Log("Holding item on trashcan");
+            InventoryUIManager._instance.HighLightTrashCan();
         }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         InventoryUIManager._instance.IsDragginToTrash = false;
+        InventoryUIManager._instance.RemoveTrashHighLight();
         IsDragginOnTrashCan = false;
     }
 
@@ -36,6 +37,7 @@ public class TrashCan : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
     {
         Debug.Log("Throwing Item");
         InventoryUIManager._instance.DeleteItem(InventoryUIManager._instance.DraggedItem);
+        InventoryUIManager._instance.RemoveTrashHighLight();
     }
 
 
