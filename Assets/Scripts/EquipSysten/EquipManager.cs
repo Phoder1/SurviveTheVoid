@@ -26,13 +26,26 @@
     }
     EquipManager()
     {
-        inventory = Inventory.GetInstance;
+        ResetEquip();
+    }
+    public void ResetEquip() {
+        if (equipSlots!= null)
+        {
+            for (int i = 0; i < equipSlots.Length; i++)
+            {
+                if (equipSlots[i] != null)
+                    UnEquipItem(i);
+                
+            }
+        }
+
+
+    inventory = Inventory.GetInstance;
         equipSlots = inventory.GetInventoryFromDictionary(2);
         equipSlotCache = null;
 
         playerStats = PlayerStats._instance;
     }
-
     public bool CheckEquip(int firstButtonID, int chestID, int? secondButtonID = null, int secondChestID = 2)
     {
         if (chestID == 2 && secondChestID == 2)

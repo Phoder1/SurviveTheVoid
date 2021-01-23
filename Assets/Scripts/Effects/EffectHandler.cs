@@ -52,6 +52,8 @@ public class EffectHandler : MonoSingleton<EffectHandler>
         worldEffect.Begin(sleepEffect);
 
     }
+
+
     public void BeginAllEffects(EffectData[] effectsData, EffectController[] effectController) {
         for (int i = 0; i < effectsData.Length; i++)
             if (effectsData[i] != null)

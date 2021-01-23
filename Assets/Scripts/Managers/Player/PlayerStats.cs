@@ -51,7 +51,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         ResetStats();
     }
 
-    private void ResetStats() {
+    public void ResetStats() {
         foreach (Stat stat in StatsDict.Values)
             stat.Reset();
     }

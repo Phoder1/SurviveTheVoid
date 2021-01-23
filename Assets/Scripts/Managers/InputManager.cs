@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Net;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class InputManager : MonoSingleton<InputManager>
 {

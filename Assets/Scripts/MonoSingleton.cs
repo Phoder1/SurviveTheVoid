@@ -20,4 +20,5 @@ public abstract class MonoSingleton<T> : MonoBehaviour,ISingleton where T : Comp
     }
 
     public abstract void Init();
+    public abstract void RestartLevel();
 }
