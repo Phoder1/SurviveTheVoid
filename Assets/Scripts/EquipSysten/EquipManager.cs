@@ -1,5 +1,6 @@
 ﻿
 
+using NUnit.Framework;
 using UnityEditor;
 
 public class EquipManager
@@ -103,13 +104,13 @@ public class EquipManager
 
 
     }
-    public bool CheckEquipGear(ItemSlot item, int firstButtonID, int chestID, int? secondButtonID = null, int secondChestID = 2)
+    public bool CheckEquip(ItemSlot item, int firstButtonID, int chestID, int? secondButtonID = null, int secondChestID = 2)
     {
 
         if (!(item.item is GearItemSO || item.item is ToolItemSO) && item != null)
             return false;
 
-  equipSlotCache = null;
+             equipSlotCache = null;
 
         if (item.item is GearItemSO)
         {
@@ -124,7 +125,7 @@ public class EquipManager
             else if (chestID != 2 && secondChestID != 2)
                 return false;
 
-          
+
 
             if (secondButtonID == null)
             {
@@ -139,19 +140,20 @@ public class EquipManager
                 EquipItem(chestID, firstButtonID);
                 return true;
             }
-
-
-
             return SwapItemsInEquip(firstButtonID, chestID, secondButtonID.GetValueOrDefault(), secondChestID);
         }
 
 
 
 
-        if (chestID == 3 && secondChestID == 2)
-        {
+        // is tool
 
+
+        if ((chestID == 3 && secondChestID == 2))
+        {
             inventory.AddToInventory(0, toolSlots[firstButtonID]);
+            toolSlots[firstButtonID] = null;
+            InventoryUIManager._instance.UpdateInventoryToUI();
             return true;
         }
         else if (chestID != 3 && secondChestID != 3)
@@ -168,7 +170,16 @@ public class EquipManager
             if (!(equipSlotCache.item is ToolItemSO) || firstButtonID < 0)
                 return false;
 
-            EquipItem(chestID, firstButtonID);
+            EquipItem(chestID, firstButtonID); // fix
+
+            int index = GetToolSlotIndex((equipSlotCache.item as ToolItemSO).GetToolType);
+            if (toolSlots[index] != null) {
+                inventory.AddToInventory(0, toolSlots[firstButtonID]);
+                toolSlots[firstButtonID] = equipSlotCache;
+            }
+
+
+                InventoryUIManager._instance.UpdateInventoryToUI();
             return true;
         }
 
@@ -177,38 +188,7 @@ public class EquipManager
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        return false;
+        return SwapItemsInEquip(firstButtonID, chestID, secondButtonID.GetValueOrDefault(), secondChestID); 
     }
     private bool SwapItemsInEquip(int firstButtonID, int chestID, int secondButtonID, int secondChestID)
     {
@@ -245,13 +225,32 @@ public class EquipManager
             return true;
 
         }
+        else if (chestID == 3)
+        {
+            toolCache = inventory.GetItemFromInventoryButton(secondChestID, secondButtonID).item as ToolItemSO;
+
+            if (toolCache == null || !CheckIndexToTool(firstButtonID, toolCache))
+                return false;
+
+            return true;
+        }
+        else if (secondChestID == 3)
+        {
+            toolCache = inventory.GetItemFromInventoryButton(chestID, firstButtonID).item as ToolItemSO;
+
+            if (toolCache == null || !CheckIndexToTool(secondButtonID, toolCache))
+                return false;
+
+
+            return true;
+        }
 
 
         return false;
     }
     private void EquipItem(int chestID, int buttonID)
     {
-
+      
         int index = GetGearSlotIndex((equipSlotCache.item as GearItemSO).GetEquipType);
         if (gearSlots[index] != null)
             UnEquipItem(index);
@@ -277,8 +276,6 @@ public class EquipManager
         if (gearSlots[buttonID] == null)
             return;
 
-
-        //inventory.AddToInventory(0, equipSlots[buttonID]);
 
         RemoveStats((gearSlots[buttonID].item as GearItemSO));
 
@@ -487,8 +484,17 @@ public class EquipManager
         }
     }
 
+    public bool IsToolActive(ToolType type)
+    {
+        toolCache = null;
+        toolCache = toolSlots[GetToolSlotIndex(type)].item as ToolItemSO;
+        if (toolCache == null)
+                    return false;
+        
+        return toolCache.SetGetIsActive;
+    }
 
-    public void SetUseOfTool(int buttonID , bool state) {
+    public void SetActiveStateTool(int buttonID , bool state) {
 
         if (buttonID < 0 || buttonID > toolSlots.Length - 1 || toolSlots[buttonID] == null)
             return;
