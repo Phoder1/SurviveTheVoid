@@ -365,13 +365,13 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
             if (Dragged.item.GetItemType == ItemType.Equipable)
             {
 
-                //if (EquipManager.GetInstance.CheckEquip(draggedSlot, fromChest, DropSlot, toChest))
-                //{
-                //    return true;
-                //}
+                if (EquipManager.GetInstance.CheckEquip(draggedSlot, fromChest, DropSlot, toChest))
+                {
+                    return true;
+                }
 
 
-                return true;
+                return false;
             }
             else
             {
