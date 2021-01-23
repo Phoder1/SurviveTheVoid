@@ -28,15 +28,9 @@ public class PlayerStateMachine
 
 
         CameraController._instance.GetSetIsZoomedIn = false;
-        if (InputManager.GetCurrentState is BuildingState || (InputManager.GetCurrentState is RemovalState))
-        {
+       
             if (InputManager.GetCurrentState is BuildingState)
              (InputManager.GetCurrentState as BuildingState).ResetBeforeChangeStates();
-
-            
-         
-            CameraController._instance.GetSetIsZoomedIn = true; 
-        }
 
         
 
@@ -47,6 +41,7 @@ public class PlayerStateMachine
                 break;
             case InputState.BuildState:
                 InputManager.SetInputState = stateBases[1];
+                CameraController._instance.GetSetIsZoomedIn = true;
                 break;
 
             case InputState.FightState:
@@ -54,6 +49,7 @@ public class PlayerStateMachine
                 break;
             case InputState.RemovalState:
                 InputManager.SetInputState = stateBases[3];
+                CameraController._instance.GetSetIsZoomedIn = true;
                 break;
             default:
                     InputManager.SetInputState = stateBases[0];

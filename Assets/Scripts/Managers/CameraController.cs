@@ -39,7 +39,7 @@ public class CameraController : MonoSingleton<CameraController>
         zoomedInCamera = zoomedInCameraObj.GetComponent<Camera>();
         zoomedOutCamera = zoomedOutCameraObj.GetComponent<Camera>();
 
-        GetSetIsZoomedIn = false;
+        SetZoomIn(false);
     }
     private void Update() {
         if (Input.GetKeyDown(KeyCode.N)) {

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 
 public class RemovalState : StateBase
@@ -8,7 +7,11 @@ public class RemovalState : StateBase
     TileSlot tileSlotCache;
     Vector2 touchPosition;
     GridManager gridManager;
-    public RemovalState() { gridManager = GridManager._instance; }
+
+    public RemovalState() { 
+        gridManager = GridManager._instance;
+   
+    }
 
     public override void ButtonB()
     {
@@ -52,7 +55,7 @@ public class RemovalState : StateBase
 
     public override void MousePos()
     {
-        touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        touchPosition = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(Input.mousePosition);
 
         currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Buildings);
 
