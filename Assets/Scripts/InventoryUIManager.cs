@@ -183,6 +183,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     {
         if (DraggedItem != buttonId)
         {
+            
             DroppedItem = buttonId;
             HightLightDrop(buttonId);
         }
