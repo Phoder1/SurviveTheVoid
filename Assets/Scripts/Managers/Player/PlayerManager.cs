@@ -10,13 +10,14 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     private InputManager inputManager;
     private GridManager gridManager;
     private Scanner scanner;
-    private PlayerMovementHandler playerController;
     private TileMapLayer buildingLayer;
 
     [SerializeField] float baseSpeed;
-    [SerializeField] int interactionLookRange = 5, airLookRange;
-
+   
+    [SerializeField] PlayerGFX _playerGFX;
+        [SerializeField] int interactionLookRange = 5, airLookRange;
     [SerializeField] float InterractionDistance;
+
 
     TileHit closestTile;
 
@@ -27,14 +28,12 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
 
     private bool gatherWasPressed;
     private bool specialWasPressed;
-    private bool anyInteracted;
     private Stat moveSpeed;
     private Stat gatheringSpeed;
     Coroutine gatherCoroutine = null;
     private Vector2Int lastCheckPosition = new Vector2Int(int.MaxValue, int.MaxValue);
     private float lastTreeCheckTime = 0;
     private const float treeCheckInterval = 0.5f;
-    private Vector2Int lastPosition;
     private Vector2Int currentPosOnGrid;
     private Vector3 startPositionOfPlayer= new Vector3(0, 0.25f, 3.81f);
     public Vector2Int GetCurrentPosOnGrid => currentPosOnGrid;
@@ -49,29 +48,45 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
 
     public override void Init()
     {
+        _playerGFX = GetComponent<PlayerGFX>();
+        _playerGFX._anim = GetComponent<Animator>();
         cameraController = CameraController._instance;
         inputManager = InputManager._instance;
         gridManager = GridManager._instance;
         playerStats = PlayerStats._instance;
+        moveSpeed = playerStats.GetStat(StatType.MoveSpeed);
+        gatheringSpeed = playerStats.GetStat(StatType.GatheringSpeed);
         scanner = new Scanner();
         playerTransfrom = transform;
         buildingLayer = TileMapLayer.Buildings;
-        DeathReset();
+        airRegenCont = new EffectController(playerStats.GetStat(StatType.Air), 2);
+        airRegenData = new EffectData(StatType.Air, EffectType.OverTime, 10f, Mathf.Infinity, 0.5f, false, false);
+
+        GameManager.DeathEvent += DeathReset;
     }
-    private void Update() {
-        lastPosition = currentPosOnGrid;
+    private void Update()
+     {
         currentPosOnGrid = gridManager.WorldToGridPosition((Vector2)transform.position, TileMapLayer.Floor);
         UpdateGridDirection();
-        playerMoved = lastPosition != currentPosOnGrid;
         CheckForTrees();
     }
 
-    private void FixedUpdate() {
+    private void FixedUpdate()
+    {
         Vector2 movementVector = inputManager.VJAxis * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue;
         movementVector.y *= 0.5f;
-        if (movementVector != Vector2.zero) {
+        if (movementVector != Vector2.zero)
+        {
             Move(movementVector);
+
+            _playerGFX.Walk(true,movementVector);
+
         }
+        else
+        {
+            _playerGFX.Walk(false,null);
+        }
+
     }
 
 
@@ -93,7 +108,6 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         }
         gatherWasPressed = false;
         specialWasPressed = false;
-        anyInteracted = false;
     }
 
     private void CheckForTrees() {
@@ -130,6 +144,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
             destination.z = transform.position.z;
             float distance = Vector2.Distance(transform.position, destination);
             if (distance > InterractionDistance) {
+                _playerGFX.Walk(true, Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * playerStats.GetSetMoveSpeed, distance));
                 Move(Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue, distance));
             }
             else {
@@ -182,18 +197,13 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         }
     }
 
- 
+
 
     public void DeathReset()
     {
-        transform.position = startPositionOfPlayer;
-        moveSpeed = playerStats.GetStat(StatType.MoveSpeed);
-        gatheringSpeed = playerStats.GetStat(StatType.GatheringSpeed);
-        if (airRegenCont != null)
-        airRegenCont.Stop();
-        
-        airRegenCont = new EffectController(playerStats.GetStat(StatType.Air), 2);
-        airRegenData = new EffectData(StatType.Air, EffectType.OverTime, 10f, Mathf.Infinity, 0.5f, false, false);
+        airRegenCont?.Stop();
+        //Start death animation
+        //transform.position = startPositionOfPlayer;
     }
 
     public class GatheringScanChecker : IChecker
