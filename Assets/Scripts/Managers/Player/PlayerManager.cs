@@ -1,24 +1,24 @@
 ﻿using Assets.Scan;
-using System;
 using System.Collections;
 using UnityEngine;
 
-public class PlayerManager : MonoSingleton<PlayerManager>
+public partial class PlayerManager : MonoSingleton<PlayerManager>
 {
     private PlayerStats playerStats;
     private static Transform playerTransfrom;
-       
-    private InputManager _inputManager;
-    private GridManager _GridManager;
-    private Scanner _scanner;
-    private PlayerController playerController;
+
+    private InputManager inputManager;
+    private GridManager gridManager;
+    private Scanner scanner;
+    private PlayerMovementHandler playerController;
     private TileMapLayer buildingLayer;
 
     [SerializeField] float baseSpeed;
     [SerializeField] int lookRange = 5;
     [SerializeField] PlayerGFX _playerGFX;
+        [SerializeField] int interactionLookRange = 5, airLookRange;
     [SerializeField] float InterractionDistance;
-   
+
 
     TileHit closestTile;
 
@@ -30,93 +30,125 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     private bool gatherWasPressed;
     private bool specialWasPressed;
     private bool anyInteracted;
+    private Stat moveSpeed;
+    private Stat gatheringSpeed;
     Coroutine gatherCoroutine = null;
-  
-    private DirectionEnum MovementDir {
-        get {
-            float angle = Vector2.SignedAngle(_inputManager.VJAxis, Vector2.up);
-            int direction = Mathf.RoundToInt(angle / 90);
-            switch (direction) {
-                case 0:
-                    return DirectionEnum.Up;
-                case 1:
-                    return DirectionEnum.Right;
-                case -1:
-                    return DirectionEnum.Left;
-                case 2:
-                    return DirectionEnum.Down;
-                default:
-                    return DirectionEnum.Down;
-            }
-        }
-    }
+    private Vector2Int lastCheckPosition = new Vector2Int(int.MaxValue, int.MaxValue);
+    private float lastTreeCheckTime = 0;
+    private const float treeCheckInterval = 0.5f;
+    private Vector2Int lastPosition;
+    private Vector2Int currentPosOnGrid;
+    private Vector3 startPositionOfPlayer= new Vector3(0, 0.25f, 3.81f);
+    public Vector2Int GetCurrentPosOnGrid => currentPosOnGrid;
+    private EffectController airRegenCont;
+    private EffectData airRegenData;
+    bool playerMoved;
+
+    private DirectionEnum gridMovementDirection;
     public static Transform GetPlayerTransform => playerTransfrom;
 
-    public override void Init() {
-       _playerGFX = GetComponent<PlayerGFX>();
-       _playerGFX._anim = GetComponent<Animator>();
-        
-        buildingLayer = TileMapLayer.Buildings;
-        _scanner = new Scanner();
-        _inputManager = InputManager._instance;
-        _GridManager = GridManager._instance;
-        playerStats = PlayerStats._instance;
-        playerController = PlayerController._instance;
-        playerTransfrom = GetComponent<Transform>();
-    }
-    private void LateUpdate() {
-        if (!anyInteracted) {
-            Vector2 movementVector = _inputManager.VJAxis * Time.deltaTime * baseSpeed * playerStats.GetSetSpeed;
-            if (movementVector != Vector2.zero) {
-                playerController.Move(movementVector);
-                _playerGFX.Walk(true,movementVector);
+    public DirectionEnum GetMovementDirection => gridMovementDirection;
 
-            }
-            else
-            {
-                _playerGFX.Walk(false,null);
-            }
+    public override void Init()
+    {
+        _playerGFX = GetComponent<PlayerGFX>();
+        _playerGFX._anim = GetComponent<Animator>();
+        cameraController = CameraController._instance;
+        inputManager = InputManager._instance;
+        gridManager = GridManager._instance;
+        playerStats = PlayerStats._instance;
+        scanner = new Scanner();
+        playerTransfrom = transform;
+        buildingLayer = TileMapLayer.Buildings;
+        DeathReset();
+    }
+    private void Update()
+     {
+        lastPosition = currentPosOnGrid;
+        currentPosOnGrid = gridManager.WorldToGridPosition((Vector2)transform.position, TileMapLayer.Floor);
+        UpdateGridDirection();
+        playerMoved = lastPosition != currentPosOnGrid;
+        CheckForTrees();
+    }
+
+    private void FixedUpdate()
+    {
+        Vector2 movementVector = inputManager.VJAxis * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue;
+        movementVector.y *= 0.5f;
+        if (movementVector != Vector2.zero)
+        {
+            Move(movementVector);
+
+            _playerGFX.Walk(true,movementVector);
+
         }
+        else
+        {
+            _playerGFX.Walk(false,null);
+        }
+
+    }
+
+
+    private void LateUpdate() {
         if (specialWasPressed != specialButton) {
             specialButton = specialWasPressed;
+            if (!specialButton)
+                closestTile = null;
         }
         if (gatherWasPressed != gatherButton) {
             gatherButton = gatherWasPressed;
-            if (!gatherButton && gatherCoroutine != null) {
-                StopCoroutine(gatherCoroutine);
-                gatherCoroutine = null;
+            if (!gatherButton) {
+                if (gatherCoroutine != null) {
+                    StopCoroutine(gatherCoroutine);
+                    gatherCoroutine = null;
+                }
+                closestTile = null;
             }
         }
         gatherWasPressed = false;
         specialWasPressed = false;
         anyInteracted = false;
 
-       
+
+    }
+
+    private void CheckForTrees() {
+        if (Time.time >= lastTreeCheckTime + treeCheckInterval) {
+            lastTreeCheckTime = Time.time;
+            if (currentPosOnGrid != lastCheckPosition) {
+                lastCheckPosition = currentPosOnGrid;
+                TileHit hit = scanner.Scan(currentPosOnGrid, gridMovementDirection, airLookRange, TileMapLayer.Buildings, new AirSourcesScanChecker());
+                if (hit != null) {
+                    airRegenCont.Begin(airRegenData);
+                }
+                else {
+                    airRegenCont.Stop();
+                }
+            }
+        }
     }
 
     public TileHit Scan(IChecker checkType) {
-        Vector2Int currentPosOnGrid = _GridManager.WorldToGridPosition(new Vector3(transform.position.x, transform.position.y, 0), TileMapLayer.Buildings);
-        return _scanner.Scan(currentPosOnGrid, MovementDir, lookRange, buildingLayer, checkType);
+        return scanner.Scan(currentPosOnGrid, gridMovementDirection, interactionLookRange, buildingLayer, checkType);
     }
     public void ImplementInteraction(bool SpecialInteract) {
+        gatherWasPressed = true;
         if (closestTile == null) {
             if (SpecialInteract) {
                 closestTile = Scan(new SpecialInterractionScanChecker());
-                specialWasPressed = true;
             }
             else {
                 closestTile = Scan(new GatheringScanChecker());
-                gatherWasPressed = true;
             }
         }
         else {
-            anyInteracted = true;
-            Vector3 destination = _GridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true);
+            Vector3 destination = gridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true);
             destination.z = transform.position.z;
             float distance = Vector2.Distance(transform.position, destination);
             if (distance > InterractionDistance) {
-                playerController.Move(Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * playerStats.GetSetSpeed, distance));
-                _playerGFX.Walk(true, Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * playerStats.GetSetSpeed, distance));
+_playerGFX.Walk(true, Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * playerStats.GetSetSpeed, distance));
+                Move(Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue, distance));
             }
             else {
                 if (SpecialInteract) {
@@ -134,7 +166,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     }
     IEnumerator HarvestTile(TileHit tileHit) {
         if (tileHit.tile.GetTileAbst is GatherableTileSO gatherable) {
-            yield return new WaitForSeconds(gatherable.GetGatheringTime / playerStats.GetSetGatheringSpeed);
+            yield return new WaitForSeconds(gatherable.GetGatheringTime / gatheringSpeed.GetSetValue);
             tileHit.tile.GatherInteraction(tileHit.gridPosition, buildingLayer);
             Debug.Log("TileHarvested");
         }
@@ -145,12 +177,42 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         SpecialInterracted = false;
         closestTile = null;
     }
-
-    public void playerDeath()
-    {
-
+    private void UpdateGridDirection() {
+        float angle = Vector2.SignedAngle(inputManager.VJAxis, new Vector2(-0.25f, 0.25f));
+        int direction = Mathf.RoundToInt(angle / 90);
+        switch (direction) {
+            case 0:
+                gridMovementDirection = DirectionEnum.Up;
+                break;
+            case 1:
+                gridMovementDirection = DirectionEnum.Right;
+                break;
+            case -1:
+                gridMovementDirection = DirectionEnum.Left;
+                break;
+            case 2:
+            case -2:
+                gridMovementDirection = DirectionEnum.Down;
+                break;
+            default:
+                gridMovementDirection = DirectionEnum.Down;
+                break;
+        }
     }
 
+
+
+    public void DeathReset()
+    {
+        transform.position = startPositionOfPlayer;
+        moveSpeed = playerStats.GetStat(StatType.MoveSpeed);
+        gatheringSpeed = playerStats.GetStat(StatType.GatheringSpeed);
+        if (airRegenCont != null)
+        airRegenCont.Stop();
+
+        airRegenCont = new EffectController(playerStats.GetStat(StatType.Air), 2);
+        airRegenData = new EffectData(StatType.Air, EffectType.OverTime, 10f, Mathf.Infinity, 0.5f, false, false);
+    }
 
     public class GatheringScanChecker : IChecker
     {
@@ -164,6 +226,16 @@ public class PlayerManager : MonoSingleton<PlayerManager>
             return tile.isSpecialInteraction;
         }
     }
-    
+    public class AirSourcesScanChecker : IChecker
+    {
+        public bool CheckTile(TileSlot tile) {
+            return tile.GetIsAirSource;
+        }
+    }
 
+    [System.Serializable]
+    public class PlayerMovementHandler
+    {
+
+    }
 }

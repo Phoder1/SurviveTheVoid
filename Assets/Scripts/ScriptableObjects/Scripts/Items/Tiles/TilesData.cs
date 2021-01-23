@@ -21,7 +21,7 @@ public class TileHit
 public abstract class TileAbstSO : ItemSO
 {
     [SerializeField] private TileBase mainTileBase;
-    [SerializeField] private bool isSolid;
+    [SerializeField] private bool isSolid, isAirSource;
     public TileBase GetMainTileBase => mainTileBase;
     public bool isSpecialInteraction {
         get {
@@ -53,6 +53,7 @@ public abstract class TileAbstSO : ItemSO
     }
 
     public bool GetIsSolid => isSolid;
+    public bool GetIsAirSource => isAirSource;
 }
 public interface ITileState
 {
@@ -64,7 +65,7 @@ public interface ITileState
     void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer);
     void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer);
     void CancelEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer);
-    void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool generation = true);
+    void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool generation = false);
 }
 public class TileSlot : ITileState
 {
@@ -104,6 +105,7 @@ public class TileSlot : ITileState
     public virtual TileAbstSO GetTileAbst => tileState.GetTileAbst;
     public virtual TileType GetTileType => tileState.GetTileType;
     public virtual bool GetIsSolid => tileState.GetIsSolid;
+    public bool GetIsAirSource => GetTileAbst.GetIsAirSource;
 
     public virtual void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer)
         => tileState.GatherInteraction(gridPosition, buildingLayer);
@@ -113,8 +115,8 @@ public class TileSlot : ITileState
     public virtual void CancelEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer)
         => tileState.CancelEvent(gridPosition, tilemapLayer);
 
-    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool playerAction = true)
-        => tileState.Init(gridPosition, tilemapLayer);
+    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool generation = false)
+        => tileState.Init(gridPosition, tilemapLayer, generation);
     #endregion
 }
 

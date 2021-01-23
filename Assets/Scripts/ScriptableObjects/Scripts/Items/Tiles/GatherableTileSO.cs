@@ -22,11 +22,12 @@ public class GatherableTileSO : TileAbstSO
 public class GrowthStage
 {
     [SerializeField] private TileBase stageTile;
-    [SerializeField] private bool isGatherable;
+    [SerializeField] private bool isGatherable, destroyOnGather;
     [SerializeField] private Drop[] drops;
 
     public TileBase GetStageTile => stageTile;
     public bool GetIsGatherable => isGatherable;
+    public bool GetDestroyOnGather => destroyOnGather;
     public Drop[] GetDrops => drops;
 }
 [System.Serializable]
@@ -76,20 +77,30 @@ public class GatherableState : ITileState
     public bool isSpecialInteraction => tile.isSpecialInteraction;
     public bool GetIsGatherable => tile.GetStages[currentStage].GetIsGatherable;
 
-    public void GatherInteraction(Vector2Int gridPosition, TileMapLayer tileMapLayer) {
-        if (reachedMaxStage) {
+    public void GatherInteraction(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
+        if (GetIsGatherable) {
             Debug.Log("Tried gathering");
-            GridManager._instance.SetTile(null, gridPosition, tileMapLayer, true);
+            if (tile.GetStages[currentStage].GetDestroyOnGather || currentStage == 0)
+                Remove(gridPosition, tilemapLayer);
+            else {
+                currentStage--;
+                if (!reachedMaxStage)
+                    InitEvent(gridPosition, tilemapLayer);
+                GridManager._instance.SetTile(tileSlot, gridPosition, tilemapLayer, true);
+            }
+
             Inventory inventory = Inventory.GetInstance;
             foreach (Drop drop in tile.GetStages[currentStage].GetDrops) {
                 if (Random.value <= drop.GetChance) {
-                    inventory.AddToInventory(0, new ItemSlot(drop.GetItem, Random.Range(drop.GetMinAmount, drop.GetMaxAmount)));
+                    inventory.AddToInventory(0, new ItemSlot(drop.GetItem, Random.Range(drop.GetMinAmount, drop.GetMaxAmount + 1)));
                 }
             }
-            inventory.PrintInventory(0);
         }
     }
-
+    private void Remove(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
+        CancelEvent(gridPosition, tilemapLayer);
+        GridManager._instance.SetTile(null, gridPosition, tilemapLayer, true);
+    }
     public void CancelEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
         if (eventInstance != null)
             eventInstance.Cancel();
@@ -105,13 +116,16 @@ public class GatherableState : ITileState
         }
     }
     public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool generation = false) {
-        if (generation)
+        if (generation) {
             currentStage = StagesCount - 1;
+        }
         if (eventInstance == null && tile.GetStages.Length > 1 && !reachedMaxStage)
             InitEvent(gridPosition, tilemapLayer);
     }
-    private void InitEvent(Vector2Int gridPosition, TileMapLayer tileMapLayer) {
-        eventInstance = new TileGrowEvent(Time.time + Random.Range(tile.GetMinGrowTime, tile.GetMaxGrowTime), tileSlot, gridPosition, tileMapLayer);
+    private void InitEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
+        if (eventInstance != null)
+            CancelEvent(gridPosition, tilemapLayer);
+        eventInstance = new TileGrowEvent(Time.time + Random.Range(tile.GetMinGrowTime, tile.GetMaxGrowTime), tileSlot, gridPosition, tilemapLayer);
     }
 
 
@@ -127,8 +141,7 @@ public class TileGrowEvent : TimeEvent
         this.tileMapLayer = tileMapLayer;
     }
 
-    public override void Trigger() {
-        eventTriggered = true;
+    protected override void TriggerBehaviour() {
         ((GatherableState)triggeringTile.tileState).Grow(eventPosition, tileMapLayer);
 
     }

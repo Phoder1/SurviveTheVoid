@@ -16,5 +16,8 @@ public abstract class StateBase
     
     
     }
+
+
+    public virtual void MousePos() { }
 }
 

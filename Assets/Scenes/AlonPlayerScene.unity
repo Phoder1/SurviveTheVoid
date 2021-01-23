@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 8e42919010a8e894f8b3aabc4a85ef98, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 02173e8e9c72a1a43898236f187ba36b, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -121,6 +121,18 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &723800478 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3303330037062540053, guid: ec261434d51bce44fa7c7f1d01379781,
+    type: 3}
+  m_PrefabInstance: {fileID: 3303330037997937118}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b4f1293ec7bd4645b3ecccfbc64604b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &784351265
 GameObject:
   m_ObjectHideFlags: 0
@@ -213,7 +225,7 @@ PrefabInstance:
         type: 3}
       propertyPath: vJ
       value: 
-      objectReference: {fileID: 1212365515}
+      objectReference: {fileID: 723800478}
     - target: {fileID: 6828253403587073456, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}
       propertyPath: m_Name
@@ -276,16 +288,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f0d45ae4df922940b20a49049c2d1e0, type: 3}
---- !u!114 &1212365515 stripped
+--- !u!114 &1359176545 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3303330037062540053, guid: ec261434d51bce44fa7c7f1d01379781,
+  m_CorrespondingSourceObject: {fileID: 3303330036332173219, guid: ec261434d51bce44fa7c7f1d01379781,
     type: 3}
   m_PrefabInstance: {fileID: 3303330037997937118}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b4f1293ec7bd4645b3ecccfbc64604b, type: 3}
+  m_Script: {fileID: 11500000, guid: 7a6cc23cff2f84a458cfeaa58d39023d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1757418854
@@ -295,6 +307,31 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2139250269882807943, guid: ee73434160860324a921a0989281f1ff,
+        type: 3}
+      propertyPath: playerColliderSize
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5392290940173787910, guid: ee73434160860324a921a0989281f1ff,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5392290940173787910, guid: ee73434160860324a921a0989281f1ff,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5435700086702367923, guid: ee73434160860324a921a0989281f1ff,
+        type: 3}
+      propertyPath: baseSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5435700086702367923, guid: ee73434160860324a921a0989281f1ff,
+        type: 3}
+      propertyPath: airLookRange
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 5435700086702367932, guid: ee73434160860324a921a0989281f1ff,
         type: 3}
       propertyPath: m_Name
@@ -308,17 +345,17 @@ PrefabInstance:
     - target: {fileID: 5435700086702367934, guid: ee73434160860324a921a0989281f1ff,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.08
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5435700086702367934, guid: ee73434160860324a921a0989281f1ff,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.92
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 5435700086702367934, guid: ee73434160860324a921a0989281f1ff,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.5
+      value: 3.81
       objectReference: {fileID: 0}
     - target: {fileID: 5435700086702367934, guid: ee73434160860324a921a0989281f1ff,
         type: 3}
@@ -609,7 +646,7 @@ Tilemap:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: -35, y: -35, z: 0}
   m_Size: {x: 66, y: 79, z: 1}
-  m_TileAnchor: {x: 0, y: 0, z: 1.8}
+  m_TileAnchor: {x: 0, y: 0, z: 2}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
     e00: 1
@@ -678,8 +715,8 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1829263319
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -778,14 +815,14 @@ Tilemap:
       e11: 0
       e12: 0
       e13: NaN
-      e20: -1.5072371e-25
+      e20: 0
       e21: 0
-      e22: -1.3883755e-25
-      e23: 6.799201e+25
-      e30: 7.58e-43
+      e22: 0
+      e23: 0
+      e30: 0
       e31: 0
-      e32: 7.58e-43
-      e33: 4.5904e-41
+      e32: 0
+      e33: 0
   m_TileColorArray:
   - m_RefCount: 0
     m_Data: {r: -2.1887779e+10, g: -2.1887779e+10, b: -2.1887779e+10, a: -2.1887779e+10}
@@ -802,7 +839,7 @@ Tilemap:
   - m_RefCount: 0
     m_Data: {r: -4.575278e+10, g: -4.575278e+10, b: -4.575278e+10, a: -4.575278e+10}
   - m_RefCount: 0
-    m_Data: {r: -9.232239, g: -9.232239, b: -9.232239, a: -9.232239}
+    m_Data: {r: 6.411438, g: 6.411438, b: 6.411438, a: 6.411438}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -852,20 +889,29 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 629309934292324171, guid: ec261434d51bce44fa7c7f1d01379781,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 1
+    - target: {fileID: 1508909983, guid: ec261434d51bce44fa7c7f1d01379781, type: 3}
+      propertyPath: onShortClick.m_PersistentCalls.m_Calls.Array.size
+      value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 629309934292324171, guid: ec261434d51bce44fa7c7f1d01379781,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
+    - target: {fileID: 1508909983, guid: ec261434d51bce44fa7c7f1d01379781, type: 3}
+      propertyPath: onShortClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 629309935759496634, guid: ec261434d51bce44fa7c7f1d01379781,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 1198.907
+    - target: {fileID: 1508909983, guid: ec261434d51bce44fa7c7f1d01379781, type: 3}
+      propertyPath: onShortClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1359176545}
+    - target: {fileID: 1508909983, guid: ec261434d51bce44fa7c7f1d01379781, type: 3}
+      propertyPath: onShortClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1508909983, guid: ec261434d51bce44fa7c7f1d01379781, type: 3}
+      propertyPath: onShortClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: OnPressedInventoryButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 1508909983, guid: ec261434d51bce44fa7c7f1d01379781, type: 3}
+      propertyPath: onShortClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 3303330036332173220, guid: ec261434d51bce44fa7c7f1d01379781,
         type: 3}
@@ -926,11 +972,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UImanager
-      objectReference: {fileID: 0}
-    - target: {fileID: 6033404864412062686, guid: ec261434d51bce44fa7c7f1d01379781,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec261434d51bce44fa7c7f1d01379781, type: 3}

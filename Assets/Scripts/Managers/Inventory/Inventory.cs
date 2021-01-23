@@ -15,16 +15,17 @@ public class Inventory
             if (_instance == null)
             {
                 _instance = new Inventory();
+                var x = EquipManager.GetInstance;
             }
 
             return _instance;
         }
     }
-    int maxCapacityOfItemsInList = 18, maxCapacityOfItemsInChest = 12;
+    int maxCapacityOfItemsInList;
     bool checkForItem = false;
     int counter = 0;
-    int itemAmountCount = 0;
-    int amountOfIDChests = 0; // 0 is the player's inventory
+    int itemAmountCount;
+    int amountOfIDChests; // 0 is the player's inventory
 
     ItemSlot[] inventoryList;
     //private int nextAddOnAmountForInventory = 5;
@@ -37,17 +38,17 @@ public class Inventory
 
     Dictionary<int, ItemSlot[]> inventoryDict;
     // 0 = > player's inventory
-    //1+ = > local inventory chests
+    //1  = > Hot Keys
+    //2+ = > Equips
+    //3? = > tools
+    //3+ = > local inventory chests
 
 
 
 
     private Inventory()
     {
-        inventoryList = new ItemSlot[maxCapacityOfItemsInList];
-        inventoryDict = new Dictionary<int, ItemSlot[]>();
-        inventoryDict.Add(amountOfIDChests, inventoryList);
-        inventoryUI = InventoryUIManager._instance;
+        ResetInventoryClass();
     }
 
 
@@ -215,6 +216,18 @@ public class Inventory
 
     }
 
+    public void ResetInventoryClass() {
+        maxCapacityOfItemsInList = 18;
+        checkForItem = false;
+        itemAmountCount = 0;
+        amountOfIDChests = 0;
+        inventoryList = new ItemSlot[maxCapacityOfItemsInList];
+        inventoryDict = new Dictionary<int, ItemSlot[]>();
+        inventoryDict.Add(amountOfIDChests, inventoryList);
+        GetNewIDForChest(5);
+        GetNewIDForChest(5);
+        inventoryUI = InventoryUIManager._instance;
+    }
     public bool AddToInventory(int chestID, ItemSlot item)
     {
         if (item == null)
@@ -378,7 +391,19 @@ public class Inventory
 
     }
 
+    public void RemoveItemFromButton(int buttonID, int chestID) {
 
+
+        inventoryCache = GetInventoryFromDictionary(chestID);
+        if (inventoryCache == null)
+            return;
+
+        if (buttonID<0 || buttonID >= inventoryCache.Length)
+            return;
+        
+
+        inventoryCache[buttonID] = null;
+    }
 
     bool HaveEnoughOfItemFromInventory(int chestID, ItemSlot item)
     {
@@ -471,34 +496,39 @@ public class Inventory
         Debug.Log("You Dont Have This Item In Your Inventory");
         return 0;
     }
-    public int GetNewIDForChest()
+    public int GetNewIDForChest(int amountOfCapacity)
     {
         amountOfIDChests++;
-        CreateNewInventory(amountOfIDChests);
+        CreateNewInventory(amountOfIDChests , amountOfCapacity);
         return amountOfIDChests;
     }
     public ItemSlot[] GetInventoryFromDictionary(int id)
     {
-        inventoryCache = null;
+        ItemSlot[] Cache = null;
 
-        inventoryDict.TryGetValue(id, out inventoryCache);
+        inventoryDict.TryGetValue(id, out Cache);
 
-        return inventoryCache;
+        return Cache;
     }
 
-    public void CreateNewInventory(int chestId) => inventoryDict.Add(chestId, new ItemSlot[maxCapacityOfItemsInChest]);
+    public void CreateNewInventory(int chestId, int amountOfCapacity) => inventoryDict.Add(chestId, new ItemSlot[amountOfCapacity]);
 
     public void ChangeBetweenItems(int firstChestID, int secondChestID, int drag, int drop)
     {
-
+     
         inventoryCache = GetInventoryFromDictionary(firstChestID);
-        if (inventoryCache == null)
+        if (inventoryCache == null )
             return;
+        if (drag < 0 || drag >= inventoryCache.Length)
+            return;
+
 
         if (firstChestID != secondChestID)
         {
             var inventoryCacheTwo = GetInventoryFromDictionary(secondChestID);
             if (inventoryCacheTwo == null)
+                return;
+            if (drop < 0 || drop >= inventoryCacheTwo.Length)
                 return;
 
             if (inventoryCache[drag] == null && inventoryCacheTwo[drop] == null)
@@ -556,6 +586,8 @@ public class Inventory
         if (inventoryCache == null)
             return null;
 
+        if (buttonId < 0 || buttonId >= inventoryCache.Length)
+            return null;
 
         return inventoryCache[buttonId];
     }
@@ -596,6 +628,8 @@ public interface IInventory
     void MakeInventoryBigger(int _newSize, int chestID);
     void PrintInventory(int chestID);
     void RemoveItemFromInventory(int chestID, ItemSlot item);
+
+  
 }
 [Serializable]
 public class ItemSlot

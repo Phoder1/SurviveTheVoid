@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Net;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class InputManager : MonoSingleton<InputManager>
 {
@@ -19,7 +15,12 @@ public class InputManager : MonoSingleton<InputManager>
     {
         playerStateMachine = PlayerStateMachine.GetInstance;
         gridManager = GridManager._instance;
+        DeathReset();
     }
+
+
+
+
     public static StateBase SetInputState
     {
         set
@@ -51,7 +52,7 @@ public class InputManager : MonoSingleton<InputManager>
             Touch[] touch = new Touch[3];
 
 
-            Debug.Log(Input.touchCount);
+
             for (int i = 0; i < Input.touchCount; i++)
             {
                 if (i >= touch.Length)
@@ -82,11 +83,31 @@ public class InputManager : MonoSingleton<InputManager>
                 }
             }
         }
+        else
+        {
+
+            switch (inputState)
+            {
+                case InputState.DefaultState:
+              
+                    break;
+                case InputState.BuildState:
+                    currentState.MousePos();
+
+                    break;
+                case InputState.FightState:
+                    // fightState
+                    break;
+                case InputState.RemovalState:
+                    currentState.MousePos();
+                    break;
+                default:
+                    break;
+            }
+
+        }
 
     }
-    
-
-
     public void SinglePressedButton(bool isButtonA)
     {
 
@@ -97,8 +118,6 @@ public class InputManager : MonoSingleton<InputManager>
 
 
     }
-
-
     public void HoldingButton(bool isButtonA)
     {
 
@@ -139,4 +158,6 @@ public class InputManager : MonoSingleton<InputManager>
 
         OnTouch();
     }
+    public void DeathReset() => playerStateMachine.SwitchState(InputState.DefaultState);
+  
 }
