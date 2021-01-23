@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5435700086702367920}
   - component: {fileID: 5435700086702367923}
   - component: {fileID: 1125945898}
-  - component: {fileID: 2139250269882807943}
   - component: {fileID: 1012182577}
   m_Layer: 0
   m_Name: Player
@@ -103,6 +102,7 @@ MonoBehaviour:
   airLookRange: 0
   InterractionDistance: 1
   SpecialInterracted: 0
+  playerColliderSize: 0
 --- !u!114 &1125945898
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,19 +116,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldownBeforeStart: 20
---- !u!114 &2139250269882807943
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5435700086702367932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab44714c80ea4874b9b12c1f1cccc87f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerColliderSize: 0
 --- !u!114 &1012182577
 MonoBehaviour:
   m_ObjectHideFlags: 0
