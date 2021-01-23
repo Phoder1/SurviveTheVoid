@@ -53,6 +53,13 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     private void Update()
     {
 
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            
+        }
+
+
+
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
@@ -107,7 +114,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         AddRecipeToList();
         InstantiateItemSlots();
         //SelectSection("Blocks");
-
+        DeleteOutCome();
 
     }
 
@@ -279,25 +286,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
             }
         }
         selectedSection.ChangeSectionSelection(true);
-        //for (int i = 0; i < scrolls.Length; i++)
-        //{
-        //    if (scrolls[i].gameObject.name == sectionName + "ScrollBar")
-        //    {
-        //        if (!scrolls[i].activeInHierarchy)
-        //        {
-        //            scrolls[i].SetActive(true);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (scrolls[i].activeInHierarchy)
-        //        {
-        //            scrolls[i].SetActive(false);
-        //        }
-        //    }
-        //}
-
-
+    
     }
     public void ShowRecipe(RecipeSO recipe)
     {
@@ -528,9 +517,25 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
     [SerializeField] float Timer;
     bool startcount;
-
-
-
+    [SerializeField]
+    Image OutComeImage;
+    [SerializeField]
+    TextMeshProUGUI OutComeText;
+    public void ShowOutCome()
+    {
+        if(selectedRecipe != null)
+        {
+            OutComeImage.gameObject.SetActive(true);
+            OutComeImage.sprite = selectedRecipe.getoutcomeItem.item.getsprite;
+            OutComeText.text = selectedRecipe.getoutcomeItem.amount.ToString();
+        }
+    }
+    public void DeleteOutCome()
+    {
+        OutComeImage.gameObject.SetActive(false);
+        OutComeImage.sprite = null;
+        OutComeText.text = "";
+    }
 
 
     public void UnlockRecipe(RecipeSO _recipe) => GetSection(_recipe.getSection).UnlockRecipe(_recipe);
