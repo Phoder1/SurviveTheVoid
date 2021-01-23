@@ -150,11 +150,10 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         {
             if (pointerDown)
             {
-                if (Inventory.GetInstance.GetItemFromInventoryButton(ChestId, Slot) != null)
-                {
-
+              
+                    InventoryUIManager._instance.TakingFrom(ChestId);
                     InventoryUIManager._instance.DraggedItem = Slot;
-                }
+                
             }
 
 

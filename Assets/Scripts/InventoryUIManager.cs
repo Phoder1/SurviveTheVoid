@@ -94,12 +94,12 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         }
         if (itemCache.item.GetItemType == ItemType.Equipable)
         {
-<<<<<<< HEAD
-            EquipManager.GetInstance.CheckEquip(buttonId, 0);
+
+            EquipManager.GetInstance.CheckEquip(itemCache, 0,buttonId);
             UpdatePlayerInventory();
-=======
-            EquipManager.GetInstance.CheckEquipGear(buttonId, 0);
->>>>>>> Rei's-Branch
+
+
+
         }
 
 
@@ -366,7 +366,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
             if (Dragged.item.GetItemType == ItemType.Equipable)
             {
 
-                if (EquipManager.GetInstance.CheckEquipGear(draggedSlot, fromChest, DropSlot, toChest))
+                if (EquipManager.GetInstance.CheckEquip(Dragged, fromChest, DropSlot, toChest))
                 {
                     return true;
                 }
