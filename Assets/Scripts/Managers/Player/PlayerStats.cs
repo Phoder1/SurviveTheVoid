@@ -48,7 +48,9 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         StatsDict = new Dictionary<StatType, Stat>();
         FillDictionary();
         AddReactions();
+        GameManager.DieEvent += DeathReset;
         ResetStats();
+
     }
 
     public void ResetStats() {
@@ -102,18 +104,29 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         EffectData hpLoseEffect = new EffectData(StatType.HP, EffectType.OverTime, -1f, Mathf.Infinity, 1f, false, false);
         EffectData hpRegenEffect = new EffectData(StatType.HP, EffectType.OverTime, 1f, Mathf.Infinity, 1f, false, false);
 
-        AddReaction(StatType.Food, true, true, 4, new EffectData[1] { hpLoseEffect });
-        AddReaction(StatType.Food, true, false, 95, new EffectData[1] { hpRegenEffect });
-    }
-    private void AddReaction(StatType statType, bool isPrecentage, bool checkSmaller, float reactionStartValue, EffectData[] effectsData) {
-        Reaction reaction = new Reaction(isPrecentage, checkSmaller, reactionStartValue, effectsData);
-        GetStat(statType).AddReaction(reaction);
+        AddReaction(StatType.Food, new ReactionEffect(true, true, 4, new EffectData[1] { hpLoseEffect }));
+        AddReaction(StatType.Food, new ReactionEffect(true, false, 95, new EffectData[1] { hpRegenEffect }));
+        AddReaction(StatType.HP, new DeathReaction(false, true, 0));
+
+        void AddReaction(StatType statType, Reaction reaction) => GetStat(statType).AddReaction(reaction);
     }
     public Stat GetStat(StatType statType) => StatsDict[statType];
     public float GetStatValue(StatType statType) => GetStat(statType).GetSetValue;
-    public float AddToStatValue(StatType statType , float amount) => GetStat(statType).GetSetValue += amount;
+    public float AddToStatValue(StatType statType, float amount) => GetStat(statType).GetSetValue += amount;
     public Stat GetMaxStat(StatType statType)
         => StatsDict[statType].maxStat;
+    private void DeathReset() {
+        ResetStats();
+        //EquipManager.ReEquip();
+
+    }
+    class DeathReaction : Reaction
+    {
+        public DeathReaction(bool triggerInPercentage, bool triggerIfSmaller, float reactionTriggerValue)
+            : base(triggerInPercentage, triggerIfSmaller, reactionTriggerValue) { }
+
+        protected override void StartReaction() => GameManager.OnDeath();
+    }
 }
 [System.Serializable]
 public class Stat
@@ -144,6 +157,12 @@ public class Stat
         }
     }
     public void Reset() {
+        if (reactions != null) {
+            foreach (Reaction reaction in reactions) {
+                reaction.Reset();
+            }
+        }
+
         GetSetValue = defaultValue;
     }
     public void AddReaction(Reaction reaction) {
@@ -184,18 +203,40 @@ public class ExpStat : Stat
     }
 }
 
-public class Reaction
+public abstract class Reaction
 {
-    private bool triggerInPercentage, triggerIfSmaller;
-    private float reactionTriggerValue;
-    private EffectData[] effectsData;
-    private EffectController[] effectsCont;
-    private bool reactionRunning;
-
-    public Reaction(bool triggerInPercentage, bool triggerIfSmaller, float reactionTriggerValue, EffectData[] effectsData) {
+    private protected bool triggerInPercentage, triggerIfSmaller;
+    private protected float reactionTriggerValue;
+    public Reaction(bool triggerInPercentage, bool triggerIfSmaller, float reactionTriggerValue) {
         this.triggerInPercentage = triggerInPercentage;
         this.triggerIfSmaller = triggerIfSmaller;
         this.reactionTriggerValue = reactionTriggerValue;
+    }
+    public bool CheckIfReactionEligible(Stat stat) {
+        float tempValueCheck = reactionTriggerValue;
+        if (triggerInPercentage && stat.GetIsCapped) {
+            tempValueCheck = stat.maxStat.GetSetValue * (reactionTriggerValue / 100);
+        }
+        if ((triggerIfSmaller && stat.GetSetValue <= tempValueCheck) || (!triggerIfSmaller && stat.GetSetValue >= tempValueCheck)) {
+            StartReaction();
+        }
+        else {
+            StopReaction();
+        }
+        return false;
+    }
+    protected virtual void StartReaction() { }
+    protected virtual void StopReaction() { }
+    public virtual void Reset() { }
+}
+public class ReactionEffect : Reaction
+{
+    private EffectData[] effectsData;
+    private EffectController[] effectsCont;
+    private bool reactionEffectRunning;
+
+    public ReactionEffect(bool triggerInPercentage, bool triggerIfSmaller, float reactionTriggerValue, EffectData[] effectsData)
+        : base(triggerInPercentage, triggerIfSmaller, reactionTriggerValue) {
         this.effectsData = effectsData;
     }
 
@@ -207,28 +248,20 @@ public class Reaction
             return effectsCont;
         }
     }
-    public bool CheckIfReactionEligible(Stat stat) {
-        float tempValueCheck = reactionTriggerValue;
-        if (triggerInPercentage && stat.GetIsCapped) {
-            tempValueCheck = stat.maxStat.GetSetValue * (reactionTriggerValue / 100);
-        }
-        if ((triggerIfSmaller && stat.GetSetValue <= tempValueCheck) || (!triggerIfSmaller && stat.GetSetValue >= tempValueCheck)) {
-            if (!reactionRunning)
-                StartReaction();
-        }
-        else {
-            if (reactionRunning)
-                StopReaction();
-        }
-        return false;
-    }
-    private void StartReaction() {
-        EffectHandler._instance.BeginAllEffects(effectsData, GetEffectsCont);
-        reactionRunning = true;
-    }
-    private void StopReaction() {
-        EffectHandler._instance.StopAllEffects(GetEffectsCont);
-        reactionRunning = false;
 
+    protected override void StartReaction() {
+        if (!reactionEffectRunning) {
+            EffectHandler._instance.BeginAllEffects(effectsData, GetEffectsCont);
+            reactionEffectRunning = true;
+        }
+    }
+    protected override void StopReaction() {
+        if (reactionEffectRunning) {
+            EffectHandler._instance.StopAllEffects(GetEffectsCont);
+            reactionEffectRunning = false;
+        }
+    }
+    public override void Reset() {
+        StopReaction();
     }
 }
