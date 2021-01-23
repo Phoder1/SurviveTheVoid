@@ -12,10 +12,17 @@ public class PlayerGFX : MonoBehaviour
 
     private void Start()
     {
+        GameManager.DieEvent += Death;
         _inputManager = InputManager._instance;
         playerSprite = GetComponent<SpriteRenderer>();
     }
-
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            Death();
+        }
+    }
     public void UpdateAnim()
     {
        
@@ -44,6 +51,10 @@ public class PlayerGFX : MonoBehaviour
 
             _anim.SetBool("isWalking", false);
         }
+    }
+    public void Death()
+    {
+        _anim.SetTrigger("Death");
     }
 
     public void TriggerAnim()

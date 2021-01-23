@@ -14,7 +14,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     private TileMapLayer buildingLayer;
 
     [SerializeField] float baseSpeed;
-    [SerializeField] int lookRange = 5;
+   
     [SerializeField] PlayerGFX _playerGFX;
         [SerializeField] int interactionLookRange = 5, airLookRange;
     [SerializeField] float InterractionDistance;
@@ -29,7 +29,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
 
     private bool gatherWasPressed;
     private bool specialWasPressed;
-    private bool anyInteracted;
+    
     private Stat moveSpeed;
     private Stat gatheringSpeed;
     Coroutine gatherCoroutine = null;
@@ -108,7 +108,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         }
         gatherWasPressed = false;
         specialWasPressed = false;
-        anyInteracted = false;
+       
 
 
     }
@@ -147,7 +147,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
             destination.z = transform.position.z;
             float distance = Vector2.Distance(transform.position, destination);
             if (distance > InterractionDistance) {
-_playerGFX.Walk(true, Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * playerStats.GetSetSpeed, distance));
+                _playerGFX.Walk(true, Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * playerStats.GetSetMoveSpeed, distance));
                 Move(Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue, distance));
             }
             else {
