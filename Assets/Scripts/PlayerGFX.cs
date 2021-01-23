@@ -15,21 +15,24 @@ public class PlayerGFX : MonoBehaviour
         GameManager.DeathEvent += Death;
         _inputManager = InputManager._instance;
         playerSprite = GetComponent<SpriteRenderer>();
-        //UpdateAnimClipTimes();
+        UpdateAnimClipTimes();
     }
-    //public void UpdateAnimClipTimes() {
-    //    AnimationClip[] clips = _anim.runtimeAnimatorController.animationClips;
-    //    foreach (AnimationClip clip in clips) {
-    //        switch (clip.name) {
-    //            case "isWalking":
-    //                walkAnimLength = clip.length;
-    //                break;
-    //            case "Death":
-    //                deathAnimLength = clip.length;
-    //                break;
-    //        }
-    //    }
-    //}
+    public void UpdateAnimClipTimes()
+    {
+        AnimationClip[] clips = _anim.runtimeAnimatorController.animationClips;
+        foreach (AnimationClip clip in clips)
+        {
+            switch (clip.name)
+            {
+                case "isWalking":
+                    walkAnimLength = clip.length;
+                    break;
+                case "Death":
+                    deathAnimLength = clip.length;
+                    break;
+            }
+        }
+    }
     public void Walk(bool DoWalk, Vector3? moveVector) {
         if (DoWalk) {
             if (moveVector.Value.x < 0) {
