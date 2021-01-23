@@ -10,7 +10,6 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     private InputManager inputManager;
     private GridManager gridManager;
     private Scanner scanner;
-    private PlayerMovementHandler playerController;
     private TileMapLayer buildingLayer;
 
     [SerializeField] float baseSpeed;
@@ -27,7 +26,6 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
 
     private bool gatherWasPressed;
     private bool specialWasPressed;
-    private bool anyInteracted;
     private Stat moveSpeed;
     private Stat gatheringSpeed;
     Coroutine gatherCoroutine = null;
@@ -56,7 +54,10 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         scanner = new Scanner();
         playerTransfrom = transform;
         buildingLayer = TileMapLayer.Buildings;
-        DeathReset();
+        airRegenCont = new EffectController(playerStats.GetStat(StatType.Air), 2);
+        airRegenData = new EffectData(StatType.Air, EffectType.OverTime, 10f, Mathf.Infinity, 0.5f, false, false);
+
+        GameManager.DieEvent += DeathReset;
     }
     private void Update() {
         lastPosition = currentPosOnGrid;
@@ -93,7 +94,6 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         }
         gatherWasPressed = false;
         specialWasPressed = false;
-        anyInteracted = false;
     }
 
     private void CheckForTrees() {
@@ -186,14 +186,9 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
 
     public void DeathReset()
     {
+        airRegenCont?.Stop();
+        //Start death animation
         transform.position = startPositionOfPlayer;
-        moveSpeed = playerStats.GetStat(StatType.MoveSpeed);
-        gatheringSpeed = playerStats.GetStat(StatType.GatheringSpeed);
-        if (airRegenCont != null)
-        airRegenCont.Stop();
-        
-        airRegenCont = new EffectController(playerStats.GetStat(StatType.Air), 2);
-        airRegenData = new EffectData(StatType.Air, EffectType.OverTime, 10f, Mathf.Infinity, 0.5f, false, false);
     }
 
     public class GatheringScanChecker : IChecker

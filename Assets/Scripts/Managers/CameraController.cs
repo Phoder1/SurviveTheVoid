@@ -1,11 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CameraController : MonoSingleton<CameraController>
 {
-    [SerializeField] private Camera zoomedOutCameraComp;
-    [SerializeField] private Camera zoomedInCameraComp;
+    [SerializeField] private GameObject zoomedOutCameraObj;
+    [SerializeField] private GameObject zoomedInCameraObj;
+
+    private Camera zoomedOutCamera;
+    private Camera zoomedInCamera;
 
     private GridManager gridManager;
     private Vector2 GetCameraRealSize => new Vector2(CurrentActiveCamera.orthographicSize * 2 * CurrentActiveCamera.aspect, CurrentActiveCamera.orthographicSize * 2);
@@ -15,22 +16,23 @@ public class CameraController : MonoSingleton<CameraController>
 
     private StarsParallaxController starsCont;
     private Camera CurrentActiveCamera;
-    private bool isZoomedIn = false;
-    public bool GetSetIsZoomedIn { 
+    private bool isZoomedIn;
+    public bool GetSetIsZoomedIn {
         get => isZoomedIn;
-        set { 
-            if(isZoomedIn != value) {
-                isZoomedIn = value;
-                SetZoomIn(value);
-            }
-        } 
+        set {
+            isZoomedIn = value;
+            SetZoomIn(value);
+        }
     }
 
 
     public override void Init() {
         gridManager = GridManager._instance;
         starsCont = GetComponent<StarsParallaxController>();
-        CurrentActiveCamera = zoomedOutCameraComp;
+        zoomedInCamera = zoomedInCameraObj.GetComponent<Camera>();
+        zoomedOutCamera = zoomedOutCameraObj.GetComponent<Camera>();
+
+        GetSetIsZoomedIn = false;
     }
     private void Update() {
         if (Input.GetKeyDown(KeyCode.N)) {
@@ -39,9 +41,9 @@ public class CameraController : MonoSingleton<CameraController>
     }
     private void SetZoomIn(bool isZoomIn) {
 
-        zoomedOutCameraComp.enabled = !isZoomIn;
-        zoomedInCameraComp.enabled = isZoomIn;
-        CurrentActiveCamera = (isZoomIn ? zoomedInCameraComp : zoomedOutCameraComp);
+        zoomedOutCameraObj.SetActive(!isZoomIn);
+        zoomedInCameraObj.SetActive(isZoomIn);
+        CurrentActiveCamera = (isZoomIn ? zoomedInCamera : zoomedOutCamera);
         starsCont.UpdateViewSize();
         UpdateView();
     }
