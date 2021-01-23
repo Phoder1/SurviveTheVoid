@@ -57,8 +57,7 @@ public class EquipManager
         {
             for (int i = 0; i < toolSlots.Length; i++)
             {
-                if (toolSlots[i] != null)
-                    UnEquipItem(i);
+                toolSlots[i] = null;
 
             }
         }
@@ -157,8 +156,9 @@ public class EquipManager
             InventoryUIManager._instance.UpdateInventoryToUI();
             return true;
         }
-        else if (chestID != 3 && secondChestID != 3)
+        else if (chestID != 3 && secondChestID != 2)
             return false;
+
 
 
         if (secondButtonID == null)
@@ -171,16 +171,17 @@ public class EquipManager
             if (!(equipSlotCache.item is ToolItemSO) || firstButtonID < 0)
                 return false;
 
-            EquipItem(chestID, firstButtonID); // fix
+        
 
             int index = GetToolSlotIndex((equipSlotCache.item as ToolItemSO).GetToolType);
             if (toolSlots[index] != null) {
-                inventory.AddToInventory(0, toolSlots[firstButtonID]);
-                toolSlots[firstButtonID] = equipSlotCache;
+                inventory.AddToInventory(0, toolSlots[index]);
             }
+                Inventory.GetInstance.RemoveItemFromInventory(0, equipSlotCache);
+                toolSlots[firstButtonID] = equipSlotCache;
 
 
-                InventoryUIManager._instance.UpdateInventoryToUI();
+                InventoryUIManager._instance.UpdatePlayerInventory();
             return true;
         }
 
