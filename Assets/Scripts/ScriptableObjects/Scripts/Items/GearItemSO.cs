@@ -1,43 +1,41 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿
+using System;
 using UnityEngine;
 
 
-
-    [CreateAssetMenu(fileName = "New Gear Item", menuName = "Items/" + "Gear")]
-    public class GearItemSO : ItemSO
-    {
-
-
-        public enum GearType
+public enum EquipType
         {
-            None,
-
             Helmet,
             Chest,
             Gloves,
             Legging,
             Shoes
         }
-        [SerializeField]
-        private GearType gearType;
-        public GearType GetGearTpye => gearType;
+[CreateAssetMenu(fileName = "New Gear Item", menuName = "Items/" + "Gear")]
+public class GearItemSO : ItemSO
+{
+    [SerializeField]
+    private EquipType equipType;
+    public EquipType GetEquipType => equipType;
 
-        [SerializeField]
-        private int maxDurability;
-        public int GetMaxDurability => maxDurability;
-
-
-        // gear tier 
-        [SerializeField]
-        private int gearTier;
-        public int GetGearTier => gearTier;
+    [SerializeField]
+    private int maxDurability;
+    public int GetMaxDurability => maxDurability;
 
 
+    // gear tier 
+    [SerializeField]
+    private int gearTier;
+    public int GetGearTier => gearTier;
 
 
 
+    public EquipStats[] equipstats;
 
-    }
-
+}
+[Serializable]
+public class EquipStats {
+    public StatType statType;
+    public bool isPercentage;
+     public float amount;
+}

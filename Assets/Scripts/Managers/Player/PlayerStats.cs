@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 public enum StatType
 {
@@ -27,6 +26,24 @@ public enum StatType
 public class PlayerStats : MonoSingleton<PlayerStats>
 {
     private Dictionary<StatType, Stat> StatsDict;
+    #region comfort zone
+    public float GetSetHP { get => GetStat(StatType.HP).GetSetValue; set => GetStat(StatType.HP).GetSetValue = value; }
+    public float GetSetFood { get => GetStat(StatType.Food).GetSetValue; set => GetStat(StatType.Food).GetSetValue = value; }
+    public float GetSetWater { get => GetStat(StatType.Water).GetSetValue; set => GetStat(StatType.Water).GetSetValue = value; }
+    public float GetSetAir { get => GetStat(StatType.Air).GetSetValue; set => GetStat(StatType.Air).GetSetValue = value; }
+    public float GetSetSleep { get => GetStat(StatType.Sleep).GetSetValue; set => GetStat(StatType.Sleep).GetSetValue = value; }
+    public float GetSetMaxHP { get => GetStat(StatType.MaxHP).GetSetValue; set => GetStat(StatType.MaxHP).GetSetValue = value; }
+    public float GetSetMaxFood { get => GetStat(StatType.MaxFood).GetSetValue; set => GetStat(StatType.MaxFood).GetSetValue = value; }
+    public float GetSetMaxWater { get => GetStat(StatType.MaxWater).GetSetValue; set => GetStat(StatType.MaxWater).GetSetValue = value; }
+    public float GetSetMaxAir { get => GetStat(StatType.MaxAir).GetSetValue; set => GetStat(StatType.MaxAir).GetSetValue = value; }
+    public float GetSetMaxSleep { get => GetStat(StatType.MaxSleep).GetSetValue; set => GetStat(StatType.MaxSleep).GetSetValue = value; }
+    public float GetSetEXP { get => GetStat(StatType.EXP).GetSetValue; set => GetStat(StatType.EXP).GetSetValue = value; }
+    public float GetSetEXPtoNextLevel { get => GetStat(StatType.EXPtoNextLevel).GetSetValue; set => GetStat(StatType.EXPtoNextLevel).GetSetValue = value; }
+    public float GetSetLevel { get => GetStat(StatType.Level).GetSetValue; set => GetStat(StatType.Level).GetSetValue = value; }
+    public float GetSetMoveSpeed { get => GetStat(StatType.MoveSpeed).GetSetValue; set => GetStat(StatType.MoveSpeed).GetSetValue = value; }
+    public float GetSetAttackDMG { get => GetStat(StatType.AttackDMG).GetSetValue; set => GetStat(StatType.AttackDMG).GetSetValue = value; }
+    public float GetSetGatheringSpeed { get => GetStat(StatType.GatheringSpeed).GetSetValue; set => GetStat(StatType.GatheringSpeed).GetSetValue = value; }
+    #endregion
     public override void Init() {
         StatsDict = new Dictionary<StatType, Stat>();
         FillDictionary();
@@ -34,7 +51,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         ResetStats();
     }
 
-    private void ResetStats() {
+    public void ResetStats() {
         foreach (Stat stat in StatsDict.Values)
             stat.Reset();
     }
@@ -93,6 +110,8 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         GetStat(statType).AddReaction(reaction);
     }
     public Stat GetStat(StatType statType) => StatsDict[statType];
+    public float GetStatValue(StatType statType) => GetStat(statType).GetSetValue;
+    public float AddToStatValue(StatType statType , float amount) => GetStat(statType).GetSetValue += amount;
     public Stat GetMaxStat(StatType statType)
         => StatsDict[statType].maxStat;
 }
@@ -115,7 +134,6 @@ public class Stat
     public virtual float GetSetValue {
         get => value;
         set {
-
             this.value = Mathf.Max(value, 0);
             if (maxStat != null)
                 this.value = Mathf.Min(this.value, maxStat.GetSetValue);
@@ -123,7 +141,6 @@ public class Stat
             if (reactions != null)
                 foreach (Reaction reaction in reactions)
                     reaction.CheckIfReactionEligible(this);
-
         }
     }
     public void Reset() {

@@ -1,14 +1,10 @@
 ﻿using TMPro;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 {
-    [Header("Equip Related")]
-    // 0 = head, 1 = Chest, 2 = Legging, 3 = Gloves, 4 = Shoes
-    public Image[] EquipSlots;
-    public GearItemSO[] EquippedSlots;
+
     [SerializeField] bool IsInventoryOn = true;
 
     [Header("Inventory Related")]
@@ -19,13 +15,53 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
     Inventory inventory;
     public Inventory GetInventory => inventory;
-    public Color SlotColor;
 
+
+    [Header("Slots Related")]
+    public Color SlotColor;
+    public Image TrashCanBackGround;
+    public bool IsDragging;
+    public override void Init()
+    {
+        inventory = Inventory.GetInstance;
+        HotKeysInventory = inventory.GetInventoryFromDictionary(1);
+        EquipInventory = inventory.GetInventoryFromDictionary(2);
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            //inventory.AddToInventory(1,new ItemSlot(CraftingManager._instance.items.getitemsArr[0],5));
+            //UpdateHotKeysToUI();
+        }
+    }
+
+
+
+    #region Inventory Slots
+
+    //public boolean = setactive of all inventory,  only update inventory after this boolean is true, if false dont update
+    [SerializeField]
+    int LookingAtInventory;
+    [SerializeField]
+    int TakingFromInventory;
+
+    public void WhatInventory(int id)
+    {
+        LookingAtInventory = id;
+    }
+    public void TakingFrom(int id)
+    {
+        TakingFromInventory = id;
+    }
 
 
     public void OnPressedInventoryButton(int buttonId)
     {
-        var checkIfSlotIsItem = inventory.GetItemFromInventoryButton(0, buttonId);
+        Debug.Log("Short press");
+        var checkIfSlotIsItem = inventory.GetItemFromInventoryButton(LookingAtInventory, buttonId);
 
 
         if (checkIfSlotIsItem == null || checkIfSlotIsItem.item == null)
@@ -46,9 +82,9 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
         if (itemCache.item.GetItemType == ItemType.Consumable)
         {
-            if (EffectHandler._instance.GetEffectCoolDown(itemCache.item as ConsumableItemSO))
+            if (ConsumeablesHandler._instance.GetEffectCoolDown(itemCache.item as ConsumableItemSO))
             {
-                if (inventory.RemoveItemFromInventory(0, new ItemSlot(itemCache.item, 1)))
+                if (inventory.RemoveItemFromInventory(LookingAtInventory, new ItemSlot(itemCache.item, 1)))
                 {
                     Debug.Log("Consumed: " + itemCache.item.getItemName);
                     (itemCache.item as ConsumableItemSO).ApplyEffect();
@@ -56,34 +92,17 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
             }
 
         }
-
-
-    }
-
-
-
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-            UpdateInventory();
-    }
-
-    //public boolean = setactive of all inventory,  only update inventory after this boolean is true, if false dont update
-
-    public void UpdateInventory()
-    {
-        if (IsInventoryOn)
+        if (itemCache.item.GetItemType == ItemType.Equipable)
         {
-            UpdateInventoryToUI();
+            EquipManager.GetInstance.CheckEquip(buttonId, 0);
         }
+
+
     }
 
-    public override void Init()
-    {
-        inventory = Inventory.GetInstance;
-    }
+
+
+
 
     public void UpdateInventoryToUI()
     {
@@ -118,7 +137,14 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
             }
         }
+
+
+
     }
+
+
+
+
 
     void SetInventorySlotActive(int Index, bool IsActive)
     {
@@ -144,7 +170,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
     public void OnLongInventoryPress(int buttonId)
     {
-        if(inventory.GetItemFromInventoryButton(0,buttonId) != null && !IsHoldingItem)
+        if (inventory.GetItemFromInventoryButton(0, buttonId) != null && !IsHoldingItem)
         {
             Debug.Log("holding Item");
             IsHoldingItem = true;
@@ -157,27 +183,28 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     public void GetDroppedItem(int buttonId)
     {
         if (DraggedItem != buttonId)
-            DroppedItem = buttonId;
-
-        for (int i = 0; i < InventorySlots.Length; i++)
         {
-            if (i == DroppedItem)
-            {
-                InventorySlots[i].GetComponent<Image>().color = Color.yellow;
-            }
-            else if (i != DraggedItem)
-            {
-                InventorySlots[i].GetComponent<Image>().color = SlotColor;
-            }
+            DroppedItem = buttonId;
+            HightLightDrop(buttonId);
         }
 
+
     }
+
+    public void HightLightDrop(int buttonId)
+    {
+        InventorySlots[buttonId].GetComponent<Image>().color = Color.yellow;
+    }
+
+
     public void CancelDropHighLight(int buttonId)
     {
         if (buttonId >= 0)
         {
             InventorySlots[DroppedItem].GetComponent<Image>().color = SlotColor;
-            ResetSwap();
+            DroppedItem = -1;
+            UpdateInventoryToUI();
+            //ResetSwap();
         }
     }
 
@@ -188,14 +215,25 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
     public void ResetSwap()
     {
+        IsHoldingItem = false;
         if (DraggedItem >= 0)
             InventorySlots[DraggedItem].GetComponent<Image>().color = SlotColor;
         if (DroppedItem >= 0)
             InventorySlots[DroppedItem].GetComponent<Image>().color = SlotColor;
-        IsHoldingItem = false;
+
         DraggedItem = -1;
         DroppedItem = -1;
-        UpdateInventoryToUI();
+
+        DraggedIntoBar = -1;
+        HotKeyDragged = -1;
+
+        LookingAtInventory = -1;
+        TakingFromInventory = -1;
+
+        EquipDragged = -1;
+        EquipDraggedInto = -1;
+        DraggedIntoEquip = -1;
+
     }
     public void SwapItems()
     {
@@ -208,10 +246,144 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     public void DeleteItem(int buttonId)
     {
         inventory.RemoveItemFromButton(buttonId, 0);
+        UpdateInventoryToUI();
         ResetSwap();
+    }
+
+    public void HighLightTrashCan()
+    {
+        TrashCanBackGround.color = Color.red;
+    }
+    public void RemoveTrashHighLight()
+    {
+        TrashCanBackGround.color = SlotColor;
+    }
+
+    #endregion
+
+    #region Equip
+    [Header("Equip Related")]
+    public int DraggedIntoEquip;
+    public int EquipDragged;
+    public int EquipDraggedInto;
+    ItemSlot[] EquipInventory;
+    public EquipSlot[] EquipSlots;
+
+    public void UpdateEquipToUI()
+    {
+        //update Equip
+        for (int i = 0; i < EquipInventory.Length; i++)
+        {
+            if (EquipInventory[i] != null)
+            {
+                //show the item sprite
+                EquipSlots[i].ShowEquippedGear(EquipInventory[i]);
+            }
+            else
+            {
+                //show that you don't wear anything
+                EquipSlots[i].NoGearEquipped();
+            }
+        }
     }
 
 
 
 
+    #endregion
+
+    #region HotKey
+    [Header("HotKey Related")]
+    public int DraggedIntoBar;
+    public int HotKeyDragged;
+    public int HotKeyDraggedInto;
+    ItemSlot[] HotKeysInventory;
+    public ConsumableHotBar[] ConsumableHotKey;
+
+
+
+    public void UpdateHotKeysToUI()
+    {
+        //update hotkeys
+        for (int i = 0; i < HotKeysInventory.Length; i++)
+        {
+            if (HotKeysInventory[i] != null)
+            {
+                ConsumableHotKey[i].ShowEquippedConsumable(HotKeysInventory[i]);
+            }
+            else
+            {
+                ConsumableHotKey[i].NoConsumableEquipped();
+            }
+        }
+    }
+
+    public void SwitchKeyInventory(int DraggedItem, int DroppedOn)
+    {
+        ItemSlot DraggedTemp = inventory.GetItemFromInventoryButton(TakingFromInventory, DraggedItem);
+        ItemSlot DroppedTemp = inventory.GetItemFromInventoryButton(LookingAtInventory, DroppedOn);
+        if (canEquipOnConsumable(TakingFromInventory, LookingAtInventory, DraggedTemp, DroppedTemp, DraggedItem, DroppedOn))
+        {
+            inventory.ChangeBetweenItems(TakingFromInventory, LookingAtInventory, DraggedItem, DroppedOn);
+
+        }
+        UpdatePlayerInventory();
+        ResetSwap();
+
+
+    }
+
+    public void UpdatePlayerInventory()
+    {
+        UpdateHotKeysToUI();
+        UpdateEquipToUI();
+        UpdateInventoryToUI();
+    }
+
+    bool canEquipOnConsumable(int fromChest, int toChest, ItemSlot Dragged, ItemSlot Drop, int draggedSlot, int DropSlot)
+    {
+        if (toChest == 0)
+        {
+            return true;
+        }
+        else if (toChest == 1)
+        {
+            if (Dragged.item.GetItemType == ItemType.Consumable)
+            {
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else if (toChest == 2)
+        {
+
+
+            if (Dragged.item.GetItemType == ItemType.Equipable)
+            {
+
+                if (EquipManager.GetInstance.CheckEquip(draggedSlot, fromChest, DropSlot, toChest))
+                {
+                    return true;
+                }
+
+
+                return false;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return true;
+        }
+
+    }
+
+    #endregion
 }

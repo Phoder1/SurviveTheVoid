@@ -31,11 +31,12 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     private Stat moveSpeed;
     private Stat gatheringSpeed;
     Coroutine gatherCoroutine = null;
-    private Vector2Int lastCheckPosition = new Vector2Int(int.MaxValue,int.MaxValue);
+    private Vector2Int lastCheckPosition = new Vector2Int(int.MaxValue, int.MaxValue);
     private float lastTreeCheckTime = 0;
     private const float treeCheckInterval = 0.5f;
     private Vector2Int lastPosition;
     private Vector2Int currentPosOnGrid;
+    private Vector3 startPositionOfPlayer= new Vector3(0, 0.25f, 3.81f);
     public Vector2Int GetCurrentPosOnGrid => currentPosOnGrid;
     private EffectController airRegenCont;
     private EffectData airRegenData;
@@ -46,19 +47,16 @@ public class PlayerManager : MonoSingleton<PlayerManager>
 
     public DirectionEnum GetMovementDirection => gridMovementDirection;
 
-    public override void Init() {
-
-        buildingLayer = TileMapLayer.Buildings;
-        scanner = new Scanner();
+    public override void Init()
+    {
         inputManager = InputManager._instance;
         gridManager = GridManager._instance;
         playerStats = PlayerStats._instance;
-        playerController = PlayerMovementHandler._instance;
-        moveSpeed = playerStats.GetStat(StatType.MoveSpeed);
-        gatheringSpeed = playerStats.GetStat(StatType.GatheringSpeed);
+        playerController = PlayerMovementHandler.GetInstance;
+        scanner = new Scanner();
         playerTransfrom = transform;
-        airRegenCont = new EffectController(playerStats.GetStat(StatType.Air), 2);
-        airRegenData = new EffectData(StatType.Air, EffectType.OverTime, 10f, Mathf.Infinity, 0.5f, false, false);
+        buildingLayer = TileMapLayer.Buildings;
+        DeathReset();
     }
     private void Update() {
         lastPosition = currentPosOnGrid;
@@ -68,16 +66,16 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         CheckForTrees();
     }
 
+    private void FixedUpdate() {
+        Vector2 movementVector = inputManager.VJAxis * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue;
+        movementVector.y *= 0.5f;
+        if (movementVector != Vector2.zero) {
+            playerController.Move(movementVector);
+        }
+    }
 
 
     private void LateUpdate() {
-        if (!anyInteracted) {
-            Vector2 movementVector = inputManager.VJAxis * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue;
-            movementVector.y *= 0.5f;
-            if (movementVector != Vector2.zero) {
-                playerController.Move(movementVector);
-            }
-        }
         if (specialWasPressed != specialButton) {
             specialButton = specialWasPressed;
             if (!specialButton)
@@ -128,7 +126,6 @@ public class PlayerManager : MonoSingleton<PlayerManager>
             }
         }
         else {
-            anyInteracted = true;
             Vector3 destination = gridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true);
             destination.z = transform.position.z;
             float distance = Vector2.Distance(transform.position, destination);
@@ -163,7 +160,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         closestTile = null;
     }
     private void UpdateGridDirection() {
-        float angle = Vector2.SignedAngle(inputManager.VJAxis, new Vector2(-0.25f,0.25f));
+        float angle = Vector2.SignedAngle(inputManager.VJAxis, new Vector2(-0.25f, 0.25f));
         int direction = Mathf.RoundToInt(angle / 90);
         switch (direction) {
             case 0:
@@ -184,6 +181,21 @@ public class PlayerManager : MonoSingleton<PlayerManager>
                 break;
         }
     }
+
+ 
+
+    public void DeathReset()
+    {
+        transform.position = startPositionOfPlayer;
+        moveSpeed = playerStats.GetStat(StatType.MoveSpeed);
+        gatheringSpeed = playerStats.GetStat(StatType.GatheringSpeed);
+        if (airRegenCont != null)
+        airRegenCont.Stop();
+        
+        airRegenCont = new EffectController(playerStats.GetStat(StatType.Air), 2);
+        airRegenData = new EffectData(StatType.Air, EffectType.OverTime, 10f, Mathf.Infinity, 0.5f, false, false);
+    }
+
     public class GatheringScanChecker : IChecker
     {
         public bool CheckTile(TileSlot tile) {
@@ -204,4 +216,145 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     }
 
 
+    public class PlayerMovementHandler
+    {
+        [Range(0.1f, 1f)]
+        [SerializeField] float playerColliderSize;
+        CameraController cameraController;
+        GridManager gridManager;
+       static PlayerMovementHandler _instance;
+
+        Vector2Int currentGridPos;
+        Vector2 gridMoveVector;
+
+        bool moved;
+        public static PlayerMovementHandler GetInstance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new PlayerMovementHandler();
+                    
+                }
+                return _instance;
+            }
+        }
+
+        PlayerMovementHandler() { Init(); }
+        public void Init()
+        {
+            cameraController = CameraController._instance;
+            gridManager = GridManager._instance;
+        }
+        public void Move(Vector2 moveVector)
+        {
+            moved = false;
+            gridMoveVector = UnityToGridVector(moveVector);
+            currentGridPos = gridManager.WorldToGridPosition((Vector2)GetPlayerTransform.position, TileMapLayer.Floor);
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                moved = true;
+            GetPlayerTransform.Translate(moveVector);
+            }
+            else
+            {
+                MoveOnY();
+                MoveOnX();
+            }
+            if (moved)
+                UpdateView();
+        }
+
+        private void MoveOnY()
+        {
+            Vector2 UnityVectorOnGridY = GridToUnityVector(new Vector2(0, gridMoveVector.y));
+            if (UnityVectorOnGridY == Vector2.zero)
+            {
+                return;
+            }
+            if (gridMoveVector.y > 0)
+            {
+                if (CheckTilesOnPos(tileLeftCorner(GetPlayerTransform.position, playerColliderSize) + UnityVectorOnGridY) && CheckTilesOnPos(tileTopCorner(GetPlayerTransform.position, playerColliderSize) + UnityVectorOnGridY))
+                {
+                    ApplyMove(UnityVectorOnGridY);
+                }
+                //else {
+                //    Vector2 nextTilePos = gridManager.GridToWorldPosition(currentGridPos + Vector2Int.up, TileMapLayer.Floor, true);
+                //    float gridDistance = UnityToGridVector(nextTilePos).y - UnityToGridVector(tileLeftCorner(transform.position, playerColliderSize)).y;
+                //    Debug.Log(gridDistance);
+                //    Vector2 moveVector = GridToUnityVector(new Vector2(0, gridDistance - 0.5f));
+                //    transform.position += (Vector3)moveVector;
+                //}
+            }
+            else
+            {
+                if (CheckTilesOnPos(tileBottomCorner(GetPlayerTransform.position, playerColliderSize) + UnityVectorOnGridY) && CheckTilesOnPos(tileRightCorner(GetPlayerTransform.position, playerColliderSize) + UnityVectorOnGridY))
+                {
+                    ApplyMove(UnityVectorOnGridY);
+                }
+                //else {
+                //    Vector2 nextGridPos = UnityToGridVector(transform.position + (Vector3)UnityVectorOnGridY);
+                //    nextGridPos.y = Mathf.Ceil(nextGridPos.y);
+                //    transform.position = (Vector3)GridToUnityVector(nextGridPos) + Vector3.forward * transform.position.z;
+                //}
+            }
+        }
+        private void MoveOnX()
+        {
+            Vector2 UnityVectorOnGridX = GridToUnityVector(new Vector2(gridMoveVector.x, 0));
+            if (UnityVectorOnGridX == Vector2.zero)
+            {
+                return;
+            }
+            if (gridMoveVector.x > 0)
+            {
+                if (CheckTilesOnPos(tileRightCorner(GetPlayerTransform.position, playerColliderSize) + UnityVectorOnGridX) && CheckTilesOnPos(tileTopCorner(GetPlayerTransform.position, playerColliderSize) + UnityVectorOnGridX))
+                {
+                    ApplyMove(UnityVectorOnGridX);
+                }
+                //else {
+                //    Vector2 nextGridPos = UnityToGridVector(transform.position + (Vector3)UnityVectorOnGridX);
+                //    nextGridPos.x = Mathf.Floor(nextGridPos.x);
+                //    transform.position = (Vector3)GridToUnityVector(nextGridPos) + Vector3.forward * transform.position.z;
+                //    ;
+                //}
+            }
+            else
+            {
+                if (CheckTilesOnPos(tileBottomCorner(GetPlayerTransform.position, playerColliderSize) + UnityVectorOnGridX) && CheckTilesOnPos(tileLeftCorner(GetPlayerTransform.position, playerColliderSize) + UnityVectorOnGridX))
+                {
+                    ApplyMove(UnityVectorOnGridX);
+                }
+                //else {
+                //    Vector2 nextGridPos = UnityToGridVector(transform.position + (Vector3)UnityVectorOnGridX);
+                //    nextGridPos.x = Mathf.Ceil(nextGridPos.x);
+                //    transform.position = (Vector3)GridToUnityVector(nextGridPos) + Vector3.forward * transform.position.z;
+                //}
+            }
+        }
+        private void ApplyMove(Vector2 vector) => ApplyMove((Vector3)vector);
+        private void ApplyMove(Vector3 vector)
+        {
+            GetPlayerTransform.position += vector;
+            moved = true;
+        }
+
+        private Vector2 UnityToGridVector(Vector2 vector) => new Vector2(2 * vector.x + vector.y, -2 * vector.x + vector.y);
+        private Vector2 GridToUnityVector(Vector2 vector) => new Vector2(0.125f * vector.x - 0.125f * vector.y, 0.25f * vector.x + 0.25f * vector.y);
+        private bool CheckTilesOnPos(Vector2 pos)
+        {
+            Vector2Int gridPos = gridManager.WorldToGridPosition(pos, TileMapLayer.Floor);
+            if (gridPos == currentGridPos)
+                return true;
+            TileSlot buildingTile = gridManager.GetTileFromGrid(gridPos, TileMapLayer.Buildings);
+            TileSlot floorTile = gridManager.GetTileFromGrid(gridPos, TileMapLayer.Floor);
+            return (buildingTile == null || !buildingTile.GetIsSolid) && floorTile != null;
+        }
+        private Vector2 tileTopCorner(Vector2 pos, float colliderSize) => pos + Vector2.up * 0.25f * colliderSize;
+        private Vector2 tileBottomCorner(Vector2 pos, float colliderSize) => pos + Vector2.down * 0.25f * colliderSize;
+        private Vector2 tileRightCorner(Vector2 pos, float colliderSize) => pos + Vector2.right * 0.5f * colliderSize;
+        private Vector2 tileLeftCorner(Vector2 pos, float colliderSize) => pos + Vector2.left * 0.5f * colliderSize;
+        private void UpdateView() => cameraController.UpdateView();
+    }
 }

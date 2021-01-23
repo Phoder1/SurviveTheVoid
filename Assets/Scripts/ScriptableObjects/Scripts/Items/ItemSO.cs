@@ -24,16 +24,6 @@ public enum ItemName
     WoodenHoe
     //Gear
 
-
-
-
-
-
-
-
-
-
-
 }
 
 
@@ -71,8 +61,7 @@ public class ItemSO : ScriptableObject
     private string description;
     public string getDescription => description;
 
-
-
+ 
 
 
     //[SerializeField]

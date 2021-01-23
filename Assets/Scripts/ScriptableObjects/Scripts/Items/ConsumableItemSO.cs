@@ -36,7 +36,7 @@ public class ConsumableItemSO : ItemSO
 {
 	public EffectData[] Effects;
 	public void ApplyEffect() {
-		EffectHandler._instance.BeginAllConsumeableEffects(Effects);
+		ConsumeablesHandler._instance.BeginAllConsumeableEffects(Effects);
 	}
 }
 [Serializable]
