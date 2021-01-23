@@ -1,8 +1,16 @@
 ﻿
+using System;
+using System.Security.Cryptography;
+
 public class GameManager : MonoSingleton<GameManager>
 {
     public ISingleton[] singletons;
-
+    static Action die;
+    public static Action SetAction {
+        set {
+            die += value;
+        }
+    }
     // The original start that controls all other Inits
     void Start()
     {
@@ -40,4 +48,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         
     }
+
+
+    
 }

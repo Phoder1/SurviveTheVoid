@@ -89,31 +89,48 @@
 
 
 
-        SwapItemsInEquip(firstButtonID, chestID, secondButtonID.GetValueOrDefault(), secondChestID);
+  
 
 
 
-        return true;
+        return SwapItemsInEquip(firstButtonID, chestID, secondButtonID.GetValueOrDefault(), secondChestID);
 
 
     }
-    private void SwapItemsInEquip(int firstButtonID, int chestID, int secondButtonID, int secondChestID)
+    private bool SwapItemsInEquip(int firstButtonID, int chestID, int secondButtonID, int secondChestID)
     {
+
 
         if (chestID == 2)
         {
-            RemoveStats(equipSlots[firstButtonID].item as GearItemSO);
+
+            if (equipSlots[firstButtonID]!= null && equipSlots[firstButtonID] != null)
+            { 
+                if (!CheckIndexToEquip(firstButtonID, equipSlots[firstButtonID].item as GearItemSO))  return false;
+              
+                    RemoveStats(equipSlots[firstButtonID].item as GearItemSO);
+            }
+
+
             ApplyStats(inventory.GetItemFromInventoryButton(secondChestID, secondButtonID).item as GearItemSO);
         }
         else if (secondChestID == 2)
         {
 
+
+
+
             RemoveStats(inventory.GetItemFromInventoryButton(chestID, firstButtonID).item as GearItemSO);
-            ApplyStats(equipSlots[secondChestID].item as GearItemSO);
+            if (equipSlots[secondChestID] != null && equipSlots[secondButtonID] != null) 
+            {
+                if (!CheckIndexToEquip(secondButtonID, equipSlots[secondButtonID].item as GearItemSO)) return false;
+
+                ApplyStats(equipSlots[secondChestID].item as GearItemSO);
+            }
         }
 
-        inventory.ChangeBetweenItems(firstButtonID, chestID, secondButtonID, secondChestID);
 
+        return true;
     }
     private void EquipItem(int chestID, int buttonID)
     {
@@ -147,7 +164,7 @@
             return;
 
 
-        inventory.AddToInventory(0, equipSlots[buttonID]);
+        //inventory.AddToInventory(0, equipSlots[buttonID]);
 
         RemoveStats((equipSlots[buttonID].item as GearItemSO));
 
@@ -186,6 +203,15 @@
             return null;
 
         return equipSlotCache.durability;
+
+    }
+    private bool CheckIndexToEquip(int index, GearItemSO gear)
+    {
+
+        if (index == GetEquipSlotIndex(gear.GetEquipType))
+            return true;
+
+        return false;
 
     }
     private int GetEquipSlotIndex(EquipType equipType)
@@ -231,7 +257,9 @@
     }
     void ApplyStats(GearItemSO equip)
     {
-
+        if (equip== null)
+           return;
+        
 
         if (equip.equipstats.Length <= 0)
             return;
