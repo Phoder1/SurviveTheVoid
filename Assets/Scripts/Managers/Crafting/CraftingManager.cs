@@ -314,6 +314,9 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
                 }
 
             }
+
+
+            UIManager._instance.craftingTimer.text = (selectedRecipe.GetCraftingTime * UIManager._instance.getCraftingAmount).ToString();
         }
 
     }
@@ -374,6 +377,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         {
             Debug.Log("Selected recipe is null");
         }
+        ShowOutCome();
     }
 
 
@@ -396,7 +400,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
                     inventory.RemoveItemsByRecipe(selectedRecipe, UIManager._instance.getCraftingAmount);
 
-                        CurrentProcessTile.StartCrafting(selectedRecipe, (selectedRecipe.getoutcomeItem.amount * UIManager._instance.getCraftingAmount));
+                        CurrentProcessTile.StartCrafting(selectedRecipe, (UIManager._instance.getCraftingAmount));
                     
                     
                     ShowRecipe(selectedRecipe);
@@ -448,7 +452,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     int CraftIndex;
     public void AttemptToCraftMax()
     {
-        CraftIndex = selectedRecipe.getoutcomeItem.item.getmaxStackSize;
+        CraftIndex = 20;
         CheckIfYouCanCraft();
 
 
@@ -456,7 +460,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
     void CheckIfYouCanCraft()
     {
-        if((CraftIndex + CurrentProcessTile.amount <= selectedRecipe.getoutcomeItem.item.getmaxStackSize))
+        if((CraftIndex + CurrentProcessTile.amount <= 20))
         {
             if (inventory.CheckEnoughItemsForRecipe(selectedRecipe, CraftIndex))
             {
@@ -470,7 +474,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
                 }
                 else
                 {
-                    CurrentProcessTile.StartCrafting(selectedRecipe, (selectedRecipe.getoutcomeItem.amount * CraftIndex));
+                    CurrentProcessTile.StartCrafting(selectedRecipe, CraftIndex);
                 }
                 ShowRecipe(selectedRecipe);
                 buttonState = ButtonState.Crafting;
@@ -527,7 +531,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         {
             OutComeImage.gameObject.SetActive(true);
             OutComeImage.sprite = selectedRecipe.getoutcomeItem.item.getsprite;
-            OutComeText.text = selectedRecipe.getoutcomeItem.amount.ToString();
+            OutComeText.text = (selectedRecipe.getoutcomeItem.amount * UIManager._instance.getCraftingAmount).ToString();
         }
     }
     public void DeleteOutCome()

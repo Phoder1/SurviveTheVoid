@@ -122,7 +122,7 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
 
 
-            //    //Debug.Log(DraggedItem.item.getItemName);
+            //    Debug.Log(DraggedItem.item.getItemName);
             //}
 
             if (fillImage != null)
@@ -150,7 +150,7 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         {
             if (pointerDown)
             {
-                if(Inventory.GetInstance.GetItemFromInventoryButton(ChestId,Slot) != null)
+                if (Inventory.GetInstance.GetItemFromInventoryButton(ChestId, Slot) != null)
                 {
 
                     InventoryUIManager._instance.DraggedItem = Slot;
@@ -162,6 +162,7 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             if (InventoryUIManager._instance.DraggedItem >= 0)
             {    
                 onLongClick.Invoke();
+                //InventoryUIManager._instance.DraggedItem = Slot;
                 IsDragged = true;
 
             }

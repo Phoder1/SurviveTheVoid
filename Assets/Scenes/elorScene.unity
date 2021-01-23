@@ -346,7 +346,7 @@ PrefabInstance:
     - target: {fileID: 1068271991, guid: ee73434160860324a921a0989281f1ff, type: 3}
       propertyPath: playerSprite
       value: 
-      objectReference: {fileID: 1757418856}
+      objectReference: {fileID: 0}
     - target: {fileID: 4594271909258422468, guid: ee73434160860324a921a0989281f1ff,
         type: 3}
       propertyPath: m_IsActive
@@ -356,7 +356,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _playerGFX
       value: 
-      objectReference: {fileID: 1757418855}
+      objectReference: {fileID: 0}
     - target: {fileID: 5435700086702367932, guid: ee73434160860324a921a0989281f1ff,
         type: 3}
       propertyPath: m_Name
@@ -417,27 +417,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5830525296113187287, guid: ee73434160860324a921a0989281f1ff,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2139250269882807943, guid: ee73434160860324a921a0989281f1ff, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ee73434160860324a921a0989281f1ff, type: 3}
---- !u!114 &1757418855 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1068271991, guid: ee73434160860324a921a0989281f1ff,
-    type: 3}
-  m_PrefabInstance: {fileID: 1757418854}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df2a4558a96bc9c4a84c7013c45f105a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!212 &1757418856 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 5435700086702367920, guid: ee73434160860324a921a0989281f1ff,
-    type: 3}
-  m_PrefabInstance: {fileID: 1757418854}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2338764766790983784
 Transform:
   m_ObjectHideFlags: 0
@@ -5290,20 +5277,24 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1371059309, guid: ec261434d51bce44fa7c7f1d01379781, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 629309934292324171, guid: ec261434d51bce44fa7c7f1d01379781,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 629309934292324171, guid: ec261434d51bce44fa7c7f1d01379781,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 629309935759496634, guid: ec261434d51bce44fa7c7f1d01379781,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 1053.9
       objectReference: {fileID: 0}
     - target: {fileID: 3303330036332173218, guid: ec261434d51bce44fa7c7f1d01379781,
         type: 3}
@@ -5315,6 +5306,11 @@ PrefabInstance:
       propertyPath: OutComeImage
       value: 
       objectReference: {fileID: 567615053}
+    - target: {fileID: 3303330036332173218, guid: ec261434d51bce44fa7c7f1d01379781,
+        type: 3}
+      propertyPath: recipeMaterialSlots.Array.size
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 3303330036332173218, guid: ec261434d51bce44fa7c7f1d01379781,
         type: 3}
       propertyPath: recipeMaterialSlots.Array.data[7]
@@ -5388,7 +5384,7 @@ PrefabInstance:
     - target: {fileID: 6033404864412062686, guid: ec261434d51bce44fa7c7f1d01379781,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec261434d51bce44fa7c7f1d01379781, type: 3}
