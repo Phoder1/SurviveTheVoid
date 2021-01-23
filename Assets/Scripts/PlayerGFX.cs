@@ -1,41 +1,41 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerGFX : MonoBehaviour
 {
     internal InputManager _inputManager;
     internal Animator _anim;
     public SpriteRenderer playerSprite;
+    float deathAnimLength;
+    float walkAnimLength;
 
-    
+    public float GetDeathAnimLength => deathAnimLength;
+    public float GetWalkAnimLength => walkAnimLength;
 
-    private void Start()
-    {
+    private void Start() {
         GameManager.DeathEvent += Death;
         _inputManager = InputManager._instance;
         playerSprite = GetComponent<SpriteRenderer>();
+        //UpdateAnimClipTimes();
     }
-    private void Update()
-    {
-        
-    }
-    public void UpdateAnim()
-    {
-       
-   
-
-    }
-    public void Walk(bool DoWalk,Vector3? moveVector)
-    {
-        if (DoWalk)
-        {
-            if (moveVector.Value.x < 0)
-            {
+    //public void UpdateAnimClipTimes() {
+    //    AnimationClip[] clips = _anim.runtimeAnimatorController.animationClips;
+    //    foreach (AnimationClip clip in clips) {
+    //        switch (clip.name) {
+    //            case "isWalking":
+    //                walkAnimLength = clip.length;
+    //                break;
+    //            case "Death":
+    //                deathAnimLength = clip.length;
+    //                break;
+    //        }
+    //    }
+    //}
+    public void Walk(bool DoWalk, Vector3? moveVector) {
+        if (DoWalk) {
+            if (moveVector.Value.x < 0) {
                 playerSprite.flipX = true;
             }
-            else
-            {
+            else {
                 playerSprite.flipX = false;
 
             }
@@ -43,19 +43,12 @@ public class PlayerGFX : MonoBehaviour
 
             _anim.SetBool("isWalking", true);
         }
-        else
-        {
+        else {
 
             _anim.SetBool("isWalking", false);
         }
     }
-    public void Death()
-    {
+    public void Death() {
         _anim.SetTrigger("Death");
-    }
-
-    public void TriggerAnim()
-    {
-
     }
 }
