@@ -235,7 +235,7 @@ public class UIManager : MonoSingleton<UIManager>
         craftingManager.sectionHolder.gameObject.SetActive(false);
         SliderBackGround.SetActive(true);
         MultipleButt.text = "Add";
-        amountText.text = "Craft: "+ craftingAmount + " Gain: " + (craftingManager.selectedRecipe.getoutcomeItem.amount * craftingAmount).ToString();
+        amountText.text = "Craft: " + craftingAmount + " Gain: " + (craftingManager.selectedRecipe.getoutcomeItem.amount * craftingAmount).ToString();
         craftingManager.buttonState = ButtonState.Crafting;
         //CraftingButton.interactable = false;
         matsHolder.SetActive(true);
@@ -251,7 +251,7 @@ public class UIManager : MonoSingleton<UIManager>
         craftingManager.selectedRecipe = craftingManager.CurrentProcessTile.craftingRecipe;
         craftingManager.sectionHolder.gameObject.SetActive(false);
         SliderBackGround.SetActive(true);
-        amountText.text = "Craft: " + (craftingManager.selectedRecipe.getoutcomeItem.amount * craftingAmount).ToString();
+        amountText.text = "Craft: " + craftingAmount + " Gain: " + (craftingManager.selectedRecipe.getoutcomeItem.amount * craftingAmount).ToString();
         MultipleButt.text = "Add";
         craftingManager.buttonState = ButtonState.Collect;
         //CraftingButton.interactable = true;
@@ -325,7 +325,7 @@ public class UIManager : MonoSingleton<UIManager>
                 //SliderBackGround.SetActive(true);
                 if (craftingManager.CurrentProcessTile.IsCrafting)
                 {
-                    if(craftingManager.CurrentProcessTile.amount >= 20)
+                    if (craftingManager.CurrentProcessTile.amount >= 20)
                     {
                         amountSlider.maxValue = 0;
                         amountSlider.minValue = 0;
@@ -335,7 +335,7 @@ public class UIManager : MonoSingleton<UIManager>
                         amountSlider.maxValue = 20 - craftingManager.CurrentProcessTile.amount;
                         amountSlider.minValue = 1;
                     }
-                   
+
                 }
                 else
                 {
@@ -356,7 +356,7 @@ public class UIManager : MonoSingleton<UIManager>
                         SliderBackGround.SetActive(true);
                 }
             }
-            else if(Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) >= 20)
+            else if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) >= 20)
             {
                 craftingManager.DeleteOutCome();
                 //SliderBackGround.SetActive(false);
@@ -374,7 +374,7 @@ public class UIManager : MonoSingleton<UIManager>
 
         if (craftingManager.selectedRecipe != null)
         {
-            amountText.text = "Craft: " + (craftingManager.selectedRecipe.getoutcomeItem.amount * craftingAmount).ToString();
+            amountText.text = "Craft: " + craftingAmount + " Gain: " + (craftingManager.selectedRecipe.getoutcomeItem.amount * craftingAmount).ToString();
             craftingManager.ShowOutCome();
             TimeToCraftText.text = "Time to craft: " + craftingManager.selectedRecipe.GetCraftingTime * craftingAmount + " Seconds";
             craftingManager.ShowRecipe(CraftingManager._instance.selectedRecipe);
