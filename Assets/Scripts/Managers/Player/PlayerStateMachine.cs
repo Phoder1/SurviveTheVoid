@@ -25,8 +25,19 @@ public class PlayerStateMachine
     {
                UnityEngine.Debug.Log(newState);
 
-        if (InputManager.GetCurrentState is BuildingState )
-            (InputManager.GetCurrentState as BuildingState).ResetBeforeChangeStates();
+
+
+        CameraController._instance.GetSetIsZoomedIn = false;
+        if (InputManager.GetCurrentState is BuildingState || (InputManager.GetCurrentState is RemovalState))
+        {
+            if (InputManager.GetCurrentState is BuildingState)
+             (InputManager.GetCurrentState as BuildingState).ResetBeforeChangeStates();
+
+            
+         
+            CameraController._instance.GetSetIsZoomedIn = true; 
+        }
+
         
 
         switch (newState)

@@ -63,7 +63,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
         if (checkIfSlotIsItem == null || checkIfSlotIsItem.item == null)
             return;
-
+       
 
         ItemSlot itemCache = new ItemSlot(checkIfSlotIsItem.item, 1);
 
@@ -89,9 +89,11 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
             }
 
         }
-        if (itemCache.item.GetItemType == ItemType.Equipable)
+        if (itemCache.item.GetItemType == ItemType.Equipable|| itemCache.item.GetItemType == ItemType.Tools)
         {
-            EquipManager.GetInstance.CheckEquipGear(buttonId, 0);
+            
+            EquipManager.GetInstance.CheckEquip(itemCache,buttonId, 0);
+            InventoryUIManager._instance.UpdatePlayerInventory();
         }
 
 
@@ -362,7 +364,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
             if (Dragged.item.GetItemType == ItemType.Equipable)
             {
 
-                if (EquipManager.GetInstance.CheckEquipGear(draggedSlot, fromChest, DropSlot, toChest))
+                if (EquipManager.GetInstance.CheckEquip(Dragged,draggedSlot, fromChest, DropSlot, toChest))
                 {
                     return true;
                 }

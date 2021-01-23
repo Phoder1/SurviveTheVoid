@@ -138,6 +138,7 @@ public class EquipManager
                     return false;
 
                 EquipItem(chestID, firstButtonID);
+                
                 return true;
             }
             return SwapItemsInEquip(firstButtonID, chestID, secondButtonID.GetValueOrDefault(), secondChestID);

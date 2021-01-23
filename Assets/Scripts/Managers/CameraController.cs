@@ -18,11 +18,17 @@ public class CameraController : MonoSingleton<CameraController>
     private Camera currentActiveCamera;
     public Camera GetCurrentActiveCamera => currentActiveCamera;
     private bool isZoomedIn;
-    public bool GetSetIsZoomedIn {
+    public bool GetSetIsZoomedIn
+    {
         get => isZoomedIn;
-        set {
-            isZoomedIn = value;
-            SetZoomIn(value);
+        set
+        {
+            if (isZoomedIn != value)
+            {
+                isZoomedIn = value;
+                SetZoomIn(value);
+            }
+
         }
     }
 
