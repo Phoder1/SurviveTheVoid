@@ -10,21 +10,16 @@ public class ConsumeablesHandler : MonoSingleton<ConsumeablesHandler>
         playerStats = PlayerStats._instance;
         effectHandler = EffectHandler._instance;
 
-        DeathReset();
+        FillDictionary();
     }
- 
-
     public void DeathReset()
     {
-        if(ConsumablesEffectsDict != null)
+        foreach (var effect in ConsumablesEffectsDict.Values)
         {
-            foreach (var effect in ConsumablesEffectsDict.Values)
-            {
-                effect.regenerationController.Stop();
-                effect.valueController.Stop();
-            }
-            ConsumablesEffectsDict = null;
+            effect.regenerationController.Stop();
+            effect.valueController.Stop();
         }
+        ConsumablesEffectsDict = null;
 
         FillDictionary();
     }

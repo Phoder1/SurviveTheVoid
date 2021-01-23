@@ -12,7 +12,8 @@ public class InputManager : MonoSingleton<InputManager>
 
  
     public override void Init()
-    {playerStateMachine = PlayerStateMachine.GetInstance;
+    {
+        playerStateMachine = PlayerStateMachine.GetInstance;
         gridManager = GridManager._instance;
         DeathReset();
     }
