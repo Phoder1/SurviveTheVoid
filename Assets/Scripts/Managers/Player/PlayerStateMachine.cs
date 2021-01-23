@@ -1,8 +1,4 @@
-﻿using System.Diagnostics;
-using UnityEngine;
-using UnityEngine.Rendering;
-
-public enum InputState { DefaultState, BuildState, FightState , RemovalState };
+﻿public enum InputState { DefaultState, BuildState, FightState , RemovalState };
 public class PlayerStateMachine 
 {
     private static PlayerStateMachine _instance;

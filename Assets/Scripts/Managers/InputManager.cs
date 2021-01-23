@@ -12,9 +12,9 @@ public class InputManager : MonoSingleton<InputManager>
 
  
     public override void Init()
-    {
-        playerStateMachine = PlayerStateMachine.GetInstance;
+    {playerStateMachine = PlayerStateMachine.GetInstance;
         gridManager = GridManager._instance;
+        DeathReset();
     }
 
 
@@ -161,5 +161,12 @@ public class InputManager : MonoSingleton<InputManager>
         }
 
         OnTouch();
+    }
+
+  
+
+    public override void DeathReset()
+    {
+       playerStateMachine.SwitchState(InputState.DefaultState);
     }
 }

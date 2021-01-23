@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 public interface ISingleton
 {
-    void SoftReset();
-    void HardReset();
+  
+
     void Init();
 }
 public abstract class MonoSingleton<T> : MonoBehaviour,ISingleton where T : Component
@@ -25,14 +25,8 @@ public abstract class MonoSingleton<T> : MonoBehaviour,ISingleton where T : Comp
     /// </summary>
     public abstract void Init();
 
-
-    /// <summary>
-    /// hard reset runs when the game starts?
-    /// </summary>
-
-    public abstract void HardReset();
     /// <summary>
     ///  soft reset runs when the players die
     /// </summary>
-    public abstract void SoftReset();
+    public abstract void DeathReset();
 }

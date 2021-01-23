@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
+
 
 public class ConsumeablesHandler : MonoSingleton<ConsumeablesHandler>
 {
@@ -10,7 +9,7 @@ public class ConsumeablesHandler : MonoSingleton<ConsumeablesHandler>
     public override void Init() {
         playerStats = PlayerStats._instance;
         effectHandler = EffectHandler._instance;
-        FillDictionary();
+        HardReset();
 
     }
     public override void HardReset()
@@ -25,7 +24,17 @@ public class ConsumeablesHandler : MonoSingleton<ConsumeablesHandler>
         FillDictionary();
     }
 
+    public override void DeathReset()
+    {
+        foreach (var effect in ConsumablesEffectsDict.Values)
+        {
+            effect.regenerationController.Stop();
+            effect.valueController.Stop();
+        }
+        ConsumablesEffectsDict = null;
 
+        FillDictionary();
+    }
     private void FillDictionary() {
         ConsumablesEffectsDict = new Dictionary<StatType, StatControllers>();
 
@@ -95,7 +104,8 @@ public class ConsumeablesHandler : MonoSingleton<ConsumeablesHandler>
 
     }
 
-  
+
+
     public class StatControllers
     {
         public readonly EffectController valueController;

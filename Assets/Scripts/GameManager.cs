@@ -9,12 +9,12 @@ public class GameManager : MonoSingleton<GameManager>
 
     }
     public override void Init() {
-        singletons = new ISingleton[12] {
+        singletons = new ISingleton[11] {
             CameraController._instance,  // alon
              GridManager._instance, // alon
              UIManager._instance, // -----
              PlayerStats._instance, // alon
-             InputManager._instance, // rei
+             InputManager._instance, // rei - V
              PlayerManager._instance, // rei
              GodmodeScript._instance, //-----
              CraftingManager._instance, // elor
@@ -31,4 +31,9 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
+
+    public override void DeathReset()
+    {
+        throw new System.NotImplementedException();
+    }
 }
