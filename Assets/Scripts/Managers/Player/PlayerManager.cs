@@ -147,8 +147,8 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
             destination.z = transform.position.z;
             float distance = Vector2.Distance(transform.position, destination);
             if (distance > InterractionDistance) {
-                _playerGFX.Walk(true, Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * playerStats.GetSetMoveSpeed, distance));
                 Move(Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue, distance));
+                _playerGFX.Walk(true, Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * playerStats.GetSetMoveSpeed, distance));
             }
             else {
                 if (SpecialInteract) {
