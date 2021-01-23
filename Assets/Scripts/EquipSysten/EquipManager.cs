@@ -1,10 +1,12 @@
-﻿public class EquipManager
+﻿using UnityEditorInternal;
+
+public class EquipManager
 {
     Inventory inventory;
     PlayerStats playerStats;
     static EquipManager _instance;
     ItemSlot equipSlotCache;
-
+    GearItemSO gearCache;
     ItemSlot[] equipSlots;
     // 0 helmet
     // 1 Chest
@@ -63,7 +65,9 @@
     {
         if (chestID == 2 && secondChestID == 2)
         {
+            inventory.AddToInventory(0, equipSlots[firstButtonID]);
             UnEquipItem(firstButtonID);
+
             return true;
         }
         else if (chestID != 2 && secondChestID != 2)
@@ -99,38 +103,42 @@
     }
     private bool SwapItemsInEquip(int firstButtonID, int chestID, int secondButtonID, int secondChestID)
     {
-
+        gearCache = null;
 
         if (chestID == 2)
         {
+            gearCache = inventory.GetItemFromInventoryButton(secondChestID, secondButtonID).item as GearItemSO;
 
-            if (equipSlots[firstButtonID]!= null && equipSlots[firstButtonID] != null)
-            { 
-                if (!CheckIndexToEquip(firstButtonID, equipSlots[firstButtonID].item as GearItemSO))  return false;
-              
-                    RemoveStats(equipSlots[firstButtonID].item as GearItemSO);
-            }
+            if (gearCache == null || !CheckIndexToEquip(firstButtonID, gearCache))
+                return false;
 
 
-            ApplyStats(inventory.GetItemFromInventoryButton(secondChestID, secondButtonID).item as GearItemSO);
+            if (equipSlots[firstButtonID] != null)
+                RemoveStats(equipSlots[firstButtonID].item as GearItemSO);
+
+
+            ApplyStats(gearCache);
+            return true;
         }
         else if (secondChestID == 2)
         {
+            gearCache = inventory.GetItemFromInventoryButton(chestID, firstButtonID).item as GearItemSO;
+           
+            if (gearCache == null || !CheckIndexToEquip(secondButtonID, gearCache))
+                return false;
+            
 
+            if (equipSlots[secondButtonID]!= null)
+            RemoveStats(equipSlots[secondButtonID].item as GearItemSO);
 
+            ApplyStats(gearCache);
 
+            return true;
 
-            RemoveStats(inventory.GetItemFromInventoryButton(chestID, firstButtonID).item as GearItemSO);
-            if (equipSlots[secondChestID] != null && equipSlots[secondButtonID] != null) 
-            {
-                if (!CheckIndexToEquip(secondButtonID, equipSlots[secondButtonID].item as GearItemSO)) return false;
-
-                ApplyStats(equipSlots[secondChestID].item as GearItemSO);
-            }
         }
 
 
-        return true;
+        return false;
     }
     private void EquipItem(int chestID, int buttonID)
     {
