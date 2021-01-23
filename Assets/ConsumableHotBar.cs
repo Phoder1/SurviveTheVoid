@@ -43,6 +43,9 @@ public class ConsumableHotBar : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             InventoryUIManager._instance.HotKeyDraggedInto = SlotKey;
             HighLightHotKey();
             InventoryUIManager._instance.WhatInventory(ChestId);
+        }else if(InventoryUIManager._instance.HotKeyDragged == SlotKey)
+        {
+            IsDraggingThis = false;
         }
 
 
@@ -89,7 +92,7 @@ public class ConsumableHotBar : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             //InventoryUIManager._instance.SwitchKeyInventory(InventoryUIManager._instance.HotKeyDragged, InventoryUIManager._instance.HotKeyDraggedInto);
         }
 
-        if (InventoryUIManager._instance.HotKeyDragged <= -1)
+        if (InventoryUIManager._instance.HotKeyDragged <= -1 && !IsDraggingThis)
         {
             ConsumeHotBar();
         }
