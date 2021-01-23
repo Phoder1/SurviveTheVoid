@@ -25,7 +25,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     {
         inventory = Inventory.GetInstance;
         HotKeysInventory = inventory.GetInventoryFromDictionary(1);
-        
+        EquipInventory = inventory.GetInventoryFromDictionary(2);
     }
 
     // Update is called once per frame
@@ -33,8 +33,8 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     {
         if (Input.GetKeyDown(KeyCode.H))
         {
-            inventory.AddToInventory(1,new ItemSlot(CraftingManager._instance.items.getitemsArr[0],5));
-            UpdateHotKeysToUI();
+            //inventory.AddToInventory(1,new ItemSlot(CraftingManager._instance.items.getitemsArr[0],5));
+            //UpdateHotKeysToUI();
         }
     }
 
@@ -219,10 +219,17 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
         DraggedItem = -1;
         DroppedItem = -1;
+
         DraggedIntoBar = -1;
         HotKeyDragged = -1;
+
         LookingAtInventory = -1;
         TakingFromInventory = -1;
+
+        EquipDragged = -1;
+        EquipDraggedInto = -1;
+        DraggedIntoEquip = -1;
+
     }
     public void SwapItems()
     {
@@ -253,16 +260,31 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     #region Equip
     [Header("Equip Related")]
     public int DraggedIntoEquip;
+    public int EquipDragged;
+    public int EquipDraggedInto;
+    ItemSlot[] EquipInventory;
+    public EquipSlot[] EquipSlots;
 
     public void UpdateEquipToUI()
     {
         //update Equip
-
-        UpdateInventoryToUI();
+        for (int i = 0; i < EquipInventory.Length; i++)
+        {
+            if (EquipInventory[i] != null)
+            {
+                //show the item sprite
+                EquipSlots[i].ShowEquippedGear(EquipInventory[i]);
+            }
+            else
+            {
+                //show that you don't wear anything
+                EquipSlots[i].NoGearEquipped();
+            }
+        }
     }
 
 
-    
+
 
     #endregion
 
@@ -273,7 +295,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     public int HotKeyDraggedInto;
     ItemSlot[] HotKeysInventory;
     public ConsumableHotBar[] ConsumableHotKey;
-    
+
 
 
     public void UpdateHotKeysToUI()
@@ -281,7 +303,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         //update hotkeys
         for (int i = 0; i < HotKeysInventory.Length; i++)
         {
-            if(HotKeysInventory[i] != null)
+            if (HotKeysInventory[i] != null)
             {
                 ConsumableHotKey[i].ShowEquippedConsumable(HotKeysInventory[i]);
             }
@@ -290,36 +312,74 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
                 ConsumableHotKey[i].NoConsumableEquipped();
             }
         }
+    }
+
+    public void SwitchKeyInventory(int DraggedItem, int DroppedOn)
+    {
+        ItemSlot DraggedTemp = inventory.GetItemFromInventoryButton(TakingFromInventory, DraggedItem);
+        ItemSlot DroppedTemp = inventory.GetItemFromInventoryButton(LookingAtInventory, DroppedOn);
+        if (canEquipOnConsumable(TakingFromInventory, LookingAtInventory, DraggedTemp, DroppedTemp))
+        {
+            inventory.ChangeBetweenItems(TakingFromInventory, LookingAtInventory, DraggedItem, DroppedOn);
+            UpdatePlayerInventory();
+        }
+
+        ResetSwap();
+
+
+    }
+
+    void UpdatePlayerInventory()
+    {
+        UpdateHotKeysToUI();
+        UpdateEquipToUI();
         UpdateInventoryToUI();
     }
 
-    public void SwitchKeyInventory(int DraggedItem,int DroppedOn)
+    bool canEquipOnConsumable(int fromChest, int toChest, ItemSlot Dragged, ItemSlot Drop)
     {
-        ItemSlot DraggedTemp = inventory.GetItemFromInventoryButton(TakingFromInventory,DraggedItem);
-        ItemSlot DroppedTemp = inventory.GetItemFromInventoryButton(LookingAtInventory, DroppedOn);
-        if (DroppedTemp == null && DraggedTemp.item.GetItemType == ItemType.Consumable)
+        if (toChest == 0)
         {
-            inventory.ChangeBetweenItems(TakingFromInventory, LookingAtInventory, DraggedItem, DroppedOn);
+            return true;
         }
-        else if (DraggedTemp.item.GetItemType == ItemType.Consumable && LookingAtInventory == 1)
+        else if (toChest == 1)
         {
-            inventory.ChangeBetweenItems(TakingFromInventory, LookingAtInventory, DraggedItem, DroppedOn);
+            if (Dragged.item.GetItemType == ItemType.Consumable)
+            {
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-        else if (DraggedTemp.item.GetItemType != ItemType.Consumable && LookingAtInventory == 1 || DroppedTemp.item.GetItemType != ItemType.Consumable && TakingFromInventory == 1)
+        else if (toChest == 2)
         {
-            Debug.Log("Cant Drag Non Consumable items into hotkeys");
+
+
+            if (Dragged.item.GetItemType == ItemType.Equipable)
+            {
+                if (EquipManager.GetInstance.CheckEquip(DraggedIntoEquip, Dragged))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {
-            inventory.ChangeBetweenItems(TakingFromInventory, LookingAtInventory, DraggedItem, DroppedOn);
+            return true;
         }
 
-
-        ResetSwap();
-        UpdateHotKeysToUI();
     }
-
-
 
     #endregion
 }
