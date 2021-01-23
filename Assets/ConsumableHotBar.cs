@@ -113,7 +113,7 @@ public class ConsumableHotBar : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
         if (itemCache.item.GetItemType == ItemType.Consumable)
         {
-            if (EffectHandler._instance.GetEffectCoolDown(itemCache.item as ConsumableItemSO))
+            if (ConsumeablesHandler._instance.GetEffectCoolDown(itemCache.item as ConsumableItemSO))
             {
                 if (Inventory.GetInstance.RemoveItemFromInventory(ChestId, new ItemSlot(itemCache.item, 1)))
                 {

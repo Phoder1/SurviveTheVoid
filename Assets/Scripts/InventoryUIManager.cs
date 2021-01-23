@@ -322,25 +322,25 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     {
         ItemSlot DraggedTemp = inventory.GetItemFromInventoryButton(TakingFromInventory, DraggedItem);
         ItemSlot DroppedTemp = inventory.GetItemFromInventoryButton(LookingAtInventory, DroppedOn);
-        if (canEquipOnConsumable(TakingFromInventory, LookingAtInventory, DraggedTemp, DroppedTemp))
+        if (canEquipOnConsumable(TakingFromInventory, LookingAtInventory, DraggedTemp, DroppedTemp, DraggedItem, DroppedOn))
         {
             inventory.ChangeBetweenItems(TakingFromInventory, LookingAtInventory, DraggedItem, DroppedOn);
-            UpdatePlayerInventory();
-        }
 
+        }
+        UpdatePlayerInventory();
         ResetSwap();
 
 
     }
 
-    void UpdatePlayerInventory()
+    public void UpdatePlayerInventory()
     {
         UpdateHotKeysToUI();
         UpdateEquipToUI();
         UpdateInventoryToUI();
     }
 
-    bool canEquipOnConsumable(int fromChest, int toChest, ItemSlot Dragged, ItemSlot Drop)
+    bool canEquipOnConsumable(int fromChest, int toChest, ItemSlot Dragged, ItemSlot Drop, int draggedSlot, int DropSlot)
     {
         if (toChest == 0)
         {
@@ -364,14 +364,14 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
             if (Dragged.item.GetItemType == ItemType.Equipable)
             {
-                if (EquipManager.GetInstance.CheckEquip(DraggedIntoEquip, Dragged))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+
+                //if (EquipManager.GetInstance.CheckEquip(draggedSlot, fromChest, DropSlot, toChest))
+                //{
+                //    return true;
+                //}
+
+
+                return true;
             }
             else
             {

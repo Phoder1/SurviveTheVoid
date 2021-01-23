@@ -12,7 +12,7 @@ public class ConsumeablesHandler : MonoSingleton<ConsumeablesHandler>
         HardReset();
 
     }
-    public override void HardReset()
+    public void HardReset()
     {
         foreach (var effect in ConsumablesEffectsDict.Values)
         {
@@ -24,7 +24,7 @@ public class ConsumeablesHandler : MonoSingleton<ConsumeablesHandler>
         FillDictionary();
     }
 
-    public override void DeathReset()
+    public void DeathReset()
     {
         foreach (var effect in ConsumablesEffectsDict.Values)
         {
