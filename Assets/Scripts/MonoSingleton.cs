@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 public interface ISingleton
 {
+
     void Init();
 }
 public abstract class MonoSingleton<T> : MonoBehaviour,ISingleton where T : Component
@@ -18,6 +19,10 @@ public abstract class MonoSingleton<T> : MonoBehaviour,ISingleton where T : Comp
             }
         }
     }
-
+    /// <summary>
+    /// run at start
+    /// </summary>
     public abstract void Init();
+
+
 }

@@ -27,16 +27,22 @@ public class TimeManager : MonoBehaviour {
     }
 
     public LinkedListNode<TimeEvent> AddEvent(TimeEvent timedEvent) {
+
         float eventTriggerTime = timedEvent.triggerTime;
+
         if (timedEventsList.Count > 0 && eventTriggerTime > timedEventsList.First.Value.triggerTime) {
             LinkedListNode<TimeEvent> currentNode = timedEventsList.Last;
+
             while (currentNode != timedEventsList.First && eventTriggerTime < currentNode.Value.triggerTime) {
                 currentNode = currentNode.Previous;
             }
+
             return timedEventsList.AddAfter(currentNode, timedEvent);
         }
         else {
+
             return timedEventsList.AddFirst(timedEvent);
+
         }
     }
 

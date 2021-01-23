@@ -129,10 +129,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
             for (int j = 0; j < slotsTransform.Length; j++)
             {
-
                 slotsTransform[j] = sectionTransform.GetChild(j);
-
-
             }
             Array.Sort(slotsTransform, (slot1, slot2) =>
             {

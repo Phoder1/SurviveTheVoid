@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Net;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class InputManager : MonoSingleton<InputManager>
 {
@@ -16,10 +12,14 @@ public class InputManager : MonoSingleton<InputManager>
 
  
     public override void Init()
-    {
-        playerStateMachine = PlayerStateMachine.GetInstance;
+    {playerStateMachine = PlayerStateMachine.GetInstance;
         gridManager = GridManager._instance;
+        DeathReset();
     }
+
+
+
+
     public static StateBase SetInputState
     {
         set
@@ -107,9 +107,6 @@ public class InputManager : MonoSingleton<InputManager>
         }
 
     }
-    
-
-
     public void SinglePressedButton(bool isButtonA)
     {
 
@@ -120,8 +117,6 @@ public class InputManager : MonoSingleton<InputManager>
 
 
     }
-
-
     public void HoldingButton(bool isButtonA)
     {
 
@@ -162,4 +157,6 @@ public class InputManager : MonoSingleton<InputManager>
 
         OnTouch();
     }
+    public override void DeathReset() => playerStateMachine.SwitchState(InputState.DefaultState);
+  
 }
