@@ -13,6 +13,18 @@ public class ConsumeablesHandler : MonoSingleton<ConsumeablesHandler>
         FillDictionary();
 
     }
+    public override void HardReset()
+    {
+        foreach (var effect in ConsumablesEffectsDict.Values)
+        {
+            effect.regenerationController.Stop();
+            effect.valueController.Stop();
+        }
+        ConsumablesEffectsDict = null;
+
+        FillDictionary();
+    }
+
 
     private void FillDictionary() {
         ConsumablesEffectsDict = new Dictionary<StatType, StatControllers>();
@@ -82,6 +94,8 @@ public class ConsumeablesHandler : MonoSingleton<ConsumeablesHandler>
         return CanUseTheItem;
 
     }
+
+  
     public class StatControllers
     {
         public readonly EffectController valueController;

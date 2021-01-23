@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class PlayerMovementHandler : MonoSingleton<PlayerMovementHandler>
+public class PlayerMovementHandler
 {
     [Range(0.1f, 1f)]
     [SerializeField] float playerColliderSize;

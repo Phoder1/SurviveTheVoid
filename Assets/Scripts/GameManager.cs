@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using UnityEngine.SceneManagement;
-
+﻿
 public class GameManager : MonoSingleton<GameManager>
 {
     public ISingleton[] singletons;
@@ -12,18 +10,17 @@ public class GameManager : MonoSingleton<GameManager>
     }
     public override void Init() {
         singletons = new ISingleton[12] {
-            CameraController._instance,
-            PlayerMovementHandler._instance,
-             GridManager._instance,
-             UIManager._instance,
-             PlayerStats._instance,
-             InputManager._instance,
-             PlayerManager._instance,
-             GodmodeScript._instance,
-             CraftingManager._instance,
-             InventoryUIManager._instance,
-             EffectHandler._instance,
-             ConsumeablesHandler._instance
+            CameraController._instance,  // alon
+             GridManager._instance, // alon
+             UIManager._instance, // -----
+             PlayerStats._instance, // alon
+             InputManager._instance, // rei
+             PlayerManager._instance, // rei
+             GodmodeScript._instance, //-----
+             CraftingManager._instance, // elor
+             InventoryUIManager._instance, // elor
+             EffectHandler._instance, // alon
+             ConsumeablesHandler._instance //
 
         };
 
@@ -34,9 +31,4 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
-
-
-    private void Update()
-    {
-    }
 }

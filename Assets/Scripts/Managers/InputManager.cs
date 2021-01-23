@@ -16,6 +16,10 @@ public class InputManager : MonoSingleton<InputManager>
         playerStateMachine = PlayerStateMachine.GetInstance;
         gridManager = GridManager._instance;
     }
+
+
+
+
     public static StateBase SetInputState
     {
         set
