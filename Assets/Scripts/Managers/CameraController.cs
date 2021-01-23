@@ -46,7 +46,10 @@ public class CameraController : MonoSingleton<CameraController>
         zoomedInCameraObj.SetActive(isZoomIn);
         Camera previousCamera = GetCurrentActiveCamera;
         currentActiveCamera = (isZoomIn ? zoomedInCamera : zoomedOutCamera);
-        //starsCont.UpdateViewSize(previousCamera.orthographicSize, GetCurrentActiveCamera.orthographicSize);
+        if (isZoomIn)
+            starsCont.UpdateViewSize(zoomedOutCamera.orthographicSize, zoomedInCamera.orthographicSize);
+        else
+            starsCont.UpdateViewSize(zoomedInCamera.orthographicSize, zoomedOutCamera.orthographicSize);
     }
     public void UpdateView() {
         gridManager.UpdateView(GetWorldView);
