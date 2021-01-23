@@ -5,6 +5,8 @@ using UnityEngine.EventSystems;
 
 public class DragNDropVisual : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
+	[SerializeField]
+	private Canvas mainCanvas;
 
 	private RectTransform itemImageTransform;
 
@@ -27,7 +29,7 @@ public class DragNDropVisual : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 		Debug.Log("On drag");
 
 		// Getting movement delta (the amount of units that the finger moved since the previous frame)
-		itemImageTransform.anchoredPosition += eventData.delta;
+		itemImageTransform.anchoredPosition += eventData.delta / mainCanvas.scaleFactor;
 	}
 	public void OnEndDrag(PointerEventData eventData)
 	{
