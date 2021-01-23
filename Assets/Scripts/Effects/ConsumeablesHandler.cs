@@ -11,7 +11,7 @@ public class ConsumeablesHandler : MonoSingleton<ConsumeablesHandler>
         effectHandler = EffectHandler._instance;
 
         FillDictionary();
-        GameManager.DieEvent += DeathReset;
+        GameManager.DeathEvent += DeathReset;
     }
     public void DeathReset()
     {
