@@ -51,4 +51,7 @@ public class PlayerGFX : MonoBehaviour
     public void Death() {
         _anim.SetTrigger("Death");
     }
+    public void Reborn() {
+        _anim.SetTrigger("Reborn");
+    }
 }

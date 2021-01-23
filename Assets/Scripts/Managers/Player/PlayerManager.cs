@@ -31,7 +31,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     Coroutine gatherCoroutine = null;
     private Vector2Int lastCheckPosition = new Vector2Int(int.MaxValue, int.MaxValue);
     private float lastTreeCheckTime = 0;
-    [SerializeField] float animDelay = 0;
+    [SerializeField] float animDelay;
     private const float treeCheckInterval = 0.5f;
     private Vector2Int currentPosOnGrid;
     private Vector3 startPositionOfPlayer;
@@ -206,6 +206,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     public IEnumerator DeathTransition(float extraDelay) {
         yield return new WaitForSeconds(_playerGFX.GetDeathAnimLength + extraDelay);
         base.transform.position = startPositionOfPlayer;
+        _playerGFX.Reborn();
     }
 
     public class GatheringScanChecker : IChecker
