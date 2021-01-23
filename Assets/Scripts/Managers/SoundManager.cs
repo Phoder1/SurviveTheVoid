@@ -2,24 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 public enum Sounds { BackGround,Consume,HarvestTree,HarvestStone,Walk,UIopen,UiClose}
-public class SoundManager : MonoBehaviour
+public class SoundManager : MonoSingleton<SoundManager>
 {
     Dictionary<Sounds, AudioSource> audioDic; 
 
-
-
     [SerializeField] AudioSource[] audioinitList;
     [SerializeField] Sounds[] sounds;
-    // Start is called before the first frame update
-    void Start()
-    {
-       audioDic = new Dictionary<Sounds, AudioSource>();
-        for (int i = 0; i < sounds.Length; i++)
-        {
+    public override void Init() {
+        audioDic = new Dictionary<Sounds, AudioSource>();
+        for (int i = 0; i < sounds.Length; i++) {
             audioDic.Add(sounds[i], audioinitList[i]);
-          
+
         }
-        
+        PlaySound(Sounds.BackGround);
     }
     private void Update()
     {
@@ -58,4 +53,5 @@ public class SoundManager : MonoBehaviour
         audioDic[sound].PlayDelayed(delay);
 
     }
+
 }

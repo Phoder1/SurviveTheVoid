@@ -5,12 +5,10 @@ using UnityEngine;
 public partial class PlayerManager : MonoSingleton<PlayerManager>
 {
     private PlayerStats playerStats;
-    private static Transform playerTransfrom;
 
     private InputManager inputManager;
     private GridManager gridManager;
     private Scanner scanner;
-    private TileMapLayer buildingLayer;
 
     [SerializeField] float baseSpeed;
    
@@ -35,14 +33,12 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     private float lastTreeCheckTime = 0;
     private const float treeCheckInterval = 0.5f;
     private Vector2Int currentPosOnGrid;
-    private Vector3 startPositionOfPlayer= new Vector3(0, 0.25f, 3.81f);
+    private Vector3 startPositionOfPlayer;
     public Vector2Int GetCurrentPosOnGrid => currentPosOnGrid;
     private EffectController airRegenCont;
     private EffectData airRegenData;
-    bool playerMoved;
 
     private DirectionEnum gridMovementDirection;
-    public static Transform GetPlayerTransform => playerTransfrom;
 
     public DirectionEnum GetMovementDirection => gridMovementDirection;
 
@@ -57,16 +53,14 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         moveSpeed = playerStats.GetStat(StatType.MoveSpeed);
         gatheringSpeed = playerStats.GetStat(StatType.GatheringSpeed);
         scanner = new Scanner();
-        playerTransfrom = transform;
-        buildingLayer = TileMapLayer.Buildings;
         airRegenCont = new EffectController(playerStats.GetStat(StatType.Air), 2);
         airRegenData = new EffectData(StatType.Air, EffectType.OverTime, 10f, Mathf.Infinity, 0.5f, false, false);
-
+        startPositionOfPlayer = base.transform.position;
         GameManager.DeathEvent += DeathReset;
     }
     private void Update()
      {
-        currentPosOnGrid = gridManager.WorldToGridPosition((Vector2)transform.position, TileMapLayer.Floor);
+        currentPosOnGrid = gridManager.WorldToGridPosition((Vector2)base.transform.position, TileMapLayer.Floor);
         UpdateGridDirection();
         CheckForTrees();
     }
@@ -127,7 +121,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     }
 
     public TileHit Scan(IChecker checkType) {
-        return scanner.Scan(currentPosOnGrid, gridMovementDirection, interactionLookRange, buildingLayer, checkType);
+        return scanner.Scan(currentPosOnGrid, gridMovementDirection, interactionLookRange, TileMapLayer.Buildings, checkType);
     }
     public void ImplementInteraction(bool SpecialInteract) {
         gatherWasPressed = true;
@@ -140,17 +134,17 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
             }
         }
         else {
-            Vector3 destination = gridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true);
-            destination.z = transform.position.z;
-            float distance = Vector2.Distance(transform.position, destination);
+            Vector3 destination = gridManager.GridToWorldPosition(closestTile.gridPosition, TileMapLayer.Buildings, true);
+            destination.z = base.transform.position.z;
+            float distance = Vector2.Distance(base.transform.position, destination);
             if (distance > InterractionDistance) {
-                _playerGFX.Walk(true, Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * playerStats.GetSetMoveSpeed, distance));
-                Move(Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue, distance));
+                _playerGFX.Walk(true, Vector3.ClampMagnitude((destination - base.transform.position).normalized * Time.deltaTime * baseSpeed * playerStats.GetSetMoveSpeed, distance));
+                Move(Vector3.ClampMagnitude((destination - base.transform.position).normalized * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue, distance));
             }
             else {
                 if (SpecialInteract) {
                     if (!SpecialInterracted) {
-                        closestTile.tile.SpecialInteraction(closestTile.gridPosition, buildingLayer);
+                        closestTile.tile.SpecialInteraction(closestTile.gridPosition, TileMapLayer.Buildings);
                         SpecialInterracted = true;
                     }
                 }
@@ -164,7 +158,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     IEnumerator HarvestTile(TileHit tileHit) {
         if (tileHit.tile.GetTileAbst is GatherableTileSO gatherable) {
             yield return new WaitForSeconds(gatherable.GetGatheringTime / gatheringSpeed.GetSetValue);
-            tileHit.tile.GatherInteraction(tileHit.gridPosition, buildingLayer);
+            tileHit.tile.GatherInteraction(tileHit.gridPosition, TileMapLayer.Buildings);
             Debug.Log("TileHarvested");
         }
         gatherCoroutine = null;
@@ -203,7 +197,14 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     {
         airRegenCont?.Stop();
         //Start death animation
+        _playerGFX.Death();
+        //Death screen transition
+        StartCoroutine(DeathTransition(1));
         //transform.position = startPositionOfPlayer;
+    }
+    public IEnumerator DeathTransition(float extraDelay) {
+        yield return new WaitForSeconds(_playerGFX.GetDeathAnimLength + extraDelay);
+        base.transform.position = startPositionOfPlayer;
     }
 
     public class GatheringScanChecker : IChecker

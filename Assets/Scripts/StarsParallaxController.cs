@@ -2,19 +2,19 @@
 
 public class StarsParallaxController : MonoBehaviour
 {
-    CameraController cameraController;
-
 
     [SerializeField] private StarsParallax[] starsParallax;
-
-    private void Start() {
-        cameraController = CameraController._instance;
-    }
 
 
     private void Update() {
         foreach (StarsParallax stars in starsParallax) {
             stars.gameobject.transform.rotation *= Quaternion.Euler(new Vector3(0,0,stars.speed));
+        }
+    }
+
+    public void UpdateViewSize(float oldCameraScalem, float newCameraScale) {
+        foreach (StarsParallax stars in starsParallax) {
+            stars.gameobject.transform.localScale *= newCameraScale / oldCameraScalem;
         }
     }
 

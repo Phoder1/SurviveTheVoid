@@ -14,10 +14,10 @@ public partial class PlayerManager
     public void Move(Vector2 moveVector) {
         moved = false;
         gridMoveVector = UnityToGridVector(moveVector);
-        currentGridPos = gridManager.WorldToGridPosition((Vector2)GetPlayerTransform.position, TileMapLayer.Floor);
+        currentGridPos = gridManager.WorldToGridPosition((Vector2)transform.position, TileMapLayer.Floor);
         if (Input.GetKey(KeyCode.LeftShift)) {
             moved = true;
-            GetPlayerTransform.Translate(moveVector);
+            transform.Translate(moveVector);
         }
         else {
             MoveOnY();
@@ -33,7 +33,7 @@ public partial class PlayerManager
             return;
         }
         if (gridMoveVector.y > 0) {
-            if (CheckTilesOnPos(tileLeftCorner(GetPlayerTransform.position, playerColliderSize) + UnityVectorOnGridY) && CheckTilesOnPos(tileTopCorner(GetPlayerTransform.position, playerColliderSize) + UnityVectorOnGridY)) {
+            if (CheckTilesOnPos(tileLeftCorner(transform.position, playerColliderSize) + UnityVectorOnGridY) && CheckTilesOnPos(tileTopCorner(transform.position, playerColliderSize) + UnityVectorOnGridY)) {
                 ApplyMove(UnityVectorOnGridY);
             }
             //else {
@@ -45,7 +45,7 @@ public partial class PlayerManager
             //}
         }
         else {
-            if (CheckTilesOnPos(tileBottomCorner(GetPlayerTransform.position, playerColliderSize) + UnityVectorOnGridY) && CheckTilesOnPos(tileRightCorner(GetPlayerTransform.position, playerColliderSize) + UnityVectorOnGridY)) {
+            if (CheckTilesOnPos(tileBottomCorner(transform.position, playerColliderSize) + UnityVectorOnGridY) && CheckTilesOnPos(tileRightCorner(transform.position, playerColliderSize) + UnityVectorOnGridY)) {
                 ApplyMove(UnityVectorOnGridY);
             }
             //else {
@@ -61,7 +61,7 @@ public partial class PlayerManager
             return;
         }
         if (gridMoveVector.x > 0) {
-            if (CheckTilesOnPos(tileRightCorner(GetPlayerTransform.position, playerColliderSize) + UnityVectorOnGridX) && CheckTilesOnPos(tileTopCorner(GetPlayerTransform.position, playerColliderSize) + UnityVectorOnGridX)) {
+            if (CheckTilesOnPos(tileRightCorner(transform.position, playerColliderSize) + UnityVectorOnGridX) && CheckTilesOnPos(tileTopCorner(transform.position, playerColliderSize) + UnityVectorOnGridX)) {
                 ApplyMove(UnityVectorOnGridX);
             }
             //else {
@@ -72,7 +72,7 @@ public partial class PlayerManager
             //}
         }
         else {
-            if (CheckTilesOnPos(tileBottomCorner(GetPlayerTransform.position, playerColliderSize) + UnityVectorOnGridX) && CheckTilesOnPos(tileLeftCorner(GetPlayerTransform.position, playerColliderSize) + UnityVectorOnGridX)) {
+            if (CheckTilesOnPos(tileBottomCorner(transform.position, playerColliderSize) + UnityVectorOnGridX) && CheckTilesOnPos(tileLeftCorner(transform.position, playerColliderSize) + UnityVectorOnGridX)) {
                 ApplyMove(UnityVectorOnGridX);
             }
             //else {
@@ -84,7 +84,7 @@ public partial class PlayerManager
     }
     private void ApplyMove(Vector2 vector) => ApplyMove((Vector3)vector);
     private void ApplyMove(Vector3 vector) {
-        GetPlayerTransform.position += vector;
+        transform.position += vector;
         moved = true;
     }
 

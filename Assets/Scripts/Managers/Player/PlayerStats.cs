@@ -117,8 +117,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         => StatsDict[statType].maxStat;
     private void DeathReset() {
         ResetStats();
-        //EquipManager.ReEquip();
-
+        EquipManager.GetInstance.ReEquipStats();
     }
     class DeathReaction : Reaction
     {
