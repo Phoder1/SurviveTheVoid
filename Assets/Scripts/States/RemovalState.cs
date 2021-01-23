@@ -45,23 +45,9 @@ public class RemovalState : StateBase
         {
 
             gridManager.SetTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings, true);
-            CancelButtonChangeState(true);
-
         }
     }
 
-
-    public void CancelButtonChangeState(bool _cameFromBuildingState)
-    {
-        if (_cameFromBuildingState && Input.GetMouseButton(0))
-        {
-
-            PlayerStateMachine.GetInstance.SwitchState(InputState.BuildState);
-        }
-
-        else
-            ButtonB();
-    }
 
 
     public override void MousePos()
