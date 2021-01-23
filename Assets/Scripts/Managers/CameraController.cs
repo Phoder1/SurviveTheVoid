@@ -45,7 +45,7 @@ public class CameraController : MonoSingleton<CameraController>
         zoomedOutCameraObj.SetActive(!isZoomIn);
         zoomedInCameraObj.SetActive(isZoomIn);
         currentActiveCamera = (isZoomIn ? zoomedInCamera : zoomedOutCamera);
-        starsCont.UpdateViewSize();
+        //starsCont.UpdateViewSize();
         UpdateView();
     }
     public void UpdateView() {

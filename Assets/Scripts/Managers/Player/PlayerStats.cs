@@ -48,7 +48,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         StatsDict = new Dictionary<StatType, Stat>();
         FillDictionary();
         AddReactions();
-        GameManager.DieEvent += DeathReset;
+        GameManager.DeathEvent += DeathReset;
         ResetStats();
 
     }

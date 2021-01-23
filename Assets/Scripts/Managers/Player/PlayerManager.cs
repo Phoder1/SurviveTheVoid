@@ -34,7 +34,6 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     private Vector2Int lastCheckPosition = new Vector2Int(int.MaxValue, int.MaxValue);
     private float lastTreeCheckTime = 0;
     private const float treeCheckInterval = 0.5f;
-    private Vector2Int lastPosition;
     private Vector2Int currentPosOnGrid;
     private Vector3 startPositionOfPlayer= new Vector3(0, 0.25f, 3.81f);
     public Vector2Int GetCurrentPosOnGrid => currentPosOnGrid;
@@ -63,14 +62,12 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         airRegenCont = new EffectController(playerStats.GetStat(StatType.Air), 2);
         airRegenData = new EffectData(StatType.Air, EffectType.OverTime, 10f, Mathf.Infinity, 0.5f, false, false);
 
-        GameManager.DieEvent += DeathReset;
+        GameManager.DeathEvent += DeathReset;
     }
     private void Update()
      {
-        lastPosition = currentPosOnGrid;
         currentPosOnGrid = gridManager.WorldToGridPosition((Vector2)transform.position, TileMapLayer.Floor);
         UpdateGridDirection();
-        playerMoved = lastPosition != currentPosOnGrid;
         CheckForTrees();
     }
 
@@ -206,7 +203,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     {
         airRegenCont?.Stop();
         //Start death animation
-        transform.position = startPositionOfPlayer;
+        //transform.position = startPositionOfPlayer;
     }
 
     public class GatheringScanChecker : IChecker

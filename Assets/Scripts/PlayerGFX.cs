@@ -12,7 +12,7 @@ public class PlayerGFX : MonoBehaviour
 
     private void Start()
     {
-        GameManager.DieEvent += Death;
+        GameManager.DeathEvent += Death;
         _inputManager = InputManager._instance;
         playerSprite = GetComponent<SpriteRenderer>();
     }
