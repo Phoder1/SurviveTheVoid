@@ -19,22 +19,18 @@ public class BuildingState : StateBase
     public BuildingState() { amountOfCurrentItem = 0; gridManager = GridManager._instance; }
 
 
-    public override void ButtonA()
-    {
+    public override void ButtonA() {
         Debug.Log("BuildingState");
         PressedConfirmBuildingButton();
     }
 
 
-    public override void ButtonB()
-    {
+    public override void ButtonB() {
         PlayerStateMachine.GetInstance.SwitchState(InputState.RemovalState);
     }
-    public override void StateOnTouch(Touch touch)
-    {
+    public override void StateOnTouch(Touch touch) {
 
-        switch (touch.phase)
-        {
+        switch (touch.phase) {
             case TouchPhase.Began:
             case TouchPhase.Moved:
             case TouchPhase.Stationary:
@@ -45,13 +41,13 @@ public class BuildingState : StateBase
 
 
                 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
-                 
+
 
 
 
 
                 CheckPosition(touchPosition);
-          
+
 
 
 
@@ -59,21 +55,18 @@ public class BuildingState : StateBase
         }
     }
 
-    private void PlaceDummyBlock(bool isCurrentOnFloor)
-    {
+    private void PlaceDummyBlock(bool isCurrentOnFloor) {
         if (Position[1] == Position[0])
             return;
 
         RemovePreviousTile();
         Position[1] = new Vector2Int(Position[0].x, Position[0].y);
-        if (isCurrentOnFloor)
-        {
+        if (isCurrentOnFloor) {
             gridManager.SetDummyTile(tileSlotCache, Position[1], TileMapLayer.Floor);
             wasFloorLayer = true;
         }
 
-        else
-        {
+        else {
             gridManager.SetDummyTile(tileSlotCache, Position[1], TileMapLayer.Buildings);
             wasFloorLayer = false;
         }
@@ -81,8 +74,7 @@ public class BuildingState : StateBase
         Position[2] = new Vector2Int(Position[1].x, Position[1].y);
     }
 
-    private void CheckPosition(Vector2 worldPos)
-    {
+    private void CheckPosition(Vector2 worldPos) {
 
         if (Position[0] == gridManager.GetHitFromWorldPosition(worldPos, TileMapLayer.Floor).gridPosition)
             return;
@@ -96,17 +88,14 @@ public class BuildingState : StateBase
 
         // there is a block on the floor
         // check if there is no a block above it 
-        if (currentTileHit.tile != null && gridManager.GetHitFromWorldPosition(worldPos, TileMapLayer.Buildings).tile == null)
-        {
+        if (currentTileHit.tile != null && gridManager.GetHitFromWorldPosition(worldPos, TileMapLayer.Buildings).tile == null) {
 
             RemovePreviousTile();
             PlaceDummyBlock(false);
 
         }
-        else if (currentlyPlacedOnFloor)
-        {
-            if (currentTileHit.tile == null && gridManager.GetHitFromWorldPosition(worldPos, TileMapLayer.Buildings).tile == null)
-            {
+        else if (currentlyPlacedOnFloor) {
+            if (currentTileHit.tile == null && gridManager.GetHitFromWorldPosition(worldPos, TileMapLayer.Buildings).tile == null) {
 
 
                 RemovePreviousTile();
@@ -121,48 +110,40 @@ public class BuildingState : StateBase
         return;
     }
 
-    private void RemovePreviousTile()
-    {
+    private void RemovePreviousTile() {
         if (Position[2] == null || Position[2] != Position[1])
             return;
 
 
-        if (wasFloorLayer)
-        {
+        if (wasFloorLayer) {
             gridManager.SetDummyTile(null, Position[2], TileMapLayer.Floor);
 
         }
-        else
-        {
+        else {
             gridManager.SetDummyTile(null, Position[2], TileMapLayer.Buildings);
         }
 
         Position[2] = Position[0];
     }
 
-    public void PressedConfirmBuildingButton()
-    {
-        if (!isBuildingAttached || tileSlotCache == null || currentTileHit==null)
+    public void PressedConfirmBuildingButton() {
+        if (!isBuildingAttached || tileSlotCache == null || currentTileHit == null)
             return;
 
-        if (wasFloorLayer)
-        {
+        if (wasFloorLayer) {
             gridManager.SetTile(tileSlotCache, Position[2], TileMapLayer.Floor, true);
         }
-        else
-        {
-            gridManager.SetTile(tileSlotCache,Position[2], TileMapLayer.Buildings, true);
+        else {
+            gridManager.SetTile(tileSlotCache, Position[2], TileMapLayer.Buildings, true);
         }
-      
+
         var itemSlotCache = new ItemSlot(tileSlotCache.GetTileAbst, 1);
         Inventory.GetInstance.RemoveItemFromInventory(0, itemSlotCache);
         amountOfCurrentItem--;
-        if (amountOfCurrentItem >= 1)
-        {
+        if (amountOfCurrentItem >= 1) {
             SetBuildingTile(itemSlotCache.item as TileAbstSO);
         }
-        else
-        {
+        else {
             PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
             UIManager._instance.ButtonCancel();
             tileSlotCache = null;
@@ -171,16 +152,15 @@ public class BuildingState : StateBase
         Debug.Log("Placed");
 
     }
-    public void SetBuildingTile(TileAbstSO Item)
-    {
+    public void SetBuildingTile(TileAbstSO Item) {
         tileSlotCache = null;
         if (Item == null)
             return;
         tileSlotCache = new TileSlot(Item);
-        if (amountOfCurrentItem<=0)
-        amountOfCurrentItem= Inventory.GetInstance.GetAmountOfItem(0, new ItemSlot(Item, 1));
+        if (amountOfCurrentItem <= 0)
+            amountOfCurrentItem = Inventory.GetInstance.GetAmountOfItem(0, new ItemSlot(Item, 1));
 
-        
+
 
         currentlyPlacedOnFloor = tileSlotCache.GetTileType == TileType.Block;
         if (amountOfCurrentItem == 0)
@@ -194,17 +174,14 @@ public class BuildingState : StateBase
 
     public bool GetIsBuildingAttached => isBuildingAttached;
 
-    public void ResetBeforeChangeStates()
-    {
+    public void ResetBeforeChangeStates() {
 
         RemovePreviousTile();
     }
-    public override void MousePos()
-    {
+    public override void MousePos() {
         CheckPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
-        if (Input.GetMouseButton(0))
-        {
+        if (Input.GetMouseButton(0)) {
             PressedConfirmBuildingButton();
         }
 
