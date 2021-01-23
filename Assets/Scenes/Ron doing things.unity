@@ -449,12 +449,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1 &916989494 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1453857612635973165, guid: ee73434160860324a921a0989281f1ff,
-    type: 3}
-  m_PrefabInstance: {fileID: 1068271982}
-  m_PrefabAsset: {fileID: 0}
 --- !u!82 &983205570 stripped
 AudioSource:
   m_CorrespondingSourceObject: {fileID: 4942333979683897810, guid: e1a6684af392bb048aa51b3670d2dc31,
@@ -528,77 +522,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5959206266346886419, guid: ee73434160860324a921a0989281f1ff,
-        type: 3}
-      propertyPath: m_ClearFlags
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5959206266346886419, guid: ee73434160860324a921a0989281f1ff,
-        type: 3}
-      propertyPath: m_BackGroundColor.b
-      value: 0.4056604
-      objectReference: {fileID: 0}
-    - target: {fileID: 5959206266346886419, guid: ee73434160860324a921a0989281f1ff,
-        type: 3}
-      propertyPath: m_BackGroundColor.g
-      value: 0.16425651
-      objectReference: {fileID: 0}
-    - target: {fileID: 5959206266346886419, guid: ee73434160860324a921a0989281f1ff,
-        type: 3}
-      propertyPath: m_BackGroundColor.r
-      value: 0.082280174
-      objectReference: {fileID: 0}
-    - target: {fileID: 5983202667245841153, guid: ee73434160860324a921a0989281f1ff,
-        type: 3}
-      propertyPath: starsParallax.Array.data[0].gameobject
-      value: 
-      objectReference: {fileID: 1565251583}
-    - target: {fileID: 5983202667245841153, guid: ee73434160860324a921a0989281f1ff,
-        type: 3}
-      propertyPath: starsParallax.Array.data[1].gameobject
-      value: 
-      objectReference: {fileID: 916989494}
-    m_RemovedComponents:
-    - {fileID: 2139250269882807943, guid: ee73434160860324a921a0989281f1ff, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee73434160860324a921a0989281f1ff, type: 3}
---- !u!1 &1068271983 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5435700086702367932, guid: ee73434160860324a921a0989281f1ff,
-    type: 3}
-  m_PrefabInstance: {fileID: 1068271982}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &1068271984
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1068271983}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ee484490389de2c4caab3328d31aeae8, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1068271991
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1068271983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df2a4558a96bc9c4a84c7013c45f105a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerSprite: {fileID: 0}
 --- !u!1839735485 &1093421274 stripped
 Tilemap:
   m_CorrespondingSourceObject: {fileID: 2338764768368483930, guid: 9a789705b18661e4980bad90cad242d0,
@@ -709,12 +634,6 @@ AudioSource:
   m_CorrespondingSourceObject: {fileID: 4942333980376615821, guid: e1a6684af392bb048aa51b3670d2dc31,
     type: 3}
   m_PrefabInstance: {fileID: 4942333979593033488}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1565251583 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8649678283245614236, guid: ee73434160860324a921a0989281f1ff,
-    type: 3}
-  m_PrefabInstance: {fileID: 1068271982}
   m_PrefabAsset: {fileID: 0}
 --- !u!82 &1655992785 stripped
 AudioSource:

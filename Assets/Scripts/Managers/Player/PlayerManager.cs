@@ -10,7 +10,6 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     private InputManager inputManager;
     private GridManager gridManager;
     private Scanner scanner;
-    private PlayerMovementHandler playerController;
     private TileMapLayer buildingLayer;
 
     [SerializeField] float baseSpeed;
@@ -29,7 +28,6 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
 
     private bool gatherWasPressed;
     private bool specialWasPressed;
-    
     private Stat moveSpeed;
     private Stat gatheringSpeed;
     Coroutine gatherCoroutine = null;
@@ -57,10 +55,15 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         inputManager = InputManager._instance;
         gridManager = GridManager._instance;
         playerStats = PlayerStats._instance;
+        moveSpeed = playerStats.GetStat(StatType.MoveSpeed);
+        gatheringSpeed = playerStats.GetStat(StatType.GatheringSpeed);
         scanner = new Scanner();
         playerTransfrom = transform;
         buildingLayer = TileMapLayer.Buildings;
-        DeathReset();
+        airRegenCont = new EffectController(playerStats.GetStat(StatType.Air), 2);
+        airRegenData = new EffectData(StatType.Air, EffectType.OverTime, 10f, Mathf.Infinity, 0.5f, false, false);
+
+        GameManager.DieEvent += DeathReset;
     }
     private void Update()
      {
@@ -108,9 +111,6 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         }
         gatherWasPressed = false;
         specialWasPressed = false;
-       
-
-
     }
 
     private void CheckForTrees() {
@@ -204,14 +204,9 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
 
     public void DeathReset()
     {
+        airRegenCont?.Stop();
+        //Start death animation
         transform.position = startPositionOfPlayer;
-        moveSpeed = playerStats.GetStat(StatType.MoveSpeed);
-        gatheringSpeed = playerStats.GetStat(StatType.GatheringSpeed);
-        if (airRegenCont != null)
-        airRegenCont.Stop();
-
-        airRegenCont = new EffectController(playerStats.GetStat(StatType.Air), 2);
-        airRegenData = new EffectData(StatType.Air, EffectType.OverTime, 10f, Mathf.Infinity, 0.5f, false, false);
     }
 
     public class GatheringScanChecker : IChecker
