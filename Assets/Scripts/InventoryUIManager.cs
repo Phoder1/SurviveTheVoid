@@ -10,7 +10,10 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     [Header("Inventory Related")]
 
     public GameObject[] InventorySlots;
+    [SerializeField]
     Image[] InventorySlotImage;
+
+    [SerializeField]
     TextMeshProUGUI[] inventorySlotText;
 
     Inventory inventory;
@@ -107,13 +110,8 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
     public void UpdateInventoryToUI()
     {
-        InventorySlotImage = new Image[inventory.GetInventory.Length];
-        inventorySlotText = new TextMeshProUGUI[inventory.GetInventory.Length];
         for (int i = 0; i < inventory.GetInventory.Length; i++)
         {
-            InventorySlotImage[i] = InventorySlots[i].transform.GetChild(0).GetComponent<Image>();
-
-            inventorySlotText[i] = InventorySlots[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>();
 
             if (inventory.GetInventory[i] != null)
             {
