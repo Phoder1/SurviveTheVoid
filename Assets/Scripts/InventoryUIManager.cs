@@ -4,9 +4,6 @@ using UnityEngine.UI;
 
 public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 {
-
-    [SerializeField] bool IsInventoryOn = true;
-
     [Header("Inventory Related")]
 
     public GameObject[] InventorySlots;

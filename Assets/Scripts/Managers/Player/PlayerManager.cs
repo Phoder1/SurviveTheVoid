@@ -55,6 +55,8 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         inputManager = InputManager._instance;
         gridManager = GridManager._instance;
         playerStats = PlayerStats._instance;
+        moveSpeed = playerStats.GetStat(StatType.MoveSpeed);
+        gatheringSpeed = playerStats.GetStat(StatType.GatheringSpeed);
         scanner = new Scanner();
         playerTransfrom = transform;
         buildingLayer = TileMapLayer.Buildings;
