@@ -44,7 +44,7 @@ public class BuildingState : StateBase
 
 
 
-                touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
+                touchPosition = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position);
 
 
 

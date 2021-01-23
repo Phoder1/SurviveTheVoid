@@ -151,10 +151,10 @@ public class EquipManager
 
         if ((chestID == 3 && secondChestID == 2))
         {
-            inventory.AddToInventory(0, toolSlots[firstButtonID]);
-            toolSlots[firstButtonID] = null;
-            InventoryUIManager._instance.UpdateInventoryToUI();
-            return true;
+            if (toolSlots[firstButtonID] != null) 
+            {
+                SetActiveStateTool(firstButtonID, !GetToolActive((toolSlots[firstButtonID].item as ToolItemSO).GetToolType));
+            }
         }
         else if (chestID != 3 && secondChestID != 2)
             return false;
@@ -486,7 +486,7 @@ public class EquipManager
         }
     }
 
-    public bool IsToolActive(ToolType type)
+    public bool GetToolActive(ToolType type)
     {
         toolCache = null;
         toolCache = toolSlots[GetToolSlotIndex(type)].item as ToolItemSO;
