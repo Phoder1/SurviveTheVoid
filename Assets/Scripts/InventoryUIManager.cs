@@ -94,7 +94,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         }
         if (itemCache.item.GetItemType == ItemType.Equipable)
         {
-            EquipManager.GetInstance.CheckEquip(buttonId, 0);
+            EquipManager.GetInstance.CheckEquipGear(buttonId, 0);
         }
 
 
@@ -365,7 +365,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
             if (Dragged.item.GetItemType == ItemType.Equipable)
             {
 
-                if (EquipManager.GetInstance.CheckEquip(draggedSlot, fromChest, DropSlot, toChest))
+                if (EquipManager.GetInstance.CheckEquipGear(draggedSlot, fromChest, DropSlot, toChest))
                 {
                     return true;
                 }

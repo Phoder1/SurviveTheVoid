@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Tilemaps;
 
-
-public enum ToolType { Axe, Pickaxe, Hoe, Shovel, Hammer, AnyTool, Any }
 public enum TileType { Block, Gatherable, Chest, ProcessingTable, LightSource }
 #region Tile hit
 public class TileHit
