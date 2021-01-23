@@ -19,7 +19,7 @@ public class GodmodeScript : MonoSingleton<GodmodeScript>
     public override void Init() {
         gridManager = GridManager._instance;
         cameraController = CameraController._instance;
-        cameraComp = cameraController.GetCameraComp;
+        //cameraComp = cameraController.CurrentActiveCamera;
     }
 
     // Update is called once per frame
@@ -37,7 +37,6 @@ public class GodmodeScript : MonoSingleton<GodmodeScript>
 
         scrollMovement = Time.deltaTime * scrollSpeed * -Input.GetAxis("Mouse ScrollWheel");
         if (scrollMovement != 0) {
-            cameraController.ZoomOut(scrollMovement);
             viewChanged = true;
 
         }

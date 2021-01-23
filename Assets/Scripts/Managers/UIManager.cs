@@ -504,8 +504,7 @@ public class UIManager : MonoSingleton<UIManager>
                 isShown = true;
             }
         }
-        else if (isBuildModeOn == true || isRemoveModeOn == true)
-        {
+        else if (isBuildModeOn == true || isRemoveModeOn == true) {
             if (isShownBuildTools == true) {
                 bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
 
@@ -590,8 +589,7 @@ public class UIManager : MonoSingleton<UIManager>
         isFightModeOn = false;
     }
 
-    public void ButtonSettings() 
-    {
+    public void ButtonSettings() {
         if (PauseMenuUI.activeSelf == false) {
             PauseMenuUI.SetActive(true);
 
@@ -630,8 +628,7 @@ public class UIManager : MonoSingleton<UIManager>
             bHide.SetActive(true);
 
             // Check if we was in remove mode
-            if(isRemoveModeOn == false)
-			{
+            if (isRemoveModeOn == false) {
                 bInventory.SetActive(true);
                 bInteractA.SetActive(true);
             }
@@ -711,21 +708,17 @@ public class UIManager : MonoSingleton<UIManager>
         }
     }
 
-    public void ButtonCancel() 
-    {
-        if (isBuildModeOn == true)
-        {
+    public void ButtonCancel() {
+        if (isBuildModeOn == true) {
             PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
             isBuildModeOn = false;
 
-            if (isQuickAccessSlotsSwapped == true && isShown == true)
-            {
+            if (isQuickAccessSlotsSwapped == true && isShown == true) {
                 SetTools(true);
                 bMainWeapon.SetActive(true);
                 bSwap.SetActive(true);
             }
-            else if (isQuickAccessSlotsSwapped == false && isShown == true)
-            {
+            else if (isQuickAccessSlotsSwapped == false && isShown == true) {
                 SetQuickAccessSlots(true);
                 bMainWeapon.SetActive(true);
                 bSwap.SetActive(true);
@@ -738,19 +731,16 @@ public class UIManager : MonoSingleton<UIManager>
             bInteractA.transform.GetChild(0).gameObject.SetActive(true);
             bInteractA.transform.GetChild(1).gameObject.SetActive(false);
 
-            if (isFightModeOn == false)
-            {
+            if (isFightModeOn == false) {
                 bGatherB.transform.GetChild(0).gameObject.SetActive(true);
                 bGatherB.transform.GetChild(2).gameObject.SetActive(false);
             }
-            else
-            {
+            else {
                 bGatherB.transform.GetChild(1).gameObject.SetActive(true);
                 bGatherB.transform.GetChild(2).gameObject.SetActive(false);
             }
 
-            if (InventoryUI.activeSelf == true)
-            {
+            if (InventoryUI.activeSelf == true) {
                 InventoryUI.SetActive(false);
                 bInteractA.SetActive(true);
                 bGatherB.SetActive(true);
@@ -758,15 +748,13 @@ public class UIManager : MonoSingleton<UIManager>
                 isInventoryOpen = false;
             }
 
-            if (isShown == false)
-            {
+            if (isShown == false) {
                 bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
             }
 
             stateText.SetActive(false);
         }
-        else if (isRemoveModeOn == true)
-		{
+        else if (isRemoveModeOn == true) {
             isRemoveModeOn = false;
             isBuildModeOn = true;
 
@@ -778,13 +766,11 @@ public class UIManager : MonoSingleton<UIManager>
         }
     }
 
-    public void ButtonRotate() 
-    {
+    public void ButtonRotate() {
 
     }
 
-    public void RemoveStateOn()
-	{
+    public void RemoveStateOn() {
         isBuildModeOn = false;
         isRemoveModeOn = true;
 
@@ -847,7 +833,7 @@ public class UIManager : MonoSingleton<UIManager>
     // Monitors logic
     public void UpdateSurvivalBar(Stat stat, float value) {
         if (barsDictionary.TryGetValue(stat.statType, out Image image) && stat.GetIsCapped)
-            image.fillAmount = Mathf.Clamp( value  / stat.maxStat.GetSetValue, 0, 1);
+            image.fillAmount = Mathf.Clamp(value / stat.maxStat.GetSetValue, 0, 1);
     }
 
     public void UpdateExpAndLvlBar() {
