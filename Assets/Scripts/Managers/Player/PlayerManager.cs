@@ -184,7 +184,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
 
  
 
-    public override void DeathReset()
+    public void DeathReset()
     {
         transform.position = startPositionOfPlayer;
         moveSpeed = playerStats.GetStat(StatType.MoveSpeed);

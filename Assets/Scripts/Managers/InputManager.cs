@@ -157,6 +157,6 @@ public class InputManager : MonoSingleton<InputManager>
 
         OnTouch();
     }
-    public override void DeathReset() => playerStateMachine.SwitchState(InputState.DefaultState);
+    public void DeathReset() => playerStateMachine.SwitchState(InputState.DefaultState);
   
 }
