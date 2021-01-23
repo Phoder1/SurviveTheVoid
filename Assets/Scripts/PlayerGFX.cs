@@ -18,10 +18,7 @@ public class PlayerGFX : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            Death();
-        }
+        
     }
     public void UpdateAnim()
     {
