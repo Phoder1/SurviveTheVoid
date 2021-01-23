@@ -14,9 +14,11 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     private TileMapLayer buildingLayer;
 
     [SerializeField] float baseSpeed;
-    [SerializeField] int interactionLookRange = 5, airLookRange;
-
+   
+    [SerializeField] PlayerGFX _playerGFX;
+        [SerializeField] int interactionLookRange = 5, airLookRange;
     [SerializeField] float InterractionDistance;
+
 
     TileHit closestTile;
 
@@ -27,7 +29,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
 
     private bool gatherWasPressed;
     private bool specialWasPressed;
-    private bool anyInteracted;
+    
     private Stat moveSpeed;
     private Stat gatheringSpeed;
     Coroutine gatherCoroutine = null;
@@ -49,6 +51,8 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
 
     public override void Init()
     {
+        _playerGFX = GetComponent<PlayerGFX>();
+        _playerGFX._anim = GetComponent<Animator>();
         cameraController = CameraController._instance;
         inputManager = InputManager._instance;
         gridManager = GridManager._instance;
@@ -58,7 +62,8 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         buildingLayer = TileMapLayer.Buildings;
         DeathReset();
     }
-    private void Update() {
+    private void Update()
+     {
         lastPosition = currentPosOnGrid;
         currentPosOnGrid = gridManager.WorldToGridPosition((Vector2)transform.position, TileMapLayer.Floor);
         UpdateGridDirection();
@@ -66,12 +71,22 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         CheckForTrees();
     }
 
-    private void FixedUpdate() {
+    private void FixedUpdate()
+    {
         Vector2 movementVector = inputManager.VJAxis * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue;
         movementVector.y *= 0.5f;
-        if (movementVector != Vector2.zero) {
+        if (movementVector != Vector2.zero)
+        {
             Move(movementVector);
+
+            _playerGFX.Walk(true,movementVector);
+
         }
+        else
+        {
+            _playerGFX.Walk(false,null);
+        }
+
     }
 
 
@@ -93,7 +108,9 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         }
         gatherWasPressed = false;
         specialWasPressed = false;
-        anyInteracted = false;
+       
+
+
     }
 
     private void CheckForTrees() {
@@ -130,6 +147,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
             destination.z = transform.position.z;
             float distance = Vector2.Distance(transform.position, destination);
             if (distance > InterractionDistance) {
+                _playerGFX.Walk(true, Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * playerStats.GetSetMoveSpeed, distance));
                 Move(Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue, distance));
             }
             else {
@@ -182,7 +200,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         }
     }
 
- 
+
 
     public void DeathReset()
     {
@@ -191,7 +209,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         gatheringSpeed = playerStats.GetStat(StatType.GatheringSpeed);
         if (airRegenCont != null)
         airRegenCont.Stop();
-        
+
         airRegenCont = new EffectController(playerStats.GetStat(StatType.Air), 2);
         airRegenData = new EffectData(StatType.Air, EffectType.OverTime, 10f, Mathf.Infinity, 0.5f, false, false);
     }
