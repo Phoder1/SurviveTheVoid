@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 public interface ISingleton
 {
-  
 
     void Init();
 }
@@ -25,8 +24,5 @@ public abstract class MonoSingleton<T> : MonoBehaviour,ISingleton where T : Comp
     /// </summary>
     public abstract void Init();
 
-    /// <summary>
-    ///  soft reset runs when the players die
-    /// </summary>
-    public abstract void DeathReset();
+
 }

@@ -46,6 +46,19 @@
 
         playerStats = PlayerStats._instance;
     }
+    public void ReEquipStats() {
+
+        if (equipSlots == null)
+            return;
+        
+        for (int i = 0; i < equipSlots.Length; i++)
+        {
+            if (equipSlots[i] == null)
+                continue;
+
+            ApplyStats((equipSlots[i].item as GearItemSO));
+        }  
+    }
     public bool CheckEquip(int firstButtonID, int chestID, int? secondButtonID = null, int secondChestID = 2)
     {
         if (chestID == 2 && secondChestID == 2)

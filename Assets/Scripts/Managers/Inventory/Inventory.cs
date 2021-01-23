@@ -48,7 +48,7 @@ public class Inventory
 
     private Inventory()
     {
-        ResetInventory();
+        ResetInventoryClass();
     }
 
 
@@ -216,7 +216,7 @@ public class Inventory
 
     }
 
-    public void ResetInventory() {
+    public void ResetInventoryClass() {
         maxCapacityOfItemsInList = 18;
         checkForItem = false;
         itemAmountCount = 0;

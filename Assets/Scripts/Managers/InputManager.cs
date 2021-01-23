@@ -107,9 +107,6 @@ public class InputManager : MonoSingleton<InputManager>
         }
 
     }
-    
-
-
     public void SinglePressedButton(bool isButtonA)
     {
 
@@ -120,8 +117,6 @@ public class InputManager : MonoSingleton<InputManager>
 
 
     }
-
-
     public void HoldingButton(bool isButtonA)
     {
 
@@ -162,11 +157,6 @@ public class InputManager : MonoSingleton<InputManager>
 
         OnTouch();
     }
-
+    public override void DeathReset() => playerStateMachine.SwitchState(InputState.DefaultState);
   
-
-    public override void DeathReset()
-    {
-       playerStateMachine.SwitchState(InputState.DefaultState);
-    }
 }

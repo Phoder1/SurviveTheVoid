@@ -56,7 +56,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         scanner = new Scanner();
         playerTransfrom = transform;
         buildingLayer = TileMapLayer.Buildings;
-        HardReset();
+        DeathReset();
     }
     private void Update() {
         lastPosition = currentPosOnGrid;
@@ -182,17 +182,16 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         }
     }
 
-    public override void HardReset()
-    {
-        DeathReset();
-    }
+ 
 
     public override void DeathReset()
     {
         transform.position = startPositionOfPlayer;
         moveSpeed = playerStats.GetStat(StatType.MoveSpeed);
         gatheringSpeed = playerStats.GetStat(StatType.GatheringSpeed);
+        if (airRegenCont != null)
         airRegenCont.Stop();
+        
         airRegenCont = new EffectController(playerStats.GetStat(StatType.Air), 2);
         airRegenData = new EffectData(StatType.Air, EffectType.OverTime, 10f, Mathf.Infinity, 0.5f, false, false);
     }
@@ -247,7 +246,6 @@ public class PlayerManager : MonoSingleton<PlayerManager>
         {
             cameraController = CameraController._instance;
             gridManager = GridManager._instance;
-          
         }
         public void Move(Vector2 moveVector)
         {
