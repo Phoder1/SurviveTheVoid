@@ -504,11 +504,11 @@ public class Inventory
     }
     public ItemSlot[] GetInventoryFromDictionary(int id)
     {
-        inventoryCache = null;
+        ItemSlot[] Cache = null;
 
-        inventoryDict.TryGetValue(id, out inventoryCache);
+        inventoryDict.TryGetValue(id, out Cache);
 
-        return inventoryCache;
+        return Cache;
     }
 
     public void CreateNewInventory(int chestId, int amountOfCapacity) => inventoryDict.Add(chestId, new ItemSlot[amountOfCapacity]);
