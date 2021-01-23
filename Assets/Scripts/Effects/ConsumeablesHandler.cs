@@ -9,14 +9,11 @@ public class ConsumeablesHandler : MonoSingleton<ConsumeablesHandler>
     public override void Init() {
         playerStats = PlayerStats._instance;
         effectHandler = EffectHandler._instance;
-        DeathReset();
+        HardReset();
+
     }
-
-
-    public void DeathReset()
+    public void HardReset()
     {
-        if (ConsumablesEffectsDict!= null)
-        {
         foreach (var effect in ConsumablesEffectsDict.Values)
         {
             effect.regenerationController.Stop();
@@ -24,7 +21,17 @@ public class ConsumeablesHandler : MonoSingleton<ConsumeablesHandler>
         }
         ConsumablesEffectsDict = null;
 
+        FillDictionary();
+    }
+
+    public void DeathReset()
+    {
+        foreach (var effect in ConsumablesEffectsDict.Values)
+        {
+            effect.regenerationController.Stop();
+            effect.valueController.Stop();
         }
+        ConsumablesEffectsDict = null;
 
         FillDictionary();
     }

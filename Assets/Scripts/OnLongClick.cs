@@ -52,8 +52,6 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             if (InventoryUIManager._instance.DraggedItem != -1 && InventoryUIManager._instance.DroppedItem != -1 && !InventoryUIManager._instance.IsDragginToTrash)
             {
                 InventoryUIManager._instance.SwapItems();
-
-
             }
             else if (InventoryUIManager._instance.IsDragginToTrash)
             {
@@ -63,6 +61,9 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             {
 
                 InventoryUIManager._instance.SwitchKeyInventory(InventoryUIManager._instance.DraggedItem, InventoryUIManager._instance.DraggedIntoBar);
+            }else if(InventoryUIManager._instance.DraggedItem >= 0 && InventoryUIManager._instance.DraggedIntoEquip >= 0)
+            {
+                InventoryUIManager._instance.SwitchKeyInventory(InventoryUIManager._instance.DraggedItem, InventoryUIManager._instance.DraggedIntoEquip);
             }
             else
             {
@@ -85,8 +86,6 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     void Update()
     {
-
-
         if (pointerDown)
         {
             pointerDownTimer += Time.deltaTime;
@@ -115,11 +114,6 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                     fillImage.fillAmount = (pointerDownTimer - (requiredHoldTime / minimumHoldAmount)) / (requiredHoldTime - (requiredHoldTime / minimumHoldAmount));
             }
         }
-
-
-
-
-
     }
 
     void Reset()
@@ -166,7 +160,12 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             onDropItem.Invoke();
         }
 
-        if(InventoryUIManager._instance.HotKeyDragged >= 0)
+        if (InventoryUIManager._instance.HotKeyDragged >= 0)
+        {
+            onDropItem.Invoke();
+            InventoryUIManager._instance.WhatInventory(ChestId);
+        }
+        else if(InventoryUIManager._instance.EquipDragged >= 0)
         {
             onDropItem.Invoke();
             InventoryUIManager._instance.WhatInventory(ChestId);
