@@ -1,8 +1,10 @@
 ﻿
+using System;
+
 public class GameManager : MonoSingleton<GameManager>
 {
     public ISingleton[] singletons;
-
+    public static event Action DieEvent;
     // The original start that controls all other Inits
     void Start()
     {
@@ -36,8 +38,9 @@ public class GameManager : MonoSingleton<GameManager>
     }
 
 
-    public void DeathReset()
+    public static void OnDeath()
     {
+        DieEvent?.Invoke();
         
     }
 }
