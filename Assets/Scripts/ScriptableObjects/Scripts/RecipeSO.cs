@@ -49,7 +49,7 @@ public class RecipeSO : ScriptableObject
     [SerializeField]
     private int CraftingTime;
     public int GetCraftingTime => CraftingTime;
-
+    [SerializeField] float expReward;
     public void UpdateIfRecipeUnlocked(bool _unlocked)
     {
         isUnlocked = _unlocked;

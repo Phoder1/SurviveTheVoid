@@ -42,6 +42,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     private DirectionEnum gridMovementDirection;
 
     public DirectionEnum GetMovementDirection => gridMovementDirection;
+    bool playerIsDead = false;
 
     public override void Init()
     {
@@ -61,48 +62,52 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     }
     private void Update()
      {
+        if (!playerIsDead) {
         currentPosOnGrid = gridManager.WorldToGridPosition((Vector2)base.transform.position, TileMapLayer.Floor);
         UpdateGridDirection();
         CheckForTrees();
+        }
     }
 
     private void FixedUpdate()
     {
-        Vector2 movementVector = inputManager.VJAxis * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue;
-        movementVector.y *= 0.5f;
-        if (movementVector != Vector2.zero)
-        {
-            Move(movementVector);
+        if (!playerIsDead) {
+            Vector2 movementVector = inputManager.VJAxis * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue;
+            movementVector.y *= 0.5f;
+            if (movementVector != Vector2.zero) {
+                Move(movementVector);
 
-            _playerGFX.Walk(true,movementVector);
+                _playerGFX.Walk(true, movementVector);
 
-        }
-        else
-        {
-            _playerGFX.Walk(false,null);
+            }
+            else {
+                _playerGFX.Walk(false, null);
+            }
         }
 
     }
 
 
     private void LateUpdate() {
-        if (specialWasPressed != specialButton) {
-            specialButton = specialWasPressed;
-            if (!specialButton)
-                closestTile = null;
-        }
-        if (gatherWasPressed != gatherButton) {
-            gatherButton = gatherWasPressed;
-            if (!gatherButton) {
-                if (gatherCoroutine != null) {
-                    StopCoroutine(gatherCoroutine);
-                    gatherCoroutine = null;
-                }
-                closestTile = null;
+        if (!playerIsDead) {
+            if (specialWasPressed != specialButton) {
+                specialButton = specialWasPressed;
+                if (!specialButton)
+                    closestTile = null;
             }
+            if (gatherWasPressed != gatherButton) {
+                gatherButton = gatherWasPressed;
+                if (!gatherButton) {
+                    if (gatherCoroutine != null) {
+                        StopCoroutine(gatherCoroutine);
+                        gatherCoroutine = null;
+                    }
+                    closestTile = null;
+                }
+            }
+            gatherWasPressed = false;
+            specialWasPressed = false;
         }
-        gatherWasPressed = false;
-        specialWasPressed = false;
     }
 
     private void CheckForTrees() {
@@ -196,6 +201,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
 
     public void DeathReset()
     {
+        playerIsDead = true;
         airRegenCont?.Stop();
         //Start death animation
         _playerGFX.Death();
@@ -205,8 +211,13 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     }
     public IEnumerator DeathTransition(float extraDelay) {
         yield return new WaitForSeconds(_playerGFX.GetDeathAnimLength + extraDelay);
-        base.transform.position = startPositionOfPlayer;
+
+
         _playerGFX.Reborn();
+
+        transform.position = startPositionOfPlayer;
+        playerIsDead = false;
+
     }
 
     public class GatheringScanChecker : IChecker

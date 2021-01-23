@@ -6,6 +6,8 @@ using UnityEngine.Tilemaps;
 public class GatherableTileSO : TileAbstSO
 {
     [SerializeField] private GrowthStage[] stages;
+    [SerializeField] private int sourceTier;
+    [SerializeField] private float expReward;
     public GrowthStage[] GetStages => stages;
     [SerializeField] private ToolType toolType;
     public ToolType GetToolType => toolType;
