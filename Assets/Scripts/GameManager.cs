@@ -1,4 +1,7 @@
-﻿public class GameManager : MonoSingleton<GameManager>
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class GameManager : MonoSingleton<GameManager>
 {
     public ISingleton[] singletons;
 
@@ -29,5 +32,11 @@
                 singleton.Init();
             }
         }
+    }
+
+
+
+    private void Update()
+    {
     }
 }

@@ -51,7 +51,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         ResetStats();
     }
 
-    private void ResetStats() {
+    public void ResetStats() {
         foreach (Stat stat in StatsDict.Values)
             stat.Reset();
     }
@@ -111,6 +111,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
     }
     public Stat GetStat(StatType statType) => StatsDict[statType];
     public float GetStatValue(StatType statType) => GetStat(statType).GetSetValue;
+    public float AddToStatValue(StatType statType , float amount) => GetStat(statType).GetSetValue += amount;
     public Stat GetMaxStat(StatType statType)
         => StatsDict[statType].maxStat;
 }
