@@ -102,7 +102,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         {
 
 
-            EquipManager.GetInstance.CheckEquip(itemCache, ChestId, takingFromIndex);
+            EquipManager.GetInstance.CheckEquip(itemCache, takingFromIndex, ChestId);
             UpdatePlayerInventory();
 
 
