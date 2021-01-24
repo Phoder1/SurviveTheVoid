@@ -895,7 +895,26 @@ public class UIManager : MonoSingleton<UIManager>
 
     // Monitors logic
     public void UpdateSurvivalBar(Stat stat, float value) {
-        if (barsDictionary.TryGetValue(stat.statType, out Image image) && stat.GetIsCapped)
+        StatType statType = stat.statType;
+        switch (stat.statType) {
+            case StatType.MaxHP:
+                statType = StatType.HP;
+                break;
+            case StatType.MaxFood:
+                statType = StatType.Food;
+                break;
+            case StatType.MaxWater:
+                statType = StatType.Water;
+                break;
+            case StatType.MaxAir:
+                statType = StatType.Air;
+                break;
+            case StatType.MaxSleep:
+                statType = StatType.Sleep;
+                break;
+
+        }
+        if (barsDictionary.TryGetValue(statType, out Image image) && stat.GetIsCapped)
             image.fillAmount = Mathf.Clamp(value / stat.maxStat.GetSetValue, 0, 1);
     }
 
