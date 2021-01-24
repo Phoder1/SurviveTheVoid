@@ -639,11 +639,30 @@ public class ItemSlot
 {
     public ItemSO item;
     public int amount;
-    public int? durability;
-    public ItemSlot(ItemSO item, int amount, int? durability = null)
+    private int? durabiltiy = null;
+    public int GetSetDurability
+    {
+        set => durabiltiy = value; get
+        {
+
+            if (durabiltiy == null)
+            {
+                durabiltiy = 0;
+
+                if (item is GearItemSO)
+                    durabiltiy = (item as GearItemSO).GetMaxDurability;
+                
+                else if (item is ToolItemSO)
+                    durabiltiy = (item as ToolItemSO).GetMaxDurability;
+                
+            
+            }
+            return durabiltiy.GetValueOrDefault();
+        }
+    }
+    public ItemSlot(ItemSO item, int amount)
     {
         this.item = item;
         this.amount = amount;
-        this.durability = durability;
     }
 }
