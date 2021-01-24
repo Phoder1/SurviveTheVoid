@@ -23,7 +23,7 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     public Image highLightedSprite;
     public Image ItemSprite;
     public TextMeshProUGUI ItemAmount;
-
+    public bool isInventoryUIClose = false;
     public Color NormalColor;
     public Color HighLightedColor;
     DragNDropVisual Vis;
@@ -155,7 +155,16 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
     void SlotAction()
     {
+        if (isInventoryUIClose)
+        {
+            EquipManager.GetInstance.SetActiveStateTool(slotPosition, !EquipManager.GetInstance.GetToolActive(EquipManager.GetInstance.GetToolTypeByIndex(slotPosition)));
+         //  if true == EquipManager.GetInstance.GetToolActive(EquipManager.GetInstance.GetToolTypeByIndex(slotPosition))
+         // visual effect
+        }
+        else
+        {
         inventoryUI.OnPressedInventoryButton();
+         }
     }
 
 
