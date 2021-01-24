@@ -423,9 +423,9 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
                 ItemSlot TempSlot = new ItemSlot(CurrentProcessTile.craftingRecipe.getoutcomeItem.item, i * CurrentProcessTile.craftingRecipe.getoutcomeItem.amount);
                 if (inventory.AddToInventory(0, TempSlot))
                 {
-                    EffectController effectController = new EffectController(PlayerStats._instance.GetStat(StatType.EXP), 0);
+                    //EffectController effectController = new EffectController(PlayerStats._instance.GetStat(StatType.EXP), 0);
                     //expEffect.duration = currentStage.GetExpReward / expEffect.amount;
-                    effectController.Begin(expEffect);
+                    //effectController.Begin(expEffect);
                     CurrentProcessTile.CollectItems(i);
                     break;
                 }
