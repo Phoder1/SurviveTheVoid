@@ -1,9 +1,6 @@
-﻿
-
-using UnityEngine;
-
-public class EquipManager
+﻿public class EquipManager
 {
+
     Inventory inventory;
     PlayerStats playerStats;
     static EquipManager _instance;
@@ -11,11 +8,14 @@ public class EquipManager
     GearItemSO gearCache; // itemSO
     ToolItemSO toolCache; // itemSO
     ItemSlot[] gearSlots;
-    // 0 helmet
-    // 1 Chest
-    // 2 Legging
-    // 3 Gloves
-    // 4 Shoes
+
+    /// <summary>
+    /// 0 helmet
+    /// 1 Chest
+    /// 2 Legging
+    /// 3 Gloves
+    /// 4 Shoes
+    /// </summary>
 
     ItemSlot[] toolSlots;
     /// <summary>
@@ -41,6 +41,9 @@ public class EquipManager
     {
         ResetEquip();
     }
+
+
+    #region Equips
     public void ResetEquip()
     {
         if (gearSlots != null)
@@ -284,11 +287,64 @@ public class EquipManager
         gearSlots[buttonID] = null;
         InventoryUIManager._instance.UpdateInventoryToUI();
     }
-
-
-
+    #endregion
     #region Durability Section
-    public void LowerDurabilityOfEquipItem(GearType equipType, int amount)
+    public int? GetGearDurability(GearType gearType)
+    {
+        equipSlotCache = null;
+
+
+        equipSlotCache = gearSlots[GetGearSlotIndex(gearType)];
+
+        if (equipSlotCache == null)
+            return null;
+
+        return equipSlotCache.GetSetDurability;
+
+    }
+    public int? GetToolDurability(ToolType type) {
+        if (toolSlots == null)
+            return null;
+
+
+
+        return GetToolDurabilityByIndex(GetToolSlotIndex(type));
+    }
+    public int GetToolDurabilityByIndex(int index)
+    {
+        if (index < 0 || index >= toolSlots.Length || toolSlots[index] == null)
+            return 0;
+
+       
+       return toolSlots[index].GetSetDurability;
+
+    }
+    public void SetAmountOfToolDurability(ToolType type, int amount)
+    {
+        equipSlotCache = null;
+
+        if (toolSlots[GetToolSlotIndex(type)] == null || amount == 0)
+            return;
+
+        equipSlotCache = toolSlots[GetToolSlotIndex(type)];
+
+        if (equipSlotCache == null)
+            return;
+
+
+        if (amount < 0)
+            amount *= -1;
+
+        if (equipSlotCache.GetSetDurability - amount <= 0)
+        {
+            toolSlots[GetToolSlotIndex(type)] = null;
+            return;
+        }
+
+        equipSlotCache.GetSetDurability -= amount;
+
+    }
+    public void SetAmountOfGearDurability(GearType equipType, int amount)
     {
 
         if (amount == 0)
@@ -312,56 +368,7 @@ public class EquipManager
         equipSlotCache.GetSetDurability -= amount;
 
     }
-    public int? GetGearDurability(GearType gearType)
-    {
-        equipSlotCache = null;
-
-
-        equipSlotCache = gearSlots[GetGearSlotIndex(gearType)];
-
-        if (equipSlotCache == null)
-            return null;
-
-        return equipSlotCache.GetSetDurability;
-
-    }
-    public int? GetToolDurabilityByEnum(ToolType type) {
-        if (toolSlots == null)
-            return null;
-
-
-
-        return GetToolDurabilityByIndex(GetToolSlotIndex(type));
-    }
-    public int GetToolDurabilityByIndex(int index) => toolSlots[index].GetSetDurability;
-    public void SetAmountOfToolDurability(ToolType type, int amount)
-    {
-        equipSlotCache = null;
-        if (toolSlots[GetToolSlotIndex(type)] == null || amount == 0)
-            return;
-
-        equipSlotCache = toolSlots[GetToolSlotIndex(type)];
-
-        if (equipSlotCache == null)
-            return;
-
-
-        if (amount < 0)
-            amount *= -1;
-
-        if (equipSlotCache.GetSetDurability - amount <= 0)
-        {
-            toolSlots[GetToolSlotIndex(type)] = null;
-            return;
-        }
-
-        equipSlotCache.GetSetDurability -= amount;
-
-    }
     #endregion
-
-
-
     #region Tiers
     public int GetTierOfGearByIndex(int index)
     {
@@ -386,10 +393,34 @@ public class EquipManager
     }
 
     #endregion
+    #region Index of tool / gear 
+    public ToolType GetToolTypeByIndex(int buttonID)
+    {
+        /// <summary>
+        /// 0 Axe 
+        /// 1 Pickaxe
+        /// 2 Hoe 
+        /// 3 Shovel
+        /// 4 Hammer
+        /// </summary>
+
+        if (buttonID == 0)
+            return ToolType.Axe;
+
+        if (buttonID == 1)
+            return ToolType.Pickaxe;
 
 
+        if (buttonID == 2)
+            return ToolType.Hoe;
 
-    #region Index of tool / gear
+        if (buttonID == 3)
+            return ToolType.Shovel;
+
+
+        return ToolType.Hammer;
+
+    }
     private int GetToolSlotIndex(ToolType toolType) {
         switch (toolType)
         {
@@ -434,10 +465,7 @@ public class EquipManager
         return 0;
     }
     #endregion
-
-
-
-
+    #region Index Check
     private bool CheckIndexToGear(int index, GearItemSO gear)
     {
 
@@ -455,9 +483,8 @@ public class EquipManager
 
         return false;
     }
-
-
-
+    #endregion
+    #region GearStats
     void RemoveStats(ItemSO equip)
     {
 
@@ -519,39 +546,7 @@ public class EquipManager
         }
     }
 
-
-    public ToolType GetToolTypeByIndex(int buttonID)
-    {
-        /// <summary>
-        /// 0 Axe 
-        /// 1 Pickaxe
-        /// 2 Hoe 
-        /// 3 Shovel
-        /// 4 Hammer
-        /// </summary>
-
-        if (buttonID == 0)
-            return ToolType.Axe;
-
-        if (buttonID == 1)
-            return ToolType.Pickaxe;
-
-
-        if (buttonID == 2)
-            return ToolType.Hoe;
-
-        if (buttonID == 3)
-            return ToolType.Shovel;
-
-
-        return ToolType.Hammer;
-
-    }
-
-
-
-
-
+    #endregion
     #region Tool's Activity
     public bool GetToolActive(ToolType type)
     {

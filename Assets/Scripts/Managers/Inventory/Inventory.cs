@@ -25,7 +25,7 @@ public class Inventory
     bool checkForItem = false;
     int counter = 0;
     int itemAmountCount;
-    int amountOfIDChests; // 0 is the player's inventory
+    int amountOfIDChests; 
 
     ItemSlot[] inventoryList;
     //private int nextAddOnAmountForInventory = 5;
@@ -37,11 +37,14 @@ public class Inventory
 
 
     Dictionary<int, ItemSlot[]> inventoryDict;
-    // 0 = > player's inventory
-    //1  = > Hot Keys
-    //2+ = > Equips
-    //3? = > tools
-    //3+ = > local inventory chests
+    /// <summary>
+    /// 0 = > player's inventory
+    ///1  = > Hot Keys
+    ///2+ = > Equips
+    ///3 = > tools
+    ///4+ = > local inventory chests
+    /// </summary>
+
 
 
 
