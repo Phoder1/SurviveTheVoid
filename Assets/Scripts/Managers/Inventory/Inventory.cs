@@ -224,8 +224,10 @@ public class Inventory
         inventoryList = new ItemSlot[maxCapacityOfItemsInList];
         inventoryDict = new Dictionary<int, ItemSlot[]>();
         inventoryDict.Add(amountOfIDChests, inventoryList);
-        GetNewIDForChest(5);
-        GetNewIDForChest(5);
+        GetNewIDForChest(5);// hotkeys
+        GetNewIDForChest(5); // equips
+        GetNewIDForChest(5);// tool bar
+
         inventoryUI = InventoryUIManager._instance;
     }
     public bool AddToInventory(int chestID, ItemSlot item)

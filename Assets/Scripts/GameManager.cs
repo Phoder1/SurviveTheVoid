@@ -1,10 +1,11 @@
 ﻿
 using System;
+using UnityEngine;
 
 public class GameManager : MonoSingleton<GameManager>
 {
     public ISingleton[] singletons;
-    public static event Action DieEvent;
+    public static event Action DeathEvent;
     // The original start that controls all other Inits
     void Start()
     {
@@ -13,7 +14,7 @@ public class GameManager : MonoSingleton<GameManager>
     }
     public override void Init()
     {
-        singletons = new ISingleton[11] {
+        singletons = new ISingleton[12] {
             CameraController._instance,  // alon
              GridManager._instance, // alon
              UIManager._instance, // -----
@@ -24,7 +25,8 @@ public class GameManager : MonoSingleton<GameManager>
              CraftingManager._instance, // elor
              InventoryUIManager._instance, // elor
              EffectHandler._instance, // alon
-             ConsumeablesHandler._instance //
+             ConsumeablesHandler._instance, //
+             SoundManager._instance
 
         };
 
@@ -36,11 +38,9 @@ public class GameManager : MonoSingleton<GameManager>
             }
         }
     }
-
-
     public static void OnDeath()
     {
-        DieEvent?.Invoke();
-        
+        DeathEvent?.Invoke();
+        Debug.Log("Died!");
     }
 }

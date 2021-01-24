@@ -5,18 +5,17 @@ using UnityEngine;
 public partial class PlayerManager : MonoSingleton<PlayerManager>
 {
     private PlayerStats playerStats;
-    private static Transform playerTransfrom;
 
     private InputManager inputManager;
     private GridManager gridManager;
     private Scanner scanner;
-    private PlayerMovementHandler playerController;
-    private TileMapLayer buildingLayer;
 
     [SerializeField] float baseSpeed;
-    [SerializeField] int interactionLookRange = 5, airLookRange;
-
+   
+    [SerializeField] PlayerGFX _playerGFX;
+        [SerializeField] int interactionLookRange = 5, airLookRange;
     [SerializeField] float InterractionDistance;
+
 
     TileHit closestTile;
 
@@ -27,73 +26,95 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
 
     private bool gatherWasPressed;
     private bool specialWasPressed;
-    private bool anyInteracted;
     private Stat moveSpeed;
     private Stat gatheringSpeed;
     Coroutine gatherCoroutine = null;
     private Vector2Int lastCheckPosition = new Vector2Int(int.MaxValue, int.MaxValue);
     private float lastTreeCheckTime = 0;
+    [SerializeField] float animDelay;
     private const float treeCheckInterval = 0.5f;
-    private Vector2Int lastPosition;
     private Vector2Int currentPosOnGrid;
-    private Vector3 startPositionOfPlayer= new Vector3(0, 0.25f, 3.81f);
+    private Vector3 startPositionOfPlayer;
     public Vector2Int GetCurrentPosOnGrid => currentPosOnGrid;
     private EffectController airRegenCont;
     private EffectData airRegenData;
-    bool playerMoved;
-
+    private GatherableTileSO tileBeingGathered;
     private DirectionEnum gridMovementDirection;
-    public static Transform GetPlayerTransform => playerTransfrom;
 
     public DirectionEnum GetMovementDirection => gridMovementDirection;
+    bool playerIsDead = false;
 
     public override void Init()
     {
+        _playerGFX = GetComponent<PlayerGFX>();
+        _playerGFX._anim = GetComponent<Animator>();
         cameraController = CameraController._instance;
         inputManager = InputManager._instance;
         gridManager = GridManager._instance;
         playerStats = PlayerStats._instance;
+        moveSpeed = playerStats.GetStat(StatType.MoveSpeed);
+        gatheringSpeed = playerStats.GetStat(StatType.GatheringSpeed);
         scanner = new Scanner();
-        playerTransfrom = transform;
-        buildingLayer = TileMapLayer.Buildings;
-        DeathReset();
+        airRegenCont = new EffectController(playerStats.GetStat(StatType.Air), 2);
+        airRegenData = new EffectData(StatType.Air, EffectType.OverTime, 10f, Mathf.Infinity, 0.5f, false, false);
+        startPositionOfPlayer = base.transform.position;
+        GameManager.DeathEvent += DeathReset;
     }
-    private void Update() {
-        lastPosition = currentPosOnGrid;
-        currentPosOnGrid = gridManager.WorldToGridPosition((Vector2)transform.position, TileMapLayer.Floor);
+    private void Update()
+     {
+        if (!playerIsDead) {
+        currentPosOnGrid = gridManager.WorldToGridPosition((Vector2)base.transform.position, TileMapLayer.Floor);
         UpdateGridDirection();
-        playerMoved = lastPosition != currentPosOnGrid;
         CheckForTrees();
+        }
     }
 
-    private void FixedUpdate() {
-        Vector2 movementVector = inputManager.VJAxis * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue;
-        movementVector.y *= 0.5f;
-        if (movementVector != Vector2.zero) {
-            Move(movementVector);
+    private void FixedUpdate()
+    {
+        if (!playerIsDead) {
+            Vector2 movementVector = inputManager.VJAxis * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue;
+            movementVector.y *= 0.5f;
+            if (movementVector != Vector2.zero) {
+                Move(movementVector);
+
+                _playerGFX.Walk(true, totalSpeed);
+
+            }
+            else {
+                _playerGFX.Walk(false, null);
+            }
         }
+
     }
 
 
     private void LateUpdate() {
-        if (specialWasPressed != specialButton) {
-            specialButton = specialWasPressed;
-            if (!specialButton)
-                closestTile = null;
-        }
-        if (gatherWasPressed != gatherButton) {
-            gatherButton = gatherWasPressed;
-            if (!gatherButton) {
-                if (gatherCoroutine != null) {
-                    StopCoroutine(gatherCoroutine);
-                    gatherCoroutine = null;
-                }
-                closestTile = null;
+        if (!playerIsDead) {
+            if (specialWasPressed != specialButton) {
+                specialButton = specialWasPressed;
+                if (!specialButton)
+                    closestTile = null;
             }
+            if (gatherWasPressed != gatherButton) {
+                gatherButton = gatherWasPressed;
+                if (!gatherButton) {
+                    if (gatherCoroutine != null) {
+                        CancelGathering();
+                    }
+                    closestTile = null;
+                }
+            }
+            gatherWasPressed = false;
+            specialWasPressed = false;
         }
-        gatherWasPressed = false;
-        specialWasPressed = false;
-        anyInteracted = false;
+    }
+
+    private void CancelGathering() {
+        StopCoroutine(gatherCoroutine);
+        gatherCoroutine = null;
+        SoundManager._instance.DisableLooping(tileBeingGathered.getGatheringSound);
+        UIManager._instance.CancelProgressBar();
+        tileBeingGathered = null;
     }
 
     private void CheckForTrees() {
@@ -113,7 +134,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     }
 
     public TileHit Scan(IChecker checkType) {
-        return scanner.Scan(currentPosOnGrid, gridMovementDirection, interactionLookRange, buildingLayer, checkType);
+        return scanner.Scan(currentPosOnGrid, gridMovementDirection, interactionLookRange, TileMapLayer.Buildings, checkType);
     }
     public void ImplementInteraction(bool SpecialInteract) {
         gatherWasPressed = true;
@@ -126,16 +147,18 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
             }
         }
         else {
-            Vector3 destination = gridManager.GridToWorldPosition(closestTile.gridPosition, buildingLayer, true);
-            destination.z = transform.position.z;
-            float distance = Vector2.Distance(transform.position, destination);
+            Vector3 destination = gridManager.GridToWorldPosition(closestTile.gridPosition, TileMapLayer.Buildings, true);
+            destination.z = base.transform.position.z;
+            float distance = Vector2.Distance(base.transform.position, destination);
             if (distance > InterractionDistance) {
-                Move(Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue, distance));
+                Vector3 moveVector = Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue, distance);
+                _playerGFX.Walk(true, moveVector);
+                Move(moveVector);
             }
             else {
                 if (SpecialInteract) {
                     if (!SpecialInterracted) {
-                        closestTile.tile.SpecialInteraction(closestTile.gridPosition, buildingLayer);
+                        closestTile.tile.SpecialInteraction(closestTile.gridPosition, TileMapLayer.Buildings);
                         SpecialInterracted = true;
                     }
                 }
@@ -148,9 +171,18 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     }
     IEnumerator HarvestTile(TileHit tileHit) {
         if (tileHit.tile.GetTileAbst is GatherableTileSO gatherable) {
-            yield return new WaitForSeconds(gatherable.GetGatheringTime / gatheringSpeed.GetSetValue);
-            tileHit.tile.GatherInteraction(tileHit.gridPosition, buildingLayer);
+            tileBeingGathered = gatherable;
+            float gatheringTime = gatherable.GetGatheringTime / gatheringSpeed.GetSetValue;
+            Vector2 tileWorldPos = gridManager.GridToWorldPosition(tileHit.gridPosition, TileMapLayer.Buildings, true);
+            Camera currentCamera = CameraController._instance.GetCurrentActiveCamera;
+            Vector2 tileScreenPos = currentCamera.WorldToScreenPoint(tileWorldPos);
+            UIManager._instance.StartProgressBar(tileScreenPos, gatheringTime);
+            SoundManager._instance.PlaySoundLooped(gatherable.getGatheringSound);
+            yield return new WaitForSeconds(gatheringTime);
+            tileHit.tile.GatherInteraction(tileHit.gridPosition, TileMapLayer.Buildings);
+            SoundManager._instance.DisableLooping(gatherable.getGatheringSound);
             Debug.Log("TileHarvested");
+            tileBeingGathered = null;
         }
         gatherCoroutine = null;
         closestTile = null;
@@ -182,18 +214,27 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         }
     }
 
- 
+
 
     public void DeathReset()
     {
+        playerIsDead = true;
+        airRegenCont?.Stop();
+        //Start death animation
+        _playerGFX.Death();
+        //Death screen transition
+        StartCoroutine(DeathTransition(animDelay));
+        //transform.position = startPositionOfPlayer;
+    }
+    public IEnumerator DeathTransition(float extraDelay) {
+        yield return new WaitForSeconds(_playerGFX.GetDeathAnimLength + extraDelay);
+
+
+        _playerGFX.Reborn();
+
         transform.position = startPositionOfPlayer;
-        moveSpeed = playerStats.GetStat(StatType.MoveSpeed);
-        gatheringSpeed = playerStats.GetStat(StatType.GatheringSpeed);
-        if (airRegenCont != null)
-        airRegenCont.Stop();
-        
-        airRegenCont = new EffectController(playerStats.GetStat(StatType.Air), 2);
-        airRegenData = new EffectData(StatType.Air, EffectType.OverTime, 10f, Mathf.Infinity, 0.5f, false, false);
+        playerIsDead = false;
+
     }
 
     public class GatheringScanChecker : IChecker

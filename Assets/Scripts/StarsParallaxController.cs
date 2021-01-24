@@ -2,16 +2,8 @@
 
 public class StarsParallaxController : MonoBehaviour
 {
-    //private Vector2 cameraRealSize => new Vector2(mainCamera.orthographicSize * 2 * mainCamera.aspect, mainCamera.orthographicSize * 2);
-    private Camera mainCamera;
-    private float cameraSize;
 
     [SerializeField] private StarsParallax[] starsParallax;
-
-    private void Start() {
-        mainCamera = Camera.main;
-        cameraSize = mainCamera.orthographicSize;
-    }
 
 
     private void Update() {
@@ -20,11 +12,10 @@ public class StarsParallaxController : MonoBehaviour
         }
     }
 
-    public void UpdateViewSize() {
+    public void UpdateViewSize(float oldCameraScalem, float newCameraScale) {
         foreach (StarsParallax stars in starsParallax) {
-            stars.gameobject.transform.localScale *= mainCamera.orthographicSize / cameraSize;
+            stars.gameobject.transform.localScale *= newCameraScale / oldCameraScalem;
         }
-        cameraSize = mainCamera.orthographicSize;
     }
 
 

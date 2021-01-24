@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 
 
-public enum EquipType
+public enum GearType
         {
             Helmet,
             Chest,
@@ -15,8 +15,8 @@ public enum EquipType
 public class GearItemSO : ItemSO
 {
     [SerializeField]
-    private EquipType equipType;
-    public EquipType GetEquipType => equipType;
+    private GearType equipType;
+    public GearType GetEquipType => equipType;
 
     [SerializeField]
     private int maxDurability;

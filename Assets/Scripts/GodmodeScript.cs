@@ -6,20 +6,21 @@ public class GodmodeScript : MonoSingleton<GodmodeScript>
     private float scrollSpeed;
     [SerializeField]
     private float moveSpeed;
+    [SerializeField] 
+    private BlockTileSO clickTile;
     private Vector2 movement;
     private float scrollMovement;
     GridManager gridManager;
     private bool viewChanged;
     CameraController cameraController;
-    Camera cameraComp;
-    [SerializeField] private BlockTileSO clickTile;
+
+
 
 
     // Start is called before the first frame update
     public override void Init() {
         gridManager = GridManager._instance;
         cameraController = CameraController._instance;
-        cameraComp = cameraController.GetCameraComp;
     }
 
     // Update is called once per frame
@@ -37,7 +38,6 @@ public class GodmodeScript : MonoSingleton<GodmodeScript>
 
         scrollMovement = Time.deltaTime * scrollSpeed * -Input.GetAxis("Mouse ScrollWheel");
         if (scrollMovement != 0) {
-            cameraController.ZoomOut(scrollMovement);
             viewChanged = true;
 
         }
@@ -60,7 +60,7 @@ public class GodmodeScript : MonoSingleton<GodmodeScript>
             Debug.Log(gridManager.GetTileFromGrid(MouseGridPosition(layer), layer));
         }
         else if (Input.GetKeyDown(KeyCode.Mouse2)) {
-            Vector3 mousePos = cameraComp.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mousePos = GetcameraComp().ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = 0;
             TileMapLayer layer = (Input.GetKey(KeyCode.LeftShift)) ? TileMapLayer.Buildings : TileMapLayer.Floor;
             TileHit hit = gridManager.GetHitFromWorldPosition(mousePos, layer);
@@ -77,9 +77,9 @@ public class GodmodeScript : MonoSingleton<GodmodeScript>
         }
     }
     private Vector2Int MouseGridPosition(TileMapLayer buildingLayer) {
-        Vector3 mousePos = cameraComp.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 mousePos = GetcameraComp().ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0;
         return gridManager.WorldToGridPosition(mousePos, buildingLayer);
     }
-
+    private Camera GetcameraComp() => cameraController.GetCurrentActiveCamera;
 }
