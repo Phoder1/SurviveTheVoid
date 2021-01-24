@@ -102,13 +102,9 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         {
 
 
-            EquipManager.GetInstance.CheckEquip(itemCache, ChestId, takingFromIndex);
+            EquipManager.GetInstance.CheckEquip(itemCache,  takingFromIndex ,ChestId);
             UpdatePlayerInventory();
 
-
-
-        }else if(itemCache.item.GetItemType == ItemType.Tools)
-        {
 
 
         }
@@ -260,7 +256,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
         ItemSlot DraggedTemp = inventory.GetItemFromInventoryButton(FirstChestID, takingFromIndex);
         ItemSlot DroppedTemp = inventory.GetItemFromInventoryButton(SecondChestID, droppingAtIndex);
-        if (canEquipOnCurrentInventory(takingFrom, droppingAt, DraggedTemp, DroppedTemp, takingFromIndex, droppingAtIndex))
+        if (CanEquipOnCurrentInventory(takingFrom, droppingAt, DraggedTemp, DroppedTemp, takingFromIndex, droppingAtIndex))
         {
             inventory.ChangeBetweenItems(FirstChestID, SecondChestID, takingFromIndex, droppingAtIndex);
 
@@ -276,7 +272,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         UpdateToolsToUI();
     }
 
-    bool canEquipOnCurrentInventory(SlotChestTypes fromChest, SlotChestTypes toChest, ItemSlot Dragged, ItemSlot Drop, int draggedSlot, int DropSlot)
+    bool CanEquipOnCurrentInventory(SlotChestTypes fromChest, SlotChestTypes toChest, ItemSlot Dragged, ItemSlot Drop, int draggedSlot, int DropSlot)
     {
         if (toChest == SlotChestTypes.Inventory)
         {
@@ -302,7 +298,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
             {
 
 
-                if (EquipManager.GetInstance.CheckEquip(Dragged, draggedSlot, 2, DropSlot))
+                if (EquipManager.GetInstance.CheckEquip(Dragged, draggedSlot, (int)fromChest-1, DropSlot, (int)toChest-1))
                 {
                     return true;
                 }
@@ -317,6 +313,10 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         }
         else if(toChest == SlotChestTypes.Tools)
         {
+            if (EquipManager.GetInstance.CheckEquip(Dragged, draggedSlot, (int)fromChest - 1, DropSlot, (int)toChest - 1))
+            {
+                return true;
+            }
             return false;
         }
         else

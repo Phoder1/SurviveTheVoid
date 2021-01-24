@@ -1,6 +1,7 @@
 ﻿
 
 using NUnit.Framework;
+using TMPro.EditorUtilities;
 using UnityEditor;
 
 public class EquipManager
@@ -485,7 +486,33 @@ public class EquipManager
             }
         }
     }
+    public ToolType GetToolTypeByIndex(int buttonID)
+    {
+        /// <summary>
+        /// 0 Axe 
+        /// 1 Pickaxe
+        /// 2 Hoe 
+        /// 3 Shovel
+        /// 4 Hammer
+        /// </summary>
 
+        if (buttonID == 0)
+            return ToolType.Axe;
+
+        if (buttonID == 1)
+            return ToolType.Pickaxe;
+
+
+        if (buttonID == 2)
+            return ToolType.Hoe;
+
+        if (buttonID == 3)
+            return ToolType.Shovel;
+
+
+        return ToolType.Hammer;
+
+    }
     public bool GetToolActive(ToolType type)
     {
         toolCache = null;
