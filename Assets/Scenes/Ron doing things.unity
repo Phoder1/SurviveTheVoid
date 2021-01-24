@@ -445,7 +445,7 @@ PrefabInstance:
     - target: {fileID: 5435700086702367934, guid: ee73434160860324a921a0989281f1ff,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 8
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5435700086702367934, guid: ee73434160860324a921a0989281f1ff,
         type: 3}
@@ -624,6 +624,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: StoneParticle
+      objectReference: {fileID: 0}
+    - target: {fileID: 2005953686570698299, guid: d53ab528d9087074baf9ff8d9c309fa4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2005953686570698300, guid: d53ab528d9087074baf9ff8d9c309fa4,
         type: 3}
@@ -832,6 +837,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: IronParticle
       objectReference: {fileID: 0}
+    - target: {fileID: 3909582303484514352, guid: e0b16874ea7a61248adcc98b7aeb98c1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3909582303484514355, guid: e0b16874ea7a61248adcc98b7aeb98c1,
         type: 3}
       propertyPath: m_RootOrder
@@ -1030,6 +1040,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: IceParticle
       objectReference: {fileID: 0}
+    - target: {fileID: 5480763038385704303, guid: 673b2a4b46f17284ab73ff277ed996e9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 673b2a4b46f17284ab73ff277ed996e9, type: 3}
 --- !u!1001 &8243480928954157574
@@ -1098,6 +1113,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CoalParicle
+      objectReference: {fileID: 0}
+    - target: {fileID: 8243480929069056618, guid: 4a8451d0a72cfd54694ba654b98b91dd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4a8451d0a72cfd54694ba654b98b91dd, type: 3}
