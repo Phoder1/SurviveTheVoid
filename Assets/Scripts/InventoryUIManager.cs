@@ -329,6 +329,10 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
                 return false;
             }
         }
+        else if(toChest == SlotChestTypes.Tools)
+        {
+            return false;
+        }
         else
         {
             return true;

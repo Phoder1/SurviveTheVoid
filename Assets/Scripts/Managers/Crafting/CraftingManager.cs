@@ -50,6 +50,8 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     private Inventory inventory;
     InventoryUIManager inventoryUI;
 
+    private static EffectData expEffect = new EffectData(StatType.EXP, EffectType.OverTime, 10f, 1, 0.03f);
+
     private void Update()
     {
 
@@ -418,9 +420,12 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
           
             for (int i = CurrentProcessTile.ItemsCrafted; i > 0; i--)
             {
-                
-                if (inventory.AddToInventory(0,new ItemSlot(CurrentProcessTile.craftingRecipe.getoutcomeItem.item, i * CurrentProcessTile.craftingRecipe.getoutcomeItem.amount)))
+                ItemSlot TempSlot = new ItemSlot(CurrentProcessTile.craftingRecipe.getoutcomeItem.item, i * CurrentProcessTile.craftingRecipe.getoutcomeItem.amount);
+                if (inventory.AddToInventory(0, TempSlot))
                 {
+                    EffectController effectController = new EffectController(PlayerStats._instance.GetStat(StatType.EXP), 0);
+                    //expEffect.duration = currentStage.GetExpReward / expEffect.amount;
+                    effectController.Begin(expEffect);
                     CurrentProcessTile.CollectItems(i);
                     break;
                 }
