@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -42,6 +43,7 @@ public class UIManager : MonoSingleton<UIManager>
     [SerializeField] private TextMeshProUGUI levelNumber;
 
     [Header("Survival bar's fill")]
+    [SerializeField] RectTransform progressBarFillObj;
     [SerializeField]
     private Image
         hpFill,
@@ -50,7 +52,11 @@ public class UIManager : MonoSingleton<UIManager>
         airFill,
         sleepFill,
         xpFill;
+    private Image progressBarFillImage;
     private Dictionary<StatType, Image> barsDictionary;
+    [SerializeField]
+    float progressBarTickTime;
+    Coroutine progressBarCoroutine;
 
 
     bool CanCollect;
@@ -62,6 +68,7 @@ public class UIManager : MonoSingleton<UIManager>
         inventoryManager = InventoryUIManager._instance;
         inputManager = InputManager._instance;
         UpdateUiState(InputManager.inputState);
+        progressBarFillImage = progressBarFillObj.GetComponent<Image>();
 
         barsDictionary = new Dictionary<StatType, Image>
         {
@@ -81,6 +88,25 @@ public class UIManager : MonoSingleton<UIManager>
             ShowCraftingTimer(craftingManager.CurrentProcessTile.ItemsCrafted, craftingManager.CurrentProcessTile.amount, craftingManager.CurrentProcessTile.CraftingTimeRemaining);
             //ShowTimeAndCollectable(craftingManager.CurrentProcessTile.ItemsCrafted, craftingManager.CurrentProcessTile.amount, craftingManager.CurrentProcessTile.CraftingTimeRemaining);
         }
+
+    }
+
+    public void StartProgressBar(Vector2 screenPosition, float duration) {
+        progressBarFillObj.position = screenPosition;
+        progressBarCoroutine = StartCoroutine(progressBarFill(duration));
+    }
+
+    IEnumerator progressBarFill(float duration) {
+        progressBarFillObj.gameObject.SetActive(true);
+        float startTime = Time.time;
+        float fillAmount = 0;
+        progressBarFillImage.fillAmount = fillAmount;
+        while (Time.time <= startTime + duration) {
+            yield return new WaitForSeconds(progressBarTickTime);
+            fillAmount += progressBarTickTime / duration;
+            progressBarFillImage.fillAmount = fillAmount;
+        }
+        progressBarFillObj.gameObject.SetActive(false);
 
     }
 
