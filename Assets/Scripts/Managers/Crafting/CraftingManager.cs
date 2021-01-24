@@ -475,7 +475,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
                 inventory.RemoveItemsByRecipe(selectedRecipe,  CraftIndex);
                 if (CurrentProcessTile.IsCrafting)
                 {
-                    CurrentProcessTile.AddToQueue(selectedRecipe.getoutcomeItem.amount * CraftIndex);
+                    CurrentProcessTile.AddToQueue(CraftIndex);
                 }
                 else
                 {
