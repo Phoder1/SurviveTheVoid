@@ -24,6 +24,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         InventoryItem = inventory.GetInventoryFromDictionary(0);
         HotKeysInventory = inventory.GetInventoryFromDictionary(1);
         EquipInventory = inventory.GetInventoryFromDictionary(2);
+        toolsInventory = inventory.GetInventoryFromDictionary(3);
     }
     
 
@@ -104,6 +105,9 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
             UpdatePlayerInventory();
 
 
+
+        }else if(itemCache.item.GetItemType == ItemType.Tools)
+        {
 
         }
 
@@ -245,26 +249,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     }
 
 
-    public void DeHighLightDrop(SlotChestTypes Chest,int Slot)
-    {
-        int ChestIndex = (int)Chest - 1;
-        if(ChestIndex == 0)
-        {
-            
-        }else if(ChestIndex == 1)
-        {
-            
-        }else if(ChestIndex == 2)
-        {
 
-        }
-        else
-        {
-
-        }
-
-
-    }
 
     public void SwapItems()
     {
@@ -279,9 +264,6 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
         }
         UpdatePlayerInventory();
-    
-
-
     }
 
     public void UpdatePlayerInventory()
@@ -289,6 +271,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         UpdateHotKeysToUI();
         UpdateEquipToUI();
         UpdateInventoryToUI();
+        UpdateToolsToUI();
     }
 
     bool canEquipOnCurrentInventory(SlotChestTypes fromChest, SlotChestTypes toChest, ItemSlot Dragged, ItemSlot Drop, int draggedSlot, int DropSlot)
@@ -341,4 +324,29 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     }
 
     #endregion
+
+
+
+    #region Tools related
+    ItemSlot[] toolsInventory;
+    public InventorySlot[] toolsSlots;
+
+    public void UpdateToolsToUI()
+    {
+        for (int i = 0; i < toolsInventory.Length; i++)
+        {
+            if (toolsInventory[i] != null)
+            {
+                toolsSlots[i].UpdateSlot(toolsInventory[i]);
+            }
+            else
+            {
+                toolsSlots[i].EmptySlot();
+            }
+            toolsSlots[i].DeHighLightSlot();
+        }
+    }
+
+
+	#endregion
 }

@@ -226,6 +226,7 @@ public class Inventory
         inventoryDict.Add(amountOfIDChests, inventoryList);
         GetNewIDForChest(5);
         GetNewIDForChest(5);
+        GetNewIDForChest(5);
         inventoryUI = InventoryUIManager._instance;
     }
     public bool AddToInventory(int chestID, ItemSlot item)
