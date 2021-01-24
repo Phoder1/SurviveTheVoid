@@ -15,12 +15,15 @@ public class PlayerGFX : MonoBehaviour
         GameManager.DeathEvent += Death;
         _inputManager = InputManager._instance;
         playerSprite = GetComponent<SpriteRenderer>();
+        _anim = GetComponent<Animator>();
         UpdateAnimClipTimes();
     }
+
     public void UpdateAnimClipTimes() {
         AnimationClip[] clips = _anim.runtimeAnimatorController.animationClips;
         foreach (AnimationClip clip in clips) {
             switch (clip.name) {
+
                 case "isWalking":
                     walkAnimLength = clip.length;
                     break;
@@ -50,5 +53,8 @@ public class PlayerGFX : MonoBehaviour
     public void Death() {
         _anim.speed = 1;
         _anim.SetTrigger("Death");
+    }
+    public void Reborn() {
+        _anim.SetTrigger("Reborn");
     }
 }
