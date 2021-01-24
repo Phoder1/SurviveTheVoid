@@ -15,35 +15,12 @@ public class ConsumableHotBar : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        ItemSlot[] Test = Inventory.GetInstance.GetInventoryFromDictionary(ChestId);
-
-        if (InventoryUIManager._instance.DraggedIntoBar <= -1 && Test[SlotKey] != null)
-        {
-            HighLightHotKey();
-            IsDraggingThis = true;
-        }
+      
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (InventoryUIManager._instance.DraggedItem >= 0)
-        {
-            InventoryUIManager._instance.DraggedIntoBar = SlotKey;
-            HighLightHotKey();
-            InventoryUIManager._instance.WhatInventory(ChestId);
-        }
-        else if (InventoryUIManager._instance.HotKeyDragged >= 0 && InventoryUIManager._instance.HotKeyDragged != SlotKey)
-        {
-            InventoryUIManager._instance.HotKeyDraggedInto = SlotKey;
-            HighLightHotKey();
-            InventoryUIManager._instance.WhatInventory(ChestId);
-        }
-        else if (InventoryUIManager._instance.EquipDragged >= 0)
-        {
-            InventoryUIManager._instance.HotKeyDraggedInto = SlotKey;
-            HighLightHotKey();
-            InventoryUIManager._instance.WhatInventory(ChestId);
-        }
+     
 
 
 
@@ -52,50 +29,13 @@ public class ConsumableHotBar : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (IsDraggingThis)
-        {
-            InventoryUIManager._instance.HotKeyDragged = SlotKey;
-            InventoryUIManager._instance.TakingFrom(ChestId);
-        }
-        else
-        {
-            InventoryUIManager._instance.WhatInventory(-1);
-            InventoryUIManager._instance.DraggedIntoBar = -1;
-            InventoryUIManager._instance.HotKeyDraggedInto = -1;
-            DeHightLightHotKey();
-        }
-        //IsDraggingThis = false;
+      
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
 
-        if (InventoryUIManager._instance.HotKeyDragged >= 0 && InventoryUIManager._instance.DroppedItem >= 0)
-        {
-            InventoryUIManager._instance.SwitchKeyInventory(InventoryUIManager._instance.HotKeyDragged, InventoryUIManager._instance.DroppedItem);
-        }
-        else if (InventoryUIManager._instance.HotKeyDragged >= 0 && InventoryUIManager._instance.HotKeyDraggedInto >= 0)
-        {
-            InventoryUIManager._instance.SwitchKeyInventory(InventoryUIManager._instance.HotKeyDragged, InventoryUIManager._instance.HotKeyDraggedInto);
-        }
-        else
-        {
-            InventoryUIManager._instance.HotKeyDragged = -1;
-            InventoryUIManager._instance.TakingFrom(-1);
-            InventoryUIManager._instance.ResetSwap();
-        }
-        if (InventoryUIManager._instance.HotKeyDraggedInto >= 0 && InventoryUIManager._instance.HotKeyDragged >= 0)
-        {
-            //InventoryUIManager._instance.SwitchKeyInventory(InventoryUIManager._instance.HotKeyDragged, InventoryUIManager._instance.HotKeyDraggedInto);
-        }
-
-        if (InventoryUIManager._instance.HotKeyDragged <= -1)
-        {
-            ConsumeHotBar();
-        }
-
-        IsDraggingThis = false;
-        DeHightLightHotKey();
+      
 
 
     }

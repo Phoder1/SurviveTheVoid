@@ -171,6 +171,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     }
     IEnumerator HarvestTile(TileHit tileHit) {
         if (tileHit.tile.GetTileAbst is GatherableTileSO gatherable) {
+            UIManager._instance.CancelProgressBar();
             tileBeingGathered = gatherable;
             float gatheringTime = gatherable.GetGatheringTime / gatheringSpeed.GetSetValue;
             Vector2 tileWorldPos = gridManager.GridToWorldPosition(tileHit.gridPosition, TileMapLayer.Buildings, true);
@@ -178,7 +179,10 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
             Vector2 tileScreenPos = currentCamera.WorldToScreenPoint(tileWorldPos);
             UIManager._instance.StartProgressBar(tileScreenPos, gatheringTime);
             SoundManager._instance.PlaySoundLooped(gatherable.getGatheringSound);
+
+
             yield return new WaitForSeconds(gatheringTime);
+
             tileHit.tile.GatherInteraction(tileHit.gridPosition, TileMapLayer.Buildings);
             SoundManager._instance.DisableLooping(gatherable.getGatheringSound);
             Debug.Log("TileHarvested");

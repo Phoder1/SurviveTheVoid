@@ -26,19 +26,25 @@ public class InputManager : MonoSingleton<InputManager>
         set
         {
             currentState = value;
+            switch (currentState) {
+                case BuildingState buildingState:
+                    inputState = InputState.BuildState;
+                    UIManager._instance.SetScreenOutlineColor(Color.green);
+                    break;
+                case FightState fightState:
+                    inputState = InputState.FightState;
+                    UIManager._instance.SetScreenOutlineColor(Color.clear);
+                    break;
+                case RemovalState removalState:
+                    inputState = InputState.RemovalState;
+                    UIManager._instance.SetScreenOutlineColor(Color.red);
+                    break;
 
-            if (currentState is BuildingState)
-                inputState = InputState.BuildState;
-
-            else if (currentState is FightState)
-                inputState = InputState.FightState;
-
-            else if (currentState is RemovalState)
-                inputState = InputState.RemovalState;
-
-            else
-                inputState = InputState.DefaultState;
-
+                default:
+                    inputState = InputState.DefaultState;
+                    UIManager._instance.SetScreenOutlineColor(Color.clear);
+                    break;
+            }
         }
     }
 
@@ -159,5 +165,5 @@ public class InputManager : MonoSingleton<InputManager>
         OnTouch();
     }
     public void DeathReset() => playerStateMachine.SwitchState(InputState.DefaultState);
-  
+
 }

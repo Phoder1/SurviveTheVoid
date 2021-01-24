@@ -62,10 +62,10 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         Stat maxStat;
         //HP
         maxStat = AddToDict(StatType.MaxHP, 100);
-        AddToDict(StatType.HP, 2, maxStat);
+        AddToDict(StatType.HP, 100, maxStat);
         //Food
         maxStat = AddToDict(StatType.MaxFood, 100);
-        AddToDict(StatType.Food, 10, maxStat);
+        AddToDict(StatType.Food, 100, maxStat);
         //Water
         maxStat = AddToDict(StatType.MaxWater, 100);
         AddToDict(StatType.Water, 100, maxStat);

@@ -50,8 +50,17 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     private Inventory inventory;
     InventoryUIManager inventoryUI;
 
+    private static EffectData expEffect = new EffectData(StatType.EXP, EffectType.OverTime, 10f, 1, 0.03f);
+
     private void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            
+        }
+
+
 
 
         if (Input.GetKeyDown(KeyCode.Z))
@@ -107,7 +116,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         AddRecipeToList();
         InstantiateItemSlots();
         //SelectSection("Blocks");
-
+        DeleteOutCome();
 
     }
 
@@ -279,25 +288,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
             }
         }
         selectedSection.ChangeSectionSelection(true);
-        //for (int i = 0; i < scrolls.Length; i++)
-        //{
-        //    if (scrolls[i].gameObject.name == sectionName + "ScrollBar")
-        //    {
-        //        if (!scrolls[i].activeInHierarchy)
-        //        {
-        //            scrolls[i].SetActive(true);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (scrolls[i].activeInHierarchy)
-        //        {
-        //            scrolls[i].SetActive(false);
-        //        }
-        //    }
-        //}
-
-
+    
     }
     public void ShowRecipe(RecipeSO recipe)
     {
@@ -325,6 +316,9 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
                 }
 
             }
+
+
+            UIManager._instance.craftingTimer.text = (selectedRecipe.GetCraftingTime * UIManager._instance.getCraftingAmount).ToString();
         }
 
     }
@@ -385,6 +379,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         {
             Debug.Log("Selected recipe is null");
         }
+        ShowOutCome();
     }
 
 
@@ -407,7 +402,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
                     inventory.RemoveItemsByRecipe(selectedRecipe, UIManager._instance.getCraftingAmount);
 
-                        CurrentProcessTile.StartCrafting(selectedRecipe, (selectedRecipe.getoutcomeItem.amount * UIManager._instance.getCraftingAmount));
+                        CurrentProcessTile.StartCrafting(selectedRecipe, (UIManager._instance.getCraftingAmount));
                     
                     
                     ShowRecipe(selectedRecipe);
@@ -425,9 +420,12 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
           
             for (int i = CurrentProcessTile.ItemsCrafted; i > 0; i--)
             {
-                
-                if (inventory.AddToInventory(0,new ItemSlot(CurrentProcessTile.craftingRecipe.getoutcomeItem.item, i * CurrentProcessTile.craftingRecipe.getoutcomeItem.amount)))
+                ItemSlot TempSlot = new ItemSlot(CurrentProcessTile.craftingRecipe.getoutcomeItem.item, i * CurrentProcessTile.craftingRecipe.getoutcomeItem.amount);
+                if (inventory.AddToInventory(0, TempSlot))
                 {
+                    EffectController effectController = new EffectController(PlayerStats._instance.GetStat(StatType.EXP), 0);
+                    expEffect.duration = (CurrentProcessTile.craftingRecipe.GetExpReward * i) / expEffect.amount;
+                    effectController.Begin(expEffect);
                     CurrentProcessTile.CollectItems(i);
                     break;
                 }
@@ -459,7 +457,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     int CraftIndex;
     public void AttemptToCraftMax()
     {
-        CraftIndex = selectedRecipe.getoutcomeItem.item.getmaxStackSize;
+        CraftIndex = 20;
         CheckIfYouCanCraft();
 
 
@@ -467,7 +465,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
     void CheckIfYouCanCraft()
     {
-        if((CraftIndex + CurrentProcessTile.amount <= selectedRecipe.getoutcomeItem.item.getmaxStackSize))
+        if((CraftIndex + CurrentProcessTile.amount <= 20))
         {
             if (inventory.CheckEnoughItemsForRecipe(selectedRecipe, CraftIndex))
             {
@@ -477,11 +475,11 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
                 inventory.RemoveItemsByRecipe(selectedRecipe,  CraftIndex);
                 if (CurrentProcessTile.IsCrafting)
                 {
-                    CurrentProcessTile.AddToQueue(selectedRecipe.getoutcomeItem.amount * CraftIndex);
+                    CurrentProcessTile.AddToQueue(CraftIndex);
                 }
                 else
                 {
-                    CurrentProcessTile.StartCrafting(selectedRecipe, (selectedRecipe.getoutcomeItem.amount * CraftIndex));
+                    CurrentProcessTile.StartCrafting(selectedRecipe, CraftIndex);
                 }
                 ShowRecipe(selectedRecipe);
                 buttonState = ButtonState.Crafting;
@@ -528,9 +526,25 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
     [SerializeField] float Timer;
     bool startcount;
-
-
-
+    [SerializeField]
+    Image OutComeImage;
+    [SerializeField]
+    TextMeshProUGUI OutComeText;
+    public void ShowOutCome()
+    {
+        if(selectedRecipe != null)
+        {
+            OutComeImage.gameObject.SetActive(true);
+            OutComeImage.sprite = selectedRecipe.getoutcomeItem.item.getsprite;
+            OutComeText.text = (selectedRecipe.getoutcomeItem.amount * UIManager._instance.getCraftingAmount).ToString();
+        }
+    }
+    public void DeleteOutCome()
+    {
+        OutComeImage.gameObject.SetActive(false);
+        OutComeImage.sprite = null;
+        OutComeText.text = "";
+    }
 
 
     public void UnlockRecipe(RecipeSO _recipe) => GetSection(_recipe.getSection).UnlockRecipe(_recipe);

@@ -50,7 +50,8 @@ public class UIManager : MonoSingleton<UIManager>
         waterFill,
         airFill,
         sleepFill,
-        xpFill;
+        xpFill,
+        screenOutline;
     private Dictionary<StatType, Image> barsDictionary;
     [SerializeField] RectTransform progressBarFillObj;
     [SerializeField] float progressBarTickTime;
@@ -88,28 +89,36 @@ public class UIManager : MonoSingleton<UIManager>
     }
 
     public void StartProgressBar(Vector2 screenPosition, float duration) {
-        progressBarFillObj.position = screenPosition;
         progressBarCoroutine = StartCoroutine(progressBarFill(duration));
     }
     public void CancelProgressBar() {
-        StopCoroutine(progressBarCoroutine);
-        progressBarCoroutine = null;
-        progressBarFillObj.gameObject.SetActive(false);
+        if (progressBarCoroutine != null) {
+            StopCoroutine(progressBarCoroutine);
+            progressBarCoroutine = null;
+            progressBarFillObj.gameObject.SetActive(false);
+        }
     }
 
     IEnumerator progressBarFill(float duration) {
+        duration *= 0.85f;
         progressBarFillObj.gameObject.SetActive(true);
-        float startTime = Time.time;
         float fillAmount = 0;
         progressBarFillImage.fillAmount = fillAmount;
-        while (Time.time <= startTime + duration) {
-            fillAmount += progressBarTickTime / duration;
+        int stepAmount = Mathf.FloorToInt(duration / progressBarTickTime);
+        float barStepProgress = progressBarTickTime / duration;
+        float startTime = Time.time;
+        float deltaTime;
+        for (int i = 0; i < stepAmount; i++) {
+            deltaTime = Time.time - startTime;
+            yield return new WaitForSeconds(progressBarTickTime - deltaTime);
+            startTime = Time.time;
+            fillAmount += barStepProgress;
             progressBarFillImage.fillAmount = fillAmount;
-            yield return new WaitForSeconds(progressBarTickTime);
         }
         progressBarFillObj.gameObject.SetActive(false);
 
     }
+    public void SetScreenOutlineColor(Color color) => screenOutline.color = color;
 
 
     #region CraftingUI
@@ -119,7 +128,7 @@ public class UIManager : MonoSingleton<UIManager>
     [SerializeField] TextMeshProUGUI CraftingButtonText;
     [Header("")]
     [SerializeField] GameObject matsHolder;
-    [SerializeField] TextMeshProUGUI craftingTimer;
+    public TextMeshProUGUI craftingTimer;
     [SerializeField] GameObject SliderBackGround;
     [SerializeField] TextMeshProUGUI MultipleButt;
     [SerializeField] Slider amountSlider;
@@ -127,6 +136,9 @@ public class UIManager : MonoSingleton<UIManager>
     [SerializeField] int craftingAmount;
     [SerializeField] Image CurrentRecipeOutSprite;
     [SerializeField] TextMeshProUGUI TimeToCraftText;
+
+
+
     public int getCraftingAmount => craftingAmount;
 
     public void OnClickSelectedSections(string _section) {
@@ -220,7 +232,7 @@ public class UIManager : MonoSingleton<UIManager>
     public void CanCraftState() {
         //update only when need
         CurrentRecipeOutSprite.gameObject.SetActive(false);
-        craftingTimer.gameObject.SetActive(false);
+        //craftingTimer.gameObject.SetActive(false);
         craftingManager.sectionHolder.gameObject.SetActive(true);
         SliderBackGround.SetActive(false);
         craftingManager.buttonState = ButtonState.CanCraft;
@@ -237,12 +249,12 @@ public class UIManager : MonoSingleton<UIManager>
         //update when need
         Debug.Log("Testing if state is on update crafting");
         CurrentRecipeOutSprite.gameObject.SetActive(true);
-        craftingTimer.gameObject.SetActive(true);
+        //craftingTimer.gameObject.SetActive(true);
         craftingManager.selectedRecipe = craftingManager.CurrentProcessTile.craftingRecipe;
         craftingManager.sectionHolder.gameObject.SetActive(false);
         SliderBackGround.SetActive(true);
         MultipleButt.text = "Add";
-        amountText.text = "Craft: " + craftingAmount;
+        amountText.text = "Craft: " + craftingAmount + " Gain: " + (craftingManager.selectedRecipe.getoutcomeItem.amount * craftingAmount).ToString();
         craftingManager.buttonState = ButtonState.Crafting;
         //CraftingButton.interactable = false;
         matsHolder.SetActive(true);
@@ -253,11 +265,11 @@ public class UIManager : MonoSingleton<UIManager>
     public void CanCollectState(int craftedItem, int AmountRemaining, float timeCraftingRemaining) {
         //update when need
         Debug.Log("Testing if state is on update collect");
-        craftingTimer.gameObject.SetActive(true);
+        //craftingTimer.gameObject.SetActive(true);
         craftingManager.selectedRecipe = craftingManager.CurrentProcessTile.craftingRecipe;
         craftingManager.sectionHolder.gameObject.SetActive(false);
         SliderBackGround.SetActive(true);
-        amountText.text = "Craft: " + craftingAmount;
+        amountText.text = "Craft: " + craftingAmount + " Gain: " + (craftingManager.selectedRecipe.getoutcomeItem.amount * craftingAmount).ToString();
         MultipleButt.text = "Add";
         craftingManager.buttonState = ButtonState.Collect;
         //CraftingButton.interactable = true;
@@ -320,27 +332,39 @@ public class UIManager : MonoSingleton<UIManager>
     public void OnChangeGetCraftingAmount() {
 
         if (craftingManager.CurrentProcessTile != null && craftingManager.selectedRecipe != null) {
-            if (craftingManager.CurrentProcessTile.amount <= craftingManager.selectedRecipe.getoutcomeItem.item.getmaxStackSize) {
+
+            if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) < 20) {
                 //SliderBackGround.SetActive(true);
                 if (craftingManager.CurrentProcessTile.IsCrafting) {
-                    amountSlider.maxValue = craftingManager.selectedRecipe.getoutcomeItem.item.getmaxStackSize - craftingManager.CurrentProcessTile.amount;
+                    if (craftingManager.CurrentProcessTile.amount >= 20) {
+                        amountSlider.maxValue = 0;
+                        amountSlider.minValue = 0;
+                    }
+                    else {
+                        amountSlider.maxValue = 20 - craftingManager.CurrentProcessTile.amount;
+                        amountSlider.minValue = 1;
+                    }
+
                 }
                 else {
-                    amountSlider.maxValue = craftingManager.selectedRecipe.getoutcomeItem.item.getmaxStackSize;
+                    amountSlider.maxValue = 20;
                 }
-                if (craftingManager.CurrentProcessTile.amount == craftingManager.selectedRecipe.getoutcomeItem.item.getmaxStackSize) {
+                if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) >= 20) {
                     if (craftingManager.buttonState != ButtonState.CanCraft)
                         SliderBackGround.SetActive(false);
                     amountSlider.minValue = 0;
+
+
                 }
                 else {
-                    amountSlider.minValue = 1;
+                    //amountSlider.minValue = 1;
                     if (craftingManager.buttonState != ButtonState.CanCraft)
                         SliderBackGround.SetActive(true);
                 }
             }
-            else {
-                SliderBackGround.SetActive(false);
+            else if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) >= 20) {
+                craftingManager.DeleteOutCome();
+                //SliderBackGround.SetActive(false);
                 amountSlider.value = 0;
                 craftingAmount = 0;
                 amountSlider.maxValue = 0;
@@ -351,11 +375,14 @@ public class UIManager : MonoSingleton<UIManager>
 
 
         craftingAmount = Mathf.RoundToInt(amountSlider.value);
-        amountText.text = "Craft: " + craftingAmount.ToString();
+
 
         if (craftingManager.selectedRecipe != null) {
+            amountText.text = "Craft: " + craftingAmount + " Gain: " + (craftingManager.selectedRecipe.getoutcomeItem.amount * craftingAmount).ToString();
+            craftingManager.ShowOutCome();
             TimeToCraftText.text = "Time to craft: " + craftingManager.selectedRecipe.GetCraftingTime * craftingAmount + " Seconds";
             craftingManager.ShowRecipe(CraftingManager._instance.selectedRecipe);
+            craftingTimer.text = (craftingManager.selectedRecipe.GetCraftingTime * craftingAmount).ToString();
         }
         //CraftingManager._instance.UpdateMatsAmount();
     }
@@ -704,6 +731,11 @@ public class UIManager : MonoSingleton<UIManager>
             }
         }
     }
+    public void SetMusicVolume(float volume)
+        => SoundManager._instance.SetVolumeGroup(VolumeGroup.Music, volume);
+    
+    public void SetSoundsVolume(float volume) 
+        => SoundManager._instance.SetVolumeGroup(VolumeGroup.Sounds, volume);
 
 
     // Build mode logic
