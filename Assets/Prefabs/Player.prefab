@@ -140,7 +140,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 2
+  orthographic size: 3
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -223,7 +223,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 4
+  orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -346,12 +346,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a526a7dfbaf78b468386abf267f4174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseSpeed: 3
+  baseSpeed: 5
   _playerGFX: {fileID: 1983083227683329054}
   interactionLookRange: 5
   airLookRange: 3
   InterractionDistance: 1.5
   SpecialInterracted: 0
+  animDelay: 0
   playerColliderSize: 0.6
   animationSpeedMultiplier: 1
 --- !u!114 &1983083227088785219

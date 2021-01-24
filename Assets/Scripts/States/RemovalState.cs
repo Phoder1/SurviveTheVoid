@@ -25,7 +25,7 @@ public class RemovalState : StateBase
             case TouchPhase.Moved:
             case TouchPhase.Stationary:
 
-                touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
+                touchPosition = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position);
 
                 currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Buildings);
                 gridManager.SetDummyTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings);

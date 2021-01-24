@@ -1,5 +1,4 @@
 ﻿using Assets.TimeEvents;
-using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -20,19 +19,17 @@ public class ProcessingTableTileState : ITileState
     public TimeEvent eventInstance;
     public Vector2Int gridPosition;
     public TileSlot tileSlot;
-    public ProcessingTableTileState(ProcessingTableTileSO tile, TileSlot tileSlot)
-    {
+    public ProcessingTableTileState(ProcessingTableTileSO tile, TileSlot tileSlot) {
         this.tileSlot = tileSlot;
         this.tile = tile;
     }
     public RecipeSO craftingRecipe;
     private float craftingStartTime;
     public int amount;
-    public int ItemsCrafted
-    {
-        get
-        {
-            if (!IsCrafting) return 0;
+    public int ItemsCrafted {
+        get {
+            if (!IsCrafting)
+                return 0;
             return Mathf.Min(Mathf.FloorToInt((Time.time - craftingStartTime) / craftingRecipe.GetCraftingTime), amount);
 
         }
@@ -44,8 +41,7 @@ public class ProcessingTableTileState : ITileState
             return craftingStartTime + craftingRecipe.GetCraftingTime * amount;
         }
     }
-    public float CraftingTimeRemaining
-    {
+    public float CraftingTimeRemaining {
         get {
             if (!IsCrafting)
                 return 0;
@@ -53,23 +49,21 @@ public class ProcessingTableTileState : ITileState
         }
     }
     private bool queueFinished = true;
-    public bool QueueFinished { 
-        get => queueFinished; 
+    public bool QueueFinished {
+        get => queueFinished;
         set {
-            if(queueFinished != value) {
+            if (queueFinished != value) {
                 queueFinished = value;
                 GridManager._instance.SetTile(tileSlot, gridPosition, TileMapLayer.Buildings);
             }
         }
     }
     private bool isCrafting;
-    public bool IsCrafting
-    {
+    public bool IsCrafting {
         get => isCrafting;
         set => isCrafting = value;
     }
-    public void StartCrafting(RecipeSO recipe, int amount)
-    {
+    public void StartCrafting(RecipeSO recipe, int amount) {
         if (IsCrafting)
             throw new System.Exception();
         craftingRecipe = recipe;
@@ -79,42 +73,33 @@ public class ProcessingTableTileState : ITileState
         this.amount = amount;
         eventInstance = new TileChangeTimeEvent(CraftingEndTime, this);
     }
-    public void CollectItems(int numOfItems)
-    {
+    public void CollectItems(int numOfItems) {
 
         amount -= numOfItems;
         craftingStartTime += craftingRecipe.GetCraftingTime * numOfItems;
-        if (amount == 0)
-        {
+        if (amount == 0) {
             ResetCrafting();
         }
-        if (amount < 0)
-        {
+        if (amount < 0) {
             throw new System.NotImplementedException();
         }
     }
-    public void AddToQueue(int numOfItems)
-    {
+    public void AddToQueue(int numOfItems) {
         amount += numOfItems;
         eventInstance.UpdateTriggerTime(CraftingEndTime);
     }
 
-    public void ResetCrafting()
-    {
+    public void ResetCrafting() {
         IsCrafting = false;
         craftingRecipe = null;
 
     }
-    public TileBase GetMainTileBase
-    {
-        get
-        {
-            if (IsCrafting && !QueueFinished)
-            {
+    public TileBase GetMainTileBase {
+        get {
+            if (IsCrafting && !QueueFinished) {
                 return tile.GetWhenActiveTile;
             }
-            else
-            {
+            else {
                 return tile.GetMainTileBase;
             }
         }
@@ -129,17 +114,16 @@ public class ProcessingTableTileState : ITileState
     public bool isSpecialInteraction => tile.isSpecialInteraction;
 
 
-    public void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer)
-    {
+    public void GatherInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
         throw new System.NotImplementedException();
     }
 
-    public void CancelEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer)
-    {
+    public void CancelEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
+        if (eventInstance != null)
+            eventInstance.Cancel();
     }
 
-    public void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer)
-    {
+    public void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
         UIManager._instance.SetCraftingUIState(true, tile.GetProcessorType, this);
     }
 
