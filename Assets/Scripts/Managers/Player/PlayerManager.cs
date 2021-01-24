@@ -37,10 +37,11 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     public Vector2Int GetCurrentPosOnGrid => currentPosOnGrid;
     private EffectController airRegenCont;
     private EffectData airRegenData;
-
+    private GatherableTileSO tileBeingGathered;
     private DirectionEnum gridMovementDirection;
 
     public DirectionEnum GetMovementDirection => gridMovementDirection;
+    bool playerIsDead = false;
 
     public override void Init()
     {
@@ -60,48 +61,54 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     }
     private void Update()
      {
+        if (!playerIsDead) {
         currentPosOnGrid = gridManager.WorldToGridPosition((Vector2)base.transform.position, TileMapLayer.Floor);
         UpdateGridDirection();
         CheckForTrees();
+        }
     }
 
     private void FixedUpdate()
     {
-        Vector2 movementVector = inputManager.VJAxis * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue;
-        movementVector.y *= 0.5f;
-        if (movementVector != Vector2.zero)
-        {
-            Move(movementVector);
+        if (!playerIsDead) {
+            Vector2 movementVector = inputManager.VJAxis * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue;
+            movementVector.y *= 0.5f;
+            if (movementVector != Vector2.zero) {
+                Move(movementVector);
 
-            _playerGFX.Walk(true,movementVector);
+                _playerGFX.Walk(true, totalSpeed);
 
-        }
-        else
-        {
-            _playerGFX.Walk(false,null);
+            }
+            else {
+                _playerGFX.Walk(false, null);
+            }
         }
 
     }
 
 
     private void LateUpdate() {
-        if (specialWasPressed != specialButton) {
-            specialButton = specialWasPressed;
-            if (!specialButton)
-                closestTile = null;
-        }
-        if (gatherWasPressed != gatherButton) {
-            gatherButton = gatherWasPressed;
-            if (!gatherButton) {
-                if (gatherCoroutine != null) {
-                    StopCoroutine(gatherCoroutine);
-                    gatherCoroutine = null;
-                }
-                closestTile = null;
+        if (!playerIsDead) {
+            if (specialWasPressed != specialButton) {
+                specialButton = specialWasPressed;
+                if (!specialButton)
+                    closestTile = null;
             }
+            if (gatherWasPressed != gatherButton) {
+                gatherButton = gatherWasPressed;
+                if (!gatherButton) {
+                    if (gatherCoroutine != null) {
+                        StopCoroutine(gatherCoroutine);
+                        gatherCoroutine = null;
+                        SoundManager._instance.DisableLooping(tileBeingGathered.getGatheringSound);
+                        tileBeingGathered = null;
+                    }
+                    closestTile = null;
+                }
+            }
+            gatherWasPressed = false;
+            specialWasPressed = false;
         }
-        gatherWasPressed = false;
-        specialWasPressed = false;
     }
 
     private void CheckForTrees() {
@@ -138,8 +145,9 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
             destination.z = base.transform.position.z;
             float distance = Vector2.Distance(base.transform.position, destination);
             if (distance > InterractionDistance) {
-                _playerGFX.Walk(true, Vector3.ClampMagnitude((destination - base.transform.position).normalized * Time.deltaTime * baseSpeed * playerStats.GetSetMoveSpeed, distance));
-                Move(Vector3.ClampMagnitude((destination - base.transform.position).normalized * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue, distance));
+                Vector3 moveVector = Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue, distance);
+                _playerGFX.Walk(true, moveVector);
+                Move(moveVector);
             }
             else {
                 if (SpecialInteract) {
@@ -157,9 +165,18 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     }
     IEnumerator HarvestTile(TileHit tileHit) {
         if (tileHit.tile.GetTileAbst is GatherableTileSO gatherable) {
-            yield return new WaitForSeconds(gatherable.GetGatheringTime / gatheringSpeed.GetSetValue);
+            tileBeingGathered = gatherable;
+            float gatheringTime = gatherable.GetGatheringTime / gatheringSpeed.GetSetValue;
+            Vector2 tileWorldPos = gridManager.GridToWorldPosition(tileHit.gridPosition, TileMapLayer.Buildings, true);
+            Camera currentCamera = CameraController._instance.GetCurrentActiveCamera;
+            Vector2 tileScreenPos = currentCamera.WorldToScreenPoint(tileWorldPos);
+            UIManager._instance.StartProgressBar(tileScreenPos, gatheringTime);
+            SoundManager._instance.PlaySoundLooped(gatherable.getGatheringSound);
+            yield return new WaitForSeconds(gatheringTime);
             tileHit.tile.GatherInteraction(tileHit.gridPosition, TileMapLayer.Buildings);
+            SoundManager._instance.DisableLooping(gatherable.getGatheringSound);
             Debug.Log("TileHarvested");
+            tileBeingGathered = null;
         }
         gatherCoroutine = null;
         closestTile = null;
@@ -195,6 +212,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
 
     public void DeathReset()
     {
+        playerIsDead = true;
         airRegenCont?.Stop();
         //Start death animation
         _playerGFX.Death();
@@ -204,7 +222,8 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     }
     public IEnumerator DeathTransition(float extraDelay) {
         yield return new WaitForSeconds(_playerGFX.GetDeathAnimLength + extraDelay);
-        base.transform.position = startPositionOfPlayer;
+        transform.position = startPositionOfPlayer;
+        playerIsDead = false;
     }
 
     public class GatheringScanChecker : IChecker

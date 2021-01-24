@@ -6,14 +6,18 @@ using UnityEngine.Tilemaps;
 public class GatherableTileSO : TileAbstSO
 {
     [SerializeField] private GrowthStage[] stages;
+    [Min(1)]
+    [SerializeField] private int sourceTier;
+    [SerializeField] private Sounds gatheringSound;
     public GrowthStage[] GetStages => stages;
     [SerializeField] private ToolType toolType;
-    public ToolType GetToolType => toolType;
 
 
     [SerializeField] private float minGrowTime;
     [SerializeField] private float maxGrowTime;
     [SerializeField] private float GatheringTime;
+    public ToolType GetToolType => toolType;
+    public Sounds getGatheringSound => gatheringSound;
     public float GetMinGrowTime => minGrowTime;
     public float GetMaxGrowTime => maxGrowTime;
     public float GetGatheringTime => GatheringTime;
@@ -21,13 +25,16 @@ public class GatherableTileSO : TileAbstSO
 [System.Serializable]
 public class GrowthStage
 {
+    [SerializeField] private float expReward;
     [SerializeField] private TileBase stageTile;
-    [SerializeField] private bool isGatherable, destroyOnGather;
+    [SerializeField] private bool isGatherable, destroyOnGather, isSolid;
     [SerializeField] private Drop[] drops;
 
     public TileBase GetStageTile => stageTile;
     public bool GetIsGatherable => isGatherable;
+    public bool GetIsSolid => isSolid;
     public bool GetDestroyOnGather => destroyOnGather;
+    public float GetExpReward => expReward;
     public Drop[] GetDrops => drops;
 }
 [System.Serializable]
@@ -48,19 +55,21 @@ public class GatherableState : ITileState
     public TileSlot tileSlot;
     public TimeEvent eventInstance;
     public GatherableTileSO tile;
-    public int currentStage = 0;
+    public int currentStageIndex = 0;
     public int StagesCount => tile.GetStages.Length;
-    public bool reachedMaxStage => currentStage >= StagesCount - 1;
+    public bool reachedMaxStage => currentStageIndex >= StagesCount - 1;
+    private GrowthStage currentStage => tile.GetStages[currentStageIndex];
+    private static EffectData expEffect = new EffectData(StatType.EXP, EffectType.OverTime, 10f, 1, 0.03f);
 
     public GatherableState(GatherableTileSO tile, TileSlot tileSlot) {
-        currentStage = 0;
+        currentStageIndex = 0;
         this.tile = tile;
         this.tileSlot = tileSlot;
     }
     public TileBase GetMainTileBase {
         get {
             if (tile.GetStages != null)
-                return tile.GetStages[currentStage].GetStageTile;
+                return currentStage.GetStageTile;
             return tile.GetMainTileBase;
         }
 
@@ -70,31 +79,48 @@ public class GatherableState : ITileState
     public ToolType GetToolType => tile.GetToolType;
 
     public TileType GetTileType => tile.GetTileType;
+    public Sounds getGatheringSound => tile.getGatheringSound;
 
-    public bool GetIsSolid => tile.GetIsSolid;
+    public bool GetIsSolid {
+        get {
+            if (StagesCount > 0) {
+                return currentStage.GetIsSolid;
+            }
+            else {
+                return tile.GetIsSolid;
+            }
+
+        }
+    }
     public float GetGatherTime => GetGatherTime;
 
     public bool isSpecialInteraction => tile.isSpecialInteraction;
-    public bool GetIsGatherable => tile.GetStages[currentStage].GetIsGatherable;
+    public bool GetIsGatherable => currentStage.GetIsGatherable;
 
     public void GatherInteraction(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
         if (GetIsGatherable) {
+            EffectController effectController = new EffectController(PlayerStats._instance.GetStat(StatType.EXP), 0);
+            expEffect.duration = currentStage.GetExpReward/expEffect.amount;
+            effectController.Begin(expEffect);
+
             Debug.Log("Tried gathering");
-            if (tile.GetStages[currentStage].GetDestroyOnGather || currentStage == 0)
+            if (currentStage.GetDestroyOnGather || currentStageIndex == 0)
                 Remove(gridPosition, tilemapLayer);
             else {
-                currentStage--;
+                currentStageIndex--;
                 if (!reachedMaxStage)
                     InitEvent(gridPosition, tilemapLayer);
                 GridManager._instance.SetTile(tileSlot, gridPosition, tilemapLayer, true);
             }
 
             Inventory inventory = Inventory.GetInstance;
-            foreach (Drop drop in tile.GetStages[currentStage].GetDrops) {
+            foreach (Drop drop in currentStage.GetDrops) {
                 if (Random.value <= drop.GetChance) {
                     inventory.AddToInventory(0, new ItemSlot(drop.GetItem, Random.Range(drop.GetMinAmount, drop.GetMaxAmount + 1)));
                 }
             }
+
+
         }
     }
     private void Remove(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
@@ -109,7 +135,7 @@ public class GatherableState : ITileState
     public void SpecialInteraction(Vector2Int gridPosition, TileMapLayer tileMapLayer) {
     }
     public void Grow(Vector2Int gridPosition, TileMapLayer tileMapLayer) {
-        currentStage++;
+        currentStageIndex++;
         GridManager._instance.SetTile(tileSlot, gridPosition, tileMapLayer, false);
         if (!reachedMaxStage) {
             InitEvent(gridPosition, tileMapLayer);
@@ -117,7 +143,7 @@ public class GatherableState : ITileState
     }
     public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool generation = false) {
         if (generation) {
-            currentStage = StagesCount - 1;
+            currentStageIndex = StagesCount - 1;
         }
         if (eventInstance == null && tile.GetStages.Length > 1 && !reachedMaxStage)
             InitEvent(gridPosition, tilemapLayer);

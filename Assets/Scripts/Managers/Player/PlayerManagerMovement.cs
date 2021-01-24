@@ -9,6 +9,9 @@ public partial class PlayerManager
 
     Vector2Int currentGridPos;
     Vector2 gridMoveVector;
+    [Min(0.1f)]
+    [SerializeField] float animationSpeedMultiplier;
+    Vector2 totalSpeed;
 
     bool moved;
     public void Move(Vector2 moveVector) {
@@ -20,8 +23,10 @@ public partial class PlayerManager
             transform.Translate(moveVector);
         }
         else {
+            totalSpeed = Vector2.zero;
             MoveOnY();
             MoveOnX();
+            totalSpeed.y *= 2;
         }
         if (moved)
             UpdateView();
@@ -34,6 +39,7 @@ public partial class PlayerManager
         }
         if (gridMoveVector.y > 0) {
             if (CheckTilesOnPos(tileLeftCorner(transform.position, playerColliderSize) + UnityVectorOnGridY) && CheckTilesOnPos(tileTopCorner(transform.position, playerColliderSize) + UnityVectorOnGridY)) {
+                totalSpeed += UnityVectorOnGridY;
                 ApplyMove(UnityVectorOnGridY);
             }
             //else {
@@ -46,6 +52,7 @@ public partial class PlayerManager
         }
         else {
             if (CheckTilesOnPos(tileBottomCorner(transform.position, playerColliderSize) + UnityVectorOnGridY) && CheckTilesOnPos(tileRightCorner(transform.position, playerColliderSize) + UnityVectorOnGridY)) {
+                totalSpeed += UnityVectorOnGridY;
                 ApplyMove(UnityVectorOnGridY);
             }
             //else {
@@ -62,6 +69,7 @@ public partial class PlayerManager
         }
         if (gridMoveVector.x > 0) {
             if (CheckTilesOnPos(tileRightCorner(transform.position, playerColliderSize) + UnityVectorOnGridX) && CheckTilesOnPos(tileTopCorner(transform.position, playerColliderSize) + UnityVectorOnGridX)) {
+                totalSpeed += UnityVectorOnGridX;
                 ApplyMove(UnityVectorOnGridX);
             }
             //else {
@@ -73,6 +81,7 @@ public partial class PlayerManager
         }
         else {
             if (CheckTilesOnPos(tileBottomCorner(transform.position, playerColliderSize) + UnityVectorOnGridX) && CheckTilesOnPos(tileLeftCorner(transform.position, playerColliderSize) + UnityVectorOnGridX)) {
+                totalSpeed += UnityVectorOnGridX;
                 ApplyMove(UnityVectorOnGridX);
             }
             //else {

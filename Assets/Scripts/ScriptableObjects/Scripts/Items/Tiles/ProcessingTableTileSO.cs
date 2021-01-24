@@ -9,6 +9,7 @@ public class ProcessingTableTileSO : TileAbstSO
     [SerializeField] private ProcessorType processorType;
     [SerializeField] private TileBase whenActiveTile;
     [SerializeField] private float speed;
+    [SerializeField] Sounds gatheringSound;
     public ProcessorType GetProcessorType => processorType;
     public TileBase GetWhenActiveTile => whenActiveTile;
     public float GetSpeed => speed;

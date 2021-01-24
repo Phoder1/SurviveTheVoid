@@ -45,8 +45,6 @@ public partial class GridManager : MonoSingleton<GridManager>
     [SerializeField] private GridRandom buildingsRandom;
     [SerializeField] private int loadDistance;
     [SerializeField] private float floorOffSet, buildingsOffSet;
-
-
     private Vector2Int lastViewMin = Vector2Int.zero, lastViewMax = Vector2Int.zero;
 
     [SerializeField] private TileTierStruct[] floorBlocksTiers;
