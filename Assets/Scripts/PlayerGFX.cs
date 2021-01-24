@@ -10,7 +10,13 @@ public class PlayerGFX : MonoBehaviour
 
     public float GetDeathAnimLength => deathAnimLength;
     public float GetWalkAnimLength => walkAnimLength;
-
+    bool isXFlipped;
+    bool SetIsXFlipped {
+        set {
+            isXFlipped = value;
+            playerSprite.flipX = isXFlipped;
+        }
+    }
     private void Start() {
         GameManager.DeathEvent += Death;
         _inputManager = InputManager._instance;
@@ -37,10 +43,10 @@ public class PlayerGFX : MonoBehaviour
         _anim.speed = 1;
         if (DoWalk) {
             if (moveVector.Value.x < 0) {
-                playerSprite.flipX = true;
+                SetIsXFlipped = true;
             }
-            else {
-                playerSprite.flipX = false;
+            else if(moveVector.Value.x > 0) {
+                SetIsXFlipped = false;
 
             }
             _anim.SetBool("isRunning", true);

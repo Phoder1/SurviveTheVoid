@@ -8,7 +8,7 @@ public class GatherableTileSO : TileAbstSO
     [SerializeField] private GrowthStage[] stages;
     [Min(1)]
     [SerializeField] private int sourceTier;
-    [SerializeField] private Sounds gatheringSound;
+    [SerializeField] private Sound gatheringSound;
     public GrowthStage[] GetStages => stages;
     [SerializeField] private ToolType toolType;
 
@@ -17,7 +17,7 @@ public class GatherableTileSO : TileAbstSO
     [SerializeField] private float maxGrowTime;
     [SerializeField] private float GatheringTime;
     public ToolType GetToolType => toolType;
-    public Sounds getGatheringSound => gatheringSound;
+    public Sound getGatheringSound => gatheringSound;
     public float GetMinGrowTime => minGrowTime;
     public float GetMaxGrowTime => maxGrowTime;
     public float GetGatheringTime => GatheringTime;
@@ -79,7 +79,7 @@ public class GatherableState : ITileState
     public ToolType GetToolType => tile.GetToolType;
 
     public TileType GetTileType => tile.GetTileType;
-    public Sounds getGatheringSound => tile.getGatheringSound;
+    public Sound getGatheringSound => tile.getGatheringSound;
 
     public bool GetIsSolid {
         get {
