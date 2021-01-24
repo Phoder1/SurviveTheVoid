@@ -6,13 +6,6 @@ using UnityEngine.UI;
 
 public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler, IPointerEnterHandler
 {
-    public enum ClickType
-    {
-        Crafting,
-        Inventory
-    }
-
-    public ClickType clickType;
     public int ChestId;
     public int Slot;
     [SerializeField]
@@ -56,48 +49,11 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public void OnPointerUp(PointerEventData evendata)
     {
 
-        if (pointerDownTimer < requiredHoldTime && pointerDown && onShortClick != null && !IsDragged && clickType == ClickType.Crafting)
+        if (pointerDownTimer < requiredHoldTime && pointerDown && onShortClick != null && !IsDragged)
         {
             onShortClick.Invoke();
         }
-        if (clickType == ClickType.Inventory)
-        {
-            if (InventoryUIManager._instance.DraggedItem != -1 && InventoryUIManager._instance.DroppedItem != -1 && !InventoryUIManager._instance.IsDragginToTrash)
-            {
-                InventoryUIManager._instance.SwapItems();
-            }
-            else if (InventoryUIManager._instance.IsDragginToTrash)
-            {
-                InventoryUIManager._instance.DeleteItem(InventoryUIManager._instance.DraggedItem);
-            }
-            else if (InventoryUIManager._instance.DraggedIntoBar >= 0 && InventoryUIManager._instance.DraggedItem >= 0)
-            {
-
-                InventoryUIManager._instance.SwitchKeyInventory(InventoryUIManager._instance.DraggedItem, InventoryUIManager._instance.DraggedIntoBar);
-            }else if(InventoryUIManager._instance.DraggedItem >= 0 && InventoryUIManager._instance.DraggedIntoEquip >= 0)
-            {
-                InventoryUIManager._instance.SwitchKeyInventory(InventoryUIManager._instance.DraggedItem, InventoryUIManager._instance.DraggedIntoEquip);
-            }
-            else if (InventoryUIManager._instance.DraggedItem <= -1 && !IsDragged)
-            {
-                if (Vis != null)
-                    Vis.ReturnToPos();
-                onShortClick.Invoke();
-            }
-
-            else
-            {
-                InventoryUIManager._instance.ResetSwap();
-            }
-
-            
-
-
-            DraggedItem = -1;
-        }
-
-
-        
+       
         Reset();
 
     }
@@ -108,22 +64,14 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if (pointerDown)
         {
             pointerDownTimer += Time.deltaTime;
-            if (pointerDownTimer >= requiredHoldTime && clickType == ClickType.Crafting)
+            if (pointerDownTimer >= requiredHoldTime)
             {
                 if (onLongClick != null)
                     onLongClick.Invoke();
 
                 Reset();
             }
-            //else if (pointerDownTimer >= requiredHoldTime && clickType == ClickType.Inventory && !IsDragged)
-            //{
-            //    if (onLongClick != null)
-            //        onLongClick.Invoke();
-
-
-
-            //    Debug.Log(DraggedItem.item.getItemName);
-            //}
+           
 
             if (fillImage != null)
             {
@@ -146,56 +94,12 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (clickType == ClickType.Inventory)
-        {
-            if (pointerDown)
-            {
-              
-                    InventoryUIManager._instance.TakingFrom(ChestId);
-                    InventoryUIManager._instance.DraggedItem = Slot;
-                
-            }
-
-
-
-            if (InventoryUIManager._instance.DraggedItem >= 0)
-            {    
-                onLongClick.Invoke();
-                //InventoryUIManager._instance.DraggedItem = Slot;
-                IsDragged = true;
-
-            }
-            
-            InventoryUIManager._instance.WhatInventory(-1);
-
-            InventoryUIManager._instance.CancelDropHighLight(InventoryUIManager._instance.DroppedItem);
-
-            DraggedItem = -1;
-        }
+       
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        DraggedItem = InventoryUIManager._instance.DraggedItem;
-
        
-
-        if (InventoryUIManager._instance.DraggedItem != InventoryUIManager._instance.DroppedItem && InventoryUIManager._instance.DraggedItem >= 0)
-        {
-            InventoryUIManager._instance.WhatInventory(ChestId);
-            onDropItem.Invoke();
-        }
-
-        if (InventoryUIManager._instance.HotKeyDragged >= 0)
-        {
-            onDropItem.Invoke();
-            InventoryUIManager._instance.WhatInventory(ChestId);
-        }
-        else if(InventoryUIManager._instance.EquipDragged >= 0)
-        {
-            onDropItem.Invoke();
-            InventoryUIManager._instance.WhatInventory(ChestId);
-        }
 
 
     }

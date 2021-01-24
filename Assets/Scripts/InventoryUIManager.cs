@@ -6,12 +6,9 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 {
     [Header("Inventory Related")]
 
-    public GameObject[] InventorySlots;
-    [SerializeField]
-    Image[] InventorySlotImage;
+    ItemSlot[] InventoryItem;
+    public InventorySlot[] Slots;
 
-    [SerializeField]
-    TextMeshProUGUI[] inventorySlotText;
 
     Inventory inventory;
     public Inventory GetInventory => inventory;
@@ -24,9 +21,13 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     public override void Init()
     {
         inventory = Inventory.GetInstance;
+        InventoryItem = inventory.GetInventoryFromDictionary(0);
         HotKeysInventory = inventory.GetInventoryFromDictionary(1);
         EquipInventory = inventory.GetInventoryFromDictionary(2);
     }
+    
+
+
 
     // Update is called once per frame
     private void Update()
@@ -43,25 +44,29 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     #region Inventory Slots
 
     //public boolean = setactive of all inventory,  only update inventory after this boolean is true, if false dont update
-    [SerializeField]
-    int LookingAtInventory;
-    [SerializeField]
-    int TakingFromInventory;
+    public SlotChestTypes takingFrom;
+    public int takingFromIndex;
 
-    public void WhatInventory(int id)
+    public SlotChestTypes droppingAt;
+    public int droppingAtIndex;
+
+    public void DroppingAt(SlotChestTypes type,int slot)
     {
-        LookingAtInventory = id;
+        droppingAt = type;
+        droppingAtIndex = slot;
     }
-    public void TakingFrom(int id)
+    public void TakingFrom(SlotChestTypes type, int slot)
     {
-        TakingFromInventory = id;
+        takingFrom = type;
+        takingFromIndex = slot;
     }
 
 
-    public void OnPressedInventoryButton(int buttonId)
+    public void OnPressedInventoryButton()
     {
         Debug.Log("Short press");
-        var checkIfSlotIsItem = inventory.GetItemFromInventoryButton(LookingAtInventory, buttonId);
+        int ChestId = (int)takingFrom - 1;
+        var checkIfSlotIsItem = inventory.GetItemFromInventoryButton(ChestId, takingFromIndex);
 
 
         if (checkIfSlotIsItem == null || checkIfSlotIsItem.item == null)
@@ -84,18 +89,18 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         {
             if (ConsumeablesHandler._instance.GetEffectCoolDown(itemCache.item as ConsumableItemSO))
             {
-                if (inventory.RemoveItemFromInventory(LookingAtInventory, new ItemSlot(itemCache.item, 1)))
+                if (inventory.RemoveItemFromInventory(ChestId, new ItemSlot(itemCache.item, 1)))
                 {
                     Debug.Log("Consumed: " + itemCache.item.getItemName);
                     (itemCache.item as ConsumableItemSO).ApplyEffect();
                 }
             }
-
+            UpdatePlayerInventory();
         }
         if (itemCache.item.GetItemType == ItemType.Equipable)
         {
 
-            EquipManager.GetInstance.CheckEquip(itemCache, 0,buttonId);
+            EquipManager.GetInstance.CheckEquip(itemCache, ChestId, takingFromIndex);
             UpdatePlayerInventory();
 
 
@@ -111,62 +116,44 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
     public void UpdateInventoryToUI()
     {
-        for (int i = 0; i < inventory.GetInventory.Length; i++)
+        for (int i = 0; i < InventoryItem.Length; i++)
         {
-
-            if (inventory.GetInventory[i] != null)
+            if (InventoryItem[i] != null)
             {
-                if (!InventorySlotImage[i].isActiveAndEnabled)
-                {
-                    SetInventorySlotActive(i, true);
-                }
-
-                InventorySlotImage[i].sprite = inventory.GetInventory[i].item.getsprite;
-
-                UpdateInventorySlotAmountUI(i, inventory.GetInventory[i].amount, true);
+                Slots[i].UpdateSlot(InventoryItem[i]);
             }
             else
             {
-                if (InventorySlotImage[i].isActiveAndEnabled)
-                {
-                    SetInventorySlotActive(i, false);
-                }
-                InventorySlotImage[i].sprite = null;
-                UpdateInventorySlotAmountUI(i, 0, false);
-
-
+                Slots[i].EmptySlot();
             }
+            Slots[i].DeHighLightSlot();
+
         }
-
-
-
     }
 
 
 
 
 
-    void SetInventorySlotActive(int Index, bool IsActive)
-    {
-        InventorySlotImage[Index].gameObject.SetActive(IsActive);
-        inventorySlotText[Index].gameObject.SetActive(IsActive);
-    }
-    void UpdateInventorySlotAmountUI(int Index, int Amount, bool IsItemExist)
-    {
-        if (IsItemExist && Amount > 1)
-        {
-            inventorySlotText[Index].text = Amount.ToString();
-        }
-        else
-        {
-            inventorySlotText[Index].text = "";
-        }
+    //void SetInventorySlotActive(int Index, bool IsActive)
+    //{
+    //    InventorySlotImage[Index].gameObject.SetActive(IsActive);
+    //    inventorySlotText[Index].gameObject.SetActive(IsActive);
+    //}
+    //void UpdateInventorySlotAmountUI(int Index, int Amount, bool IsItemExist)
+    //{
+    //    if (IsItemExist && Amount > 1)
+    //    {
+    //        inventorySlotText[Index].text = Amount.ToString();
+    //    }
+    //    else
+    //    {
+    //        inventorySlotText[Index].text = "";
+    //    }
 
-    }
+    //}
 
 
-    public int DraggedItem;
-    public int DroppedItem;
 
     public void OnLongInventoryPress(int buttonId)
     {
@@ -174,83 +161,24 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         {
             Debug.Log("holding Item");
             IsHoldingItem = true;
-            DraggedItem = buttonId;
-            InventorySlots[buttonId].GetComponent<Image>().color = Color.yellow;
-        }
-
-
-    }
-    public void GetDroppedItem(int buttonId)
-    {
-        if (DraggedItem != buttonId)
-        {
-            
-            DroppedItem = buttonId;
-            HightLightDrop(buttonId);
+            //DraggedItem = buttonId;
+            //InventorySlots[buttonId].GetComponent<Image>().color = Color.yellow;
         }
 
 
     }
 
-    public void HightLightDrop(int buttonId)
-    {
-        InventorySlots[buttonId].GetComponent<Image>().color = Color.yellow;
-    }
 
 
-    public void CancelDropHighLight(int buttonId)
-    {
-        if (buttonId >= 0)
-        {
-            InventorySlots[DroppedItem].GetComponent<Image>().color = SlotColor;
-            DroppedItem = -1;
-            UpdateInventoryToUI();
-            //ResetSwap();
-        }
-    }
 
+
+  
     [HideInInspector]
     public bool IsHoldingItem;
     [HideInInspector]
     public bool IsDragginToTrash;
 
-    public void ResetSwap()
-    {
-        IsHoldingItem = false;
-        if (DraggedItem >= 0)
-            InventorySlots[DraggedItem].GetComponent<Image>().color = SlotColor;
-        if (DroppedItem >= 0)
-            InventorySlots[DroppedItem].GetComponent<Image>().color = SlotColor;
-
-        DraggedItem = -1;
-        DroppedItem = -1;
-
-        DraggedIntoBar = -1;
-        HotKeyDragged = -1;
-
-        LookingAtInventory = -1;
-        TakingFromInventory = -1;
-
-        EquipDragged = -1;
-        EquipDraggedInto = -1;
-        DraggedIntoEquip = -1;
-
-    }
-    public void SwapItems()
-    {
-        //new Color(190, 99, 22);
-
-        inventory.ChangeBetweenItems(0, 0, DraggedItem, DroppedItem);
-        UpdateInventoryToUI();
-        ResetSwap();
-    }
-    public void DeleteItem(int buttonId)
-    {
-        inventory.RemoveItemFromButton(buttonId, 0);
-        UpdateInventoryToUI();
-        ResetSwap();
-    }
-
+   
     public void HighLightTrashCan()
     {
         TrashCanBackGround.color = Color.red;
@@ -264,11 +192,9 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
     #region Equip
     [Header("Equip Related")]
-    public int DraggedIntoEquip;
-    public int EquipDragged;
-    public int EquipDraggedInto;
+
     ItemSlot[] EquipInventory;
-    public EquipSlot[] EquipSlots;
+    public InventorySlot[] EquipSlots;
 
     public void UpdateEquipToUI()
     {
@@ -278,13 +204,14 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
             if (EquipInventory[i] != null)
             {
                 //show the item sprite
-                EquipSlots[i].ShowEquippedGear(EquipInventory[i]);
+                EquipSlots[i].UpdateSlot(EquipInventory[i]);
             }
             else
             {
                 //show that you don't wear anything
-                EquipSlots[i].NoGearEquipped();
+                EquipSlots[i].EmptySlot();
             }
+            EquipSlots[i].DeHighLightSlot();
         }
     }
 
@@ -295,11 +222,8 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
     #region HotKey
     [Header("HotKey Related")]
-    public int DraggedIntoBar;
-    public int HotKeyDragged;
-    public int HotKeyDraggedInto;
     ItemSlot[] HotKeysInventory;
-    public ConsumableHotBar[] ConsumableHotKey;
+    public InventorySlot[] ConsumableHotKey;
 
 
 
@@ -310,26 +234,52 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         {
             if (HotKeysInventory[i] != null)
             {
-                ConsumableHotKey[i].ShowEquippedConsumable(HotKeysInventory[i]);
+                ConsumableHotKey[i].UpdateSlot(HotKeysInventory[i]);
             }
             else
             {
-                ConsumableHotKey[i].NoConsumableEquipped();
+                ConsumableHotKey[i].EmptySlot();
             }
+            ConsumableHotKey[i].DeHighLightSlot();
         }
     }
 
-    public void SwitchKeyInventory(int DraggedItem, int DroppedOn)
+
+    public void DeHighLightDrop(SlotChestTypes Chest,int Slot)
     {
-        ItemSlot DraggedTemp = inventory.GetItemFromInventoryButton(TakingFromInventory, DraggedItem);
-        ItemSlot DroppedTemp = inventory.GetItemFromInventoryButton(LookingAtInventory, DroppedOn);
-        if (canEquipOnConsumable(TakingFromInventory, LookingAtInventory, DraggedTemp, DroppedTemp, DraggedItem, DroppedOn))
+        int ChestIndex = (int)Chest - 1;
+        if(ChestIndex == 0)
         {
-            inventory.ChangeBetweenItems(TakingFromInventory, LookingAtInventory, DraggedItem, DroppedOn);
+            
+        }else if(ChestIndex == 1)
+        {
+            
+        }else if(ChestIndex == 2)
+        {
+
+        }
+        else
+        {
+
+        }
+
+
+    }
+
+    public void SwapItems()
+    {
+        int FirstChestID = ((int)takingFrom - 1);
+        int SecondChestID = ((int)droppingAt - 1);
+
+        ItemSlot DraggedTemp = inventory.GetItemFromInventoryButton(FirstChestID, takingFromIndex);
+        ItemSlot DroppedTemp = inventory.GetItemFromInventoryButton(SecondChestID, droppingAtIndex);
+        if (canEquipOnCurrentInventory(takingFrom, droppingAt, DraggedTemp, DroppedTemp, takingFromIndex, droppingAtIndex))
+        {
+            inventory.ChangeBetweenItems(FirstChestID, SecondChestID, takingFromIndex, droppingAtIndex);
 
         }
         UpdatePlayerInventory();
-        ResetSwap();
+    
 
 
     }
@@ -341,13 +291,13 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         UpdateInventoryToUI();
     }
 
-    bool canEquipOnConsumable(int fromChest, int toChest, ItemSlot Dragged, ItemSlot Drop, int draggedSlot, int DropSlot)
+    bool canEquipOnCurrentInventory(SlotChestTypes fromChest, SlotChestTypes toChest, ItemSlot Dragged, ItemSlot Drop, int draggedSlot, int DropSlot)
     {
-        if (toChest == 0)
+        if (toChest == SlotChestTypes.Inventory)
         {
             return true;
         }
-        else if (toChest == 1)
+        else if (toChest == SlotChestTypes.HotKey)
         {
             if (Dragged.item.GetItemType == ItemType.Consumable)
             {
@@ -359,14 +309,14 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
                 return false;
             }
         }
-        else if (toChest == 2)
+        else if (toChest == SlotChestTypes.Equip)
         {
 
 
             if (Dragged.item.GetItemType == ItemType.Equipable)
             {
 
-                if (EquipManager.GetInstance.CheckEquip(Dragged, fromChest, DropSlot, toChest))
+                if (EquipManager.GetInstance.CheckEquip(Dragged, draggedSlot, 2, DropSlot))
                 {
                     return true;
                 }

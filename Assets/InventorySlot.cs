@@ -1,54 +1,62 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using TMPro;
+using UnityEngine.UI;
+
+public enum SlotChestTypes
+{
+    none,
+    Inventory,
+    HotKey,
+    Equip,
+    Tools,
+    Chest
+}
+
 
 public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler, IPointerEnterHandler
 {
-    public int ChestId;
-    public int SlotKey;
-    //public ItemSlot ItemHolder;
+    public SlotChestTypes slotType;
+    public int slotPosition;
+    InventoryUIManager inventoryUI;
     public bool IsDraggingThis;
+    public Image highLightedSprite;
+    public Image ItemSprite;
+    public TextMeshProUGUI ItemAmount;
+
+    public Color NormalColor;
+    public Color HighLightedColor;
+    DragNDropVisual Vis;
+    private void Start()
+    {
+        inventoryUI = InventoryUIManager._instance;
+        Vis = gameObject.GetComponent<DragNDropVisual>();
+    }
 
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        ItemSlot[] Test = Inventory.GetInstance.GetInventoryFromDictionary(ChestId);
-
-        if (InventoryUIManager._instance.DraggedIntoBar <= -1 && Test[SlotKey] != null)
+        if (inventoryUI.takingFrom == SlotChestTypes.none)
         {
+            int ChestId = (int)slotType - 1;
+            var checkIfSlotIsItem = inventoryUI.GetInventory.GetItemFromInventoryButton(ChestId, slotPosition);
+            if (checkIfSlotIsItem != null)
+            {
+                IsDraggingThis = true;
+                inventoryUI.TakingFrom(slotType, slotPosition);
+                HighLightSlot();
+            }
 
-            IsDraggingThis = true;
         }
     }
-
+    
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (InventoryUIManager._instance.DraggedItem >= 0)
+        if (inventoryUI.takingFrom != SlotChestTypes.none)
         {
-            InventoryUIManager._instance.DraggedIntoBar = SlotKey;
-
-            InventoryUIManager._instance.WhatInventory(ChestId);
+            inventoryUI.DroppingAt(slotType, slotPosition);
+            HighLightSlot();
         }
-        else if (InventoryUIManager._instance.HotKeyDragged >= 0 && InventoryUIManager._instance.HotKeyDragged != SlotKey)
-        {
-            InventoryUIManager._instance.HotKeyDraggedInto = SlotKey;
-
-            InventoryUIManager._instance.WhatInventory(ChestId);
-        }
-        else if (InventoryUIManager._instance.EquipDragged >= 0)
-        {
-            InventoryUIManager._instance.HotKeyDraggedInto = SlotKey;
-
-            InventoryUIManager._instance.WhatInventory(ChestId);
-        }
-        else if (InventoryUIManager._instance.HotKeyDragged == SlotKey)
-        {
-            IsDraggingThis = false;
-        }
-
 
 
 
@@ -56,82 +64,106 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (IsDraggingThis)
+        //if taking anything
+        if (inventoryUI.takingFrom != SlotChestTypes.none)
         {
-            InventoryUIManager._instance.HotKeyDragged = SlotKey;
-            InventoryUIManager._instance.TakingFrom(ChestId);
+            //to not by accident dehighlight the one you picked up
+
+            //dropping at equip != inventory = true + taking from 0 = 0 = true = true both
+            // dropping at Inventory != inventory = false + taking from 0 = 0 = false one true one = false;
+            //
+
+
+            if (inventoryUI.takingFromIndex != slotPosition) // if 0 != 0 = true
+            {
+                if (inventoryUI.droppingAt == slotType)// if equip == equip = true;
+                {
+                    //de highlight in correct inventory
+                    DeHighLightSlot();
+                }
+                //de highlight slot in correct inventory
+                DeHighLightSlot();
+            }
+
+
+            // resets so you dont drop at anywhere
+            inventoryUI.DroppingAt(SlotChestTypes.none, -1);
+
+          
+
         }
-        else
-        {
-            InventoryUIManager._instance.WhatInventory(-1);
-            InventoryUIManager._instance.DraggedIntoBar = -1;
-            InventoryUIManager._instance.HotKeyDraggedInto = -1;
-        }
-        //IsDraggingThis = false;
+        
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-
-        if (InventoryUIManager._instance.HotKeyDragged >= 0 && InventoryUIManager._instance.DroppedItem >= 0)
+        if (inventoryUI.takingFromIndex >= 0 && inventoryUI.droppingAtIndex >= 0)
         {
-            InventoryUIManager._instance.SwitchKeyInventory(InventoryUIManager._instance.HotKeyDragged, InventoryUIManager._instance.DroppedItem);
-        }
-        else if (InventoryUIManager._instance.HotKeyDragged >= 0 && InventoryUIManager._instance.HotKeyDraggedInto >= 0)
-        {
-            InventoryUIManager._instance.SwitchKeyInventory(InventoryUIManager._instance.HotKeyDragged, InventoryUIManager._instance.HotKeyDraggedInto);
+            inventoryUI.SwapItems();
         }
         else
         {
-            InventoryUIManager._instance.HotKeyDragged = -1;
-            InventoryUIManager._instance.TakingFrom(-1);
-            InventoryUIManager._instance.ResetSwap();
+            SlotAction();
         }
-        if (InventoryUIManager._instance.HotKeyDraggedInto >= 0 && InventoryUIManager._instance.HotKeyDragged >= 0)
+        if(Vis != null)
         {
-            //InventoryUIManager._instance.SwitchKeyInventory(InventoryUIManager._instance.HotKeyDragged, InventoryUIManager._instance.HotKeyDraggedInto);
+            Vis.ReturnToPos();
         }
 
-        if (InventoryUIManager._instance.HotKeyDragged <= -1 && !IsDraggingThis)
-        {
-            ConsumeHotBar();
-        }
-
+        DeHighLightSlot();
+        ResetDrag();
         IsDraggingThis = false;
-
-
     }
 
-    void ConsumeHotBar()
+
+
+    public void ResetDrag()
     {
-        var checkIfSlotIsItem = Inventory.GetInstance.GetItemFromInventoryButton(ChestId, SlotKey);
+        inventoryUI.DroppingAt(SlotChestTypes.none, -1);
+        inventoryUI.TakingFrom(SlotChestTypes.none, -1);
+
+    }
 
 
-        if (checkIfSlotIsItem == null || checkIfSlotIsItem.item == null)
-            return;
+    public void UpdateSlot(ItemSlot Item)
+    {
+        ItemSprite.gameObject.SetActive(true);
+        ItemSprite.sprite = Item.item.getsprite;
+        if (ItemAmount != null)
+            ItemAmount.text = Item.amount.ToString();
+    }
+    public void EmptySlot()
+    {
+        ItemSprite.gameObject.SetActive(false);
+        ItemSprite.sprite = null;
+
+        if (ItemAmount != null)
+            ItemAmount.text = "";
+    }
 
 
-        ItemSlot itemCache = new ItemSlot(checkIfSlotIsItem.item, 1);
 
-        if (itemCache.item.GetItemType == ItemType.Consumable)
-        {
-            if (ConsumeablesHandler._instance.GetEffectCoolDown(itemCache.item as ConsumableItemSO))
-            {
-                if (Inventory.GetInstance.RemoveItemFromInventory(ChestId, new ItemSlot(itemCache.item, 1)))
-                {
-                    Debug.Log("Consumed: " + itemCache.item.getItemName);
-                    (itemCache.item as ConsumableItemSO).ApplyEffect();
-                }
-            }
+    public void HighLightSlot()
+    {
+        highLightedSprite.color = HighLightedColor;
+    }
 
-        }
-        InventoryUIManager._instance.UpdateHotKeysToUI();
+    public void DeHighLightSlot()
+    {
+        highLightedSprite.color = NormalColor;
+    }
+
+    void SlotAction()
+    {
+        inventoryUI.OnPressedInventoryButton();
     }
 
 
 
 
- 
 
-   
+
+
+
+
 }
