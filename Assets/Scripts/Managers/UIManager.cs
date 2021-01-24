@@ -43,7 +43,6 @@ public class UIManager : MonoSingleton<UIManager>
     [SerializeField] private TextMeshProUGUI levelNumber;
 
     [Header("Survival bar's fill")]
-    [SerializeField] RectTransform progressBarFillObj;
     [SerializeField]
     private Image
         hpFill,
@@ -52,10 +51,10 @@ public class UIManager : MonoSingleton<UIManager>
         airFill,
         sleepFill,
         xpFill;
-    private Image progressBarFillImage;
     private Dictionary<StatType, Image> barsDictionary;
-    [SerializeField]
-    float progressBarTickTime;
+    [SerializeField] RectTransform progressBarFillObj;
+    [SerializeField] float progressBarTickTime;
+    private Image progressBarFillImage;
     Coroutine progressBarCoroutine;
 
 
@@ -95,6 +94,11 @@ public class UIManager : MonoSingleton<UIManager>
         progressBarFillObj.position = screenPosition;
         progressBarCoroutine = StartCoroutine(progressBarFill(duration));
     }
+    public void CancelProgressBar() {
+        StopCoroutine(progressBarCoroutine);
+        progressBarCoroutine = null;
+        progressBarFillObj.gameObject.SetActive(false);
+    }
 
     IEnumerator progressBarFill(float duration) {
         progressBarFillObj.gameObject.SetActive(true);
@@ -102,9 +106,9 @@ public class UIManager : MonoSingleton<UIManager>
         float fillAmount = 0;
         progressBarFillImage.fillAmount = fillAmount;
         while (Time.time <= startTime + duration) {
-            yield return new WaitForSeconds(progressBarTickTime);
             fillAmount += progressBarTickTime / duration;
             progressBarFillImage.fillAmount = fillAmount;
+            yield return new WaitForSeconds(progressBarTickTime);
         }
         progressBarFillObj.gameObject.SetActive(false);
 

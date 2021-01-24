@@ -98,10 +98,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
                 gatherButton = gatherWasPressed;
                 if (!gatherButton) {
                     if (gatherCoroutine != null) {
-                        StopCoroutine(gatherCoroutine);
-                        gatherCoroutine = null;
-                        SoundManager._instance.DisableLooping(tileBeingGathered.getGatheringSound);
-                        tileBeingGathered = null;
+                        CancelGathering();
                     }
                     closestTile = null;
                 }
@@ -109,6 +106,14 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
             gatherWasPressed = false;
             specialWasPressed = false;
         }
+    }
+
+    private void CancelGathering() {
+        StopCoroutine(gatherCoroutine);
+        gatherCoroutine = null;
+        SoundManager._instance.DisableLooping(tileBeingGathered.getGatheringSound);
+        UIManager._instance.CancelProgressBar();
+        tileBeingGathered = null;
     }
 
     private void CheckForTrees() {
