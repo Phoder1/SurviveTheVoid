@@ -36,7 +36,7 @@ public class TrashCan : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
     void ThrowItem()
     {
         Debug.Log("Throwing Item");
-        InventoryUIManager._instance.DeleteItem(InventoryUIManager._instance.DraggedItem);
+
         InventoryUIManager._instance.RemoveTrashHighLight();
     }
 

@@ -227,6 +227,7 @@ public class Inventory
         GetNewIDForChest(5);// hotkeys
         GetNewIDForChest(5); // equips
         GetNewIDForChest(5);// tool bar
+
         inventoryUI = InventoryUIManager._instance;
     }
     public bool AddToInventory(int chestID, ItemSlot item)

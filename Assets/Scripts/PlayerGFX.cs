@@ -15,6 +15,7 @@ public class PlayerGFX : MonoBehaviour
         GameManager.DeathEvent += Death;
         _inputManager = InputManager._instance;
         playerSprite = GetComponent<SpriteRenderer>();
+        _anim = GetComponent<Animator>();
         UpdateAnimClipTimes();
     }
 
