@@ -330,59 +330,60 @@ public class UIManager : MonoSingleton<UIManager>
 
     //Slider amount related
     public void OnChangeGetCraftingAmount() {
+        if (craftingManager != null) {
+            if (craftingManager.CurrentProcessTile != null && craftingManager.selectedRecipe != null) {
 
-        if (craftingManager.CurrentProcessTile != null && craftingManager.selectedRecipe != null) {
+                if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) < 20) {
+                    //SliderBackGround.SetActive(true);
+                    if (craftingManager.CurrentProcessTile.IsCrafting) {
+                        if (craftingManager.CurrentProcessTile.amount >= 20) {
+                            amountSlider.maxValue = 0;
+                            amountSlider.minValue = 0;
+                        }
+                        else {
+                            amountSlider.maxValue = 20 - craftingManager.CurrentProcessTile.amount;
+                            amountSlider.minValue = 1;
+                        }
 
-            if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) < 20) {
-                //SliderBackGround.SetActive(true);
-                if (craftingManager.CurrentProcessTile.IsCrafting) {
-                    if (craftingManager.CurrentProcessTile.amount >= 20) {
-                        amountSlider.maxValue = 0;
-                        amountSlider.minValue = 0;
                     }
                     else {
-                        amountSlider.maxValue = 20 - craftingManager.CurrentProcessTile.amount;
-                        amountSlider.minValue = 1;
+                        amountSlider.maxValue = 20;
                     }
+                    if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) >= 20) {
+                        if (craftingManager.buttonState != ButtonState.CanCraft)
+                            SliderBackGround.SetActive(false);
+                        amountSlider.minValue = 0;
 
+
+                    }
+                    else {
+                        //amountSlider.minValue = 1;
+                        if (craftingManager.buttonState != ButtonState.CanCraft)
+                            SliderBackGround.SetActive(true);
+                    }
                 }
-                else {
-                    amountSlider.maxValue = 20;
-                }
-                if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) >= 20) {
-                    if (craftingManager.buttonState != ButtonState.CanCraft)
-                        SliderBackGround.SetActive(false);
+                else if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) >= 20) {
+                    craftingManager.DeleteOutCome();
+                    //SliderBackGround.SetActive(false);
+                    amountSlider.value = 0;
+                    craftingAmount = 0;
+                    amountSlider.maxValue = 0;
                     amountSlider.minValue = 0;
 
-
-                }
-                else {
-                    //amountSlider.minValue = 1;
-                    if (craftingManager.buttonState != ButtonState.CanCraft)
-                        SliderBackGround.SetActive(true);
                 }
             }
-            else if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) >= 20) {
-                craftingManager.DeleteOutCome();
-                //SliderBackGround.SetActive(false);
-                amountSlider.value = 0;
-                craftingAmount = 0;
-                amountSlider.maxValue = 0;
-                amountSlider.minValue = 0;
 
+
+            craftingAmount = Mathf.RoundToInt(amountSlider.value);
+
+
+            if (craftingManager.selectedRecipe != null) {
+                amountText.text = "Craft: " + craftingAmount + " Gain: " + (craftingManager.selectedRecipe.getoutcomeItem.amount * craftingAmount).ToString();
+                craftingManager.ShowOutCome();
+                TimeToCraftText.text = "Time to craft: " + craftingManager.selectedRecipe.GetCraftingTime * craftingAmount + " Seconds";
+                craftingManager.ShowRecipe(CraftingManager._instance.selectedRecipe);
+                craftingTimer.text = (craftingManager.selectedRecipe.GetCraftingTime * craftingAmount).ToString();
             }
-        }
-
-
-        craftingAmount = Mathf.RoundToInt(amountSlider.value);
-
-
-        if (craftingManager.selectedRecipe != null) {
-            amountText.text = "Craft: " + craftingAmount + " Gain: " + (craftingManager.selectedRecipe.getoutcomeItem.amount * craftingAmount).ToString();
-            craftingManager.ShowOutCome();
-            TimeToCraftText.text = "Time to craft: " + craftingManager.selectedRecipe.GetCraftingTime * craftingAmount + " Seconds";
-            craftingManager.ShowRecipe(CraftingManager._instance.selectedRecipe);
-            craftingTimer.text = (craftingManager.selectedRecipe.GetCraftingTime * craftingAmount).ToString();
         }
         //CraftingManager._instance.UpdateMatsAmount();
     }
