@@ -21,14 +21,44 @@ MonoBehaviour:
   isSolid: 1
   isAirSource: 1
   stages:
-  - stageTile: {fileID: 11400000, guid: 4ea9cd078e7b9d64ca99a8c476addd0a, type: 2}
+  - expReward: 0
+    stageTile: {fileID: 11400000, guid: 4ea9cd078e7b9d64ca99a8c476addd0a, type: 2}
     isGatherable: 0
     destroyOnGather: 0
+    isSolid: 0
     drops: []
-  - stageTile: {fileID: 11400000, guid: ea80f8e67af76e44ab21f659941c74b5, type: 2}
+  - expReward: 0
+    stageTile: {fileID: 11400000, guid: ea80f8e67af76e44ab21f659941c74b5, type: 2}
     isGatherable: 0
     destroyOnGather: 0
+    isSolid: 0
     drops: []
+  - expReward: 10
+    stageTile: {fileID: 11400000, guid: 4c4346b9a20c40c47bea99b56593e34f, type: 2}
+    isGatherable: 1
+    destroyOnGather: 1
+    isSolid: 1
+    drops:
+    - item: {fileID: 11400000}
+      Chance: 1
+      minAmount: 1
+      maxAmount: 1
+    - item: {fileID: 11400000, guid: 6e3627ca283f52b4499153bb2af26248, type: 2}
+      Chance: 1
+      minAmount: 1
+      maxAmount: 3
+    - item: {fileID: 11400000, guid: 09698c5a98717bc4ea06472bb871ac49, type: 2}
+      Chance: 0.5
+      minAmount: 1
+      maxAmount: 3
+    - item: {fileID: 11400000}
+      Chance: 0.5
+      minAmount: 1
+      maxAmount: 1
+    - item: {fileID: 11400000, guid: 15f6588093b9bde479796bc44fb85fd4, type: 2}
+      Chance: 1
+      minAmount: 1
+      maxAmount: 3
   - stageTile: {fileID: 11400000, guid: c994ea58f41327c4ca92c7d0180311c9, type: 2}
     isGatherable: 1
     destroyOnGather: 1
@@ -53,6 +83,8 @@ MonoBehaviour:
       Chance: 1
       minAmount: 1
       maxAmount: 3
+  sourceTier: 0
+  gatheringSound: 2
   toolType: 0
   minGrowTime: 1
   maxGrowTime: 5

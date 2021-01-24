@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 
 public class RemovalState : StateBase
@@ -8,7 +7,11 @@ public class RemovalState : StateBase
     TileSlot tileSlotCache;
     Vector2 touchPosition;
     GridManager gridManager;
-    public RemovalState() { gridManager = GridManager._instance; }
+
+    public RemovalState() { 
+        gridManager = GridManager._instance;
+   
+    }
 
     public override void ButtonB()
     {
@@ -22,7 +25,7 @@ public class RemovalState : StateBase
             case TouchPhase.Moved:
             case TouchPhase.Stationary:
 
-                touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
+                touchPosition = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position);
 
                 currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Buildings);
                 gridManager.SetDummyTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings);
@@ -45,28 +48,14 @@ public class RemovalState : StateBase
         {
 
             gridManager.SetTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings, true);
-            CancelButtonChangeState(true);
-
         }
     }
 
-
-    public void CancelButtonChangeState(bool _cameFromBuildingState)
-    {
-        if (_cameFromBuildingState && Input.GetMouseButton(0))
-        {
-
-            PlayerStateMachine.GetInstance.SwitchState(InputState.BuildState);
-        }
-
-        else
-            ButtonB();
-    }
 
 
     public override void MousePos()
     {
-        touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        touchPosition = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(Input.mousePosition);
 
         currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Buildings);
 

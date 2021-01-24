@@ -9,6 +9,7 @@ public class ProcessingTableTileSO : TileAbstSO
     [SerializeField] private ProcessorType processorType;
     [SerializeField] private TileBase whenActiveTile;
     [SerializeField] private float speed;
+    [SerializeField] Sound gatheringSound;
     public ProcessorType GetProcessorType => processorType;
     public TileBase GetWhenActiveTile => whenActiveTile;
     public float GetSpeed => speed;
@@ -122,7 +123,7 @@ public class ProcessingTableTileState : ITileState
 
     public ToolType GetInteractionType => throw new System.NotImplementedException();
 
-    public TileType GetTileType => throw new System.NotImplementedException();
+    public TileType GetTileType => tile.GetTileType;
 
     public bool GetIsSolid => tile.GetIsSolid;
     public bool isSpecialInteraction => tile.isSpecialInteraction;

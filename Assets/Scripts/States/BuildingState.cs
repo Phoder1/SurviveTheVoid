@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 
 public class BuildingState : StateBase
 {
-
+  
     Vector2 touchPosition;
     TileHit currentTileHit;
     TileSlot tileSlotCache;
@@ -16,7 +16,11 @@ public class BuildingState : StateBase
     GridManager gridManager;
     int amountOfCurrentItem;
 
-    public BuildingState() { amountOfCurrentItem = 0; gridManager = GridManager._instance; }
+    public BuildingState() {
+        amountOfCurrentItem = 0;
+     
+        gridManager = GridManager._instance; 
+    }
 
 
     public override void ButtonA() {
@@ -34,13 +38,13 @@ public class BuildingState : StateBase
             case TouchPhase.Began:
             case TouchPhase.Moved:
             case TouchPhase.Stationary:
-                if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject() && currentTileHit.tile != null)
+                if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject() && (currentTileHit != null && currentTileHit.tile != null))
                     return;
 
 
 
 
-                touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
+                touchPosition = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position);
 
 
 
@@ -179,7 +183,7 @@ public class BuildingState : StateBase
         RemovePreviousTile();
     }
     public override void MousePos() {
-        CheckPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        CheckPosition(CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(Input.mousePosition));
 
         if (Input.GetMouseButton(0)) {
             PressedConfirmBuildingButton();

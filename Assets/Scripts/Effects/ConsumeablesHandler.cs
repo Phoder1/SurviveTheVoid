@@ -11,6 +11,7 @@ public class ConsumeablesHandler : MonoSingleton<ConsumeablesHandler>
         effectHandler = EffectHandler._instance;
 
         FillDictionary();
+        GameManager.DeathEvent += DeathReset;
     }
     public void DeathReset()
     {
@@ -19,9 +20,6 @@ public class ConsumeablesHandler : MonoSingleton<ConsumeablesHandler>
             effect.regenerationController.Stop();
             effect.valueController.Stop();
         }
-        ConsumablesEffectsDict = null;
-
-        FillDictionary();
     }
     private void FillDictionary() {
         ConsumablesEffectsDict = new Dictionary<StatType, StatControllers>();

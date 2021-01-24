@@ -13,8 +13,6 @@ public abstract class StateBase
     public abstract void ButtonB();
     public virtual void StateOnTouch(Touch touch) {
     
-    
-    
     }
 
 

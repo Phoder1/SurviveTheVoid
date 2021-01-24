@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Tilemaps;
 
-
-public enum ToolType { Axe, Pickaxe, Hoe, Shovel, Hammer, AnyTool, Any }
 public enum TileType { Block, Gatherable, Chest, ProcessingTable, LightSource }
 #region Tile hit
 public class TileHit
@@ -21,7 +19,9 @@ public class TileHit
 public abstract class TileAbstSO : ItemSO
 {
     [SerializeField] private TileBase mainTileBase;
-    [SerializeField] private bool isSolid, isAirSource;
+    [Header("Is overriden by stages if there's any.")]
+    [SerializeField] private bool isSolid;
+    [SerializeField] private bool isAirSource;
     public TileBase GetMainTileBase => mainTileBase;
     public bool isSpecialInteraction {
         get {
@@ -93,7 +93,7 @@ public class TileSlot : ITileState
     }
     public bool IsGatherable {
         get {
-            if(tileState is GatherableState gatherable) {
+            if (tileState is GatherableState gatherable) {
                 return gatherable.GetIsGatherable;
             }
             return false;

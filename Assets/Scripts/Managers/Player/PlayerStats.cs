@@ -48,7 +48,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         StatsDict = new Dictionary<StatType, Stat>();
         FillDictionary();
         AddReactions();
-        GameManager.DieEvent += DeathReset;
+        GameManager.DeathEvent += DeathReset;
         ResetStats();
 
     }
@@ -117,8 +117,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         => StatsDict[statType].maxStat;
     private void DeathReset() {
         ResetStats();
-        //EquipManager.ReEquip();
-
+        EquipManager.GetInstance.ReEquipStats();
     }
     class DeathReaction : Reaction
     {
