@@ -350,9 +350,10 @@ MonoBehaviour:
   _playerGFX: {fileID: 1983083227683329054}
   interactionLookRange: 5
   airLookRange: 3
-  InterractionDistance: 1
+  InterractionDistance: 1.5
   SpecialInterracted: 0
   playerColliderSize: 0.6
+  animationSpeedMultiplier: 1
 --- !u!114 &1983083227088785219
 MonoBehaviour:
   m_ObjectHideFlags: 0

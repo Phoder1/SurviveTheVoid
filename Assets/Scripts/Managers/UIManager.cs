@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -51,6 +52,10 @@ public class UIManager : MonoSingleton<UIManager>
         sleepFill,
         xpFill;
     private Dictionary<StatType, Image> barsDictionary;
+    [SerializeField] RectTransform progressBarFillObj;
+    [SerializeField] float progressBarTickTime;
+    private Image progressBarFillImage;
+    Coroutine progressBarCoroutine;
 
 
     bool CanCollect;
@@ -61,6 +66,7 @@ public class UIManager : MonoSingleton<UIManager>
         inventoryManager = InventoryUIManager._instance;
         inputManager = InputManager._instance;
         UpdateUiState(InputManager.inputState);
+        progressBarFillImage = progressBarFillObj.GetComponent<Image>();
 
         barsDictionary = new Dictionary<StatType, Image>
         {
@@ -78,6 +84,30 @@ public class UIManager : MonoSingleton<UIManager>
             ShowCraftingTimer(craftingManager.CurrentProcessTile.ItemsCrafted, craftingManager.CurrentProcessTile.amount, craftingManager.CurrentProcessTile.CraftingTimeRemaining);
             //ShowTimeAndCollectable(craftingManager.CurrentProcessTile.ItemsCrafted, craftingManager.CurrentProcessTile.amount, craftingManager.CurrentProcessTile.CraftingTimeRemaining);
         }
+
+    }
+
+    public void StartProgressBar(Vector2 screenPosition, float duration) {
+        progressBarFillObj.position = screenPosition;
+        progressBarCoroutine = StartCoroutine(progressBarFill(duration));
+    }
+    public void CancelProgressBar() {
+        StopCoroutine(progressBarCoroutine);
+        progressBarCoroutine = null;
+        progressBarFillObj.gameObject.SetActive(false);
+    }
+
+    IEnumerator progressBarFill(float duration) {
+        progressBarFillObj.gameObject.SetActive(true);
+        float startTime = Time.time;
+        float fillAmount = 0;
+        progressBarFillImage.fillAmount = fillAmount;
+        while (Time.time <= startTime + duration) {
+            fillAmount += progressBarTickTime / duration;
+            progressBarFillImage.fillAmount = fillAmount;
+            yield return new WaitForSeconds(progressBarTickTime);
+        }
+        progressBarFillObj.gameObject.SetActive(false);
 
     }
 

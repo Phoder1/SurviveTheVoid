@@ -38,7 +38,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     public Vector2Int GetCurrentPosOnGrid => currentPosOnGrid;
     private EffectController airRegenCont;
     private EffectData airRegenData;
-
+    private GatherableTileSO tileBeingGathered;
     private DirectionEnum gridMovementDirection;
 
     public DirectionEnum GetMovementDirection => gridMovementDirection;
@@ -77,7 +77,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
             if (movementVector != Vector2.zero) {
                 Move(movementVector);
 
-                _playerGFX.Walk(true, movementVector);
+                _playerGFX.Walk(true, totalSpeed);
 
             }
             else {
@@ -99,8 +99,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
                 gatherButton = gatherWasPressed;
                 if (!gatherButton) {
                     if (gatherCoroutine != null) {
-                        StopCoroutine(gatherCoroutine);
-                        gatherCoroutine = null;
+                        CancelGathering();
                     }
                     closestTile = null;
                 }
@@ -108,6 +107,14 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
             gatherWasPressed = false;
             specialWasPressed = false;
         }
+    }
+
+    private void CancelGathering() {
+        StopCoroutine(gatherCoroutine);
+        gatherCoroutine = null;
+        SoundManager._instance.DisableLooping(tileBeingGathered.getGatheringSound);
+        UIManager._instance.CancelProgressBar();
+        tileBeingGathered = null;
     }
 
     private void CheckForTrees() {
@@ -144,8 +151,9 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
             destination.z = base.transform.position.z;
             float distance = Vector2.Distance(base.transform.position, destination);
             if (distance > InterractionDistance) {
-                _playerGFX.Walk(true, Vector3.ClampMagnitude((destination - base.transform.position).normalized * Time.deltaTime * baseSpeed * playerStats.GetSetMoveSpeed, distance));
-                Move(Vector3.ClampMagnitude((destination - base.transform.position).normalized * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue, distance));
+                Vector3 moveVector = Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue, distance);
+                _playerGFX.Walk(true, moveVector);
+                Move(moveVector);
             }
             else {
                 if (SpecialInteract) {
@@ -163,9 +171,18 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     }
     IEnumerator HarvestTile(TileHit tileHit) {
         if (tileHit.tile.GetTileAbst is GatherableTileSO gatherable) {
-            yield return new WaitForSeconds(gatherable.GetGatheringTime / gatheringSpeed.GetSetValue);
+            tileBeingGathered = gatherable;
+            float gatheringTime = gatherable.GetGatheringTime / gatheringSpeed.GetSetValue;
+            Vector2 tileWorldPos = gridManager.GridToWorldPosition(tileHit.gridPosition, TileMapLayer.Buildings, true);
+            Camera currentCamera = CameraController._instance.GetCurrentActiveCamera;
+            Vector2 tileScreenPos = currentCamera.WorldToScreenPoint(tileWorldPos);
+            UIManager._instance.StartProgressBar(tileScreenPos, gatheringTime);
+            SoundManager._instance.PlaySoundLooped(gatherable.getGatheringSound);
+            yield return new WaitForSeconds(gatheringTime);
             tileHit.tile.GatherInteraction(tileHit.gridPosition, TileMapLayer.Buildings);
+            SoundManager._instance.DisableLooping(gatherable.getGatheringSound);
             Debug.Log("TileHarvested");
+            tileBeingGathered = null;
         }
         gatherCoroutine = null;
         closestTile = null;
