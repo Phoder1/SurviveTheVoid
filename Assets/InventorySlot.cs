@@ -91,6 +91,9 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         }
         else if (!leftFrame) {
             SlotAction();
+        }else if (inventoryUI.IsDragginToTrash)
+        {
+            inventoryUI.RemoveItemViaTrashCan();
         }
         if (Vis != null) {
             Vis.ReturnToPos();

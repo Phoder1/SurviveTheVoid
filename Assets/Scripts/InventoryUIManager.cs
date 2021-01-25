@@ -205,9 +205,9 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
 
 
-    [HideInInspector]
+    
     public bool IsHoldingItem;
-    [HideInInspector]
+    
     public bool IsDragginToTrash;
 
 
@@ -337,4 +337,16 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
 
     #endregion
+
+
+    public void RemoveItemViaTrashCan()
+    {
+        int ChestId = (int)takingFrom - 1;
+        inventory.RemoveItemFromButton(takingFromIndex,ChestId);
+        RemoveTrashHighLight();
+        UpdatePlayerInventory();
+    }
+
+
+
 }

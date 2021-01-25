@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad4fb29703af1ac4e92edd55a5b9b4f5, type: 3}
+  m_Name: PalkoSoil
+  m_EditorClassIdentifier: 
+  itemID: 16
+  itemName: Palko Soil
+  maxStackSize: 20
+  description: Lime colored, very soft and fertile soil.
+  itemEnum: 0
+  sprite: {fileID: 21300000, guid: 8de85f6ae3872074fa78bd534ac84e3f, type: 3}
+  mainTileBase: {fileID: 11400000, guid: 3751b86d3c6ba954a99796b9771a9975, type: 2}
+  interactionType: 8
+  isSolid: 1

@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30b7874b8e5eab142871768f1d102839, type: 3}
+  m_Name: DeMeatTree
+  m_EditorClassIdentifier: 
+  itemID: 0
+  itemName: De Meat Tree
+  maxStackSize: 20
+  description: 
+  sprite: {fileID: 21300000, guid: a26e7d8d8cf9895489eb83714e4de580, type: 3}
+  mainTileBase: {fileID: 0}
+  isSolid: 1
+  isAirSource: 1
+  stages:
+  - expReward: 10
+    stageTile: {fileID: 11400000, guid: 4fd35b8bf76259d458270c6c1bea03d9, type: 2}
+    isGatherable: 0
+    destroyOnGather: 0
+    isSolid: 0
+    drops: []
+  - expReward: 20
+    stageTile: {fileID: 11400000, guid: c5f52df520a2d9341a95fd8636f3ec1e, type: 2}
+    isGatherable: 0
+    destroyOnGather: 0
+    isSolid: 1
+    drops: []
+  - expReward: 30
+    stageTile: {fileID: 11400000, guid: 1ff8a424ea0798245a8ffe78f27944d9, type: 2}
+    isGatherable: 1
+    destroyOnGather: 0
+    isSolid: 1
+    drops:
+    - item: {fileID: 11400000, guid: b5504b3b3f6cef540b7a82dfcea5739a, type: 2}
+      Chance: 1
+      minAmount: 1
+      maxAmount: 3
+    - item: {fileID: 11400000}
+      Chance: 0.2
+      minAmount: 1
+      maxAmount: 1
+  sourceTier: 0
+  gatherDurabilityCost: 1
+  gatheringSound: 0
+  toolType: 0
+  minGrowTime: 30
+  maxGrowTime: 90
+  gatheringTime: 4
