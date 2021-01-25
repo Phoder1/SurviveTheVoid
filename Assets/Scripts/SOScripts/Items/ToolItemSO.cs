@@ -12,7 +12,6 @@ public class ToolItemSO : ItemSO
     public ToolType GetToolType => toolType;
 
 
-
     [SerializeField]
     private int maxDurability;
     public int GetMaxDurability => maxDurability;
@@ -21,13 +20,14 @@ public class ToolItemSO : ItemSO
     [SerializeField]
     private int toolTier;
     public int GetToolTier => toolTier;
-
+    [SerializeField]
+    private int Tier;
     [SerializeField]
     private float speedPrecentage;
 
+    public float GetSpeedPrecentage => speedPrecentage;
     bool isActive = false;
-    public float GetPrecentage => speedPrecentage;
-
+    public int GetTier => Tier;
 
     public bool SetGetIsActive { set { if (isActive != value) isActive = value; } get => isActive; }
 }

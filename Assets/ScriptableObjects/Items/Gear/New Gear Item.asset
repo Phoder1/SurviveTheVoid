@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e76a88f55714548bb59252d769c07b, type: 3}
   m_Name: New Gear Item
   m_EditorClassIdentifier: 
-  itemID: 4
+  itemID: 32
   itemName: Hat
   maxStackSize: 1
   description: 
@@ -20,4 +20,7 @@ MonoBehaviour:
   equipType: 1
   maxDurability: 25
   gearTier: 0
-  effectDatas: []
+  equipstats:
+  - statType: 0
+    isPercentage: 0
+    amount: 0

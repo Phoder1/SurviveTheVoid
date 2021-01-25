@@ -33,6 +33,7 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     private void Start() {
         inventoryUI = InventoryUIManager._instance;
         Vis = gameObject.GetComponent<DragNDropVisual>();
+        SetToggleOutline(true);
     }
 
 
@@ -142,7 +143,7 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
     void SlotAction() {
         if (!inventoryUI.GetSetIsUiClosed && slotType == SlotChestType.Tools) {
-            equipManager.SetActiveStateTool(slotPosition, !equipManager.GetToolActive(equipManager.GetToolTypeByIndex(slotPosition)));
+            equipManager.SetActiveStateTool(equipManager.GetToolTypeByIndex(slotPosition), !equipManager.GetToolActive(equipManager.GetToolTypeByIndex(slotPosition)));
             SetToggleOutline(equipManager.GetToolActive(equipManager.GetToolTypeByIndex(slotPosition)));
         }
         else {
