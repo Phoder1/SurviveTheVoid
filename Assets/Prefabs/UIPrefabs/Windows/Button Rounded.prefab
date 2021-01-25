@@ -429,10 +429,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotType: 4
   slotPosition: 0
-  IsDraggingThis: 0
   highLightedSprite: {fileID: 5919547623676599459}
-  ItemSprite: {fileID: 5919547623773934812}
-  ItemAmount: {fileID: 8900935943094237893}
+  itemSprite: {fileID: 5919547623773934812}
+  defualtItemSprite: {fileID: 0}
+  itemAmount: {fileID: 8900935943094237893}
   NormalColor: {r: 1, g: 1, b: 1, a: 1}
   HighLightedColor: {r: 1, g: 1, b: 0.43137255, a: 1}
   toggleOutline: {fileID: 2493645904917273647}

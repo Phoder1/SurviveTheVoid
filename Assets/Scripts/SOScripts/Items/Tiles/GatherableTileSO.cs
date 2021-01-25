@@ -30,10 +30,14 @@ public class GrowthStage
 {
     [SerializeField] private float expReward;
     [SerializeField] private TileBase stageTile;
+    [SerializeField] private TileBase tileWhileGathered;
+    [SerializeField] private GameObject particlesWhileGathered;
     [SerializeField] private bool isGatherable, destroyOnGather, isSolid;
     [SerializeField] private Drop[] drops;
 
     public TileBase GetStageTile => stageTile;
+    public GameObject GetParticlesWhileGathered => particlesWhileGathered;
+    public TileBase GetTileWhileGathered => tileWhileGathered;
     public bool GetIsGatherable => isGatherable;
     public bool GetIsSolid => isSolid;
     public bool GetDestroyOnGather => destroyOnGather;
@@ -58,9 +62,28 @@ public class GatherableState : ITileState
     public TileSlot tileSlot;
     public TimeEvent eventInstance;
     public GatherableTileSO tile;
+    private GameObject particlesObject;
+    private readonly Vector3 particlesOffset = new Vector3(0, 2, 20);
+    private readonly Quaternion particlesRotation = Quaternion.Euler(-60, 0, 0);
     public int currentStageIndex = 0;
     public int StagesCount => tile.GetStages.Length;
+    private bool isBeingGathered;
     public bool reachedMaxStage => currentStageIndex >= StagesCount - 1;
+    public void SetIsBeingGatheredState(bool state, Vector2Int gridPos) {
+        if (isBeingGathered != state && currentStage.GetTileWhileGathered != null) {
+            isBeingGathered = state;
+            GridManager._instance.SetTile(tileSlot, gridPos, TileMapLayer.Buildings);
+            if (currentStage.GetParticlesWhileGathered != null) {
+                if (state) {
+                Vector3 position = GridManager._instance.GridToWorldPosition(gridPos, TileMapLayer.Buildings, true) + particlesOffset;
+                particlesObject = Object.Instantiate(currentStage.GetParticlesWhileGathered, position, particlesRotation);
+                }else if(particlesObject != null){
+                    Object.Destroy(particlesObject);
+                    particlesObject = null;
+                }
+            }
+        }
+    }
     private GrowthStage currentStage => tile.GetStages[currentStageIndex];
     private static EffectData expEffect = new EffectData(StatType.EXP, EffectType.OverTime, 10f, 1, 0.03f);
 
@@ -72,7 +95,7 @@ public class GatherableState : ITileState
     public TileBase GetMainTileBase {
         get {
             if (tile.GetStages != null)
-                return currentStage.GetStageTile;
+                return (isBeingGathered ? currentStage.GetTileWhileGathered : currentStage.GetStageTile);
             return tile.GetMainTileBase;
         }
 
@@ -103,7 +126,7 @@ public class GatherableState : ITileState
     public void GatherInteraction(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
         if (GetIsGatherable) {
             EffectController effectController = new EffectController(PlayerStats._instance.GetStat(StatType.EXP), 0);
-            expEffect.duration = currentStage.GetExpReward/expEffect.amount;
+            expEffect.duration = currentStage.GetExpReward / expEffect.amount;
             effectController.Begin(expEffect);
 
             Debug.Log("Tried gathering");
@@ -113,7 +136,7 @@ public class GatherableState : ITileState
                 currentStageIndex--;
                 if (!reachedMaxStage)
                     InitEvent(gridPosition, tilemapLayer);
-                GridManager._instance.SetTile(tileSlot, gridPosition, tilemapLayer, true);
+                SetIsBeingGatheredState(false, gridPosition);
             }
 
             Inventory inventory = Inventory.GetInstance;
@@ -129,6 +152,10 @@ public class GatherableState : ITileState
     private void Remove(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
         CancelEvent(gridPosition, tilemapLayer);
         GridManager._instance.SetTile(null, gridPosition, tilemapLayer, true);
+        if (particlesObject != null) {
+            Object.Destroy(particlesObject);
+            particlesObject = null;
+        }
     }
     public void CancelEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
         if (eventInstance != null)

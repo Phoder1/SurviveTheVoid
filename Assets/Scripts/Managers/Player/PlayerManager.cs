@@ -38,7 +38,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     public Vector2Int GetCurrentPosOnGrid => currentPosOnGrid;
     private EffectController airRegenCont;
     private EffectData airRegenData;
-    private GatherableTileSO tileBeingGathered;
+    private TileHit tileBeingGathered;
     private DirectionEnum gridMovementDirection;
     public PlayerGFX GetPlayerGFX {
 
@@ -123,9 +123,11 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     private void CancelGathering() {
         StopCoroutine(gatherCoroutine);
         gatherCoroutine = null;
-        SoundManager._instance.DisableLooping(tileBeingGathered.getGatheringSound);
+        SoundManager._instance.DisableLooping(((GatherableTileSO)tileBeingGathered.tile.GetTileAbst).getGatheringSound);
         UIManager._instance.CancelProgressBar();
+        ((GatherableState)tileBeingGathered.tile.tileState).SetIsBeingGatheredState(false, tileBeingGathered.gridPosition);
         tileBeingGathered = null;
+
     }
 
     private void CheckForTrees() {
@@ -182,8 +184,9 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     }
     IEnumerator HarvestTile(TileHit tileHit) {
         if (tileHit.tile.GetTileAbst is GatherableTileSO gatherable) {
+            ((GatherableState)tileHit.tile.tileState).SetIsBeingGatheredState(true, tileHit.gridPosition);
             UIManager._instance.CancelProgressBar();
-            tileBeingGathered = gatherable;
+            tileBeingGathered = tileHit;
             float gatheringTime = gatherable.GetGatheringTime / (gatheringSpeed.GetSetValue * equipManager.GetGatheringSpeedFromTool(gatherable.GetToolType));
             Vector2 tileWorldPos = gridManager.GridToWorldPosition(tileHit.gridPosition, TileMapLayer.Buildings, true);
             Camera currentCamera = CameraController._instance.GetCurrentActiveCamera;

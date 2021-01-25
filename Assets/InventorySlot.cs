@@ -20,8 +20,9 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     [Min(0)]
     public int slotPosition;
     [SerializeField] private Image highLightedSprite;
-    [SerializeField] private Image ItemSprite;
-    [SerializeField] private TextMeshProUGUI ItemAmount;
+    [SerializeField] private Image itemSprite;
+    [SerializeField] private Image defualtItemSprite;
+    [SerializeField] private TextMeshProUGUI itemAmount;
     [SerializeField] private Color NormalColor;
     [SerializeField] private Color HighLightedColor;
     [SerializeField] private GameObject toggleOutline;
@@ -29,6 +30,7 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     private EquipManager equipManager = EquipManager.GetInstance;
     private InventoryUIManager inventoryUI;
     private bool leftFrame;
+    
     private DragNDropVisual Vis;
     private void Start() {
         inventoryUI = InventoryUIManager._instance;
@@ -85,10 +87,7 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
     public void OnPointerUp(PointerEventData eventData) {
         if (inventoryUI.takingFromIndex >= 0 && inventoryUI.droppingAtIndex >= 0) {
-            if (inventoryUI.TrySwapItems()) {
-                ResetSlot();
-            }
-
+            inventoryUI.TrySwapItems();
         }
         else if (!leftFrame) {
             SlotAction();
@@ -102,6 +101,7 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
         DeHighLightSlot();
         ResetDrag();
+
     }
 
 
@@ -113,18 +113,11 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     }
 
 
-    public void UpdateSlot(ItemSlot Item) {
-        ItemSprite.gameObject.SetActive(true);
-        ItemSprite.sprite = Item.item.getsprite;
-        if (ItemAmount != null)
-            ItemAmount.text = (Item.amount <= 1 ? "" : Item.amount.ToString());
+    public void UpdateSlot(ItemSlot item) {
+        SetItemSprite(true, item);
     }
     public void EmptySlot() {
-        ItemSprite.gameObject.SetActive(false);
-        ItemSprite.sprite = null;
-
-        if (ItemAmount != null)
-            ItemAmount.text = "";
+        SetItemSprite(false, null);
     }
 
 
@@ -154,7 +147,19 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         if (toggleOutline != null)
             toggleOutline.SetActive(state);
     }
-    private void ResetSlot() {
-
+    private void SetItemSprite(bool state, ItemSlot item) {
+        itemSprite.gameObject.SetActive(state);
+        if (defualtItemSprite)
+            defualtItemSprite.gameObject.SetActive(!state);
+        if (state) {
+            itemSprite.sprite = item.item.getsprite;
+            if (itemAmount != null)
+                itemAmount.text = (item.amount <= 1 ? "" : item.amount.ToString());
+        }
+        else {
+            itemSprite.sprite = null;
+            if (itemAmount != null)
+                itemAmount.text = "";
+        }
     }
 }

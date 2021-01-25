@@ -30,14 +30,12 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     {
         Vector2 size = joystickSize;
         Vector2 tempVector = eventData.position - joystickPosition;
-        Debug.Log("JS size: " + size);
         
         tempVector = Vector2.ClampMagnitude(tempVector, size.x / 2);
         if (tempVector.magnitude <= minimumLength * (size.x / 2))
             tempVector = Vector2.zero;
         joystickKnob.rectTransform.position = joystickPosition + tempVector;
         tempVector = tempVector / (size.x / 2);
-        Debug.Log("JS pos: " + joystickPosition + ", event pos: " + eventData.position + ", vector: " + tempVector);
         joystickVector = tempVector;
 
         //float joystickBGx = joystickBG.rectTransform.sizeDelta.x;
