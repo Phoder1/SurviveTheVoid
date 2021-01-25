@@ -10,18 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0385232e857e8e446aa3c8cacfcbfb44, type: 3}
-  m_Name: RecipeSweatMeat
+  m_Name: RecipeWoodAxe
   m_EditorClassIdentifier: 
   ItemCostArr:
-  - item: {fileID: 11400000, guid: 57ced865777850e4f909fc1d38ab0cd9, type: 2}
-    amount: 1
+  - item: {fileID: 11400000, guid: 6e3627ca283f52b4499153bb2af26248, type: 2}
+    amount: 5
   - item: {fileID: 11400000, guid: 15f6588093b9bde479796bc44fb85fd4, type: 2}
-    amount: 1
+    amount: 2
   outcomeItem:
-    item: {fileID: 11400000, guid: f41038be2f5eef64fa2cd8c9911af922, type: 2}
+    item: {fileID: 11400000, guid: deb12be7599554b468aea5d823a6af09, type: 2}
     amount: 1
   tier: 0
-  section: 5
+  section: 4
   isUnlocked: 1
-  processorType: 1
-  CraftingTime: 5
+  processorType: 0
+  CraftingTime: 20
+  expReward: 50

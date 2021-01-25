@@ -54,24 +54,31 @@ MonoBehaviour:
   - audioSource: {fileID: 1105160805761189472}
     sound: 0
     VolumeGroup: 0
+    defaultVolume: 0
   - audioSource: {fileID: 1105160806830723986}
     sound: 1
     VolumeGroup: 1
+    defaultVolume: 0
   - audioSource: {fileID: 1105160805916512044}
     sound: 2
     VolumeGroup: 1
+    defaultVolume: 0
   - audioSource: {fileID: 1105160806434763123}
     sound: 3
     VolumeGroup: 1
+    defaultVolume: 0
   - audioSource: {fileID: 1105160806158470207}
     sound: 4
     VolumeGroup: 1
+    defaultVolume: 0
   - audioSource: {fileID: 1105160806154153857}
     sound: 5
     VolumeGroup: 1
+    defaultVolume: 0
   - audioSource: {fileID: 1105160806426443985}
     sound: 6
     VolumeGroup: 1
+    defaultVolume: 0
 --- !u!1 &1105160805761189475
 GameObject:
   m_ObjectHideFlags: 0
@@ -1095,6 +1102,26 @@ MonoBehaviour:
   buildingsGeneration:
   - tile: {fileID: 11400000, guid: 7e65aa60f26158b4b996e206110fc114, type: 2}
     chance: 0.01
+    distance: 0
+    spread: 0
+    global: 1
+  - tile: {fileID: 11400000, guid: cc01397123cb8d848999e88d4a7801c1, type: 2}
+    chance: 0.01
+    distance: 0
+    spread: 0
+    global: 1
+  - tile: {fileID: 11400000, guid: 4beb4737faec12442bb67d0b68f3f4c8, type: 2}
+    chance: 0.001
+    distance: 0
+    spread: 0
+    global: 1
+  - tile: {fileID: 11400000, guid: 8e98db741a88b584991dbf067aca19b6, type: 2}
+    chance: 0.001
+    distance: 0
+    spread: 0
+    global: 1
+  - tile: {fileID: 11400000, guid: 86404689dc27d044ea3fe5654d15f743, type: 2}
+    chance: 0.002
     distance: 0
     spread: 0
     global: 1

@@ -16,19 +16,19 @@ MonoBehaviour:
   itemName: Cooked Meat
   maxStackSize: 20
   description: 
-  sprite: {fileID: 21300000, guid: 1d9610081e7a2914488c88a72b0ee1e8, type: 3}
+  sprite: {fileID: 21300000, guid: afcd5a9a38ab784498c8b9676c76e9b9, type: 3}
   Effects:
   - effectStatType: 1
     effectType: 2
-    isRelative: 0
-    isPrecentage: 0
+    inPercentage: 0
+    isRelativeToMax: 0
     amount: 100
     duration: 30
     tickTime: 0.5
   - effectStatType: 2
     effectType: 0
-    isRelative: 0
-    isPrecentage: 0
+    inPercentage: 0
+    isRelativeToMax: 0
     amount: 100
     duration: 30
     tickTime: 1
