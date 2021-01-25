@@ -34,6 +34,7 @@ public class EffectHandler : MonoSingleton<EffectHandler>
         EffectData sleepEffect = new EffectData(StatType.Sleep, EffectType.OverTime, -sleepDropAmount, Mathf.Infinity, 1f, false, false);
 
 
+
         yield return new WaitForSeconds(cooldownBeforeStart);
 
 
