@@ -16,17 +16,22 @@ public class EffectHandler : MonoSingleton<EffectHandler>
         StartCoroutine(SurvivalEffects());
     }
 
-
-
-
+    [SerializeField]
+    float hungerDropAmount;
+    [SerializeField]
+    float WaterDropAmount;
+    [SerializeField]
+    float airDropAmount;
+    [SerializeField]
+    float sleepDropAmount;
     IEnumerator SurvivalEffects() {
 
         //Declartion of Effects
 
-        EffectData hungerEffect = new EffectData( StatType.Food, EffectType.OverTime, -0.5f, Mathf.Infinity, 1f, false, false );
-        EffectData thirstEffect =  new EffectData(StatType.Water, EffectType.OverTime, -0.5f, Mathf.Infinity, 1f, false, false);
-        EffectData oxygenEffect =  new EffectData(StatType.Air, EffectType.OverTime, -0.5f, Mathf.Infinity, 1f, false, false);
-        EffectData sleepEffect = new EffectData(StatType.Sleep, EffectType.OverTime, -0.5f, Mathf.Infinity, 1f, false, false);
+        EffectData hungerEffect = new EffectData( StatType.Food, EffectType.OverTime, -hungerDropAmount, Mathf.Infinity, 1f, false, false );
+        EffectData thirstEffect =  new EffectData(StatType.Water, EffectType.OverTime, -WaterDropAmount, Mathf.Infinity, 1f, false, false);
+        EffectData oxygenEffect =  new EffectData(StatType.Air, EffectType.OverTime, -airDropAmount, Mathf.Infinity, 1f, false, false);
+        EffectData sleepEffect = new EffectData(StatType.Sleep, EffectType.OverTime, -sleepDropAmount, Mathf.Infinity, 1f, false, false);
 
 
         yield return new WaitForSeconds(cooldownBeforeStart);

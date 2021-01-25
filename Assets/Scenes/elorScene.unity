@@ -370,6 +370,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1983083227088785219, guid: ee73434160860324a921a0989281f1ff,
+        type: 3}
+      propertyPath: airDropAmount
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1983083227088785219, guid: ee73434160860324a921a0989281f1ff,
+        type: 3}
+      propertyPath: WaterDropAmount
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1983083227088785219, guid: ee73434160860324a921a0989281f1ff,
+        type: 3}
+      propertyPath: sleepDropAmount
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1983083227088785219, guid: ee73434160860324a921a0989281f1ff,
+        type: 3}
+      propertyPath: hungerDropAmount
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 5830525296113187285, guid: ee73434160860324a921a0989281f1ff,
         type: 3}
       propertyPath: m_Name
