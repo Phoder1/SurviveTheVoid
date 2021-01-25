@@ -72,8 +72,4 @@ public class EquipSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         transform.GetComponent<Image>().color = Color.white;
 
     }
-
-
-
-
 }

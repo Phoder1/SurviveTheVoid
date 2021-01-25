@@ -166,13 +166,4 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         inventoryUI.OnPressedInventoryButton();
          }
     }
-
-
-
-
-
-
-
-
-
 }
