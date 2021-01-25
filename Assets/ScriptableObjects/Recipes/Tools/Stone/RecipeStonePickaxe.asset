@@ -10,15 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0385232e857e8e446aa3c8cacfcbfb44, type: 3}
-  m_Name: RecipeStoneAxe 1
+  m_Name: RecipeStonePickAxe
   m_EditorClassIdentifier: 
-  ItemCostArr: []
+  ItemCostArr:
+  - item: {fileID: 11400000, guid: f89a2a83765e2a147a87ce718623f51f, type: 2}
+    amount: 5
+  - item: {fileID: 11400000, guid: 15f6588093b9bde479796bc44fb85fd4, type: 2}
+    amount: 2
   outcomeItem:
-    item: {fileID: 0}
-    amount: 0
+    item: {fileID: 11400000, guid: f776d80c3ab06204a9b95af9ed7be092, type: 2}
+    amount: 1
   tier: 0
   section: 4
-  isUnlocked: 0
+  isUnlocked: 1
   processorType: 0
   CraftingTime: 20
   expReward: 100

@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0385232e857e8e446aa3c8cacfcbfb44, type: 3}
-  m_Name: RecipeStoneHoe
+  m_Name: RecipeUranPickAxe
   m_EditorClassIdentifier: 
   ItemCostArr:
-  - item: {fileID: 11400000, guid: f89a2a83765e2a147a87ce718623f51f, type: 2}
-    amount: 3
+  - item: {fileID: 11400000, guid: 9d9e62851fc766d4c8998b400dd8868d, type: 2}
+    amount: 5
   - item: {fileID: 11400000, guid: 15f6588093b9bde479796bc44fb85fd4, type: 2}
     amount: 2
   outcomeItem:
-    item: {fileID: 11400000, guid: db8fbb28cf4ffc243a83e57d153b1dee, type: 2}
+    item: {fileID: 11400000, guid: 498ae706bc28af24aa15cd44a11e3072, type: 2}
     amount: 1
   tier: 0
   section: 4
   isUnlocked: 1
   processorType: 0
-  CraftingTime: 20
-  expReward: 100
+  CraftingTime: 30
+  expReward: 150
