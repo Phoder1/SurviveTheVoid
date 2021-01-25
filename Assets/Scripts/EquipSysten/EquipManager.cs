@@ -333,7 +333,7 @@
         return toolSlots[index].GetSetDurability;
 
     }
-    public void SetAmountOfToolDurability(ToolType type, int amount) {
+    public void LowerAmountOfToolDurability(ToolType type, int amount) {
         equipSlotCache = null;
 
         if (toolSlots[GetToolSlotIndex(type)] == null || amount == 0)
@@ -592,16 +592,16 @@
         (toolSlots[buttonID].item as ToolItemSO).SetGetIsActive = state;
         UnityEngine.Debug.Log((toolSlots[buttonID].item as ToolItemSO).SetGetIsActive);
     }
-    public float? GetGatheringSpeedFromTool(ToolType tool) {
+    public float GetGatheringSpeedFromTool(ToolType tool) {
         toolCache = null;
 
         if (toolSlots[GetToolSlotIndex(tool)] == null) {
-            return null;
+            return 1;
         }
 
         toolCache = toolSlots[GetToolSlotIndex(tool)].item as ToolItemSO;
 
-        return 1 + (toolCache.GetPrecentage) / 100;
+        return 1 + (toolCache.GetSpeedPrecentage) / 100;
         // GetTier 
 
     }

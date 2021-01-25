@@ -13,10 +13,6 @@ public class ToolItemSO : ItemSO
 
 
     [SerializeField]
-    private float gatheringSpeed;
-    public float GetGatheringSpeed => gatheringSpeed;
-
-    [SerializeField]
     private int maxDurability;
     public int GetMaxDurability => maxDurability;
 
@@ -27,10 +23,10 @@ public class ToolItemSO : ItemSO
     [SerializeField]
     private int Tier;
     [SerializeField]
-    private float Precentage;
+    private float speedPrecentage;
 
+    public float GetSpeedPrecentage => speedPrecentage;
     bool isActive = false;
-    public float GetPrecentage => Precentage;
     public int GetTier => Tier;
 
     public bool SetGetIsActive { set { if (isActive != value) isActive = value; } get => isActive; }

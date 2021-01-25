@@ -172,7 +172,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         if (tileHit.tile.GetTileAbst is GatherableTileSO gatherable) {
             UIManager._instance.CancelProgressBar();
             tileBeingGathered = gatherable;
-            float gatheringTime = gatherable.GetGatheringTime / gatheringSpeed.GetSetValue;
+            float gatheringTime = gatherable.GetGatheringTime / (gatheringSpeed.GetSetValue * equipManager.GetGatheringSpeedFromTool(gatherable.GetToolType));
             Vector2 tileWorldPos = gridManager.GridToWorldPosition(tileHit.gridPosition, TileMapLayer.Buildings, true);
             Camera currentCamera = CameraController._instance.GetCurrentActiveCamera;
             Vector2 tileScreenPos = currentCamera.WorldToScreenPoint(tileWorldPos);
@@ -183,9 +183,9 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
             yield return new WaitForSeconds(gatheringTime);
 
             tileHit.tile.GatherInteraction(tileHit.gridPosition, TileMapLayer.Buildings);
-            int? durability;
-            if ((durability = equipManager.GetToolDurability(gatherable.GetToolType)) != null)
-                equipManager.SetAmountOfToolDurability(gatherable.GetToolType, (int)durability - gatherable.GetGatherDurabilityCost);
+       
+            if (( equipManager.GetToolDurability(gatherable.GetToolType)) != null )
+                equipManager.LowerAmountOfToolDurability(gatherable.GetToolType, gatherable.GetGatherDurabilityCost);
             SoundManager._instance.DisableLooping(gatherable.getGatheringSound);
             Debug.Log("TileHarvested");
             tileBeingGathered = null;
@@ -232,10 +232,15 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         //transform.position = startPositionOfPlayer;
     }
     public IEnumerator DeathTransition(float extraDelay) {
-        yield return new WaitForSeconds(_playerGFX.GetDeathAnimLength + extraDelay);
 
+        
+        yield return new WaitForSeconds(_playerGFX.GetDeathAnimLength);
 
         _playerGFX.Reborn();
+
+        yield return new WaitForSeconds(extraDelay);
+
+       
 
         transform.position = startPositionOfPlayer;
         playerIsDead = false;
