@@ -15314,7 +15314,7 @@ MonoBehaviour:
   - {fileID: 6140556874787960919}
   SlotColor: {r: 0.74509805, g: 0.3882353, b: 0.08627451, a: 1}
   TrashCanBackGround: {fileID: 7245347438909543730}
-  IsDragging: 0
+  isDragging: 0
   takingFrom: 0
   takingFromIndex: -1
   droppingAt: 0
@@ -17925,6 +17925,11 @@ PrefabInstance:
       propertyPath: slotPosition
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 9219356730211477370, guid: 2a63511ef5012144d9117b0e49853ec1,
+        type: 3}
+      propertyPath: toggleOutline
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a63511ef5012144d9117b0e49853ec1, type: 3}
 --- !u!114 &8260483169759673475 stripped
@@ -18490,6 +18495,11 @@ PrefabInstance:
         type: 3}
       propertyPath: slotPosition
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 9219356730211477370, guid: 2a63511ef5012144d9117b0e49853ec1,
+        type: 3}
+      propertyPath: toggleOutline
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a63511ef5012144d9117b0e49853ec1, type: 3}
@@ -19353,6 +19363,11 @@ PrefabInstance:
         type: 3}
       propertyPath: slotPosition
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9219356730211477370, guid: 2a63511ef5012144d9117b0e49853ec1,
+        type: 3}
+      propertyPath: toggleOutline
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 9219356730211477370, guid: 2a63511ef5012144d9117b0e49853ec1,
         type: 3}
@@ -21076,6 +21091,11 @@ PrefabInstance:
       propertyPath: slotType
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 9219356730211477370, guid: 2a63511ef5012144d9117b0e49853ec1,
+        type: 3}
+      propertyPath: toggleOutline
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a63511ef5012144d9117b0e49853ec1, type: 3}
 --- !u!1 &4589610655571369495 stripped
@@ -21248,6 +21268,11 @@ PrefabInstance:
         type: 3}
       propertyPath: slotPosition
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9219356730211477370, guid: 2a63511ef5012144d9117b0e49853ec1,
+        type: 3}
+      propertyPath: toggleOutline
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a63511ef5012144d9117b0e49853ec1, type: 3}
