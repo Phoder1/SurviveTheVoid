@@ -17,7 +17,6 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     [SerializeField] int interactionLookRange = 5, airLookRange;
     [SerializeField] float InterractionDistance;
 
-
     TileHit closestTile;
 
     public bool SpecialInterracted;
@@ -32,7 +31,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     Coroutine gatherCoroutine = null;
     private Vector2Int lastCheckPosition = new Vector2Int(int.MaxValue, int.MaxValue);
     private float lastTreeCheckTime = 0;
-    [SerializeField] float animDelay;
+ 
     private const float treeCheckInterval = 0.5f;
     private Vector2Int currentPosOnGrid;
     private Vector3 startPositionOfPlayer;
@@ -41,6 +40,18 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     private EffectData airRegenData;
     private GatherableTileSO tileBeingGathered;
     private DirectionEnum gridMovementDirection;
+    public PlayerGFX GetPlayerGFX {
+
+        get
+        {
+            if (_playerGFX == null)
+            {
+                _playerGFX = GetComponent<PlayerGFX>();
+            }
+            return _playerGFX;
+        }
+    
+    }
 
     public DirectionEnum GetMovementDirection => gridMovementDirection;
     bool playerIsDead = false;
@@ -60,6 +71,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         airRegenData = new EffectData(StatType.Air, EffectType.OverTime, 10f, Mathf.Infinity, 0.5f, false, false);
         startPositionOfPlayer = base.transform.position;
         GameManager.DeathEvent += DeathReset;
+        GameManager.RespawnEvent += RespawnReset;
     }
     private void Update() {
         if (!playerIsDead) {
@@ -222,32 +234,17 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
 
 
 
-    public void DeathReset() {
+    private void DeathReset() {
         playerIsDead = true;
         airRegenCont?.Stop();
-        //Start death animation
         _playerGFX.Death();
-        //Death screen transition
-        StartCoroutine(DeathTransition(animDelay));
-        //transform.position = startPositionOfPlayer;
     }
-    public IEnumerator DeathTransition(float extraDelay) {
-
-      //  Debug.Log("Start");
-        yield return new WaitForSeconds(_playerGFX.GetDeathAnimLength);
-
-       // Debug.Log("Player Died");
-        UIManager._instance.BlackPanel(true);
-
-        yield return new WaitForSeconds(extraDelay);
-
+  
+    private void RespawnReset() {
         _playerGFX.Reborn();
-      //  Debug.Log("Player Reborn");
-       
-
+        //  Debug.Log("Player Reborn");
         transform.position = startPositionOfPlayer;
         playerIsDead = false;
-        UIManager._instance.BlackPanel(false);
     }
 
     public class GatheringScanChecker : IChecker

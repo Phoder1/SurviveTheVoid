@@ -48,7 +48,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         StatsDict = new Dictionary<StatType, Stat>();
         FillDictionary();
         AddReactions();
-        GameManager.DeathEvent += DeathReset;
+        GameManager.RespawnEvent += DeathReset;
         ResetStats();
 
     }
@@ -62,10 +62,10 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         Stat maxStat;
         //HP
         maxStat = AddToDict(StatType.MaxHP, 100);
-        AddToDict(StatType.HP, 50, maxStat);
+        AddToDict(StatType.HP, 2, maxStat);
         //Food
         maxStat = AddToDict(StatType.MaxFood, 100);
-        AddToDict(StatType.Food, 50, maxStat);
+        AddToDict(StatType.Food, 20, maxStat);
         //Water
         maxStat = AddToDict(StatType.MaxWater, 100);
         AddToDict(StatType.Water, 100, maxStat);
