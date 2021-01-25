@@ -17,12 +17,15 @@ public class BuildingState : StateBase
     int amountOfCurrentItem;
 
     public BuildingState() {
-        amountOfCurrentItem = 0;
-
+        ResetParam();
            gridManager = GridManager._instance; 
     }
 
-
+     void ResetParam() {
+        currentTileHit = null;
+        amountOfCurrentItem = 0;
+        tileSlotCache = null;
+    }
     public override void ButtonA() {
         Debug.Log("BuildingState");
         PressedConfirmBuildingButton();
@@ -41,18 +44,12 @@ public class BuildingState : StateBase
                 if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject() || (currentTileHit != null && currentTileHit.tile == null))
                     return;
 
-                PointerEventData ped = new PointerEventData(null);
-                ped.position = Input.GetTouch(0).position;
-                List<RaycastResult> results = new List<RaycastResult>();
-                GR.Raycast(ped, results);
-                if (results.Count == 0)
-                {
-
+           
                 touchPosition = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position);
 
 
                 CheckPosition(touchPosition);
-                }
+                
                 break;
         }
     }
@@ -178,8 +175,8 @@ public class BuildingState : StateBase
     public bool GetIsBuildingAttached => isBuildingAttached;
 
     public void ResetBeforeChangeStates() {
-
-        RemovePreviousTile();
+        ResetParam();
+       RemovePreviousTile();
     }
     public override void MousePos() {
         CheckPosition(CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(Input.mousePosition));

@@ -404,7 +404,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -594,6 +594,16 @@ PrefabInstance:
       propertyPath: isInventoryUIClose
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6963315610375024728, guid: 3f0f2149cec67a94683c854c627d510f,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -313.5996
+      objectReference: {fileID: 0}
+    - target: {fileID: 6963315610670373513, guid: 3f0f2149cec67a94683c854c627d510f,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -47.299805
+      objectReference: {fileID: 0}
     - target: {fileID: 6963315611653940984, guid: 3f0f2149cec67a94683c854c627d510f,
         type: 3}
       propertyPath: m_Name
@@ -658,6 +668,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6963315611945314363, guid: 3f0f2149cec67a94683c854c627d510f,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -213.90039
+      objectReference: {fileID: 0}
+    - target: {fileID: 6963315611945314363, guid: 3f0f2149cec67a94683c854c627d510f,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 161.3999
       objectReference: {fileID: 0}
     - target: {fileID: 7216058517122300852, guid: 3f0f2149cec67a94683c854c627d510f,
         type: 3}

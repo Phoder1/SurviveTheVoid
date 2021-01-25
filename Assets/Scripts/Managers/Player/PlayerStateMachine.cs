@@ -41,7 +41,6 @@ public class PlayerStateMachine
                 InputManager.SetInputState = stateBases[1];
                 CameraController._instance.GetSetIsZoomedIn = true;
                 break;
-
             case InputState.FightState:
                 InputManager.SetInputState = stateBases[2];
                 break;
