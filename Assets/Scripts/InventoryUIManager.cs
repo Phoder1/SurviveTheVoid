@@ -18,6 +18,15 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     public Color SlotColor;
     public Image TrashCanBackGround;
     public bool IsDragging;
+    private bool isUiOpen;
+    public bool GetSetIsUiClosed { 
+        get => isUiOpen; 
+        set {
+            isUiOpen = value;
+            if(isUiOpen)
+                UpdateInventoryToUI();
+        } 
+    }
     public override void Init()
     {
         inventory = Inventory.GetInstance;
@@ -249,19 +258,22 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
 
 
-    public void SwapItems()
+    public bool TrySwapItems()
     {
+        
         int FirstChestID = ((int)takingFrom - 1);
         int SecondChestID = ((int)droppingAt - 1);
 
         ItemSlot DraggedTemp = inventory.GetItemFromInventoryButton(FirstChestID, takingFromIndex);
         ItemSlot DroppedTemp = inventory.GetItemFromInventoryButton(SecondChestID, droppingAtIndex);
-        if (CanEquipOnCurrentInventory(takingFrom, droppingAt, DraggedTemp, DroppedTemp, takingFromIndex, droppingAtIndex))
+        bool swapable = CanEquipOnCurrentInventory(takingFrom, droppingAt, DraggedTemp, DroppedTemp, takingFromIndex, droppingAtIndex) 
+            && CanEquipOnCurrentInventory(droppingAt, takingFrom, DroppedTemp, DraggedTemp, droppingAtIndex, takingFromIndex);
+        if (swapable)
         {
             inventory.ChangeBetweenItems(FirstChestID, SecondChestID, takingFromIndex, droppingAtIndex);
-
         }
         UpdatePlayerInventory();
+        return swapable;
     }
 
     public void UpdatePlayerInventory()
@@ -298,13 +310,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
             {
 
 
-                if (EquipManager.GetInstance.CheckEquip(Dragged, draggedSlot, (int)fromChest-1, DropSlot, (int)toChest-1))
-                {
-                    return true;
-                }
-
-
-                return false;
+                return EquipManager.GetInstance.CheckEquip(Dragged, draggedSlot, (int)fromChest - 1, DropSlot, (int)toChest - 1);
             }
             else
             {
@@ -313,7 +319,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         }
         else if(toChest == SlotChestTypes.Tools)
         {
-            if (EquipManager.GetInstance.CheckEquip(Dragged, draggedSlot, (int)fromChest - 1, DropSlot, (int)toChest - 1))
+            if (EquipManager.GetInstance.CheckEquip(Dragged, draggedSlot, (int)fromChest, DropSlot, (int)toChest))
             {
                 return true;
             }
