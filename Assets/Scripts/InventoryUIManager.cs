@@ -344,6 +344,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         int ChestId = (int)takingFrom - 1;
         inventory.RemoveItemFromButton(takingFromIndex,ChestId);
         RemoveTrashHighLight();
+        UpdatePlayerInventory();
     }
 
 
