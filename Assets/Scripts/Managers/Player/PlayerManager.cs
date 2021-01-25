@@ -252,7 +252,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         public bool CheckTile(TileSlot tile) {
             EquipManager equipManager = EquipManager.GetInstance;
             if (tile.GetTileAbst is GatherableTileSO gatherable) {
-                return (equipManager.GetToolActive(gatherable.GetToolType) && gatherable.GetSourceTier <= equipManager.GetTierByEnum(gatherable.GetToolType));
+                return (equipManager.GetToolActive(gatherable.GetToolType) && gatherable.GetSourceTier <= equipManager.GetTierByEnum(gatherable.GetToolType) && tile.IsGatherable);
             }
             return false;
         }
