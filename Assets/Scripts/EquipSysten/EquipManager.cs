@@ -1,4 +1,6 @@
-﻿public class EquipManager
+﻿using UnityEngine.UIElements.Experimental;
+
+public class EquipManager
 {
     Inventory inventory;
     PlayerStats playerStats;
@@ -24,6 +26,8 @@
     /// 4 Shoes
     /// </summary>
 
+
+    bool[] toolsActive;
     ItemSlot[] toolSlots;
     /// <summary>
     /// 0 Axe 
@@ -54,16 +58,24 @@
             for (int i = 0; i < gearSlots.Length; i++) {
                 if (gearSlots[i] != null)
                     UnEquipItem(gearSlots[i]);
-
+               
                 toolSlots[i] = null;
             }
         }
 
 
-
         inventory = Inventory.GetInstance;
         gearSlots = inventory.GetInventoryFromDictionary(2);
         toolSlots = inventory.GetInventoryFromDictionary(3);
+
+
+        if (toolsActive== null)
+            toolsActive = new bool[toolSlots.Length];
+
+        for (int i = 0; i < toolsActive.Length; i++)
+            toolsActive[i] = true;
+
+
         equipSlotCache = null;
         gearCache = null;
         toolCache = null;
@@ -459,25 +471,11 @@
 
     #endregion
     #region Tool's Activity
-    public bool GetToolActive(ToolType type) {
-        toolCache = null;
-        if (toolSlots[GetToolSlotIndex(type)] == null)
-            return false;
-
-
-        toolCache = toolSlots[GetToolSlotIndex(type)].item as ToolItemSO;
-        if (toolCache == null)
-            return false;
-
-        return toolCache.SetGetIsActive;
-    }
-    public void SetActiveStateTool(int buttonID, bool state) {
-
-        if (buttonID < 0 || buttonID > toolSlots.Length - 1 || toolSlots[buttonID] == null)
-            return;
-
-        (toolSlots[buttonID].item as ToolItemSO).SetGetIsActive = state;
-        UnityEngine.Debug.Log((toolSlots[buttonID].item as ToolItemSO).SetGetIsActive);
+    public bool GetToolActive(ToolType type) => toolsActive[GetToolSlotIndex(type)];
+    
+    public void SetActiveStateTool(ToolType type, bool state) {
+        if (toolsActive[GetToolSlotIndex(type)] != state)
+               toolsActive[GetToolSlotIndex(type)] = state;
     }
     public float GetGatheringSpeedFromTool(ToolType tool) {
         toolCache = null;

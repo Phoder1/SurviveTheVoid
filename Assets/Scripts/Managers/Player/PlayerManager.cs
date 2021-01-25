@@ -233,18 +233,21 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     }
     public IEnumerator DeathTransition(float extraDelay) {
 
-        
+      //  Debug.Log("Start");
         yield return new WaitForSeconds(_playerGFX.GetDeathAnimLength);
 
-        _playerGFX.Reborn();
+       // Debug.Log("Player Died");
+        UIManager._instance.BlackPanel(true);
 
         yield return new WaitForSeconds(extraDelay);
 
+        _playerGFX.Reborn();
+      //  Debug.Log("Player Reborn");
        
 
         transform.position = startPositionOfPlayer;
         playerIsDead = false;
-
+        UIManager._instance.BlackPanel(false);
     }
 
     public class GatheringScanChecker : IChecker

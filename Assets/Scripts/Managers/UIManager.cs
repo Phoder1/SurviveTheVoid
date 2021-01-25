@@ -85,10 +85,6 @@ public class UIManager : MonoSingleton<UIManager>
             ShowCraftingTimer(craftingManager.CurrentProcessTile.ItemsCrafted, craftingManager.CurrentProcessTile.amount, craftingManager.CurrentProcessTile.CraftingTimeRemaining);
             //ShowTimeAndCollectable(craftingManager.CurrentProcessTile.ItemsCrafted, craftingManager.CurrentProcessTile.amount, craftingManager.CurrentProcessTile.CraftingTimeRemaining);
         }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            BlackPanel(true);
-        }
     }
 
     public void StartProgressBar(Vector2 screenPosition, float duration) {
@@ -244,25 +240,22 @@ public class UIManager : MonoSingleton<UIManager>
     }
    
     IEnumerator DeathScreen() {
-        float timerOfDeathScreen = 3f;
+        float timerOfDeathScreen = 1f;
         float startingTime = Time.time;
-        float alphaSpeed = blackPanelImage.color.a;
-        
+        float alphaSpeed = 0;
         while (Time.time< startingTime+timerOfDeathScreen)
         {
-            alphaSpeed += 5f;
+            alphaSpeed += 2f* Time.deltaTime;
+            blackPanelImage.color = new Color(blackPanelImage.color.r, blackPanelImage.color.g, blackPanelImage.color.b, alphaSpeed); ;
             yield return null;
         }
         startingTime = Time.time;
         while (Time.time < startingTime + timerOfDeathScreen)
         {
-            alphaSpeed -= 5f;
+            alphaSpeed -= 5f * Time.deltaTime;
+            blackPanelImage.color = new Color(blackPanelImage.color.r, blackPanelImage.color.g, blackPanelImage.color.b, alphaSpeed); ;
             yield return null;
         }
-
-
-
-
     }
     public void CanCraftState() {
         //update only when need
