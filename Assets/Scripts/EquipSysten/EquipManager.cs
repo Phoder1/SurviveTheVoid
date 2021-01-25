@@ -416,7 +416,7 @@ public class EquipManager
     }
     #endregion
     #region Tiers
-    public int GetTierOfGearByIndex(int index)
+    private int GetTierOfGearByIndex(int index)
     {
         if ((index < 0) || index >= gearSlots.Length || gearSlots[index] == null)
             return 0;
@@ -430,7 +430,7 @@ public class EquipManager
     public int GetTierByEnum(ToolType type) {
         return GetTierOfToolByIndex(GetToolSlotIndex(type));
     }
-    public int GetTierOfToolByIndex(int index) {
+    private int GetTierOfToolByIndex(int index) {
 
         if ((index < 0) || index >= toolSlots.Length || toolSlots[index] == null)
             return 0;
