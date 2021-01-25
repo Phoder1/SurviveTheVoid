@@ -31,10 +31,10 @@ public enum ItemName
 public enum ItemType
 {
     Generic,
-    Tools,
+    Tool,
     Consumable,
     Building,
-    Equipable
+    Gear
 
 }
 
@@ -83,11 +83,11 @@ public class ItemSO : ScriptableObject
                 case ConsumableItemSO consumable:
                     return ItemType.Consumable;
                 case GearItemSO Gear:
-                    return ItemType.Equipable;
+                    return ItemType.Gear;
                 case TileAbstSO Tile:
                     return ItemType.Building;
                 case ToolItemSO Tool:
-                    return ItemType.Tools;
+                    return ItemType.Tool;
                 default:
                     return ItemType.Generic;
             }

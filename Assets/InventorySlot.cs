@@ -3,12 +3,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public enum SlotChestTypes
+public enum SlotChestType
 {
     none,
     Inventory,
     HotKey,
-    Equip,
+    Gear,
     Tools,
     Chest
 }
@@ -16,7 +16,7 @@ public enum SlotChestTypes
 
 public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler, IPointerEnterHandler
 {
-    public SlotChestTypes slotType;
+    public SlotChestType slotType;
     [Min(0)]
     public int slotPosition;
     [SerializeField] private Image highLightedSprite;
@@ -28,7 +28,6 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     [SerializeField] private GameObject highlightOutline;
     private EquipManager equipManager = EquipManager.GetInstance;
     private InventoryUIManager inventoryUI;
-    private bool IsDraggingThis;
     private bool leftFrame;
     private DragNDropVisual Vis;
     private void Start() {
@@ -38,12 +37,10 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
 
     public void OnPointerDown(PointerEventData eventData) {
-        if (inventoryUI.takingFrom == SlotChestTypes.none) {
+        if (inventoryUI.takingFrom == SlotChestType.none) {
             leftFrame = false;
-            int ChestId = (int)slotType - 1;
-            var checkIfSlotIsItem = inventoryUI.GetInventory.GetItemFromInventoryButton(ChestId, slotPosition);
+            var checkIfSlotIsItem = inventoryUI.GetInventory.GetItemFromInventoryButton(inventoryUI.GetInventoryID(slotType), slotPosition);
             if (checkIfSlotIsItem != null) {
-                IsDraggingThis = true;
                 inventoryUI.TakingFrom(slotType, slotPosition);
                 HighLightSlot();
             }
@@ -52,7 +49,7 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     }
 
     public void OnPointerEnter(PointerEventData eventData) {
-        if (inventoryUI.takingFrom != SlotChestTypes.none && (inventoryUI.takingFromIndex != slotPosition || inventoryUI.takingFrom != slotType)) {
+        if (inventoryUI.takingFrom != SlotChestType.none && (inventoryUI.takingFromIndex != slotPosition || inventoryUI.takingFrom != slotType)) {
             inventoryUI.DroppingAt(slotType, slotPosition);
             HighLightSlot();
         }
@@ -60,7 +57,7 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
     public void OnPointerExit(PointerEventData eventData) {
         //if taking anything
-        if (inventoryUI.takingFrom != SlotChestTypes.none) {
+        if (inventoryUI.takingFrom != SlotChestType.none) {
             leftFrame = true;
             //to not by accident dehighlight the one you picked up
 
@@ -77,7 +74,7 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
 
             // resets so you dont drop at anywhere
-            inventoryUI.DroppingAt(SlotChestTypes.none, -1);
+            inventoryUI.DroppingAt(SlotChestType.none, -1);
 
 
 
@@ -101,14 +98,13 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
         DeHighLightSlot();
         ResetDrag();
-        IsDraggingThis = false;
     }
 
 
 
     public void ResetDrag() {
-        inventoryUI.DroppingAt(SlotChestTypes.none, -1);
-        inventoryUI.TakingFrom(SlotChestTypes.none, -1);
+        inventoryUI.DroppingAt(SlotChestType.none, -1);
+        inventoryUI.TakingFrom(SlotChestType.none, -1);
 
     }
 
@@ -142,7 +138,7 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     }
 
     void SlotAction() {
-        if (!inventoryUI.GetSetIsUiClosed && slotType == SlotChestTypes.Tools) {
+        if (!inventoryUI.GetSetIsUiClosed && slotType == SlotChestType.Tools) {
             equipManager.SetActiveStateTool(slotPosition, !equipManager.GetToolActive(equipManager.GetToolTypeByIndex(slotPosition)));
             SetToggleOutline(equipManager.GetToolActive(equipManager.GetToolTypeByIndex(slotPosition)));
         }

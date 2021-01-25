@@ -62,10 +62,10 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         Stat maxStat;
         //HP
         maxStat = AddToDict(StatType.MaxHP, 100);
-        AddToDict(StatType.HP, 100, maxStat);
+        AddToDict(StatType.HP, 50, maxStat);
         //Food
         maxStat = AddToDict(StatType.MaxFood, 100);
-        AddToDict(StatType.Food, 100, maxStat);
+        AddToDict(StatType.Food, 50, maxStat);
         //Water
         maxStat = AddToDict(StatType.MaxWater, 100);
         AddToDict(StatType.Water, 100, maxStat);
@@ -149,7 +149,7 @@ public class Stat
             this.value = Mathf.Max(value, 0);
             if (maxStat != null)
                 this.value = Mathf.Min(this.value, maxStat.GetSetValue);
-            UIManager._instance.UpdateSurvivalBar(this, value);
+            UIManager._instance.UpdateSurvivalBar(this);
             if (reactions != null)
                 foreach (Reaction reaction in reactions)
                     reaction.CheckIfReactionEligible(this);
