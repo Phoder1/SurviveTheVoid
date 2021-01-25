@@ -271,17 +271,25 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
     public bool TrySwapItems() {
 
-        ItemSlot draggedTemp = inventory.GetItemFromInventoryButton(GetInventoryID(takingFrom), takingFromIndex);
-        ItemSlot occupyingTileTemp = inventory.GetItemFromInventoryButton(GetInventoryID(droppingAt), droppingAtIndex);
+        ItemSlot draggedItem = inventory.GetItemFromInventoryButton(GetInventoryID(takingFrom), takingFromIndex);
+        ItemSlot occupyingTile = inventory.GetItemFromInventoryButton(GetInventoryID(droppingAt), droppingAtIndex);
 
-        bool swapable = CanPlaceOnSlot(draggedTemp, droppingAt, droppingAtIndex) && CanPlaceOnSlot(occupyingTileTemp, takingFrom, takingFromIndex);
+        bool swapable = CanPlaceOnSlot(draggedItem, droppingAt, droppingAtIndex) && CanPlaceOnSlot(occupyingTile, takingFrom, takingFromIndex);
         if (swapable) {
+            if (takingFrom == SlotChestType.Gear || takingFrom == SlotChestType.Tools) {
+                equipManager.UnEquipItem(draggedItem);
+            if(occupyingTile != null)
+                equipManager.EquipItem(occupyingTile);
+            }
+            if (droppingAt == SlotChestType.Gear || droppingAt == SlotChestType.Tools) {
+                if (occupyingTile != null) 
+                    equipManager.UnEquipItem(occupyingTile);
+                equipManager.EquipItem(draggedItem);
+            }
             inventory.ChangeBetweenItems(GetInventoryID(takingFrom), GetInventoryID(droppingAt), takingFromIndex, droppingAtIndex);
-            //equipManager.UnEquipItem(occupyingTileTemp);
-            //equipManager.EquipItem(draggedTemp);
 
+            UpdatePlayerInventory();
         }
-        UpdatePlayerInventory();
         return swapable;
     }
 
