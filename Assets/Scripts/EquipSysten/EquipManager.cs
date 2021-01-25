@@ -77,8 +77,7 @@ public class EquipManager
         if (gearSlots == null || toolSlots == null)
             return;
 
-        if (gearSlots != null)
-        {
+       
             for (int i = 0; i < gearSlots.Length; i++)
             {
                 if (gearSlots[i] != null)
@@ -87,7 +86,7 @@ public class EquipManager
                 if (toolSlots[i] != null)
                     ApplyStats((toolSlots[i].item));
             }
-        }
+        
 
     }
 
