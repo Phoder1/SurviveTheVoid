@@ -655,7 +655,8 @@ public class ItemSlot
     private int? durabiltiy = null;
     public int GetSetDurability
     {
-        set => durabiltiy = value; get
+        set => durabiltiy = value;
+        get
         {
 
             if (durabiltiy == null)
