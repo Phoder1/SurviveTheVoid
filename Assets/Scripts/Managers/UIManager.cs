@@ -9,7 +9,7 @@ public class UIManager : MonoSingleton<UIManager>
     CraftingManager craftingManager;
     InventoryUIManager inventoryManager;
     PlayerStats playerStats;
-
+    
     // UI elements
     [SerializeField]
     private GameObject
@@ -41,7 +41,7 @@ public class UIManager : MonoSingleton<UIManager>
         stateText,
         xpBar;
     [SerializeField] private TextMeshProUGUI levelNumber;
-
+    [SerializeField] Image blackPanelImage;
     [Header("Survival bar's fill")]
     [SerializeField]
     private Image
@@ -85,11 +85,14 @@ public class UIManager : MonoSingleton<UIManager>
             ShowCraftingTimer(craftingManager.CurrentProcessTile.ItemsCrafted, craftingManager.CurrentProcessTile.amount, craftingManager.CurrentProcessTile.CraftingTimeRemaining);
             //ShowTimeAndCollectable(craftingManager.CurrentProcessTile.ItemsCrafted, craftingManager.CurrentProcessTile.amount, craftingManager.CurrentProcessTile.CraftingTimeRemaining);
         }
-
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            BlackPanel(true);
+        }
     }
 
     public void StartProgressBar(Vector2 screenPosition, float duration) {
-        progressBarCoroutine = StartCoroutine(progressBarFill(duration));
+        progressBarCoroutine = StartCoroutine(ProgressBarFill(duration));
     }
     public void CancelProgressBar() {
         if (progressBarCoroutine != null) {
@@ -99,7 +102,7 @@ public class UIManager : MonoSingleton<UIManager>
         }
     }
 
-    IEnumerator progressBarFill(float duration) {
+    IEnumerator ProgressBarFill(float duration) {
         duration *= 0.85f;
         progressBarFillObj.gameObject.SetActive(true);
         float fillAmount = 0;
@@ -227,8 +230,40 @@ public class UIManager : MonoSingleton<UIManager>
                 break;
         }
     }
+    public void BlackPanel(bool start) {
+       
+        if (start)
+        {
+            StartCoroutine(DeathScreen());
+        }
+        else
+        {
+            StopCoroutine(DeathScreen());
+        }
+    
+    }
+   
+    IEnumerator DeathScreen() {
+        float timerOfDeathScreen = 3f;
+        float startingTime = Time.time;
+        float alphaSpeed = blackPanelImage.color.a;
+        
+        while (Time.time< startingTime+timerOfDeathScreen)
+        {
+            alphaSpeed += 5f;
+            yield return null;
+        }
+        startingTime = Time.time;
+        while (Time.time < startingTime + timerOfDeathScreen)
+        {
+            alphaSpeed -= 5f;
+            yield return null;
+        }
 
 
+
+
+    }
     public void CanCraftState() {
         //update only when need
         CurrentRecipeOutSprite.gameObject.SetActive(false);

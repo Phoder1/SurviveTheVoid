@@ -583,8 +583,10 @@ public class ItemSlot
     public ItemSO item;
     public int amount;
     private int? durabiltiy = null;
+
     public int GetSetDurability {
         set => durabiltiy = value; get {
+
 
             if (durabiltiy == null) {
                 durabiltiy = 0;

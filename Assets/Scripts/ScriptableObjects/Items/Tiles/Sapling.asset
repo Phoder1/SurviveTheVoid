@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30b7874b8e5eab142871768f1d102839, type: 3}
   m_Name: Sapling
   m_EditorClassIdentifier: 
-  itemID: 0
+  itemID: 13
   itemName: Sapling
   maxStackSize: 20
   description: A oak tree sapling
@@ -60,8 +60,9 @@ MonoBehaviour:
       minAmount: 1
       maxAmount: 3
   sourceTier: 0
+  gatherDurabilityCost: 10
   gatheringSound: 2
   toolType: 0
   minGrowTime: 1
   maxGrowTime: 5
-  GatheringTime: 3
+  gatheringTime: 4

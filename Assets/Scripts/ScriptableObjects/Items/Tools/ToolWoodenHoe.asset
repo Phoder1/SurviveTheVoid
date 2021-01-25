@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4a002a5cfe591141af7835f8c9845bc, type: 3}
   m_Name: ToolWoodenHoe
   m_EditorClassIdentifier: 
-  itemID: 13
+  itemID: 34
   itemName: Wooden Hoe
   maxStackSize: 1
   description: 
   sprite: {fileID: 21300000, guid: 177435b670171524d975dde3325297ed, type: 3}
-  equipType: 2
-  gatheringSpeed: 1
+  toolType: 0
   maxDurability: 25
   toolTier: 1
+  Tier: 0
+  speedPrecentage: 300
