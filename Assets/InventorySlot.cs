@@ -160,13 +160,4 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     private void ResetSlot() {
 
     }
-
-
-
-
-
-
-
-
-
 }

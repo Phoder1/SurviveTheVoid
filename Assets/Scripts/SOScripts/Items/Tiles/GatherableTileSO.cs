@@ -8,6 +8,7 @@ public class GatherableTileSO : TileAbstSO
     [SerializeField] private GrowthStage[] stages;
     [Min(1)]
     [SerializeField] private int sourceTier;
+    [SerializeField] private int gatherDurabilityCost;
     [SerializeField] private Sound gatheringSound;
     [SerializeField] private ToolType toolType;
     [SerializeField] private float minGrowTime;
@@ -22,6 +23,7 @@ public class GatherableTileSO : TileAbstSO
     public float GetMaxGrowTime => maxGrowTime;
     public float GetGatheringTime => gatheringTime;
     public int GetSourceTier => sourceTier;
+    public int GetGatherDurabilityCost => gatherDurabilityCost;
 }
 [System.Serializable]
 public class GrowthStage
