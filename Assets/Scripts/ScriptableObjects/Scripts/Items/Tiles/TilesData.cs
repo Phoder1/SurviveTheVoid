@@ -100,6 +100,14 @@ public class TileSlot : ITileState
         }
     }
     public bool isSpecialInteraction => tileState.isSpecialInteraction;
+    public bool GetIsDestructible {
+        get {
+            if(tileState is ProcessingTableTileState processing) {
+                return processing.GetIsDestructible;
+            }
+            return true;
+        }
+    }
     #region Passthrough
     public virtual TileBase GetMainTileBase => tileState.GetMainTileBase;
     public virtual TileAbstSO GetTileAbst => tileState.GetTileAbst;
