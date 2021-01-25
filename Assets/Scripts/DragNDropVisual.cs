@@ -40,7 +40,6 @@ public class DragNDropVisual : MonoBehaviour, IBeginDragHandler, IEndDragHandler
 	}
 	public void OnDrag(PointerEventData eventData)
 	{
-		Debug.Log("On drag");
 
 			// Getting movement delta (the amount of units that the finger moved since the previous frame)
 			itemImageTransform.anchoredPosition += eventData.delta / mainCanvas.scaleFactor;

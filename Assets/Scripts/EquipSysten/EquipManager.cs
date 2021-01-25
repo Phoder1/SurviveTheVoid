@@ -540,7 +540,7 @@
                     continue;
                 }
 
-                playerStats.AddToStatValue(gearCache.equipstats[i].statType, gearCache.equipstats[i].amount);
+                PlayerStats._instance.AddToStatValue(gearCache.equipstats[i].statType, gearCache.equipstats[i].amount);
             }
         }
     }

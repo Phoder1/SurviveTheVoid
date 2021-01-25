@@ -120,7 +120,7 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         ItemSprite.gameObject.SetActive(true);
         ItemSprite.sprite = Item.item.getsprite;
         if (ItemAmount != null)
-            ItemAmount.text = Item.amount.ToString();
+            ItemAmount.text = (Item.amount <= 1 ? "" : Item.amount.ToString());
     }
     public void EmptySlot() {
         ItemSprite.gameObject.SetActive(false);
@@ -145,7 +145,7 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     }
 
     void SlotAction() {
-        if (!inventoryUI.GetSetIsUiClosed) {
+        if (!inventoryUI.GetSetIsUiClosed && slotType == SlotChestTypes.Tools) {
             equipManager.SetActiveStateTool(slotPosition, !equipManager.GetToolActive(equipManager.GetToolTypeByIndex(slotPosition)));
             SetToggleOutline(equipManager.GetToolActive(equipManager.GetToolTypeByIndex(slotPosition)));
         }
