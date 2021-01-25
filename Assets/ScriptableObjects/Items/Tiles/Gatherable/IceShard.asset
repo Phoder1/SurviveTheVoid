@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30b7874b8e5eab142871768f1d102839, type: 3}
   m_Name: IceShard
   m_EditorClassIdentifier: 
-  itemID: 23
+  itemID: 7
   itemName: Ice Shard
   maxStackSize: 20
   description: you actually can grow ice?!
@@ -63,9 +63,10 @@ MonoBehaviour:
       Chance: 0.8
       minAmount: 1
       maxAmount: 3
-  sourceTier: 0
+  sourceTier: 1
+  gatherDurabilityCost: 1
   gatheringSound: 3
   toolType: 1
   minGrowTime: 10
   maxGrowTime: 20
-  GatheringTime: 4
+  gatheringTime: 3

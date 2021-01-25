@@ -10,49 +10,52 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30b7874b8e5eab142871768f1d102839, type: 3}
-  m_Name: StoneShard
+  m_Name: CoalShard
   m_EditorClassIdentifier: 
-  itemID: 0
-  itemName: Stone Shard
+  itemID: 4
+  itemName: Coal Shard
   maxStackSize: 20
   description: 
-  sprite: {fileID: 21300000, guid: 9212a77e0761ac243878133b80115bd9, type: 3}
-  mainTileBase: {fileID: 11400000, guid: ead1fc20ca39aa74bb881362eea33fb5, type: 2}
+  sprite: {fileID: 21300000, guid: ea332612fcf856942b4729c8305da3ca, type: 3}
+  mainTileBase: {fileID: 11400000, guid: 67fa51cf16cd2f04a8898004d71c18dd, type: 2}
   isSolid: 1
   isAirSource: 0
   stages:
-  - stageTile: {fileID: 11400000, guid: ead1fc20ca39aa74bb881362eea33fb5, type: 2}
+  - expReward: 0
+    stageTile: {fileID: 11400000, guid: 67fa51cf16cd2f04a8898004d71c18dd, type: 2}
     isGatherable: 1
     destroyOnGather: 1
-    isSolid: 1
+    isSolid: 0
     drops:
-    - item: {fileID: 11400000, guid: f89a2a83765e2a147a87ce718623f51f, type: 2}
+    - item: {fileID: 11400000, guid: 4133f645eb9dd76458d7303af391b871, type: 2}
       Chance: 1
       minAmount: 1
       maxAmount: 2
-  - stageTile: {fileID: 11400000, guid: c47e9ad424d2732418ca6d2dd0a120e8, type: 2}
+  - expReward: 0
+    stageTile: {fileID: 11400000, guid: aaf21959ca3c5374fa2db41848c2e68f, type: 2}
     isGatherable: 1
     destroyOnGather: 0
-    isSolid: 1
+    isSolid: 0
     drops:
-    - item: {fileID: 11400000, guid: f89a2a83765e2a147a87ce718623f51f, type: 2}
+    - item: {fileID: 11400000, guid: 4133f645eb9dd76458d7303af391b871, type: 2}
       Chance: 1
       minAmount: 1
       maxAmount: 2
-    - item: {fileID: 11400000, guid: f89a2a83765e2a147a87ce718623f51f, type: 2}
+    - item: {fileID: 11400000, guid: 4133f645eb9dd76458d7303af391b871, type: 2}
       Chance: 1
       minAmount: 1
       maxAmount: 3
-  - stageTile: {fileID: 11400000, guid: 214c0c7f35da58740a1bb20b7f98602f, type: 2}
+  - expReward: 0
+    stageTile: {fileID: 11400000, guid: 3c8bb5f7c6f79fc4daf10a14cf8823e6, type: 2}
     isGatherable: 1
     destroyOnGather: 0
-    isSolid: 1
+    isSolid: 0
     drops:
-    - item: {fileID: 11400000, guid: f89a2a83765e2a147a87ce718623f51f, type: 2}
+    - item: {fileID: 11400000, guid: 4133f645eb9dd76458d7303af391b871, type: 2}
       Chance: 1
       minAmount: 2
       maxAmount: 3
-    - item: {fileID: 11400000, guid: f89a2a83765e2a147a87ce718623f51f, type: 2}
+    - item: {fileID: 11400000, guid: 4133f645eb9dd76458d7303af391b871, type: 2}
       Chance: 1
       minAmount: 1
       maxAmount: 3
@@ -61,9 +64,9 @@ MonoBehaviour:
       minAmount: 1
       maxAmount: 1
   sourceTier: 1
-  expReward: 1
-  gatheringSound: 3
+  gatherDurabilityCost: 2
+  gatheringSound: 0
   toolType: 1
   minGrowTime: 10
   maxGrowTime: 20
-  GatheringTime: 4
+  gatheringTime: 4
