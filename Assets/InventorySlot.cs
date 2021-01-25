@@ -56,9 +56,6 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
             inventoryUI.DroppingAt(slotType, slotPosition);
             HighLightSlot();
         }
-
-
-
     }
 
     public void OnPointerExit(PointerEventData eventData) {
