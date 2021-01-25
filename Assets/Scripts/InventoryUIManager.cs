@@ -11,6 +11,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
     Inventory inventory;
     public Inventory GetInventory => inventory;
+    EquipManager equipManager;
 
 
     [Header("Slots Related")]
@@ -32,6 +33,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         HotKeysInventory = inventory.GetInventoryFromDictionary(1);
         EquipInventory = inventory.GetInventoryFromDictionary(2);
         toolsInventory = inventory.GetInventoryFromDictionary(3);
+        equipManager = EquipManager.GetInstance;
     }
 
 
@@ -50,17 +52,17 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     #region Inventory Slots
 
     //public boolean = setactive of all inventory,  only update inventory after this boolean is true, if false dont update
-    public SlotChestTypes takingFrom;
+    public SlotChestType takingFrom;
     public int takingFromIndex;
 
-    public SlotChestTypes droppingAt;
+    public SlotChestType droppingAt;
     public int droppingAtIndex;
 
-    public void DroppingAt(SlotChestTypes type, int slot) {
+    public void DroppingAt(SlotChestType type, int slot) {
         droppingAt = type;
         droppingAtIndex = slot;
     }
-    public void TakingFrom(SlotChestTypes type, int slot) {
+    public void TakingFrom(SlotChestType type, int slot) {
         takingFrom = type;
         takingFromIndex = slot;
     }
@@ -68,8 +70,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
     public void OnPressedInventoryButton() {
         Debug.Log("Short press");
-        int ChestId = (int)takingFrom - 1;
-        var checkIfSlotIsItem = inventory.GetItemFromInventoryButton(ChestId, takingFromIndex);
+        var checkIfSlotIsItem = inventory.GetItemFromInventoryButton(GetInventoryID(takingFrom), takingFromIndex);
 
 
         if (checkIfSlotIsItem == null || checkIfSlotIsItem.item == null)
@@ -79,40 +80,78 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         ItemSlot itemCache = new ItemSlot(checkIfSlotIsItem.item, 1);
 
 
-
-        if (itemCache.item.GetItemType == ItemType.Building) {
-            UIManager._instance.ButtonInventory();
-            PlayerStateMachine.GetInstance.SwitchState(InputState.BuildState);
-            (InputManager.GetCurrentState as BuildingState).SetBuildingTile(itemCache.item as TileAbstSO);
-        }
-
-
-        if (itemCache.item.GetItemType == ItemType.Consumable) {
-            if (ConsumeablesHandler._instance.GetEffectCoolDown(itemCache.item as ConsumableItemSO)) {
-                if (inventory.RemoveItemFromInventory(ChestId, new ItemSlot(itemCache.item, 1))) {
-                    Debug.Log("Consumed: " + itemCache.item.getItemName);
-                    (itemCache.item as ConsumableItemSO).ApplyEffect();
+        switch (itemCache.item) {
+            case ConsumableItemSO consumable:
+                if (ConsumeablesHandler._instance.GetEffectCoolDown(consumable)) {
+                    if (inventory.RemoveItemFromInventory(GetInventoryID(takingFrom), new ItemSlot(itemCache.item, 1))) {
+                        Debug.Log("Consumed: " + itemCache.item.getItemName);
+                        consumable.ApplyEffect();
+                    }
                 }
-            }
+                UpdatePlayerInventory();
+                break;
+            case TileAbstSO tile:
+                UIManager._instance.ButtonInventory();
+                PlayerStateMachine.GetInstance.SwitchState(InputState.BuildState);
+                (InputManager.GetCurrentState as BuildingState).SetBuildingTile(tile);
+                break;
+            case ToolItemSO tool:
+            case GearItemSO gear:
+                Equip(itemCache);
+                break;
+        }
+    }
+
+    void Equip(ItemSlot itemSlot) {
+        ItemSO itemSO = itemSlot.item;
+        if (itemSO.GetItemType != ItemType.Gear && itemSO.GetItemType != ItemType.Tool)
+            return;
+        bool isTool = itemSO.GetItemType == ItemType.Tool;
+        int originInvID = GetInventoryID(takingFrom);
+        int targetInvID = (takingFrom == SlotChestType.Inventory ? GetInventoryID(isTool ? SlotChestType.Tools : SlotChestType.Gear) : GetInventoryID(SlotChestType.Inventory));
+        int targetIndex;
+
+        if (itemSO is ToolItemSO tool)
+            targetIndex = equipManager.GetIndexByToolType(tool.GetToolType);
+        else if (itemSO is GearItemSO gear)
+            targetIndex = equipManager.GetGearSlotIndex(gear.GetEquipType);
+        else
+            return;
+
+
+        if (takingFrom == SlotChestType.Inventory) {
+            equipManager.UnEquipItem(inventory.GetItemFromInventoryButton(targetInvID, targetIndex));
+            equipManager.EquipItem(itemSlot);
+            inventory.ChangeBetweenItems(originInvID, targetInvID, takingFromIndex, targetIndex);
             UpdatePlayerInventory();
         }
-        if (itemCache.item.GetItemType == ItemType.Equipable || itemCache.item.GetItemType == ItemType.Tools) {
-
-
-            EquipManager.GetInstance.CheckEquip(itemCache, takingFromIndex, ChestId);
+        else if (inventory.CheckIfEnoughSpaceInInventory(GetInventoryID(SlotChestType.Inventory), itemSlot)) {
+            equipManager.UnEquipItem(itemSlot);
+            inventory.RemoveItemAtPosition(originInvID, takingFromIndex);
+            inventory.AddToInventory(GetInventoryID(SlotChestType.Inventory), itemSlot);
             UpdatePlayerInventory();
-
-
-
         }
-
-
     }
 
 
 
 
-
+    public int GetInventoryID(SlotChestType chestType) {
+        switch (chestType) {
+            case SlotChestType.Inventory:
+                return 0;
+            case SlotChestType.HotKey:
+                return 1;
+            case SlotChestType.Gear:
+                return 2;
+            case SlotChestType.Tools:
+                return 3;
+            case SlotChestType.Chest:
+                return 4;
+            default:
+                return -1;
+        }
+    }
     public void UpdateInventoryToUI() {
         for (int i = 0; i < InventoryItem.Length; i++) {
             if (InventoryItem[i] != null) {
@@ -232,19 +271,25 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
     public bool TrySwapItems() {
 
-        int FirstChestID = ((int)takingFrom - 1);
-        int SecondChestID = ((int)droppingAt - 1);
+        ItemSlot draggedItem = inventory.GetItemFromInventoryButton(GetInventoryID(takingFrom), takingFromIndex);
+        ItemSlot occupyingTile = inventory.GetItemFromInventoryButton(GetInventoryID(droppingAt), droppingAtIndex);
 
-        ItemSlot DraggedTemp = inventory.GetItemFromInventoryButton(FirstChestID, takingFromIndex);
-        ItemSlot DroppedTemp = inventory.GetItemFromInventoryButton(SecondChestID, droppingAtIndex);
-
-        bool swapable = CanEquipOnCurrentInventory(takingFrom, droppingAt, DraggedTemp, DroppedTemp, takingFromIndex, droppingAtIndex)
-            && CanEquipOnCurrentInventory(droppingAt, takingFrom, DroppedTemp, DraggedTemp, droppingAtIndex, takingFromIndex);
+        bool swapable = CanPlaceOnSlot(draggedItem, droppingAt, droppingAtIndex) && CanPlaceOnSlot(occupyingTile, takingFrom, takingFromIndex);
         if (swapable) {
-            inventory.ChangeBetweenItems(FirstChestID, SecondChestID, takingFromIndex, droppingAtIndex);
+            if (takingFrom == SlotChestType.Gear || takingFrom == SlotChestType.Tools) {
+                equipManager.UnEquipItem(draggedItem);
+            if(occupyingTile != null)
+                equipManager.EquipItem(occupyingTile);
+            }
+            if (droppingAt == SlotChestType.Gear || droppingAt == SlotChestType.Tools) {
+                if (occupyingTile != null) 
+                    equipManager.UnEquipItem(occupyingTile);
+                equipManager.EquipItem(draggedItem);
+            }
+            inventory.ChangeBetweenItems(GetInventoryID(takingFrom), GetInventoryID(droppingAt), takingFromIndex, droppingAtIndex);
 
+            UpdatePlayerInventory();
         }
-        UpdatePlayerInventory();
         return swapable;
     }
 
@@ -255,17 +300,15 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         UpdateToolsToUI();
     }
 
-    bool CanEquipOnCurrentInventory(SlotChestTypes fromChest, SlotChestTypes toChest, ItemSlot dragged, ItemSlot drop, int draggedInvSlot, int DropInvSlot) {
+    bool CanPlaceOnSlot(ItemSlot dragged, SlotChestType toChest, int DropInvSlot) {
         if (dragged == null || dragged.item == null)
             return true;
         switch (toChest) {
-            case SlotChestTypes.HotKey:
+            case SlotChestType.HotKey:
                 return (dragged.item.GetItemType == ItemType.Consumable);
-            case SlotChestTypes.Equip:
-                return dragged.item.GetItemType == ItemType.Equipable
-                    && EquipManager.GetInstance.CheckEquip(dragged, draggedInvSlot, (int)fromChest - 1, DropInvSlot, (int)toChest - 1);
-            case SlotChestTypes.Tools:
-                return (EquipManager.GetInstance.CheckEquip(dragged, draggedInvSlot, (int)fromChest, DropInvSlot, (int)toChest));
+            case SlotChestType.Gear:
+            case SlotChestType.Tools:
+                return EquipManager.GetInstance.CheckEquip(dragged, toChest, DropInvSlot);
             default:
                 return true;
         }
