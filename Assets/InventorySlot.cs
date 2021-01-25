@@ -33,6 +33,7 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     private void Start() {
         inventoryUI = InventoryUIManager._instance;
         Vis = gameObject.GetComponent<DragNDropVisual>();
+        SetToggleOutline(true);
     }
 
 
