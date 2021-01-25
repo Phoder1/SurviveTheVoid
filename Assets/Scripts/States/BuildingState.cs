@@ -17,12 +17,15 @@ public class BuildingState : StateBase
     int amountOfCurrentItem;
 
     public BuildingState() {
-        amountOfCurrentItem = 0;
-
+        ResetParam();
            gridManager = GridManager._instance; 
     }
 
-
+     void ResetParam() {
+        currentTileHit = null;
+        amountOfCurrentItem = 0;
+        tileSlotCache = null;
+    }
     public override void ButtonA() {
         Debug.Log("BuildingState");
         PressedConfirmBuildingButton();
@@ -172,8 +175,8 @@ public class BuildingState : StateBase
     public bool GetIsBuildingAttached => isBuildingAttached;
 
     public void ResetBeforeChangeStates() {
-
-        RemovePreviousTile();
+        ResetParam();
+       RemovePreviousTile();
     }
     public override void MousePos() {
         CheckPosition(CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(Input.mousePosition));

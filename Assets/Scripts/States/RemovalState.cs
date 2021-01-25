@@ -10,7 +10,6 @@ public class RemovalState : StateBase
 
     public RemovalState() { 
         gridManager = GridManager._instance;
-   
     }
 
     public override void ButtonB()
@@ -44,10 +43,11 @@ public class RemovalState : StateBase
 
 
 
-        if (currentTileHit != null && Inventory.GetInstance.AddToInventory(0, new ItemSlot(currentTileHit.tile.GetTileAbst, 1)))
+        if (currentTileHit != null&& currentTileHit.tile.GetIsDestructible && Inventory.GetInstance.AddToInventory(0, new ItemSlot(currentTileHit.tile.GetTileAbst, 1)))
         {
-
             gridManager.SetTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings, true);
+            tileSlotCache = null;
+
         }
     }
 

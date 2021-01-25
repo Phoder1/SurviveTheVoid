@@ -783,7 +783,7 @@ public class UIManager : MonoSingleton<UIManager>
     }
 
     public void ButtonCancel() {
-        if (isBuildModeOn == true) {
+       
             PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
             isBuildModeOn = false;
 
@@ -827,17 +827,9 @@ public class UIManager : MonoSingleton<UIManager>
             }
 
             stateText.SetActive(false);
-        }
-        else if (isRemoveModeOn == true) {
-            isRemoveModeOn = false;
-            isBuildModeOn = true;
 
-            bInteractA.SetActive(true);
-            bInventory.SetActive(true);
-
-
-            PlayerStateMachine.GetInstance.SwitchState(InputState.BuildState);
-        }
+        bInteractA.SetActive(true);
+        bInventory.SetActive(true);
     }
 
     public void ButtonRotate() {
