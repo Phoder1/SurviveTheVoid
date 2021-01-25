@@ -59,10 +59,14 @@ MonoBehaviour:
       Chance: 1
       minAmount: 1
       maxAmount: 3
+    - item: {fileID: 11400000, guid: c527a38ed9b15f14ca1e00dabf336bc5, type: 2}
+      Chance: 0.3
+      minAmount: 1
+      maxAmount: 1
   sourceTier: 0
   gatherDurabilityCost: 1
   gatheringSound: 2
   toolType: 0
-  minGrowTime: 1
-  maxGrowTime: 5
+  minGrowTime: 30
+  maxGrowTime: 90
   gatheringTime: 4
