@@ -197,8 +197,14 @@ PrefabInstance:
     - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}
       propertyPath: buildingsGeneration.Array.size
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: buildingsGeneration.Array.data[5].tile
+      value: 
+      objectReference: {fileID: 11400000, guid: 2902bb4dba6de7e4fb8c206c3bad165e,
+        type: 2}
     - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}
       propertyPath: buildingsGeneration.Array.data[0].chance
