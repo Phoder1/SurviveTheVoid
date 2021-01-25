@@ -38,7 +38,7 @@ public class BuildingState : StateBase
             case TouchPhase.Began:
             case TouchPhase.Moved:
             case TouchPhase.Stationary:
-                if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject() && currentTileHit.tile != null)
+                if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject() && (currentTileHit != null && currentTileHit.tile != null))
                     return;
 
 

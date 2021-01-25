@@ -17,31 +17,32 @@ public enum SlotChestTypes
 public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler, IPointerEnterHandler
 {
     public SlotChestTypes slotType;
+    [Min(0)]
     public int slotPosition;
     InventoryUIManager inventoryUI;
     public bool IsDraggingThis;
     public Image highLightedSprite;
     public Image ItemSprite;
     public TextMeshProUGUI ItemAmount;
-    public bool isInventoryUIClose = false;
+    private bool leftFrame;
     public Color NormalColor;
     public Color HighLightedColor;
+    EquipManager equipManager = EquipManager.GetInstance;
+    [SerializeField] private GameObject toggleOutline;
+    [SerializeField] private GameObject highlightOutline;
     DragNDropVisual Vis;
-    private void Start()
-    {
+    private void Start() {
         inventoryUI = InventoryUIManager._instance;
         Vis = gameObject.GetComponent<DragNDropVisual>();
     }
 
 
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        if (inventoryUI.takingFrom == SlotChestTypes.none)
-        {
+    public void OnPointerDown(PointerEventData eventData) {
+        if (inventoryUI.takingFrom == SlotChestTypes.none) {
+            leftFrame = false;
             int ChestId = (int)slotType - 1;
             var checkIfSlotIsItem = inventoryUI.GetInventory.GetItemFromInventoryButton(ChestId, slotPosition);
-            if (checkIfSlotIsItem != null)
-            {
+            if (checkIfSlotIsItem != null) {
                 IsDraggingThis = true;
                 inventoryUI.TakingFrom(slotType, slotPosition);
                 HighLightSlot();
@@ -49,11 +50,9 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
         }
     }
-    
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        if (inventoryUI.takingFrom != SlotChestTypes.none)
-        {
+
+    public void OnPointerEnter(PointerEventData eventData) {
+        if (inventoryUI.takingFrom != SlotChestTypes.none && (inventoryUI.takingFromIndex != slotPosition || inventoryUI.takingFrom != slotType)) {
             inventoryUI.DroppingAt(slotType, slotPosition);
             HighLightSlot();
         }
@@ -62,11 +61,10 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
     }
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
+    public void OnPointerExit(PointerEventData eventData) {
         //if taking anything
-        if (inventoryUI.takingFrom != SlotChestTypes.none)
-        {
+        if (inventoryUI.takingFrom != SlotChestTypes.none) {
+            leftFrame = true;
             //to not by accident dehighlight the one you picked up
 
             //dropping at equip != inventory = true + taking from 0 = 0 = true = true both
@@ -74,13 +72,8 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
             //
 
 
-            if (inventoryUI.takingFromIndex != slotPosition) // if 0 != 0 = true
+            if (inventoryUI.takingFromIndex != slotPosition || inventoryUI.takingFrom != slotType) // if 0 != 0 = true
             {
-                if (inventoryUI.droppingAt == slotType)// if equip == equip = true;
-                {
-                    //de highlight in correct inventory
-                    DeHighLightSlot();
-                }
                 //de highlight slot in correct inventory
                 DeHighLightSlot();
             }
@@ -89,24 +82,23 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
             // resets so you dont drop at anywhere
             inventoryUI.DroppingAt(SlotChestTypes.none, -1);
 
-          
+
 
         }
-        
+
     }
 
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        if (inventoryUI.takingFromIndex >= 0 && inventoryUI.droppingAtIndex >= 0)
-        {
-            inventoryUI.SwapItems();
+    public void OnPointerUp(PointerEventData eventData) {
+        if (inventoryUI.takingFromIndex >= 0 && inventoryUI.droppingAtIndex >= 0) {
+            if (inventoryUI.TrySwapItems()) {
+                ResetSlot();
+            }
+
         }
-        else
-        {
+        else if (!leftFrame) {
             SlotAction();
         }
-        if(Vis != null)
-        {
+        if (Vis != null) {
             Vis.ReturnToPos();
         }
 
@@ -117,23 +109,20 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
 
 
-    public void ResetDrag()
-    {
+    public void ResetDrag() {
         inventoryUI.DroppingAt(SlotChestTypes.none, -1);
         inventoryUI.TakingFrom(SlotChestTypes.none, -1);
 
     }
 
 
-    public void UpdateSlot(ItemSlot Item)
-    {
+    public void UpdateSlot(ItemSlot Item) {
         ItemSprite.gameObject.SetActive(true);
         ItemSprite.sprite = Item.item.getsprite;
         if (ItemAmount != null)
-            ItemAmount.text = Item.amount.ToString();
+            ItemAmount.text = (Item.amount <= 1 ? "" : Item.amount.ToString());
     }
-    public void EmptySlot()
-    {
+    public void EmptySlot() {
         ItemSprite.gameObject.SetActive(false);
         ItemSprite.sprite = null;
 
@@ -143,28 +132,33 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
 
 
-    public void HighLightSlot()
-    {
+    public void HighLightSlot() {
         highLightedSprite.color = HighLightedColor;
+        if (highlightOutline != null)
+            highlightOutline.SetActive(true);
     }
 
-    public void DeHighLightSlot()
-    {
+    public void DeHighLightSlot() {
         highLightedSprite.color = NormalColor;
+        if (highlightOutline != null)
+            highlightOutline.SetActive(false);
     }
 
-    void SlotAction()
-    {
-        if (isInventoryUIClose)
-        {
-            EquipManager.GetInstance.SetActiveStateTool(slotPosition, !EquipManager.GetInstance.GetToolActive(EquipManager.GetInstance.GetToolTypeByIndex(slotPosition)));
-         //  if true == EquipManager.GetInstance.GetToolActive(EquipManager.GetInstance.GetToolTypeByIndex(slotPosition))
-         // visual effect
+    void SlotAction() {
+        if (!inventoryUI.GetSetIsUiClosed && slotType == SlotChestTypes.Tools) {
+            equipManager.SetActiveStateTool(slotPosition, !equipManager.GetToolActive(equipManager.GetToolTypeByIndex(slotPosition)));
+            SetToggleOutline(equipManager.GetToolActive(equipManager.GetToolTypeByIndex(slotPosition)));
         }
-        else
-        {
-        inventoryUI.OnPressedInventoryButton();
-         }
+        else {
+            inventoryUI.OnPressedInventoryButton();
+        }
+    }
+    public void SetToggleOutline(bool state) {
+        if (toggleOutline != null)
+            toggleOutline.SetActive(state);
+    }
+    private void ResetSlot() {
+
     }
 
 

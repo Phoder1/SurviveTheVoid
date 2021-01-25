@@ -7,10 +7,6 @@ public enum ToolType { Axe, Pickaxe, Hoe, Shovel, Hammer }
 public class ToolItemSO : ItemSO
 {
 
-   
-
-
-
     [SerializeField]
     ToolType toolType;
     public ToolType GetToolType => toolType;
@@ -18,25 +14,16 @@ public class ToolItemSO : ItemSO
 
     [SerializeField]
     private float gatheringSpeed;
-    public float getGatheringSpeed => gatheringSpeed;
+    public float GetGatheringSpeed => gatheringSpeed;
 
     [SerializeField]
     private int maxDurability;
-    public int getMaxDurability => maxDurability;
-    private int? durabiltiy = null;
-    public int GetSetDurability { set => durabiltiy = value; get
-        {
+    public int GetMaxDurability => maxDurability;
 
-            if (durabiltiy == null)
-            {
-                durabiltiy = maxDurability;
-            }
-            return durabiltiy.GetValueOrDefault();
-        }  }
     // int tier
     [SerializeField]
     private int toolTier;
-    public int getToolTier => toolTier;
+    public int GetToolTier => toolTier;
     [SerializeField]
     private int Tier;
     [SerializeField]
@@ -46,6 +33,6 @@ public class ToolItemSO : ItemSO
     public float GetPrecentage => Precentage;
     public int GetTier => Tier;
 
-    public bool SetGetIsActive { set => isActive = value; get => isActive; }
+    public bool SetGetIsActive { set { if (isActive != value) isActive = value; } get => isActive; }
 }
 

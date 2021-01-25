@@ -5,9 +5,18 @@ using UnityEngine;
 public class Inventory
 {
     private static Inventory _instance;
+
     //Inventory IInventory.GetInstance => GetInstance;
 
     InventoryUIManager inventoryUI;
+    public InventoryUIManager GetInventoryUI { 
+        get {
+            if(inventoryUI == null) {
+                inventoryUI = InventoryUIManager._instance;
+            }
+            return inventoryUI;
+        }
+    }
     public static Inventory GetInstance
     {
         get
@@ -25,7 +34,7 @@ public class Inventory
     bool checkForItem = false;
     int counter = 0;
     int itemAmountCount;
-    int amountOfIDChests; // 0 is the player's inventory
+    int amountOfIDChests; 
 
     ItemSlot[] inventoryList;
     //private int nextAddOnAmountForInventory = 5;
@@ -33,15 +42,19 @@ public class Inventory
 
 
     public ItemSlot[] GetInventory { get => inventoryList; }
+
     private ItemSlot[] inventoryCache;
 
 
     Dictionary<int, ItemSlot[]> inventoryDict;
-    // 0 = > player's inventory
-    //1  = > Hot Keys
-    //2+ = > Equips
-    //3? = > tools
-    //3+ = > local inventory chests
+    /// <summary>
+    /// 0 = > player's inventory
+    ///1  = > Hot Keys
+    ///2+ = > Equips
+    ///3 = > tools
+    ///4+ = > local inventory chests
+    /// </summary>
+
 
 
 
@@ -239,7 +252,7 @@ public class Inventory
         {
             itemAmountCount = 0;
             AddAmountOfItem(chestID, item);
-            inventoryUI.UpdateInventoryToUI();
+            GetInventoryUI?.UpdateInventoryToUI();
             return true;
         }
         Debug.Log("Cant Add The Item");
@@ -328,7 +341,7 @@ public class Inventory
        
         if (RemoveObjectFromInventory(chestID, item))
         {
-        inventoryUI.UpdateInventoryToUI();
+        GetInventoryUI?.UpdateInventoryToUI();
             return true;
         }
 
@@ -515,13 +528,13 @@ public class Inventory
 
     public void CreateNewInventory(int chestId, int amountOfCapacity) => inventoryDict.Add(chestId, new ItemSlot[amountOfCapacity]);
 
-    public void ChangeBetweenItems(int firstChestID, int secondChestID, int drag, int drop)
+    public void ChangeBetweenItems(int firstChestID, int secondChestID, int dragSlot, int dropSlot)
     {
      
         inventoryCache = GetInventoryFromDictionary(firstChestID);
         if (inventoryCache == null )
             return;
-        if (drag < 0 || drag >= inventoryCache.Length)
+        if (dragSlot < 0 || dragSlot >= inventoryCache.Length)
             return;
 
 
@@ -530,52 +543,52 @@ public class Inventory
             var inventoryCacheTwo = GetInventoryFromDictionary(secondChestID);
             if (inventoryCacheTwo == null)
                 return;
-            if (drop < 0 || drop >= inventoryCacheTwo.Length)
+            if (dropSlot < 0 || dropSlot >= inventoryCacheTwo.Length)
                 return;
 
-            if (inventoryCache[drag] == null && inventoryCacheTwo[drop] == null)
+            if (inventoryCache[dragSlot] == null && inventoryCacheTwo[dropSlot] == null)
             {
                 return;
             }
-            else if (inventoryCache[drag] != null && inventoryCacheTwo[drop] != null)
+            else if (inventoryCache[dragSlot] != null && inventoryCacheTwo[dropSlot] != null)
             {
-                ItemSlot temporaryCache = inventoryCacheTwo[drop];
-                inventoryCacheTwo[drop] = inventoryCache[drag];
-                inventoryCache[drag] = temporaryCache;
+                ItemSlot temporaryCache = inventoryCacheTwo[dropSlot];
+                inventoryCacheTwo[dropSlot] = inventoryCache[dragSlot];
+                inventoryCache[dragSlot] = temporaryCache;
             }
-            else if (inventoryCache[drag] == null && inventoryCacheTwo[drop] != null)
+            else if (inventoryCache[dragSlot] == null && inventoryCacheTwo[dropSlot] != null)
             {
-                inventoryCache[drag] = inventoryCacheTwo[drop];
-                inventoryCacheTwo[drop] = null;
+                inventoryCache[dragSlot] = inventoryCacheTwo[dropSlot];
+                inventoryCacheTwo[dropSlot] = null;
             }
-            else if (inventoryCache[drag] != null && inventoryCacheTwo[drop] == null)
+            else if (inventoryCache[dragSlot] != null && inventoryCacheTwo[dropSlot] == null)
             {
-                inventoryCacheTwo[drop] = inventoryCache[drag];
-                inventoryCache[drag] = null;
+                inventoryCacheTwo[dropSlot] = inventoryCache[dragSlot];
+                inventoryCache[dragSlot] = null;
             }
 
         }
         else
         {
-            if (inventoryCache[drag] == null && inventoryCache[drop] == null)
+            if (inventoryCache[dragSlot] == null && inventoryCache[dropSlot] == null)
             {
                 return;
             }
-            else if (inventoryCache[drag] != null && inventoryCache[drop] != null)
+            else if (inventoryCache[dragSlot] != null && inventoryCache[dropSlot] != null)
             {
-                ItemSlot temporaryCache = inventoryCache[drop];
-                inventoryCache[drop] = inventoryCache[drag];
-                inventoryCache[drag] = temporaryCache;
+                ItemSlot temporaryCache = inventoryCache[dropSlot];
+                inventoryCache[dropSlot] = inventoryCache[dragSlot];
+                inventoryCache[dragSlot] = temporaryCache;
             }
-            else if (inventoryCache[drag] == null && inventoryCache[drop] != null)
+            else if (inventoryCache[dragSlot] == null && inventoryCache[dropSlot] != null)
             {
-                inventoryCache[drag] = inventoryCache[drop];
-                inventoryCache[drop] = null;
+                inventoryCache[dragSlot] = inventoryCache[dropSlot];
+                inventoryCache[dropSlot] = null;
             }
-            else if (inventoryCache[drag] != null && inventoryCache[drop] == null)
+            else if (inventoryCache[dragSlot] != null && inventoryCache[dropSlot] == null)
             {
-                inventoryCache[drop] = inventoryCache[drag];
-                inventoryCache[drag] = null;
+                inventoryCache[dropSlot] = inventoryCache[dragSlot];
+                inventoryCache[dragSlot] = null;
             }
 
         }
@@ -639,11 +652,30 @@ public class ItemSlot
 {
     public ItemSO item;
     public int amount;
-    public int? durability;
-    public ItemSlot(ItemSO item, int amount, int? durability = null)
+    private int? durabiltiy = null;
+    public int GetSetDurability
+    {
+        set => durabiltiy = value; get
+        {
+
+            if (durabiltiy == null)
+            {
+                durabiltiy = 0;
+
+                if (item is GearItemSO)
+                    durabiltiy = (item as GearItemSO).GetMaxDurability;
+                
+                else if (item is ToolItemSO)
+                    durabiltiy = (item as ToolItemSO).GetMaxDurability;
+                
+            
+            }
+            return durabiltiy.GetValueOrDefault();
+        }
+    }
+    public ItemSlot(ItemSO item, int amount)
     {
         this.item = item;
         this.amount = amount;
-        this.durability = durability;
     }
 }

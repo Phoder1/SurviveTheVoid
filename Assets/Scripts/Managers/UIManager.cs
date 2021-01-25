@@ -330,59 +330,60 @@ public class UIManager : MonoSingleton<UIManager>
 
     //Slider amount related
     public void OnChangeGetCraftingAmount() {
+        if (craftingManager != null) {
+            if (craftingManager.CurrentProcessTile != null && craftingManager.selectedRecipe != null) {
 
-        if (craftingManager.CurrentProcessTile != null && craftingManager.selectedRecipe != null) {
+                if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) < 20) {
+                    //SliderBackGround.SetActive(true);
+                    if (craftingManager.CurrentProcessTile.IsCrafting) {
+                        if (craftingManager.CurrentProcessTile.amount >= 20) {
+                            amountSlider.maxValue = 0;
+                            amountSlider.minValue = 0;
+                        }
+                        else {
+                            amountSlider.maxValue = 20 - craftingManager.CurrentProcessTile.amount;
+                            amountSlider.minValue = 1;
+                        }
 
-            if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) < 20) {
-                //SliderBackGround.SetActive(true);
-                if (craftingManager.CurrentProcessTile.IsCrafting) {
-                    if (craftingManager.CurrentProcessTile.amount >= 20) {
-                        amountSlider.maxValue = 0;
-                        amountSlider.minValue = 0;
                     }
                     else {
-                        amountSlider.maxValue = 20 - craftingManager.CurrentProcessTile.amount;
-                        amountSlider.minValue = 1;
+                        amountSlider.maxValue = 20;
                     }
+                    if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) >= 20) {
+                        if (craftingManager.buttonState != ButtonState.CanCraft)
+                            SliderBackGround.SetActive(false);
+                        amountSlider.minValue = 0;
 
+
+                    }
+                    else {
+                        //amountSlider.minValue = 1;
+                        if (craftingManager.buttonState != ButtonState.CanCraft)
+                            SliderBackGround.SetActive(true);
+                    }
                 }
-                else {
-                    amountSlider.maxValue = 20;
-                }
-                if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) >= 20) {
-                    if (craftingManager.buttonState != ButtonState.CanCraft)
-                        SliderBackGround.SetActive(false);
+                else if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) >= 20) {
+                    craftingManager.DeleteOutCome();
+                    //SliderBackGround.SetActive(false);
+                    amountSlider.value = 0;
+                    craftingAmount = 0;
+                    amountSlider.maxValue = 0;
                     amountSlider.minValue = 0;
 
-
-                }
-                else {
-                    //amountSlider.minValue = 1;
-                    if (craftingManager.buttonState != ButtonState.CanCraft)
-                        SliderBackGround.SetActive(true);
                 }
             }
-            else if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) >= 20) {
-                craftingManager.DeleteOutCome();
-                //SliderBackGround.SetActive(false);
-                amountSlider.value = 0;
-                craftingAmount = 0;
-                amountSlider.maxValue = 0;
-                amountSlider.minValue = 0;
 
+
+            craftingAmount = Mathf.RoundToInt(amountSlider.value);
+
+
+            if (craftingManager.selectedRecipe != null) {
+                amountText.text = "Craft: " + craftingAmount + " Gain: " + (craftingManager.selectedRecipe.getoutcomeItem.amount * craftingAmount).ToString();
+                craftingManager.ShowOutCome();
+                TimeToCraftText.text = "Time to craft: " + craftingManager.selectedRecipe.GetCraftingTime * craftingAmount + " Seconds";
+                craftingManager.ShowRecipe(CraftingManager._instance.selectedRecipe);
+                craftingTimer.text = (craftingManager.selectedRecipe.GetCraftingTime * craftingAmount).ToString();
             }
-        }
-
-
-        craftingAmount = Mathf.RoundToInt(amountSlider.value);
-
-
-        if (craftingManager.selectedRecipe != null) {
-            amountText.text = "Craft: " + craftingAmount + " Gain: " + (craftingManager.selectedRecipe.getoutcomeItem.amount * craftingAmount).ToString();
-            craftingManager.ShowOutCome();
-            TimeToCraftText.text = "Time to craft: " + craftingManager.selectedRecipe.GetCraftingTime * craftingAmount + " Seconds";
-            craftingManager.ShowRecipe(CraftingManager._instance.selectedRecipe);
-            craftingTimer.text = (craftingManager.selectedRecipe.GetCraftingTime * craftingAmount).ToString();
         }
         //CraftingManager._instance.UpdateMatsAmount();
     }
@@ -599,31 +600,14 @@ public class UIManager : MonoSingleton<UIManager>
     }
 
     public void ButtonInventory() {
-        if (InventoryUI.activeSelf == true) {
-            InventoryUI.SetActive(false);
-
-            bInteractA.SetActive(true);
-            bGatherB.SetActive(true);
-
-            if (isBuildModeOn == false) {
-                viFight.SetActive(true);
-            }
-            else {
-                viFight.SetActive(false);
-            }
-
-            isInventoryOpen = false;
-        }
-        else {
-            InventoryUI.SetActive(true);
-
-            viFight.SetActive(false);
-            bInteractA.SetActive(false);
-            bGatherB.SetActive(false);
-
-            inventoryManager.UpdateInventoryToUI();
-            isInventoryOpen = true;
-        }
+        bool UiState = !InventoryUI.activeSelf;
+        InventoryUI.SetActive(UiState);
+        Debug.Log("UI state:" + UiState);
+        inventoryManager.GetSetIsUiClosed = UiState;
+        bInteractA.SetActive(!UiState);
+        bGatherB.SetActive(!UiState);
+        isInventoryOpen = UiState;
+        viFight.SetActive(!isBuildModeOn && !UiState);
     }
 
     public void ButtonFightTransition() {
@@ -636,7 +620,7 @@ public class UIManager : MonoSingleton<UIManager>
         isFightModeOn = true;
     }
 
-    public void BottunGatherTransition() {
+    public void ButtonGatherTransition() {
         viFight.transform.GetChild(0).gameObject.SetActive(true);
         viFight.transform.GetChild(1).gameObject.SetActive(false);
 
@@ -733,8 +717,8 @@ public class UIManager : MonoSingleton<UIManager>
     }
     public void SetMusicVolume(float volume)
         => SoundManager._instance.SetVolumeGroup(VolumeGroup.Music, volume);
-    
-    public void SetSoundsVolume(float volume) 
+
+    public void SetSoundsVolume(float volume)
         => SoundManager._instance.SetVolumeGroup(VolumeGroup.Sounds, volume);
 
 
@@ -894,7 +878,26 @@ public class UIManager : MonoSingleton<UIManager>
 
     // Monitors logic
     public void UpdateSurvivalBar(Stat stat, float value) {
-        if (barsDictionary.TryGetValue(stat.statType, out Image image) && stat.GetIsCapped)
+        StatType statType = stat.statType;
+        switch (stat.statType) {
+            case StatType.MaxHP:
+                statType = StatType.HP;
+                break;
+            case StatType.MaxFood:
+                statType = StatType.Food;
+                break;
+            case StatType.MaxWater:
+                statType = StatType.Water;
+                break;
+            case StatType.MaxAir:
+                statType = StatType.Air;
+                break;
+            case StatType.MaxSleep:
+                statType = StatType.Sleep;
+                break;
+
+        }
+        if (barsDictionary.TryGetValue(statType, out Image image) && stat.GetIsCapped)
             image.fillAmount = Mathf.Clamp(value / stat.maxStat.GetSetValue, 0, 1);
     }
 
