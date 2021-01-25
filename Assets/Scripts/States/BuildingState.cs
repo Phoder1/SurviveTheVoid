@@ -1,12 +1,12 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class BuildingState : StateBase
 {
-  
+    public GraphicRaycaster GR;
     Vector2 touchPosition;
     TileHit currentTileHit;
     TileSlot tileSlotCache;
@@ -18,8 +18,8 @@ public class BuildingState : StateBase
 
     public BuildingState() {
         amountOfCurrentItem = 0;
-     
-        gridManager = GridManager._instance; 
+
+           gridManager = GridManager._instance; 
     }
 
 
@@ -38,27 +38,26 @@ public class BuildingState : StateBase
             case TouchPhase.Began:
             case TouchPhase.Moved:
             case TouchPhase.Stationary:
-                if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject() && (currentTileHit != null && currentTileHit.tile != null))
+                if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject() || (currentTileHit != null && currentTileHit.tile == null))
                     return;
 
-
-
+                PointerEventData ped = new PointerEventData(null);
+                ped.position = Input.GetTouch(0).position;
+                List<RaycastResult> results = new List<RaycastResult>();
+                GR.Raycast(ped, results);
+                if (results.Count == 0)
+                {
 
                 touchPosition = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position);
 
 
-
-
-
                 CheckPosition(touchPosition);
-
-
-
-
+                }
                 break;
         }
     }
 
+ 
     private void PlaceDummyBlock(bool isCurrentOnFloor) {
         if (Position[1] == Position[0])
             return;

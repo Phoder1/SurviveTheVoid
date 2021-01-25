@@ -1,6 +1,7 @@
-﻿public class EquipManager
-{
+﻿using System;
 
+public class EquipManager
+{
     Inventory inventory;
     PlayerStats playerStats;
     static EquipManager _instance;
@@ -42,27 +43,24 @@
         ResetEquip();
     }
 
+    // do unequip function to the outside will get itemslot and REMOVE THE FUNCTION
+
+
 
     #region Equips
     public void ResetEquip()
     {
-        if (gearSlots != null)
+        if (gearSlots != null && toolSlots != null)
         {
             for (int i = 0; i < gearSlots.Length; i++)
             {
                 if (gearSlots[i] != null)
-                    UnEquipItem(i);
+                    UnEquipItem(gearSlots[i]);
 
-            }
-        }
-        if (toolSlots != null)
-        {
-            for (int i = 0; i < toolSlots.Length; i++)
-            {
                 toolSlots[i] = null;
-
             }
         }
+        
 
 
         inventory = Inventory.GetInstance;
@@ -76,215 +74,257 @@
     public void ReEquipStats()
     {
 
-        if (gearSlots == null && toolSlots == null)
+        if (gearSlots == null || toolSlots == null)
             return;
 
-        if (gearSlots != null)
-        {
+       
             for (int i = 0; i < gearSlots.Length; i++)
             {
-                if (gearSlots[i] == null)
-                    continue;
+                if (gearSlots[i] != null)
+                       ApplyStats(gearSlots[i].item);
 
-                ApplyStats((gearSlots[i].item as GearItemSO));
+                if (toolSlots[i] != null)
+                    ApplyStats((toolSlots[i].item));
             }
-        }
-        if (toolSlots != null)
-        {
-            if (gearSlots != null)
-            {
-                for (int i = 0; i < toolSlots.Length; i++)
-                {
-                    if (toolSlots[i] == null)
-                        continue;
+        
 
-                    ApplyStats((toolSlots[i].item as ToolItemSO));
-                }
-            }
-        }
     }
-    public bool CheckEquip(ItemSlot item, int firstButtonID, int chestID, int? secondButtonID = null, int secondChestID = 2)
+
+    /// <summary>
+    /// 
+    /// 
+    /// 
+    /// 
+    /// </summary>
+
+    public bool CheckEquip(ItemSlot firstItem, int firstButtonID, int chestID, int? secondButtonID = null, int? secondChestID = null, ItemSlot secondItem = null)
     {
-        if (item == null || item.item == null)
-            return true;
-        if (!(item.item is GearItemSO || item.item is ToolItemSO) && item != null)
+
+        if (firstItem == null && secondItem == null)
             return false;
 
-        equipSlotCache = null;
+        else if (firstItem == null && secondItem != null)
+        {
+            if (!(secondItem.item is GearItemSO || secondItem.item is ToolItemSO))
+                return false;
+            // check single equip
+
+            return true;
+
+
+        }
+        else if (firstItem != null && secondItem == null)
+        {
+            if (!(firstItem.item is GearItemSO || firstItem.item is ToolItemSO))
+                return false;
+            return true;
+
+
+        }
+        else
+        {
+            if (!(firstItem.item is GearItemSO || firstItem.item is ToolItemSO) && !(secondItem.item is GearItemSO || secondItem.item is ToolItemSO))
+                return false;
+            // check swap
+
+
+            if (firstItem.item is GearItemSO || secondItem.item is GearItemSO)
+            {
+                if ((chestID != 2 && chestID != 3) && secondChestID == 2)
+                {
+                    return CheckIndexToGear(secondButtonID.GetValueOrDefault(), firstItem.item as GearItemSO);
+                }
+                else if (chestID == 2 && (secondChestID != 2 && secondChestID !=3))
+                {
+                    return CheckIndexToGear(firstButtonID, secondItem.item as GearItemSO);
+                }
+            }
+            else if (firstItem.item is ToolItemSO || secondItem.item is ToolItemSO)
+            {
+                if ((chestID != 2  && chestID != 3) && secondChestID == 3)
+                {
+                    return CheckIndexToTool(secondButtonID.GetValueOrDefault(), firstItem.item as ToolItemSO);
+                }
+                else if (chestID == 3 && (secondChestID != 2 && secondChestID != 3))
+                {
+                    return CheckIndexToTool(firstButtonID, secondItem.item as ToolItemSO);
+                }
+            }
+
+        }
+
+        return false;
+        { 
+
+        //equipSlotCache = null;
+
+        //if (item.item is GearItemSO)
+        //{
+        //    if (chestID != 2 && secondChestID != 2)
+        //        return false;
+
+        //    if (chestID == 2 && secondChestID == 2)
+        //    {
+        //        inventory.AddToInventory(0, gearSlots[firstButtonID]);
+        //        UnEquipItem(firstButtonID);
+
+        //        return true;
+        //    }
+        //    else if (chestID == 0 && secondChestID == 2 && secondButtonID != null)
+        //    {
+        //        if (gearSlots[secondButtonID.GetValueOrDefault()] != null)
+        //            RemoveStats(gearSlots[secondButtonID.GetValueOrDefault()].item);
+
+        //        ApplyStats(item.item);
+        //        return true;
+        //    }
+
+
+
+        //    if (secondButtonID == null)
+        //    {
+        //        equipSlotCache = inventory.GetItemFromInventoryButton(chestID, firstButtonID);
+        //        if (equipSlotCache == null || equipSlotCache.item == null)
+        //            return false;
+
+
+        //        if (!(equipSlotCache.item is GearItemSO) || firstButtonID < 0)
+        //            return false;
+
+        //        EquipItem(chestID, firstButtonID);
+
+        //        return true;
+        //    }
+        //    return SwapItemsInEquip(firstButtonID, chestID, secondButtonID.GetValueOrDefault(), secondChestID);
+        //}
+
+
+
+
+        //// is tool
+
+
+        //if ((chestID == 3 && secondChestID == 2))
+        //{
+        //    if (toolSlots[firstButtonID] != null)
+        //    {
+        //        inventory.AddToInventory(0, toolSlots[firstButtonID]);
+        //        toolSlots[firstButtonID] = null;
+        //        return true;
+        //    }
+        //}
+        //else if (secondButtonID == null || chestID != 0 && secondChestID != 3)
+        //{
+        //    equipSlotCache = inventory.GetItemFromInventoryButton(chestID, firstButtonID);
+        //    if (equipSlotCache == null || equipSlotCache.item == null)
+        //        return false;
+
+
+        //    if (!(equipSlotCache.item is ToolItemSO) || firstButtonID < 0)
+        //        return false;
+
+
+
+        //    int index = GetToolSlotIndex((equipSlotCache.item as ToolItemSO).GetToolType);
+        //    if (toolSlots[index] != null)
+        //    {
+        //        inventory.AddToInventory(0, toolSlots[index]);
+        //    }
+        //    Inventory.GetInstance.RemoveItemFromInventory(0, equipSlotCache);
+        //    toolSlots[index] = equipSlotCache;
+
+
+        //    InventoryUIManager._instance.UpdatePlayerInventory();
+        //    return true;
+
+
+        //}
+        //if (chestID != 3 && secondChestID != 2 && secondChestID != 3)
+        //    return false;
+
+
+
+        //return SwapItemsInEquip(firstButtonID, chestID, secondButtonID.GetValueOrDefault(), secondChestID);
+    }
+    }
+
+    public bool EquipItem(ItemSlot item)
+    {
+        if (item == null || !(item.item is GearItemSO || item.item is ToolItemSO))
+            return false;
+
 
         if (item.item is GearItemSO)
         {
+            gearCache = null;
+            gearCache = (item.item as GearItemSO);
 
-            if (chestID == 2 && secondChestID == 2)
-            {
-                inventory.AddToInventory(0, gearSlots[firstButtonID]);
-                UnEquipItem(firstButtonID);
+            if (gearSlots[GetGearSlotIndex(gearCache.GetEquipType)] != null)
+                RemoveStats(gearSlots[GetGearSlotIndex(gearCache.GetEquipType)].item);
 
-                return true;
-            }
-            else if (chestID != 2 && secondChestID != 2)
-                return false;
+            ApplyStats(gearCache);
+            return true;
 
 
-
-            if (secondButtonID == null)
-            {
-                equipSlotCache = inventory.GetItemFromInventoryButton(chestID, firstButtonID);
-                if (equipSlotCache == null || equipSlotCache.item == null)
-                    return false;
-
-
-                if (!(equipSlotCache.item is GearItemSO) || firstButtonID < 0)
-                    return false;
-
-                EquipItem(chestID, firstButtonID);
-
-                return true;
-            }
-            return SwapItemsInEquip(firstButtonID, chestID, secondButtonID.GetValueOrDefault(), secondChestID);
         }
-
-
-
-
-        // is tool
-
-
-        if ((chestID == 3 && secondChestID == 2))
+        else if (item.item is ToolItemSO)
         {
-            if (toolSlots[firstButtonID] != null)
-            {
-                inventory.AddToInventory(0, toolSlots[firstButtonID]);
-                toolSlots[firstButtonID] = null;
-                return true;
-
-            }
+            return true;
         }
-        else if (chestID != 3 && secondChestID != 2)
+
+
+        return false;
+        {
+        //int index = GetGearSlotIndex((equipSlotCache.item as GearItemSO).GetEquipType);
+        //if (gearSlots[index] != null)
+        //    UnEquipItem(index);
+        //else
+        //    inventory.GetInventoryFromDictionary(chestID)[buttonID] = null;
+
+
+
+        //gearSlots[index] = equipSlotCache;
+
+
+
+        //ApplyStats((gearSlots[index].item as GearItemSO));
+
+
+        //InventoryUIManager._instance.UpdatePlayerInventory();
+
+
+        //equipSlotCache = null;
+    }
+    }
+    public bool UnEquipItem(ItemSlot item)
+    {
+        if (item == null || !(item.item is GearItemSO || item.item is ToolItemSO))
             return false;
 
 
-
-        if (secondButtonID == null)
+        if (item.item is GearItemSO)
         {
-            equipSlotCache = inventory.GetItemFromInventoryButton(chestID, firstButtonID);
-            if (equipSlotCache == null || equipSlotCache.item == null)
+            gearCache = null;
+            gearCache = (item.item as GearItemSO);
+
+            if (gearSlots[GetGearSlotIndex(gearCache.GetEquipType)] == null)
                 return false;
 
 
-            if (!(equipSlotCache.item is ToolItemSO) || firstButtonID < 0)
-                return false;
-
-
-
-            int index = GetToolSlotIndex((equipSlotCache.item as ToolItemSO).GetToolType);
-            if (toolSlots[index] != null) {
-                inventory.AddToInventory(0, toolSlots[index]);
-            }
-            Inventory.GetInstance.RemoveItemFromInventory(0, equipSlotCache);
-            toolSlots[index] = equipSlotCache;
-
-
-            InventoryUIManager._instance.UpdatePlayerInventory();
+                RemoveStats(gearSlots[GetGearSlotIndex(gearCache.GetEquipType)].item);
             return true;
         }
-
-
-
-
-        return SwapItemsInEquip(firstButtonID, chestID, secondButtonID.GetValueOrDefault(), secondChestID);
-    }
-    private bool SwapItemsInEquip(int firstButtonID, int chestID, int secondButtonID, int secondChestID)
-    {
-        gearCache = null;
-
-        if (chestID == 2)
+        else if (item.item is ToolItemSO)
         {
-            gearCache = inventory.GetItemFromInventoryButton(secondChestID, secondButtonID).item as GearItemSO;
-
-            if (gearCache == null || !CheckIndexToGear(firstButtonID, gearCache))
+            if (toolSlots[GetToolSlotIndex((item.item as ToolItemSO).GetToolType)] == null)
                 return false;
-
-
-            if (gearSlots[firstButtonID] != null)
-                RemoveStats(gearSlots[firstButtonID].item as GearItemSO);
-
-
-            ApplyStats(gearCache);
-            return true;
-        }
-        else if (secondChestID == 2)
-        {
-            gearCache = inventory.GetItemFromInventoryButton(chestID, firstButtonID).item as GearItemSO;
-
-            if (gearCache == null || !CheckIndexToGear(secondButtonID, gearCache))
-                return false;
-
-
-            if (gearSlots[secondButtonID] != null)
-                RemoveStats(gearSlots[secondButtonID].item as GearItemSO);
-
-            ApplyStats(gearCache);
-
-            return true;
-
-        }
-        else if (chestID == 3)
-        {
-            toolCache = inventory.GetItemFromInventoryButton(secondChestID, secondButtonID).item as ToolItemSO;
-
-            if (toolCache == null || !CheckIndexToTool(firstButtonID, toolCache))
-                return false;
-
-            return true;
-        }
-        else if (secondChestID == 3)
-        {
-            toolCache = inventory.GetItemFromInventoryButton(chestID, firstButtonID).item as ToolItemSO;
-
-            if (toolCache == null || !CheckIndexToTool(secondButtonID, toolCache))
-                return false;
-
 
             return true;
         }
 
 
         return false;
-    }
-    private void EquipItem(int chestID, int buttonID)
-    {
-
-        int index = GetGearSlotIndex((equipSlotCache.item as GearItemSO).GetEquipType);
-        if (gearSlots[index] != null)
-            UnEquipItem(index);
-        else
-            inventory.GetInventoryFromDictionary(chestID)[buttonID] = null;
-
-
-
-        gearSlots[index] = equipSlotCache;
-
-
-
-        ApplyStats((gearSlots[index].item as GearItemSO));
-
-
-        InventoryUIManager._instance.UpdateInventoryToUI();
-
-
-        equipSlotCache = null;
-    }
-    private void UnEquipItem(int buttonID)
-    {
-        if (gearSlots[buttonID] == null)
-            return;
-
-
-        RemoveStats((gearSlots[buttonID].item as GearItemSO));
-
-        gearSlots[buttonID] = null;
-        InventoryUIManager._instance.UpdateInventoryToUI();
+     
     }
     #endregion
     #region Durability Section
@@ -337,11 +377,12 @@
         if (equipSlotCache.GetSetDurability - amount <= 0)
         {
             toolSlots[GetToolSlotIndex(type)] = null;
+            InventoryUIManager._instance.UpdateToolsToUI();
             return;
         }
 
         equipSlotCache.GetSetDurability -= amount;
-
+        InventoryUIManager._instance.UpdateToolsToUI();
     }
     public void SetAmountOfGearDurability(GearType equipType, int amount)
     {
@@ -359,8 +400,14 @@
             amount *= -1;
 
 
-        if (equipSlotCache.GetSetDurability - amount <= 0)
-            UnEquipItem(GetGearSlotIndex(equipType));
+        if (equipSlotCache.GetSetDurability - amount <= 0) 
+                        {
+            RemoveStats(equipSlotCache.item);
+            gearSlots[GetGearSlotIndex(equipType)] = null;
+            equipSlotCache = null;
+            return;
+        }
+           
 
 
 
@@ -369,7 +416,7 @@
     }
     #endregion
     #region Tiers
-    public int GetTierOfGearByIndex(int index)
+    private int GetTierOfGearByIndex(int index)
     {
         if ((index < 0) || index >= gearSlots.Length || gearSlots[index] == null)
             return 0;
@@ -383,7 +430,7 @@
     public int GetTierByEnum(ToolType type) {
         return GetTierOfToolByIndex(GetToolSlotIndex(type));
     }
-    public int GetTierOfToolByIndex(int index) {
+    private int GetTierOfToolByIndex(int index) {
 
         if ((index < 0) || index >= toolSlots.Length || toolSlots[index] == null)
             return 0;
@@ -540,7 +587,7 @@
                     continue;
                 }
 
-                PlayerStats._instance.AddToStatValue(gearCache.equipstats[i].statType, gearCache.equipstats[i].amount);
+                playerStats.AddToStatValue(gearCache.equipstats[i].statType, gearCache.equipstats[i].amount);
             }
         }
     }
@@ -566,6 +613,7 @@
             return;
 
         (toolSlots[buttonID].item as ToolItemSO).SetGetIsActive = state;
+        UnityEngine.Debug.Log((toolSlots[buttonID].item as ToolItemSO).SetGetIsActive);
     }
     public float? GetGatheringSpeedFromTool(ToolType tool)
     {

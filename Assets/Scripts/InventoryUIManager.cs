@@ -237,10 +237,12 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
         ItemSlot DraggedTemp = inventory.GetItemFromInventoryButton(FirstChestID, takingFromIndex);
         ItemSlot DroppedTemp = inventory.GetItemFromInventoryButton(SecondChestID, droppingAtIndex);
+
         bool swapable = CanEquipOnCurrentInventory(takingFrom, droppingAt, DraggedTemp, DroppedTemp, takingFromIndex, droppingAtIndex)
             && CanEquipOnCurrentInventory(droppingAt, takingFrom, DroppedTemp, DraggedTemp, droppingAtIndex, takingFromIndex);
         if (swapable) {
             inventory.ChangeBetweenItems(FirstChestID, SecondChestID, takingFromIndex, droppingAtIndex);
+
         }
         UpdatePlayerInventory();
         return swapable;
