@@ -17,7 +17,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
     [Header("Slots Related")]
     public Color SlotColor;
     public Image TrashCanBackGround;
-    public bool IsDragging;
+    public bool isDragging;
     private bool isUiOpen;
     public bool GetSetIsUiClosed {
         get => isUiOpen;
@@ -278,18 +278,18 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         if (swapable) {
             if (takingFrom == SlotChestType.Gear || takingFrom == SlotChestType.Tools) {
                 equipManager.UnEquipItem(draggedItem);
-            if(occupyingTile != null)
-                equipManager.EquipItem(occupyingTile);
+                if (occupyingTile != null)
+                    equipManager.EquipItem(occupyingTile);
             }
             if (droppingAt == SlotChestType.Gear || droppingAt == SlotChestType.Tools) {
-                if (occupyingTile != null) 
+                if (occupyingTile != null)
                     equipManager.UnEquipItem(occupyingTile);
                 equipManager.EquipItem(draggedItem);
             }
             inventory.ChangeBetweenItems(GetInventoryID(takingFrom), GetInventoryID(droppingAt), takingFromIndex, droppingAtIndex);
 
-            UpdatePlayerInventory();
         }
+        UpdatePlayerInventory();
         return swapable;
     }
 
