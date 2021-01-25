@@ -9,11 +9,12 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     private InputManager inputManager;
     private GridManager gridManager;
     private Scanner scanner;
+    private EquipManager equipManager;
 
     [SerializeField] float baseSpeed;
-   
+
     [SerializeField] PlayerGFX _playerGFX;
-        [SerializeField] int interactionLookRange = 5, airLookRange;
+    [SerializeField] int interactionLookRange = 5, airLookRange;
     [SerializeField] float InterractionDistance;
 
 
@@ -44,8 +45,8 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     public DirectionEnum GetMovementDirection => gridMovementDirection;
     bool playerIsDead = false;
 
-    public override void Init()
-    {
+    public override void Init() {
+        equipManager = EquipManager.GetInstance;
         _playerGFX = GetComponent<PlayerGFX>();
         _playerGFX._anim = GetComponent<Animator>();
         cameraController = CameraController._instance;
@@ -60,17 +61,15 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         startPositionOfPlayer = base.transform.position;
         GameManager.DeathEvent += DeathReset;
     }
-    private void Update()
-     {
+    private void Update() {
         if (!playerIsDead) {
-        currentPosOnGrid = gridManager.WorldToGridPosition((Vector2)base.transform.position, TileMapLayer.Floor);
-        UpdateGridDirection();
-        CheckForTrees();
+            currentPosOnGrid = gridManager.WorldToGridPosition((Vector2)base.transform.position, TileMapLayer.Floor);
+            UpdateGridDirection();
+            CheckForTrees();
         }
     }
 
-    private void FixedUpdate()
-    {
+    private void FixedUpdate() {
         if (!playerIsDead) {
             Vector2 movementVector = inputManager.VJAxis * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue;
             movementVector.y *= 0.5f;
@@ -184,6 +183,9 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
             yield return new WaitForSeconds(gatheringTime);
 
             tileHit.tile.GatherInteraction(tileHit.gridPosition, TileMapLayer.Buildings);
+            int? durability;
+            if ((durability = equipManager.GetToolDurability(gatherable.GetToolType)) != null)
+                equipManager.SetAmountOfToolDurability(gatherable.GetToolType, (int)durability - gatherable.GetGatherDurabilityCost);
             SoundManager._instance.DisableLooping(gatherable.getGatheringSound);
             Debug.Log("TileHarvested");
             tileBeingGathered = null;
@@ -220,8 +222,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
 
 
 
-    public void DeathReset()
-    {
+    public void DeathReset() {
         playerIsDead = true;
         airRegenCont?.Stop();
         //Start death animation
@@ -244,8 +245,11 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     public class GatheringScanChecker : IChecker
     {
         public bool CheckTile(TileSlot tile) {
-
-            return tile.IsGatherable;
+            EquipManager equipManager = EquipManager.GetInstance;
+            if (tile.GetTileAbst is GatherableTileSO gatherable) {
+                return (equipManager.GetToolActive(gatherable.GetToolType) && gatherable.GetSourceTier <= equipManager.GetTierByEnum(gatherable.GetToolType));
+            }
+            return false;
         }
     }
     public class SpecialInterractionScanChecker : IChecker { public bool CheckTile(TileSlot tile) => tile.isSpecialInteraction; }
