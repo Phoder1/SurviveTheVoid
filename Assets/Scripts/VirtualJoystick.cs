@@ -6,37 +6,55 @@ using UnityEngine.EventSystems;
 
 public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
-    private Image joystick;
+    private Image joystickKnob;
     private Image joystickBG;
+    private RectTransform rectTransform;
     [SerializeField] float joystickOffset;
-    public Vector2 inpudDir { set; get; }
+    [Range(0,1)]
+    [SerializeField] float minimumLength;
+    public Vector2 joystickVector { set; get; }
+    private Vector2 joystickPosition => transform.position;
+    private Vector2 joystickSize => rectTransform.sizeDelta * rectTransform.localScale * mainCanvas.scaleFactor;
+    [SerializeField] Canvas mainCanvas;
     private void Start()
     {
         joystickBG = GetComponent<Image>();
-        joystick = transform.GetChild(0).GetComponent<Image>();
+        joystickKnob = transform.GetChild(0).GetComponent<Image>();
+        rectTransform = GetComponent<RectTransform>();
         
+
+
 
     }
     public void OnDrag(PointerEventData eventData)
     {
-        Vector2 pos = Vector2.zero;
-        float joystickBGx = joystickBG.rectTransform.sizeDelta.x;
-        float joystickBGy = joystickBG.rectTransform.sizeDelta.y;
-        if(RectTransformUtility.ScreenPointToLocalPointInRectangle(joystickBG.rectTransform,eventData.position,eventData.pressEventCamera,out pos))
-        {
-            pos.x /= joystickBGx;
-            pos.y /= joystickBGy;
-            inpudDir = new Vector2(pos.x, pos.y);
-            
-            if (inpudDir.magnitude > 1)
-            {
-                inpudDir = inpudDir.normalized; 
-            }
+        Vector2 size = joystickSize;
+        Vector2 tempVector = eventData.position - joystickPosition;
+        
+        tempVector = Vector2.ClampMagnitude(tempVector, size.x / 2);
+        if (tempVector.magnitude <= minimumLength * (size.x / 2))
+            tempVector = Vector2.zero;
+        joystickKnob.rectTransform.position = joystickPosition + tempVector;
+        tempVector = tempVector / (size.x / 2);
+        joystickVector = tempVector;
 
-            joystick.rectTransform.anchoredPosition = new Vector2(inpudDir.x * joystickBGx/joystickOffset, inpudDir.y * joystickBGy/ joystickOffset);
+        //float joystickBGx = joystickBG.rectTransform.sizeDelta.x;
+        //float joystickBGy = joystickBG.rectTransform.sizeDelta.y;
+
+        //Vector2 pos;
+        //if (RectTransformUtility.ScreenPointToLocalPointInRectangle(joystickBG.rectTransform, eventData.position, eventData.pressEventCamera, out pos)) {
+        //    //pos.x /= joystickBGx;
+        //    //pos.y /= joystickBGy;
+        //    inpudDir = new Vector2(pos.x, pos.y);
+
+        //    if (inpudDir.magnitude > 1) {
+        //        inpudDir = inpudDir.normalized;
+        //    }
+
+        //    joystickKnob.rectTransform.anchoredPosition = new Vector2(inpudDir.x * joystickBGx / joystickOffset, inpudDir.y * joystickBGy / joystickOffset);
 
 
-        }
+        //}
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -46,8 +64,8 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHan
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        inpudDir = Vector2.zero;
-        joystick.rectTransform.anchoredPosition = Vector2.zero;
+        joystickVector = Vector2.zero;
+        joystickKnob.rectTransform.anchoredPosition = Vector2.zero;
     }
 
 

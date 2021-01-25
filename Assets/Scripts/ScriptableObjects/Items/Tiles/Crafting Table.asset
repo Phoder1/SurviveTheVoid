@@ -16,11 +16,11 @@ MonoBehaviour:
   itemName: Crafting Table
   maxStackSize: 20
   description: A table used for crafting
-  itemEnum: 0
   sprite: {fileID: 21300000, guid: cb09d5c7b32b9094fa8dd51c73928ea3, type: 3}
   mainTileBase: {fileID: 11400000, guid: 4dc2a2f02030fa94ca9b0741a5cc1362, type: 2}
-  interactionType: 7
   isSolid: 1
+  isAirSource: 0
   processorType: 0
-  whenActiveTile: {fileID: 11400000, guid: 4dc2a2f02030fa94ca9b0741a5cc1362, type: 2}
+  whenActiveTile: {fileID: 11400000, guid: 9af0a2790885b844fa779b483547fadc, type: 2}
   speed: 0
+  gatheringSound: 0
