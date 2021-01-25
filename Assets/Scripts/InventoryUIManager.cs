@@ -257,8 +257,6 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         if (dragged == null || dragged.item == null)
             return true;
         switch (toChest) {
-            case SlotChestTypes.Inventory:
-                return true;
             case SlotChestTypes.HotKey:
                 return (dragged.item.GetItemType == ItemType.Consumable);
             case SlotChestTypes.Equip:

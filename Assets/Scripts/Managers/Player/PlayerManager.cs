@@ -244,21 +244,12 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     public class GatheringScanChecker : IChecker
     {
         public bool CheckTile(TileSlot tile) {
+
             return tile.IsGatherable;
         }
     }
-    public class SpecialInterractionScanChecker : IChecker
-    {
-        public bool CheckTile(TileSlot tile) {
-            return tile.isSpecialInteraction;
-        }
-    }
-    public class AirSourcesScanChecker : IChecker
-    {
-        public bool CheckTile(TileSlot tile) {
-            return tile.GetIsAirSource;
-        }
-    }
+    public class SpecialInterractionScanChecker : IChecker { public bool CheckTile(TileSlot tile) => tile.isSpecialInteraction; }
+    public class AirSourcesScanChecker : IChecker { public bool CheckTile(TileSlot tile) => tile.GetIsAirSource; }
 
     [System.Serializable]
     public class PlayerMovementHandler

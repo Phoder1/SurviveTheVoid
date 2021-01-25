@@ -19,18 +19,18 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     public SlotChestTypes slotType;
     [Min(0)]
     public int slotPosition;
-    InventoryUIManager inventoryUI;
-    public bool IsDraggingThis;
-    public Image highLightedSprite;
-    public Image ItemSprite;
-    public TextMeshProUGUI ItemAmount;
-    private bool leftFrame;
-    public Color NormalColor;
-    public Color HighLightedColor;
-    EquipManager equipManager = EquipManager.GetInstance;
+    [SerializeField] private Image highLightedSprite;
+    [SerializeField] private Image ItemSprite;
+    [SerializeField] private TextMeshProUGUI ItemAmount;
+    [SerializeField] private Color NormalColor;
+    [SerializeField] private Color HighLightedColor;
     [SerializeField] private GameObject toggleOutline;
     [SerializeField] private GameObject highlightOutline;
-    DragNDropVisual Vis;
+    private EquipManager equipManager = EquipManager.GetInstance;
+    private InventoryUIManager inventoryUI;
+    private bool IsDraggingThis;
+    private bool leftFrame;
+    private DragNDropVisual Vis;
     private void Start() {
         inventoryUI = InventoryUIManager._instance;
         Vis = gameObject.GetComponent<DragNDropVisual>();
@@ -56,9 +56,6 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
             inventoryUI.DroppingAt(slotType, slotPosition);
             HighLightSlot();
         }
-
-
-
     }
 
     public void OnPointerExit(PointerEventData eventData) {
