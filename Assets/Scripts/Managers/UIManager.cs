@@ -600,14 +600,31 @@ public class UIManager : MonoSingleton<UIManager>
     }
 
     public void ButtonInventory() {
-        bool UiState = !InventoryUI.activeSelf;
-        InventoryUI.SetActive(UiState);
-        Debug.Log("UI state:" + UiState);
-        inventoryManager.GetSetIsUiClosed = UiState;
-        bInteractA.SetActive(!UiState);
-        bGatherB.SetActive(!UiState);
-        isInventoryOpen = UiState;
-        viFight.SetActive(!isBuildModeOn && !UiState);
+        if (InventoryUI.activeSelf == true) {
+            InventoryUI.SetActive(false);
+
+            bInteractA.SetActive(true);
+            bGatherB.SetActive(true);
+
+            if (isBuildModeOn == false) {
+                viFight.SetActive(true);
+            }
+            else {
+                viFight.SetActive(false);
+            }
+
+            isInventoryOpen = false;
+        }
+        else {
+            InventoryUI.SetActive(true);
+
+            viFight.SetActive(false);
+            bInteractA.SetActive(false);
+            bGatherB.SetActive(false);
+
+            inventoryManager.UpdateInventoryToUI();
+            isInventoryOpen = true;
+        }
     }
 
     public void ButtonFightTransition() {
@@ -620,7 +637,7 @@ public class UIManager : MonoSingleton<UIManager>
         isFightModeOn = true;
     }
 
-    public void ButtonGatherTransition() {
+    public void BottunGatherTransition() {
         viFight.transform.GetChild(0).gameObject.SetActive(true);
         viFight.transform.GetChild(1).gameObject.SetActive(false);
 
@@ -717,8 +734,8 @@ public class UIManager : MonoSingleton<UIManager>
     }
     public void SetMusicVolume(float volume)
         => SoundManager._instance.SetVolumeGroup(VolumeGroup.Music, volume);
-
-    public void SetSoundsVolume(float volume)
+    
+    public void SetSoundsVolume(float volume) 
         => SoundManager._instance.SetVolumeGroup(VolumeGroup.Sounds, volume);
 
 

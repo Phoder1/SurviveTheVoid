@@ -102,11 +102,12 @@
                 }
             }
         }
+
+
     }
     public bool CheckEquip(ItemSlot item, int firstButtonID, int chestID, int? secondButtonID = null, int secondChestID = 2)
     {
-        if (item == null || item.item == null)
-            return true;
+
         if (!(item.item is GearItemSO || item.item is ToolItemSO) && item != null)
             return false;
 
@@ -540,7 +541,7 @@
                     continue;
                 }
 
-                PlayerStats._instance.AddToStatValue(gearCache.equipstats[i].statType, gearCache.equipstats[i].amount);
+                playerStats.AddToStatValue(gearCache.equipstats[i].statType, gearCache.equipstats[i].amount);
             }
         }
     }
