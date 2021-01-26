@@ -43,13 +43,14 @@ public class BuildingState : StateBase
             case TouchPhase.Began:
             case TouchPhase.Moved:
             case TouchPhase.Stationary:
-                if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject() || (currentTileHit != null && currentTileHit.tile == null))
+
+                if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject())//|| (currentTileHit != null && currentTileHit.tile == null)
                     return;
 
            
                 touchPosition = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position);
 
-
+                currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
                 CheckPosition(touchPosition);
                 
                 break;
@@ -81,26 +82,29 @@ public class BuildingState : StateBase
         if (Position[0] == gridManager.GetHitFromWorldPosition(worldPos, TileMapLayer.Floor).gridPosition)
             return;
 
-        currentTileHit = gridManager.GetHitFromWorldPosition(worldPos, TileMapLayer.Floor);
+     
 
-        Position[0] = new Vector2Int(currentTileHit.gridPosition.x, currentTileHit.gridPosition.y);
+   
 
-
+          
 
 
         // there is a block on the floor
         // check if there is no a block above it 
         if (currentTileHit.tile != null && gridManager.GetHitFromWorldPosition(worldPos, TileMapLayer.Buildings).tile == null) {
 
-            RemovePreviousTile();
+
+
+            Position[0] = new Vector2Int(currentTileHit.gridPosition.x, currentTileHit.gridPosition.y);
+
+
             PlaceDummyBlock(false);
 
         }
         else if (currentlyPlacedOnFloor) {
             if (currentTileHit.tile == null && gridManager.GetHitFromWorldPosition(worldPos, TileMapLayer.Buildings).tile == null) {
+                Position[0] = new Vector2Int(currentTileHit.gridPosition.x, currentTileHit.gridPosition.y);
 
-
-                RemovePreviousTile();
                 PlaceDummyBlock(true);
 
             }
@@ -131,11 +135,18 @@ public class BuildingState : StateBase
     public void PressedConfirmBuildingButton() {
         if (!isBuildingAttached || tileSlotCache == null || currentTileHit == null)
             return;
+      
+
 
         if (wasFloorLayer) {
+        
+
+
             gridManager.SetTile(tileSlotCache, Position[2], TileMapLayer.Floor, true);
         }
         else {
+        
+
             gridManager.SetTile(tileSlotCache, Position[2], TileMapLayer.Buildings, true);
         }
 
