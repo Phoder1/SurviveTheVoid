@@ -85,7 +85,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         if (!playerIsDead) {
             Vector2 movementVector = inputManager.VJAxis * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue;
             movementVector.y *= 0.5f;
-            if (movementVector != Vector2.zero) {
+            if (movementVector != Vector2.zero && closestTile == null) {
                 Move(movementVector);
 
                 _playerGFX.Walk(true, totalSpeed);
@@ -150,7 +150,8 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         return scanner.Scan(currentPosOnGrid, gridMovementDirection, interactionLookRange, TileMapLayer.Buildings, checkType);
     }
     public void ImplementInteraction(bool SpecialInteract) {
-        gatherWasPressed = true;
+        gatherWasPressed = !SpecialInteract;
+        specialWasPressed = SpecialInteract;
         if (closestTile == null) {
             if (SpecialInteract) {
                 closestTile = Scan(new SpecialInterractionScanChecker());
