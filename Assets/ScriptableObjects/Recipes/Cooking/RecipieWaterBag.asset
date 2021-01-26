@@ -10,18 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0385232e857e8e446aa3c8cacfcbfb44, type: 3}
-  m_Name: RecipeCraftingTable
+  m_Name: RecipieWaterBag
   m_EditorClassIdentifier: 
   ItemCostArr:
-  - item: {fileID: 11400000, guid: 6e3627ca283f52b4499153bb2af26248, type: 2}
-    amount: 2
-  - item: {fileID: 11400000, guid: 15f6588093b9bde479796bc44fb85fd4, type: 2}
-    amount: 1
+  - item: {fileID: 11400000, guid: aa20fa708bbce4c4b9867d11c545b7dc, type: 2}
+    amount: 6
+  - item: {fileID: 11400000, guid: 7ef8f8ae7a922374895b3e0c0235acf5, type: 2}
+    amount: 4
   outcomeItem:
-    item: {fileID: 11400000, guid: 8ea548a2c682f27479dd1a078a7962ce, type: 2}
-    amount: 1
-  tier: 0
-  section: 1
+    item: {fileID: 11400000, guid: 389161c3dcc42d6489683ad9aa061544, type: 2}
+    amount: 5
+  tier: 1
+  section: 5
   isUnlocked: 1
-  processorType: 0
+  processorType: 1
   CraftingTime: 10
+  expReward: 0

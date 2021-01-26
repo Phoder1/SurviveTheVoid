@@ -6,7 +6,9 @@ public enum SectionEnum
     Plants,
     Weapons,
     Tools,
-    Food
+    Food,
+    Generic,
+    Gear
 }
 
 public enum ProcessorType
