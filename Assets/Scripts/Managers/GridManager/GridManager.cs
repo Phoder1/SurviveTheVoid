@@ -234,6 +234,7 @@ public partial class GridManager : MonoSingleton<GridManager>
     public void SetTile(TileSlot tile, Vector2Int gridPosition, TileMapLayer buildingLayer, bool playerAction = true) {
 
         Vector2Int chunkPos = GridToChunkCoordinates(gridPosition);
+        SetTileColor(gridPosition, buildingLayer, Color.white);
         if (TryGetChunk(chunkPos, out Chunk chunk)) {
             chunk.SetTile(tile, gridPosition, buildingLayer, playerAction, false);
         }
@@ -242,7 +243,7 @@ public partial class GridManager : MonoSingleton<GridManager>
         }
     }
 
-    public void SetDummyTile(TileSlot tile, Vector2Int gridPosition, TileMapLayer buildingLayer) {
+    public void SetDummyTile(TileSlot tile, Vector2Int gridPosition, TileMapLayer buildingLayer, Color color) {
         Tilemap tilemap = GetTilemap(buildingLayer);
         if (GetTileFromGrid(gridPosition,buildingLayer) == null) {
             if (tile == null) {
@@ -250,6 +251,7 @@ public partial class GridManager : MonoSingleton<GridManager>
             }
             else {
                 GetTilemap(buildingLayer).SetTile((Vector3Int)gridPosition, tile.GetMainTileBase);
+                SetTileColor(gridPosition, buildingLayer, color);
             }
         }
     }

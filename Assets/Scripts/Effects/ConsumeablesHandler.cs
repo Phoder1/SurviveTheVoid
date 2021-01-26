@@ -30,7 +30,7 @@ public class ConsumeablesHandler : MonoSingleton<ConsumeablesHandler>
         AddToDict(StatType.MaxFood, 3, 3);
         AddToDict(StatType.Water, 0.5f, 3);
         AddToDict(StatType.MaxWater, 3, 3);
-        AddToDict(StatType.Air, 3, 3);
+        AddToDict(StatType.Air, 0.5f, 3);
         AddToDict(StatType.MaxAir, 3, 3);
         AddToDict(StatType.Sleep, 3, 3);
         AddToDict(StatType.MaxSleep, 3, 3);

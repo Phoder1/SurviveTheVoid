@@ -27,7 +27,7 @@ public class RemovalState : StateBase
                 touchPosition = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position);
 
                 currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Buildings);
-                gridManager.SetDummyTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings);
+                gridManager.SetDummyTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings, Color.white);
                 if (currentTileHit == null || currentTileHit.tile == null || gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) == null)
                     return;
                 Debug.Log("Found!");
