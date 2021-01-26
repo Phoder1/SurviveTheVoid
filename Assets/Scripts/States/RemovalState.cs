@@ -10,7 +10,6 @@ public class RemovalState : StateBase
 
     public RemovalState() { 
         gridManager = GridManager._instance;
-   
     }
 
     public override void ButtonB()
@@ -25,7 +24,7 @@ public class RemovalState : StateBase
             case TouchPhase.Moved:
             case TouchPhase.Stationary:
 
-                touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
+                touchPosition = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position);
 
                 currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Buildings);
                 gridManager.SetDummyTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings);
@@ -44,10 +43,11 @@ public class RemovalState : StateBase
 
 
 
-        if (currentTileHit != null && Inventory.GetInstance.AddToInventory(0, new ItemSlot(currentTileHit.tile.GetTileAbst, 1)))
+        if (currentTileHit != null&& currentTileHit.tile.GetIsDestructible && Inventory.GetInstance.AddToInventory(0, new ItemSlot(currentTileHit.tile.GetTileAbst, 1)))
         {
-
             gridManager.SetTile(null, currentTileHit.gridPosition, TileMapLayer.Buildings, true);
+            tileSlotCache = null;
+
         }
     }
 

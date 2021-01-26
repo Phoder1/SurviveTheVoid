@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine;
 
-public class TrashCan : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler,IPointerUpHandler
+public class TrashCan : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 {
-    bool IsDragginOnTrashCan;
+    public bool IsDragginOnTrashCan;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (InventoryUIManager._instance.IsHoldingItem)
+        if (InventoryUIManager._instance.takingFromIndex >= 0)
         {
             IsDragginOnTrashCan = true;
             InventoryUIManager._instance.IsDragginToTrash = true;
@@ -24,22 +24,8 @@ public class TrashCan : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
         IsDragginOnTrashCan = false;
     }
 
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        if (IsDragginOnTrashCan)
-        {
-            Debug.Log("pointer up");
-            ThrowItem();
-        }
-    }
 
-    void ThrowItem()
-    {
-        Debug.Log("Throwing Item");
-
-        InventoryUIManager._instance.RemoveTrashHighLight();
-    }
-
+  
 
 
 }

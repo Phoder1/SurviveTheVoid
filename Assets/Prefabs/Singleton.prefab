@@ -9,8 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1105160804974540972}
+  - component: {fileID: 9164461480191919650}
   m_Layer: 0
-  m_Name: SoundContainer
+  m_Name: SoundManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,15 +29,56 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1105160805761189473}
-  - {fileID: 1105160806426443984}
   - {fileID: 1105160806830723981}
-  - {fileID: 1105160806158470206}
   - {fileID: 1105160805916512047}
   - {fileID: 1105160806434763122}
+  - {fileID: 1105160806158470206}
   - {fileID: 1105160806154153856}
+  - {fileID: 1105160806426443984}
   m_Father: {fileID: 8259702621401894649}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9164461480191919650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1105160804974540974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb37a161eaf02d545a46eb8bd2e32f90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioSources:
+  - audioSource: {fileID: 1105160805761189472}
+    sound: 0
+    VolumeGroup: 0
+    defaultVolume: 0
+  - audioSource: {fileID: 1105160806830723986}
+    sound: 1
+    VolumeGroup: 1
+    defaultVolume: 0
+  - audioSource: {fileID: 1105160805916512044}
+    sound: 2
+    VolumeGroup: 1
+    defaultVolume: 0
+  - audioSource: {fileID: 1105160806434763123}
+    sound: 3
+    VolumeGroup: 1
+    defaultVolume: 0
+  - audioSource: {fileID: 1105160806158470207}
+    sound: 4
+    VolumeGroup: 1
+    defaultVolume: 0
+  - audioSource: {fileID: 1105160806154153857}
+    sound: 5
+    VolumeGroup: 1
+    defaultVolume: 0
+  - audioSource: {fileID: 1105160806426443985}
+    sound: 6
+    VolumeGroup: 1
+    defaultVolume: 0
 --- !u!1 &1105160805761189475
 GameObject:
   m_ObjectHideFlags: 0
@@ -48,7 +90,7 @@ GameObject:
   - component: {fileID: 1105160805761189473}
   - component: {fileID: 1105160805761189472}
   m_Layer: 0
-  m_Name: BackGroundSound
+  m_Name: BackGroundMusic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -175,7 +217,7 @@ GameObject:
   - component: {fileID: 1105160805916512047}
   - component: {fileID: 1105160805916512044}
   m_Layer: 0
-  m_Name: wOODcHOP
+  m_Name: HarvestTree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -193,7 +235,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1105160804974540972}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &1105160805916512044
 AudioSource:
@@ -320,7 +362,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1105160804974540972}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &1105160806154153857
 AudioSource:
@@ -447,7 +489,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1105160804974540972}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &1105160806158470207
 AudioSource:
@@ -574,7 +616,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1105160804974540972}
-  m_RootOrder: 1
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &1105160806426443985
 AudioSource:
@@ -683,7 +725,7 @@ GameObject:
   - component: {fileID: 1105160806434763122}
   - component: {fileID: 1105160806434763123}
   m_Layer: 0
-  m_Name: StoneHit
+  m_Name: HarvestStone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -701,7 +743,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1105160804974540972}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &1105160806434763123
 AudioSource:
@@ -715,7 +757,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: e401ba924915f564e85328e0e80ca295, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.3
+  m_Volume: 0.15
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -828,7 +870,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1105160804974540972}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &1105160806830723986
 AudioSource:
@@ -937,7 +979,6 @@ GameObject:
   - component: {fileID: 8259702621401894649}
   - component: {fileID: 8299357133394408407}
   - component: {fileID: 4043660047941272735}
-  - component: {fileID: 4010407033306944410}
   - component: {fileID: 4002651174605677083}
   - component: {fileID: 1916986686293705550}
   - component: {fileID: 41707134889584068}
@@ -993,27 +1034,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vJ: {fileID: 0}
---- !u!114 &4010407033306944410
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6828253403587073456}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb37a161eaf02d545a46eb8bd2e32f90, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioinitList:
-  - {fileID: 1105160805761189472}
-  - {fileID: 1105160806426443985}
-  - {fileID: 1105160806830723986}
-  - {fileID: 1105160806158470207}
-  - {fileID: 1105160805916512044}
-  - {fileID: 1105160806434763123}
-  - {fileID: 1105160806154153857}
-  sounds: 00000000060000000100000004000000020000000300000005000000
 --- !u!114 &4002651174605677083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1081,6 +1101,31 @@ MonoBehaviour:
     overlapStart: 1500
   buildingsGeneration:
   - tile: {fileID: 11400000, guid: 7e65aa60f26158b4b996e206110fc114, type: 2}
+    chance: 0.01
+    distance: 0
+    spread: 0
+    global: 1
+  - tile: {fileID: 11400000, guid: cc01397123cb8d848999e88d4a7801c1, type: 2}
+    chance: 0.01
+    distance: 0
+    spread: 0
+    global: 1
+  - tile: {fileID: 11400000, guid: 8e98db741a88b584991dbf067aca19b6, type: 2}
+    chance: 0.001
+    distance: 0
+    spread: 0
+    global: 1
+  - tile: {fileID: 11400000, guid: 4beb4737faec12442bb67d0b68f3f4c8, type: 2}
+    chance: 0.001
+    distance: 0
+    spread: 0
+    global: 1
+  - tile: {fileID: 11400000, guid: 86404689dc27d044ea3fe5654d15f743, type: 2}
+    chance: 0.001
+    distance: 0
+    spread: 0
+    global: 1
+  - tile: {fileID: 11400000, guid: cc01397123cb8d848999e88d4a7801c1, type: 2}
     chance: 0.01
     distance: 0
     spread: 0
@@ -1196,23 +1241,22 @@ Tilemap:
       e11: 0
       e12: 0
       e13: NaN
-      e20: -6.0373
+      e20: -1.2762458e-11
       e21: 0
-      e22: -37.940918
-      e23: 3.1053217e+32
-      e30: 7.93e-43
+      e22: -1.2893685e-14
+      e23: -6.934747e+21
+      e30: 6.53e-43
       e31: 0
-      e32: 7.93e-43
-      e33: 4.5905e-41
+      e32: 6.53e-43
+      e33: 4.5904e-41
   m_TileColorArray:
   - m_RefCount: 0
-    m_Data: {r: 0.0000000017678623, g: 0.0000000017678623, b: 0.0000000017678623,
-      a: 0.0000000017678623}
+    m_Data: {r: -7.088608, g: -7.088608, b: -7.088608, a: -7.088608}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Origin: {x: 0, y: -15, z: 0}
-  m_Size: {x: 24, y: 47, z: 1}
+  m_Origin: {x: -4, y: -15, z: 0}
+  m_Size: {x: 28, y: 47, z: 1}
   m_TileAnchor: {x: 0, y: 0, z: 2}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
@@ -1371,7 +1415,15 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   m_TileSpriteArray:
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
   - m_RefCount: 0
@@ -1380,30 +1432,29 @@ Tilemap:
   - m_RefCount: 0
     m_Data:
       e00: NaN
-      e01: -5.2260874e-17
-      e02: -5.2260795e-17
+      e01: 0
+      e02: 0
       e03: NaN
       e10: NaN
-      e11: 7.9e-43
-      e12: 7.9e-43
+      e11: 0
+      e12: 0
       e13: NaN
-      e20: 0.0062849596
-      e21: -5.2258545e-17
-      e22: -5.226998e-17
-      e23: -5.226998e-17
-      e30: 7.95e-43
-      e31: 7.9e-43
-      e32: 7.9e-43
-      e33: 7.9e-43
+      e20: -1.2762458e-11
+      e21: 0
+      e22: -1.2893685e-14
+      e23: -6.934747e+21
+      e30: 6.53e-43
+      e31: 0
+      e32: 6.53e-43
+      e33: 4.5904e-41
   m_TileColorArray:
   - m_RefCount: 0
-    m_Data: {r: 0.0000000017285231, g: 0.0000000017285231, b: 0.0000000017285231,
-      a: 0.0000000017285231}
+    m_Data: {r: -5.062393, g: -5.062393, b: -5.062393, a: -5.062393}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Origin: {x: 0, y: -18, z: 0}
-  m_Size: {x: 23, y: 49, z: 1}
+  m_Origin: {x: -4, y: -18, z: 0}
+  m_Size: {x: 27, y: 49, z: 1}
   m_TileAnchor: {x: 0, y: 0, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:

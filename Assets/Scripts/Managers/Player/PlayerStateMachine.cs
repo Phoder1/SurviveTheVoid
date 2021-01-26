@@ -1,10 +1,11 @@
-﻿public enum InputState { DefaultState, BuildState, FightState , RemovalState };
-public class PlayerStateMachine 
+﻿using UnityEngine;
+
+public enum InputState { DefaultState, BuildState, FightState, RemovalState };
+public class PlayerStateMachine
 {
     private static PlayerStateMachine _instance;
     StateBase[] stateBases = new StateBase[4];
-    private PlayerStateMachine()
-    {
+    private PlayerStateMachine() {
         stateBases[0] = new DefaultState();
         stateBases[1] = new BuildingState();
         stateBases[2] = new FightState();
@@ -14,28 +15,25 @@ public class PlayerStateMachine
     }
     public static PlayerStateMachine GetInstance {
         get {
-            if (_instance == null)
-            {
+            if (_instance == null) {
                 _instance = new PlayerStateMachine();
             }
             return _instance;
         }
     }
-    public void SwitchState(InputState newState)
-    {
-               UnityEngine.Debug.Log(newState);
+    public void SwitchState(InputState newState) {
+        UnityEngine.Debug.Log(newState);
 
 
 
         CameraController._instance.GetSetIsZoomedIn = false;
-       
-            if (InputManager.GetCurrentState is BuildingState)
-             (InputManager.GetCurrentState as BuildingState).ResetBeforeChangeStates();
 
-        
+        if (InputManager.GetCurrentState is BuildingState)
+            (InputManager.GetCurrentState as BuildingState).ResetBeforeChangeStates();
 
-        switch (newState)
-        {
+
+
+        switch (newState) {
             case InputState.DefaultState:
                 InputManager.SetInputState = stateBases[0];
                 break;
@@ -43,7 +41,6 @@ public class PlayerStateMachine
                 InputManager.SetInputState = stateBases[1];
                 CameraController._instance.GetSetIsZoomedIn = true;
                 break;
-
             case InputState.FightState:
                 InputManager.SetInputState = stateBases[2];
                 break;
@@ -52,7 +49,7 @@ public class PlayerStateMachine
                 CameraController._instance.GetSetIsZoomedIn = true;
                 break;
             default:
-                    InputManager.SetInputState = stateBases[0];
+                InputManager.SetInputState = stateBases[0];
                 break;
 
         }

@@ -3,12 +3,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public enum SlotChestTypes
+public enum SlotChestType
 {
     none,
     Inventory,
     HotKey,
-    Equip,
+    Gear,
     Tools,
     Chest
 }
@@ -16,57 +16,52 @@ public enum SlotChestTypes
 
 public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler, IPointerEnterHandler
 {
-    public SlotChestTypes slotType;
+    public SlotChestType slotType;
+    [Min(0)]
     public int slotPosition;
-    InventoryUIManager inventoryUI;
-    public bool IsDraggingThis;
-    public Image highLightedSprite;
-    public Image ItemSprite;
-    public TextMeshProUGUI ItemAmount;
-
-    public Color NormalColor;
-    public Color HighLightedColor;
-    DragNDropVisual Vis;
-    private void Start()
-    {
+    [SerializeField] private Image highLightedSprite;
+    [SerializeField] private Image itemSprite;
+    [SerializeField] private Image defualtItemSprite;
+    [SerializeField] private TextMeshProUGUI itemAmount;
+    [SerializeField] private Color NormalColor;
+    [SerializeField] private Color HighLightedColor;
+    [SerializeField] private GameObject toggleOutline;
+    [SerializeField] private GameObject highlightOutline;
+    private EquipManager equipManager = EquipManager.GetInstance;
+    private InventoryUIManager inventoryUI;
+    private bool leftFrame;
+    
+    private DragNDropVisual Vis;
+    private void Start() {
         inventoryUI = InventoryUIManager._instance;
         Vis = gameObject.GetComponent<DragNDropVisual>();
+        SetToggleOutline(true);
     }
 
 
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        if (inventoryUI.takingFrom == SlotChestTypes.none)
-        {
-            int ChestId = (int)slotType - 1;
-            var checkIfSlotIsItem = inventoryUI.GetInventory.GetItemFromInventoryButton(ChestId, slotPosition);
-            if (checkIfSlotIsItem != null)
-            {
-                IsDraggingThis = true;
+    public void OnPointerDown(PointerEventData eventData) {
+        if (inventoryUI.takingFrom == SlotChestType.none) {
+            leftFrame = false;
+            var checkIfSlotIsItem = inventoryUI.GetInventory.GetItemFromInventoryButton(inventoryUI.GetInventoryID(slotType), slotPosition);
+            if (checkIfSlotIsItem != null) {
                 inventoryUI.TakingFrom(slotType, slotPosition);
                 HighLightSlot();
             }
 
         }
     }
-    
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        if (inventoryUI.takingFrom != SlotChestTypes.none)
-        {
+
+    public void OnPointerEnter(PointerEventData eventData) {
+        if (inventoryUI.takingFrom != SlotChestType.none && (inventoryUI.takingFromIndex != slotPosition || inventoryUI.takingFrom != slotType)) {
             inventoryUI.DroppingAt(slotType, slotPosition);
             HighLightSlot();
         }
-
-
-
     }
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
+    public void OnPointerExit(PointerEventData eventData) {
         //if taking anything
-        if (inventoryUI.takingFrom != SlotChestTypes.none)
-        {
+        if (inventoryUI.takingFrom != SlotChestType.none) {
+            leftFrame = true;
             //to not by accident dehighlight the one you picked up
 
             //dropping at equip != inventory = true + taking from 0 = 0 = true = true both
@@ -74,96 +69,97 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
             //
 
 
-            if (inventoryUI.takingFromIndex != slotPosition) // if 0 != 0 = true
+            if (inventoryUI.takingFromIndex != slotPosition || inventoryUI.takingFrom != slotType) // if 0 != 0 = true
             {
-                if (inventoryUI.droppingAt == slotType)// if equip == equip = true;
-                {
-                    //de highlight in correct inventory
-                    DeHighLightSlot();
-                }
                 //de highlight slot in correct inventory
                 DeHighLightSlot();
             }
 
 
             // resets so you dont drop at anywhere
-            inventoryUI.DroppingAt(SlotChestTypes.none, -1);
+            inventoryUI.DroppingAt(SlotChestType.none, -1);
 
-          
+
 
         }
-        
+
     }
 
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        if (inventoryUI.takingFromIndex >= 0 && inventoryUI.droppingAtIndex >= 0)
-        {
-            inventoryUI.SwapItems();
+    public void OnPointerUp(PointerEventData eventData) {
+        if (inventoryUI.takingFromIndex >= 0 && inventoryUI.droppingAtIndex >= 0) {
+            inventoryUI.TrySwapItems();
         }
-        else
-        {
+        else if (!leftFrame) {
             SlotAction();
-        }
-        if(Vis != null)
+        }else if (inventoryUI.IsDragginToTrash)
         {
+            inventoryUI.RemoveItemViaTrashCan();
+        }
+        if (Vis != null) {
             Vis.ReturnToPos();
         }
 
         DeHighLightSlot();
         ResetDrag();
-        IsDraggingThis = false;
-    }
-
-
-
-    public void ResetDrag()
-    {
-        inventoryUI.DroppingAt(SlotChestTypes.none, -1);
-        inventoryUI.TakingFrom(SlotChestTypes.none, -1);
 
     }
 
 
-    public void UpdateSlot(ItemSlot Item)
-    {
-        ItemSprite.gameObject.SetActive(true);
-        ItemSprite.sprite = Item.item.getsprite;
-        if (ItemAmount != null)
-            ItemAmount.text = Item.amount.ToString();
-    }
-    public void EmptySlot()
-    {
-        ItemSprite.gameObject.SetActive(false);
-        ItemSprite.sprite = null;
 
-        if (ItemAmount != null)
-            ItemAmount.text = "";
+    public void ResetDrag() {
+        inventoryUI.DroppingAt(SlotChestType.none, -1);
+        inventoryUI.TakingFrom(SlotChestType.none, -1);
+
     }
 
 
+    public void UpdateSlot(ItemSlot item) {
+        SetItemSprite(true, item);
+    }
+    public void EmptySlot() {
+        SetItemSprite(false, null);
+    }
 
-    public void HighLightSlot()
-    {
+
+
+    public void HighLightSlot() {
         highLightedSprite.color = HighLightedColor;
+        if (highlightOutline != null)
+            highlightOutline.SetActive(true);
     }
 
-    public void DeHighLightSlot()
-    {
+    public void DeHighLightSlot() {
         highLightedSprite.color = NormalColor;
+        if (highlightOutline != null)
+            highlightOutline.SetActive(false);
     }
 
-    void SlotAction()
-    {
-        inventoryUI.OnPressedInventoryButton();
+    void SlotAction() {
+        if (!inventoryUI.GetSetIsUiClosed && slotType == SlotChestType.Tools) {
+            equipManager.SetActiveStateTool(equipManager.GetToolTypeByIndex(slotPosition), !equipManager.GetToolActive(equipManager.GetToolTypeByIndex(slotPosition)));
+            SetToggleOutline(equipManager.GetToolActive(equipManager.GetToolTypeByIndex(slotPosition)));
+        }
+        else {
+            inventoryUI.OnPressedInventoryButton();
+        }
     }
-
-
-
-
-
-
-
-
-
+    public void SetToggleOutline(bool state) {
+        if (toggleOutline != null)
+            toggleOutline.SetActive(state);
+    }
+    private void SetItemSprite(bool state, ItemSlot item) {
+        itemSprite.gameObject.SetActive(state);
+        if (defualtItemSprite)
+            defualtItemSprite.gameObject.SetActive(!state);
+        if (state) {
+            itemSprite.sprite = item.item.getsprite;
+            if (itemAmount != null)
+                itemAmount.text = (item.amount <= 1 ? "" : item.amount.ToString());
+        }
+        else {
+            itemSprite.sprite = null;
+            if (itemAmount != null)
+                itemAmount.text = "";
+        }
+    }
 }

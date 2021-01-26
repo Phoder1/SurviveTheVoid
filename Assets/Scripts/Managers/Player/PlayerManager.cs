@@ -9,13 +9,13 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     private InputManager inputManager;
     private GridManager gridManager;
     private Scanner scanner;
+    private EquipManager equipManager;
 
     [SerializeField] float baseSpeed;
-   
-    [SerializeField] PlayerGFX _playerGFX;
-        [SerializeField] int interactionLookRange = 5, airLookRange;
-    [SerializeField] float InterractionDistance;
 
+    [SerializeField] PlayerGFX _playerGFX;
+    [SerializeField] int interactionLookRange = 5, airLookRange;
+    [SerializeField] float InterractionDistance;
 
     TileHit closestTile;
 
@@ -31,21 +31,33 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     Coroutine gatherCoroutine = null;
     private Vector2Int lastCheckPosition = new Vector2Int(int.MaxValue, int.MaxValue);
     private float lastTreeCheckTime = 0;
-    [SerializeField] float animDelay;
+ 
     private const float treeCheckInterval = 0.5f;
     private Vector2Int currentPosOnGrid;
     private Vector3 startPositionOfPlayer;
     public Vector2Int GetCurrentPosOnGrid => currentPosOnGrid;
     private EffectController airRegenCont;
     private EffectData airRegenData;
-    private GatherableTileSO tileBeingGathered;
+    private TileHit tileBeingGathered;
     private DirectionEnum gridMovementDirection;
+    public PlayerGFX GetPlayerGFX {
+
+        get
+        {
+            if (_playerGFX == null)
+            {
+                _playerGFX = GetComponent<PlayerGFX>();
+            }
+            return _playerGFX;
+        }
+    
+    }
 
     public DirectionEnum GetMovementDirection => gridMovementDirection;
     bool playerIsDead = false;
 
-    public override void Init()
-    {
+    public override void Init() {
+        equipManager = EquipManager.GetInstance;
         _playerGFX = GetComponent<PlayerGFX>();
         _playerGFX._anim = GetComponent<Animator>();
         cameraController = CameraController._instance;
@@ -59,18 +71,17 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         airRegenData = new EffectData(StatType.Air, EffectType.OverTime, 10f, Mathf.Infinity, 0.5f, false, false);
         startPositionOfPlayer = base.transform.position;
         GameManager.DeathEvent += DeathReset;
+        GameManager.RespawnEvent += RespawnReset;
     }
-    private void Update()
-     {
+    private void Update() {
         if (!playerIsDead) {
-        currentPosOnGrid = gridManager.WorldToGridPosition((Vector2)base.transform.position, TileMapLayer.Floor);
-        UpdateGridDirection();
-        CheckForTrees();
+            currentPosOnGrid = gridManager.WorldToGridPosition((Vector2)base.transform.position, TileMapLayer.Floor);
+            UpdateGridDirection();
+            CheckForTrees();
         }
     }
 
-    private void FixedUpdate()
-    {
+    private void FixedUpdate() {
         if (!playerIsDead) {
             Vector2 movementVector = inputManager.VJAxis * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue;
             movementVector.y *= 0.5f;
@@ -112,9 +123,11 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     private void CancelGathering() {
         StopCoroutine(gatherCoroutine);
         gatherCoroutine = null;
-        SoundManager._instance.DisableLooping(tileBeingGathered.getGatheringSound);
+        SoundManager._instance.DisableLooping(((GatherableTileSO)tileBeingGathered.tile.GetTileAbst).getGatheringSound);
         UIManager._instance.CancelProgressBar();
+        ((GatherableState)tileBeingGathered.tile.tileState).SetIsBeingGatheredState(false, tileBeingGathered.gridPosition);
         tileBeingGathered = null;
+
     }
 
     private void CheckForTrees() {
@@ -171,15 +184,23 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     }
     IEnumerator HarvestTile(TileHit tileHit) {
         if (tileHit.tile.GetTileAbst is GatherableTileSO gatherable) {
-            tileBeingGathered = gatherable;
-            float gatheringTime = gatherable.GetGatheringTime / gatheringSpeed.GetSetValue;
+            ((GatherableState)tileHit.tile.tileState).SetIsBeingGatheredState(true, tileHit.gridPosition);
+            UIManager._instance.CancelProgressBar();
+            tileBeingGathered = tileHit;
+            float gatheringTime = gatherable.GetGatheringTime / (gatheringSpeed.GetSetValue * equipManager.GetGatheringSpeedFromTool(gatherable.GetToolType));
             Vector2 tileWorldPos = gridManager.GridToWorldPosition(tileHit.gridPosition, TileMapLayer.Buildings, true);
             Camera currentCamera = CameraController._instance.GetCurrentActiveCamera;
             Vector2 tileScreenPos = currentCamera.WorldToScreenPoint(tileWorldPos);
             UIManager._instance.StartProgressBar(tileScreenPos, gatheringTime);
             SoundManager._instance.PlaySoundLooped(gatherable.getGatheringSound);
+
+
             yield return new WaitForSeconds(gatheringTime);
+
             tileHit.tile.GatherInteraction(tileHit.gridPosition, TileMapLayer.Buildings);
+       
+            if (( equipManager.GetToolDurability(gatherable.GetToolType)) != null )
+                equipManager.LowerAmountOfToolDurability(gatherable.GetToolType, gatherable.GetGatherDurabilityCost);
             SoundManager._instance.DisableLooping(gatherable.getGatheringSound);
             Debug.Log("TileHarvested");
             tileBeingGathered = null;
@@ -216,45 +237,31 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
 
 
 
-    public void DeathReset()
-    {
+    private void DeathReset() {
         playerIsDead = true;
         airRegenCont?.Stop();
-        //Start death animation
         _playerGFX.Death();
-        //Death screen transition
-        StartCoroutine(DeathTransition(animDelay));
-        //transform.position = startPositionOfPlayer;
     }
-    public IEnumerator DeathTransition(float extraDelay) {
-        yield return new WaitForSeconds(_playerGFX.GetDeathAnimLength + extraDelay);
-
-
+  
+    private void RespawnReset() {
         _playerGFX.Reborn();
-
+        //  Debug.Log("Player Reborn");
         transform.position = startPositionOfPlayer;
         playerIsDead = false;
-
     }
 
     public class GatheringScanChecker : IChecker
     {
         public bool CheckTile(TileSlot tile) {
-            return tile.IsGatherable;
+            EquipManager equipManager = EquipManager.GetInstance;
+            if (tile.GetTileAbst is GatherableTileSO gatherable) {
+                return (equipManager.GetToolActive(gatherable.GetToolType) && gatherable.GetSourceTier <= equipManager.GetTierByEnum(gatherable.GetToolType) && tile.IsGatherable);
+            }
+            return false;
         }
     }
-    public class SpecialInterractionScanChecker : IChecker
-    {
-        public bool CheckTile(TileSlot tile) {
-            return tile.isSpecialInteraction;
-        }
-    }
-    public class AirSourcesScanChecker : IChecker
-    {
-        public bool CheckTile(TileSlot tile) {
-            return tile.GetIsAirSource;
-        }
-    }
+    public class SpecialInterractionScanChecker : IChecker { public bool CheckTile(TileSlot tile) => tile.isSpecialInteraction; }
+    public class AirSourcesScanChecker : IChecker { public bool CheckTile(TileSlot tile) => tile.GetIsAirSource; }
 
     [System.Serializable]
     public class PlayerMovementHandler

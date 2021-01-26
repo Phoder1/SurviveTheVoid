@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79e76a88f55714548bb59252d769c07b, type: 3}
+  m_Name: Leaf headwear
+  m_EditorClassIdentifier: 
+  itemID: 0
+  itemName: Leaf headwear
+  maxStackSize: 1
+  description: 
+  sprite: {fileID: 0}
+  equipType: 0
+  maxDurability: 100
+  gearTier: 1
+  equipstats:
+  - statType: 10
+    isPercentage: 1
+    amount: 45

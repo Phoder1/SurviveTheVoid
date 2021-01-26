@@ -16,16 +16,21 @@ public class TimeManager : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
-        if (timedEventsList.Count > 0) {
-            while (timedEventsList.First.Value.triggerTime <= Time.time) {
-                TimeEvent triggeredEvent = timedEventsList.First.Value;
-                triggeredEvent.Trigger();
-                if(timedEventsList.Count == 0) { break; }
+    void Update()
+    {
+        if (timedEventsList != null)
+        {
+            if (timedEventsList.Count > 0)
+            {
+                while (timedEventsList.First.Value.triggerTime <= Time.time)
+                {
+                    TimeEvent triggeredEvent = timedEventsList.First.Value;
+                    triggeredEvent.Trigger();
+                    if (timedEventsList.Count == 0) { break; }
+                }
             }
         }
     }
-
     public LinkedListNode<TimeEvent> AddEvent(TimeEvent timedEvent) {
 
         float eventTriggerTime = timedEvent.triggerTime;

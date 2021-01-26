@@ -9,7 +9,7 @@ public class UIManager : MonoSingleton<UIManager>
     CraftingManager craftingManager;
     InventoryUIManager inventoryManager;
     PlayerStats playerStats;
-
+    
     // UI elements
     [SerializeField]
     private GameObject
@@ -41,7 +41,7 @@ public class UIManager : MonoSingleton<UIManager>
         stateText,
         xpBar;
     [SerializeField] private TextMeshProUGUI levelNumber;
-
+    [SerializeField] Image blackPanelImage;
     [Header("Survival bar's fill")]
     [SerializeField]
     private Image
@@ -50,7 +50,8 @@ public class UIManager : MonoSingleton<UIManager>
         waterFill,
         airFill,
         sleepFill,
-        xpFill;
+        xpFill,
+        screenOutline;
     private Dictionary<StatType, Image> barsDictionary;
     [SerializeField] RectTransform progressBarFillObj;
     [SerializeField] float progressBarTickTime;
@@ -60,8 +61,7 @@ public class UIManager : MonoSingleton<UIManager>
 
     bool CanCollect;
 
-    public override void Init()
-    {
+    public override void Init() {
         playerStats = PlayerStats._instance;
         craftingManager = CraftingManager._instance;
         inventoryManager = InventoryUIManager._instance;
@@ -77,42 +77,47 @@ public class UIManager : MonoSingleton<UIManager>
     }
 
 
-    private void Update()
-    {
+    private void Update() {
         ButtonControls();
 
 
-        if (CraftingUI.activeInHierarchy && craftingManager.CurrentProcessTile != null && craftingManager.CurrentProcessTile.IsCrafting && craftingManager.CurrentProcessTile.amount > 0)
-        {
+        if (CraftingUI.activeInHierarchy && craftingManager.CurrentProcessTile != null && craftingManager.CurrentProcessTile.IsCrafting && craftingManager.CurrentProcessTile.amount > 0) {
             ShowCraftingTimer(craftingManager.CurrentProcessTile.ItemsCrafted, craftingManager.CurrentProcessTile.amount, craftingManager.CurrentProcessTile.CraftingTimeRemaining);
             //ShowTimeAndCollectable(craftingManager.CurrentProcessTile.ItemsCrafted, craftingManager.CurrentProcessTile.amount, craftingManager.CurrentProcessTile.CraftingTimeRemaining);
         }
-
     }
 
     public void StartProgressBar(Vector2 screenPosition, float duration) {
-        progressBarFillObj.position = screenPosition;
-        progressBarCoroutine = StartCoroutine(progressBarFill(duration));
+        progressBarCoroutine = StartCoroutine(ProgressBarFill(duration));
     }
     public void CancelProgressBar() {
-        StopCoroutine(progressBarCoroutine);
-        progressBarCoroutine = null;
-        progressBarFillObj.gameObject.SetActive(false);
-    }
-
-    IEnumerator progressBarFill(float duration) {
-        progressBarFillObj.gameObject.SetActive(true);
-        float startTime = Time.time;
-        float fillAmount = 0;
-        progressBarFillImage.fillAmount = fillAmount;
-        while (Time.time <= startTime + duration) {
-            fillAmount += progressBarTickTime / duration;
-            progressBarFillImage.fillAmount = fillAmount;
-            yield return new WaitForSeconds(progressBarTickTime);
+        if (progressBarCoroutine != null) {
+            StopCoroutine(progressBarCoroutine);
+            progressBarCoroutine = null;
+            progressBarFillObj.gameObject.SetActive(false);
         }
+    }
+
+    IEnumerator ProgressBarFill(float duration) {
+        //duration *= 0.85f;
+        progressBarFillObj.gameObject.SetActive(true);
+
+        progressBarFillImage.fillAmount = 0;
+        float barStepProgress;
+        float startTime = Time.time;
+
+        while (startTime + duration > Time.time)
+        {
+            barStepProgress = Time.deltaTime / duration;
+            progressBarFillImage.fillAmount += barStepProgress;
+            yield return Time.deltaTime;
+        }
+
+
         progressBarFillObj.gameObject.SetActive(false);
 
     }
+    public void SetScreenOutlineColor(Color color) => screenOutline.color = color;
 
 
     #region CraftingUI
@@ -135,73 +140,60 @@ public class UIManager : MonoSingleton<UIManager>
 
     public int getCraftingAmount => craftingAmount;
 
-    public void OnClickSelectedSections(string _section)
-    {
-        if (craftingManager.buttonState == ButtonState.CanCraft)
-        {
+    public void OnClickSelectedSections(string _section) {
+        if (craftingManager.buttonState == ButtonState.CanCraft) {
             craftingManager.SelectSection(_section);
             HighLightSection(_section);
         }
     }
 
-    public void OnClickSelectedRecipe(int _recipe)
-    {
+    public void OnClickSelectedRecipe(int _recipe) {
         craftingManager.SelectRecipe(_recipe);
     }
 
-    public void OnClickCraftButton()
-    {
+    public void OnClickCraftButton() {
         craftingManager.AttemptToCraft();
         Debug.Log("Short Click");
     }
-    public void OnLongClickCraftButton()
-    {
+    public void OnLongClickCraftButton() {
         craftingManager.AttemptToCraftMax();
         Debug.Log("Craft the max you can");
     }
 
-    public void HighLightSection(string _section)
-    {
-        for (int i = 0; i < SectionBackGroundImage.Length; i++)
-        {
-            if (_section == "Blocks")
-            {
+    public void HighLightSection(string _section) {
+        for (int i = 0; i < SectionBackGroundImage.Length; i++) {
+            if (_section == "Blocks") {
                 if (i != 0)
                     SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
 
 
                 SectionBackGroundImage[0].sprite = sectionBackGroundSprite[1];
             }
-            else if (_section == "Furnitures")
-            {
+            else if (_section == "Furnitures") {
                 if (i != 1)
                     SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
 
                 SectionBackGroundImage[1].sprite = sectionBackGroundSprite[1];
             }
-            else if (_section == "Plants")
-            {
+            else if (_section == "Plants") {
                 if (i != 2)
                     SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
 
                 SectionBackGroundImage[2].sprite = sectionBackGroundSprite[1];
             }
-            else if (_section == "Weapons")
-            {
+            else if (_section == "Weapons") {
                 if (i != 3)
                     SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
 
                 SectionBackGroundImage[3].sprite = sectionBackGroundSprite[1];
             }
-            else if (_section == "Tools")
-            {
+            else if (_section == "Tools") {
                 if (i != 4)
                     SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
 
                 SectionBackGroundImage[4].sprite = sectionBackGroundSprite[1];
             }
-            else if (_section == "Food")
-            {
+            else if (_section == "Food") {
                 if (i != 5)
                     SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
 
@@ -216,10 +208,8 @@ public class UIManager : MonoSingleton<UIManager>
 
 
 
-    public void SetButtonToState(ButtonState CraftState, int craftedItem, int AmountRemaining, float timeCraftingRemaining = 0)
-    {
-        switch (CraftState)
-        {
+    public void SetButtonToState(ButtonState CraftState, int craftedItem, int AmountRemaining, float timeCraftingRemaining = 0) {
+        switch (CraftState) {
             case ButtonState.CanCraft:
                 craftingManager.buttonState = ButtonState.CanCraft;
                 CanCraftState();
@@ -236,10 +226,38 @@ public class UIManager : MonoSingleton<UIManager>
                 break;
         }
     }
-
-
-    public void CanCraftState()
-    {
+    public void BlackPanel(bool start) {
+       
+        if (start)
+        {
+            StartCoroutine(DeathScreen());
+        }
+        else
+        {
+            StopCoroutine(DeathScreen());
+        }
+    
+    }
+   
+    IEnumerator DeathScreen() {
+        float timerOfDeathScreen = 1f;
+        float startingTime = Time.time;
+        float alphaSpeed = 0;
+        while (Time.time< startingTime+timerOfDeathScreen)
+        {
+            alphaSpeed += 2f* Time.deltaTime;
+            blackPanelImage.color = new Color(blackPanelImage.color.r, blackPanelImage.color.g, blackPanelImage.color.b, alphaSpeed); ;
+            yield return null;
+        }
+        startingTime = Time.time;
+        while (Time.time < startingTime + timerOfDeathScreen)
+        {
+            alphaSpeed -= 5f * Time.deltaTime;
+            blackPanelImage.color = new Color(blackPanelImage.color.r, blackPanelImage.color.g, blackPanelImage.color.b, alphaSpeed); ;
+            yield return null;
+        }
+    }
+    public void CanCraftState() {
         //update only when need
         CurrentRecipeOutSprite.gameObject.SetActive(false);
         //craftingTimer.gameObject.SetActive(false);
@@ -255,8 +273,7 @@ public class UIManager : MonoSingleton<UIManager>
         CurrentRecipeOutSprite.sprite = null;
     }
 
-    public void CraftingState(int craftedItem, int AmountRemaining, float timeCraftingRemaining)
-    {
+    public void CraftingState(int craftedItem, int AmountRemaining, float timeCraftingRemaining) {
         //update when need
         Debug.Log("Testing if state is on update crafting");
         CurrentRecipeOutSprite.gameObject.SetActive(true);
@@ -273,8 +290,7 @@ public class UIManager : MonoSingleton<UIManager>
 
 
     }
-    public void CanCollectState(int craftedItem, int AmountRemaining, float timeCraftingRemaining)
-    {
+    public void CanCollectState(int craftedItem, int AmountRemaining, float timeCraftingRemaining) {
         //update when need
         Debug.Log("Testing if state is on update collect");
         //craftingTimer.gameObject.SetActive(true);
@@ -292,8 +308,7 @@ public class UIManager : MonoSingleton<UIManager>
 
     }
 
-    void ShowCraftingTimer(int craftedItem, int AmountRemaining, float timeCraftingRemaining)
-    {
+    void ShowCraftingTimer(int craftedItem, int AmountRemaining, float timeCraftingRemaining) {
 
 
         //always update
@@ -307,8 +322,7 @@ public class UIManager : MonoSingleton<UIManager>
 
     }
 
-    public void ShowTimeAndCollectable(int craftedItem, int AmountRemaining, float timeCraftingRemaining)
-    {
+    public void ShowTimeAndCollectable(int craftedItem, int AmountRemaining, float timeCraftingRemaining) {
         if (timeCraftingRemaining <= 0)// no time
         {
             //SetButtonToState(ButtonState.CanCraft, craftedItem, AmountRemaining, timeCraftingRemaining);
@@ -317,8 +331,7 @@ public class UIManager : MonoSingleton<UIManager>
                 if (craftingManager.buttonState != ButtonState.CanCraft)
                     SetButtonToState(ButtonState.CanCraft, craftedItem, AmountRemaining, timeCraftingRemaining);
             }
-            else
-            {
+            else {
                 if (craftedItem > 0)// if you still have something to pick up
                 {
                     if (craftingManager.buttonState != ButtonState.Collect)
@@ -344,71 +357,61 @@ public class UIManager : MonoSingleton<UIManager>
 
 
     //Slider amount related
-    public void OnChangeGetCraftingAmount()
-    {
+    public void OnChangeGetCraftingAmount() {
+        if (craftingManager != null) {
+            if (craftingManager.CurrentProcessTile != null && craftingManager.selectedRecipe != null) {
 
-        if (craftingManager.CurrentProcessTile != null && craftingManager.selectedRecipe != null)
-        {
+                if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) < 20) {
+                    //SliderBackGround.SetActive(true);
+                    if (craftingManager.CurrentProcessTile.IsCrafting) {
+                        if (craftingManager.CurrentProcessTile.amount >= 20) {
+                            amountSlider.maxValue = 0;
+                            amountSlider.minValue = 0;
+                        }
+                        else {
+                            amountSlider.maxValue = 20 - craftingManager.CurrentProcessTile.amount;
+                            amountSlider.minValue = 1;
+                        }
 
-            if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) < 20)
-            {
-                //SliderBackGround.SetActive(true);
-                if (craftingManager.CurrentProcessTile.IsCrafting)
-                {
-                    if (craftingManager.CurrentProcessTile.amount >= 20)
-                    {
-                        amountSlider.maxValue = 0;
+                    }
+                    else {
+                        amountSlider.maxValue = 20;
+                    }
+                    if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) >= 20) {
+                        if (craftingManager.buttonState != ButtonState.CanCraft)
+                            SliderBackGround.SetActive(false);
                         amountSlider.minValue = 0;
-                    }
-                    else
-                    {
-                        amountSlider.maxValue = 20 - craftingManager.CurrentProcessTile.amount;
-                        amountSlider.minValue = 1;
-                    }
 
+
+                    }
+                    else {
+                        //amountSlider.minValue = 1;
+                        if (craftingManager.buttonState != ButtonState.CanCraft)
+                            SliderBackGround.SetActive(true);
+                    }
                 }
-                else
-                {
-                    amountSlider.maxValue = 20;
-                }
-                if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) >= 20)
-                {
-                    if (craftingManager.buttonState != ButtonState.CanCraft)
-                        SliderBackGround.SetActive(false);
+                else if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) >= 20) {
+                    craftingManager.DeleteOutCome();
+                    //SliderBackGround.SetActive(false);
+                    amountSlider.value = 0;
+                    craftingAmount = 0;
+                    amountSlider.maxValue = 0;
                     amountSlider.minValue = 0;
 
-
-                }
-                else
-                {
-                    //amountSlider.minValue = 1;
-                    if (craftingManager.buttonState != ButtonState.CanCraft)
-                        SliderBackGround.SetActive(true);
                 }
             }
-            else if (Mathf.CeilToInt(craftingManager.CurrentProcessTile.amount / craftingManager.selectedRecipe.getoutcomeItem.amount) >= 20)
-            {
-                craftingManager.DeleteOutCome();
-                //SliderBackGround.SetActive(false);
-                amountSlider.value = 0;
-                craftingAmount = 0;
-                amountSlider.maxValue = 0;
-                amountSlider.minValue = 0;
 
+
+            craftingAmount = Mathf.RoundToInt(amountSlider.value);
+
+
+            if (craftingManager.selectedRecipe != null) {
+                amountText.text = "Craft: " + craftingAmount + " Gain: " + (craftingManager.selectedRecipe.getoutcomeItem.amount * craftingAmount).ToString();
+                craftingManager.ShowOutCome();
+                TimeToCraftText.text = "Time to craft: " + craftingManager.selectedRecipe.GetCraftingTime * craftingAmount + " Seconds";
+                craftingManager.ShowRecipe(CraftingManager._instance.selectedRecipe);
+                craftingTimer.text = (craftingManager.selectedRecipe.GetCraftingTime * craftingAmount).ToString();
             }
-        }
-
-
-        craftingAmount = Mathf.RoundToInt(amountSlider.value);
-
-
-        if (craftingManager.selectedRecipe != null)
-        {
-            amountText.text = "Craft: " + craftingAmount + " Gain: " + (craftingManager.selectedRecipe.getoutcomeItem.amount * craftingAmount).ToString();
-            craftingManager.ShowOutCome();
-            TimeToCraftText.text = "Time to craft: " + craftingManager.selectedRecipe.GetCraftingTime * craftingAmount + " Seconds";
-            craftingManager.ShowRecipe(CraftingManager._instance.selectedRecipe);
-            craftingTimer.text = (craftingManager.selectedRecipe.GetCraftingTime * craftingAmount).ToString();
         }
         //CraftingManager._instance.UpdateMatsAmount();
     }
@@ -416,8 +419,7 @@ public class UIManager : MonoSingleton<UIManager>
 
 
 
-    public void SetCraftingUIState(bool IsActive, ProcessorType _type, ProcessingTableTileState tile)
-    {
+    public void SetCraftingUIState(bool IsActive, ProcessorType _type, ProcessingTableTileState tile) {
         CraftingScreenUI();
         craftingManager.buttonState = ButtonState.Openining;
         craftingManager.GetSetProcessor = _type;
@@ -426,17 +428,14 @@ public class UIManager : MonoSingleton<UIManager>
 
 
         ShowTimeAndCollectable(tile.ItemsCrafted, tile.amount, tile.CraftingTimeRemaining);
-        if (craftingManager.CurrentProcessTile.IsCrafting)
-        {
+        if (craftingManager.CurrentProcessTile.IsCrafting) {
 
         }
-        else
-        {
+        else {
             ResetMultiple();
         }
 
-        if (tile.craftingRecipe != null)
-        {
+        if (tile.craftingRecipe != null) {
             craftingManager.SelectSection(tile.craftingRecipe.getSection.ToString());
             craftingManager.selectedRecipe = tile.craftingRecipe;
             craftingManager.ShowRecipe(craftingManager.selectedRecipe);
@@ -447,23 +446,18 @@ public class UIManager : MonoSingleton<UIManager>
 
     }
     bool IsCrafting;
-    public void ToggleMultiple()
-    {
-        if (craftingManager.CurrentProcessTile != null)
-        {
-            if (craftingManager.CurrentProcessTile.IsCrafting)
-            {
+    public void ToggleMultiple() {
+        if (craftingManager.CurrentProcessTile != null) {
+            if (craftingManager.CurrentProcessTile.IsCrafting) {
 
 
                 craftingManager.AddToCraft();
                 amountSlider.value = 1;
                 OnChangeGetCraftingAmount();
             }
-            else if (craftingManager.selectedRecipe != null)
-            {
+            else if (craftingManager.selectedRecipe != null) {
                 SliderBackGround.SetActive(!SliderBackGround.activeInHierarchy);
-                if (!SliderBackGround.activeInHierarchy)
-                {
+                if (!SliderBackGround.activeInHierarchy) {
                     amountSlider.value = 1;
                     OnChangeGetCraftingAmount();
                 }
@@ -474,8 +468,7 @@ public class UIManager : MonoSingleton<UIManager>
 
     }
 
-    public void ResetMultiple()
-    {
+    public void ResetMultiple() {
         SliderBackGround.SetActive(false);
         amountSlider.value = 1;
         OnChangeGetCraftingAmount();
@@ -484,8 +477,7 @@ public class UIManager : MonoSingleton<UIManager>
 
 
 
-    public void ButtonCloseCraftingUI()
-    {
+    public void ButtonCloseCraftingUI() {
         ResetMultiple();
         CloseCraftScreen();
         craftingManager.selectedRecipe = null;
@@ -509,15 +501,12 @@ public class UIManager : MonoSingleton<UIManager>
 
 
 
-    void ButtonControls()
-    {
-        if (isHoldingButton && bInteractA.activeInHierarchy == true)
-        {
+    void ButtonControls() {
+        if (isHoldingButton && bInteractA.activeInHierarchy == true) {
             ReleaseButton();
         }
     }
-    public void ButtonPressedDown(bool _isButtonA)
-    {
+    public void ButtonPressedDown(bool _isButtonA) {
         Debug.Log(_isButtonA);
         this.isButtonA = _isButtonA;
         stopHoldingButton = false;
@@ -525,34 +514,28 @@ public class UIManager : MonoSingleton<UIManager>
         inputManager.SinglePressedButton(_isButtonA);
 
     }
-    public void ButtonPressedUp()
-    {
+    public void ButtonPressedUp() {
 
 
         isHoldingButton = false;
         stopHoldingButton = true;
     }
-    void ReleaseButton()
-    {
+    void ReleaseButton() {
 
         isHoldingButton = false;
-        if (!stopHoldingButton)
-        {
+        if (!stopHoldingButton) {
             PressButton();
         }
     }
-    void PressButton()
-    {
-        if (bInteractA.activeInHierarchy == true)
-        {
+    void PressButton() {
+        if (bInteractA.activeInHierarchy == true) {
             isHoldingButton = true;
 
             inputManager.HoldingButton(isButtonA);
         }
     }
 
-    void SetTools(bool turnOn)
-    {
+    void SetTools(bool turnOn) {
 
         bTool1.SetActive(turnOn);
         bTool2.SetActive(turnOn);
@@ -561,8 +544,7 @@ public class UIManager : MonoSingleton<UIManager>
         bTool5.SetActive(turnOn);
 
     }
-    void SetQuickAccessSlots(bool turnOn)
-    {
+    void SetQuickAccessSlots(bool turnOn) {
 
         bQuickAccess1.SetActive(turnOn);
         bQuickAccess2.SetActive(turnOn);
@@ -573,22 +555,17 @@ public class UIManager : MonoSingleton<UIManager>
 
 
     // Main HUD logic
-    public void ButtonHide()
-    {
-        if (isBuildModeOn == false && isRemoveModeOn == false)
-        {
-            if (isShown == true)
-            {
+    public void ButtonHide() {
+        if (isBuildModeOn == false && isRemoveModeOn == false) {
+            if (isShown == true) {
                 bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
 
-                if (isQuickAccessSlotsSwapped == true)
-                {
+                if (isQuickAccessSlotsSwapped == true) {
                     SetTools(false);
                     bMainWeapon.SetActive(false);
                     bSwap.SetActive(false);
                 }
-                else
-                {
+                else {
                     SetQuickAccessSlots(false);
                     bMainWeapon.SetActive(false);
                     bSwap.SetActive(false);
@@ -596,18 +573,15 @@ public class UIManager : MonoSingleton<UIManager>
 
                 isShown = false;
             }
-            else
-            {
+            else {
                 bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
 
-                if (isQuickAccessSlotsSwapped == true)
-                {
+                if (isQuickAccessSlotsSwapped == true) {
                     SetTools(true);
                     bMainWeapon.SetActive(true);
                     bSwap.SetActive(true);
                 }
-                else
-                {
+                else {
                     SetQuickAccessSlots(true);
                     bMainWeapon.SetActive(true);
                     bSwap.SetActive(true);
@@ -616,10 +590,8 @@ public class UIManager : MonoSingleton<UIManager>
                 isShown = true;
             }
         }
-        else if (isBuildModeOn == true || isRemoveModeOn == true)
-        {
-            if (isShownBuildTools == true)
-            {
+        else if (isBuildModeOn == true || isRemoveModeOn == true) {
+            if (isShownBuildTools == true) {
                 bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
 
                 bCancel.SetActive(false);
@@ -627,8 +599,7 @@ public class UIManager : MonoSingleton<UIManager>
 
                 isShownBuildTools = false;
             }
-            else
-            {
+            else {
                 bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
 
                 bCancel.SetActive(true);
@@ -639,18 +610,15 @@ public class UIManager : MonoSingleton<UIManager>
         }
     }
 
-    public void ButtonSwap()
-    {
-        if (isQuickAccessSlotsSwapped == true)
-        {
+    public void ButtonSwap() {
+        if (isQuickAccessSlotsSwapped == true) {
             SetTools(false);
 
             SetQuickAccessSlots(true);
 
             isQuickAccessSlotsSwapped = false;
         }
-        else
-        {
+        else {
             SetTools(true);
 
             SetQuickAccessSlots(false);
@@ -659,41 +627,18 @@ public class UIManager : MonoSingleton<UIManager>
         }
     }
 
-    public void ButtonInventory()
-    {
-        if (InventoryUI.activeSelf == true)
-        {
-            InventoryUI.SetActive(false);
-
-            bInteractA.SetActive(true);
-            bGatherB.SetActive(true);
-
-            if (isBuildModeOn == false)
-            {
-                viFight.SetActive(true);
-            }
-            else
-            {
-                viFight.SetActive(false);
-            }
-
-            isInventoryOpen = false;
-        }
-        else
-        {
-            InventoryUI.SetActive(true);
-
-            viFight.SetActive(false);
-            bInteractA.SetActive(false);
-            bGatherB.SetActive(false);
-
-            inventoryManager.UpdateInventoryToUI();
-            isInventoryOpen = true;
-        }
+    public void ButtonInventory() {
+        bool UiState = !InventoryUI.activeSelf;
+        InventoryUI.SetActive(UiState);
+        Debug.Log("UI state:" + UiState);
+        inventoryManager.GetSetIsUiClosed = UiState;
+        bInteractA.SetActive(!UiState);
+        bGatherB.SetActive(!UiState);
+        isInventoryOpen = UiState;
+        viFight.SetActive(!isBuildModeOn && !UiState);
     }
 
-    public void ButtonFightTransition()
-    {
+    public void ButtonFightTransition() {
         viFight.transform.GetChild(0).gameObject.SetActive(false);
         viFight.transform.GetChild(1).gameObject.SetActive(true);
 
@@ -703,8 +648,7 @@ public class UIManager : MonoSingleton<UIManager>
         isFightModeOn = true;
     }
 
-    public void BottunGatherTransition()
-    {
+    public void ButtonGatherTransition() {
         viFight.transform.GetChild(0).gameObject.SetActive(true);
         viFight.transform.GetChild(1).gameObject.SetActive(false);
 
@@ -714,10 +658,8 @@ public class UIManager : MonoSingleton<UIManager>
         isFightModeOn = false;
     }
 
-    public void ButtonSettings()
-    {
-        if (PauseMenuUI.activeSelf == false)
-        {
+    public void ButtonSettings() {
+        if (PauseMenuUI.activeSelf == false) {
             PauseMenuUI.SetActive(true);
 
             vjMove.SetActive(false);
@@ -731,16 +673,13 @@ public class UIManager : MonoSingleton<UIManager>
             SetQuickAccessSlots(false);
             bInventory.SetActive(false);
 
-            if (isInventoryOpen == true)
-            {
+            if (isInventoryOpen == true) {
                 InventoryUI.SetActive(false);
             }
-            if (isChestOpen == true)
-            {
+            if (isChestOpen == true) {
                 ChestUI.SetActive(false);
             }
-            if (isBuildModeOn == true || isRemoveModeOn == true)
-            {
+            if (isBuildModeOn == true || isRemoveModeOn == true) {
                 bCancel.SetActive(false);
                 bRotate.SetActive(false);
                 stateText.SetActive(false);
@@ -748,8 +687,7 @@ public class UIManager : MonoSingleton<UIManager>
 
             Time.timeScale = 0f;
         }
-        else
-        {
+        else {
             Time.timeScale = 1f;
 
             PauseMenuUI.SetActive(false);
@@ -759,30 +697,26 @@ public class UIManager : MonoSingleton<UIManager>
             bHide.SetActive(true);
 
             // Check if we was in remove mode
-            if (isRemoveModeOn == false)
-            {
+            if (isRemoveModeOn == false) {
                 bInventory.SetActive(true);
                 bInteractA.SetActive(true);
             }
 
             // Check if we was on Items and the tool bar wasn't hidden, also if we wasn't in build or remove mode
-            if (isQuickAccessSlotsSwapped == true && isShown != false && isBuildModeOn != true && isRemoveModeOn != true)
-            {
+            if (isQuickAccessSlotsSwapped == true && isShown != false && isBuildModeOn != true && isRemoveModeOn != true) {
                 SetTools(true);
                 bMainWeapon.SetActive(true);
                 bSwap.SetActive(true);
             }
             // Check if we was on QASlots and the tool bar wasn't hidden, also if we wasn't in build or remove mode
-            else if (isQuickAccessSlotsSwapped == false && isShown != false && isBuildModeOn != true && isRemoveModeOn != true)
-            {
+            else if (isQuickAccessSlotsSwapped == false && isShown != false && isBuildModeOn != true && isRemoveModeOn != true) {
                 SetQuickAccessSlots(true);
                 bMainWeapon.SetActive(true);
                 bSwap.SetActive(true);
             }
 
             // Check if inventory was open
-            if (isInventoryOpen == true)
-            {
+            if (isInventoryOpen == true) {
                 InventoryUI.SetActive(true);
 
                 viFight.SetActive(false);
@@ -791,41 +725,40 @@ public class UIManager : MonoSingleton<UIManager>
             }
 
             // Check if we was in build or remove mode
-            if (isBuildModeOn == true || isRemoveModeOn == true)
-            {
+            if (isBuildModeOn == true || isRemoveModeOn == true) {
                 bCancel.SetActive(true);
                 bRotate.SetActive(true);
                 stateText.SetActive(true);
             }
 
             // Check if tools for build mode was hidden
-            if (isShownBuildTools == false)
-            {
+            if (isShownBuildTools == false) {
                 bCancel.SetActive(false);
                 bRotate.SetActive(false);
             }
 
             // Check if we wasn't in build or remove mode and inventory closed to show Visual Icon for Fight mode
-            if (isBuildModeOn == false && isRemoveModeOn == false && isInventoryOpen != true)
-            {
+            if (isBuildModeOn == false && isRemoveModeOn == false && isInventoryOpen != true) {
                 viFight.SetActive(true);
             }
         }
     }
+    public void SetMusicVolume(float volume)
+        => SoundManager._instance.SetVolumeGroup(VolumeGroup.Music, volume);
+
+    public void SetSoundsVolume(float volume)
+        => SoundManager._instance.SetVolumeGroup(VolumeGroup.Sounds, volume);
 
 
     // Build mode logic
-    public void BuildModeUI()
-    {
+    public void BuildModeUI() {
         isBuildModeOn = true;
         bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
 
-        if (isQuickAccessSlotsSwapped == true)
-        {
+        if (isQuickAccessSlotsSwapped == true) {
             SetTools(false);
         }
-        else
-        {
+        else {
             SetQuickAccessSlots(false);
         }
         bMainWeapon.SetActive(false);
@@ -839,33 +772,27 @@ public class UIManager : MonoSingleton<UIManager>
         bInteractA.transform.GetChild(0).gameObject.SetActive(false);
         bInteractA.transform.GetChild(1).gameObject.SetActive(true);
 
-        if (isFightModeOn == false)
-        {
+        if (isFightModeOn == false) {
             bGatherB.transform.GetChild(0).gameObject.SetActive(false);
             bGatherB.transform.GetChild(2).gameObject.SetActive(true);
         }
-        else
-        {
+        else {
             bGatherB.transform.GetChild(1).gameObject.SetActive(false);
             bGatherB.transform.GetChild(2).gameObject.SetActive(true);
         }
     }
 
-    public void ButtonCancel()
-    {
-        if (isBuildModeOn == true)
-        {
+    public void ButtonCancel() {
+       
             PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
             isBuildModeOn = false;
 
-            if (isQuickAccessSlotsSwapped == true && isShown == true)
-            {
+            if (isQuickAccessSlotsSwapped == true && isShown == true) {
                 SetTools(true);
                 bMainWeapon.SetActive(true);
                 bSwap.SetActive(true);
             }
-            else if (isQuickAccessSlotsSwapped == false && isShown == true)
-            {
+            else if (isQuickAccessSlotsSwapped == false && isShown == true) {
                 SetQuickAccessSlots(true);
                 bMainWeapon.SetActive(true);
                 bSwap.SetActive(true);
@@ -878,19 +805,16 @@ public class UIManager : MonoSingleton<UIManager>
             bInteractA.transform.GetChild(0).gameObject.SetActive(true);
             bInteractA.transform.GetChild(1).gameObject.SetActive(false);
 
-            if (isFightModeOn == false)
-            {
+            if (isFightModeOn == false) {
                 bGatherB.transform.GetChild(0).gameObject.SetActive(true);
                 bGatherB.transform.GetChild(2).gameObject.SetActive(false);
             }
-            else
-            {
+            else {
                 bGatherB.transform.GetChild(1).gameObject.SetActive(true);
                 bGatherB.transform.GetChild(2).gameObject.SetActive(false);
             }
 
-            if (InventoryUI.activeSelf == true)
-            {
+            if (InventoryUI.activeSelf == true) {
                 InventoryUI.SetActive(false);
                 bInteractA.SetActive(true);
                 bGatherB.SetActive(true);
@@ -898,33 +822,21 @@ public class UIManager : MonoSingleton<UIManager>
                 isInventoryOpen = false;
             }
 
-            if (isShown == false)
-            {
+            if (isShown == false) {
                 bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
             }
 
             stateText.SetActive(false);
-        }
-        else if (isRemoveModeOn == true)
-        {
-            isRemoveModeOn = false;
-            isBuildModeOn = true;
 
-            bInteractA.SetActive(true);
-            bInventory.SetActive(true);
-
-
-            PlayerStateMachine.GetInstance.SwitchState(InputState.BuildState);
-        }
+        bInteractA.SetActive(true);
+        bInventory.SetActive(true);
     }
 
-    public void ButtonRotate()
-    {
+    public void ButtonRotate() {
 
     }
 
-    public void RemoveStateOn()
-    {
+    public void RemoveStateOn() {
         isBuildModeOn = false;
         isRemoveModeOn = true;
 
@@ -934,18 +846,15 @@ public class UIManager : MonoSingleton<UIManager>
 
 
     // Crafting screen logic
-    public void CraftingScreenUI()
-    {
+    public void CraftingScreenUI() {
         CraftingUI.SetActive(true);
 
-        if (isQuickAccessSlotsSwapped == true && isShown != false)
-        {
+        if (isQuickAccessSlotsSwapped == true && isShown != false) {
             SetTools(false);
             bMainWeapon.SetActive(false);
             bSwap.SetActive(false);
         }
-        else if (isQuickAccessSlotsSwapped == false && isShown != false)
-        {
+        else if (isQuickAccessSlotsSwapped == false && isShown != false) {
             SetQuickAccessSlots(false);
             bMainWeapon.SetActive(false);
             bSwap.SetActive(false);
@@ -962,18 +871,15 @@ public class UIManager : MonoSingleton<UIManager>
         xpBar.SetActive(false);
     }
 
-    public void CloseCraftScreen()
-    {
+    public void CloseCraftScreen() {
         CraftingUI.SetActive(false);
 
-        if (isQuickAccessSlotsSwapped == true && isShown != false)
-        {
+        if (isQuickAccessSlotsSwapped == true && isShown != false) {
             SetTools(true);
             bMainWeapon.SetActive(true);
             bSwap.SetActive(true);
         }
-        else if (isQuickAccessSlotsSwapped == false && isShown != false)
-        {
+        else if (isQuickAccessSlotsSwapped == false && isShown != false) {
             SetQuickAccessSlots(true);
             bMainWeapon.SetActive(true);
             bSwap.SetActive(true);
@@ -991,14 +897,30 @@ public class UIManager : MonoSingleton<UIManager>
 
 
     // Monitors logic
-    public void UpdateSurvivalBar(Stat stat, float value)
-    {
-        if (barsDictionary.TryGetValue(stat.statType, out Image image) && stat.GetIsCapped)
-            image.fillAmount = Mathf.Clamp(value / stat.maxStat.GetSetValue, 0, 1);
+    public void UpdateSurvivalBar(Stat stat) {
+        switch (stat.statType) {
+            case StatType.MaxHP:
+                stat = playerStats.GetStat(StatType.HP);
+                break;
+            case StatType.MaxFood:
+                stat = playerStats.GetStat(StatType.Food);
+                break;
+            case StatType.MaxWater:
+                stat = playerStats.GetStat(StatType.Water);
+                break;
+            case StatType.MaxAir:
+                stat = playerStats.GetStat(StatType.Air);
+                break;
+            case StatType.MaxSleep:
+                stat = playerStats.GetStat(StatType.Sleep);
+                break;
+        }
+        StatType statType = stat.statType;
+        if (barsDictionary.TryGetValue(statType, out Image image) && stat.GetIsCapped)
+            image.fillAmount = Mathf.Clamp(stat.GetSetValue / stat.maxStat.GetSetValue, 0, 1);
     }
 
-    public void UpdateExpAndLvlBar()
-    {
+    public void UpdateExpAndLvlBar() {
         xpFill.fillAmount = Mathf.Clamp(playerStats.GetStat(StatType.EXP).GetSetValue / playerStats.GetStat(StatType.EXPtoNextLevel).GetSetValue, 0, 1);
         levelNumber.SetText(Mathf.RoundToInt(playerStats.GetStat(StatType.Level).GetSetValue).ToString());
     }
@@ -1010,10 +932,8 @@ public class UIManager : MonoSingleton<UIManager>
     [Header("States related")]
     [SerializeField] TextMeshProUGUI StateText;
 
-    public void UpdateUiState(InputState CurrentState)
-    {
-        switch (CurrentState)
-        {
+    public void UpdateUiState(InputState CurrentState) {
+        switch (CurrentState) {
             case InputState.DefaultState:
                 StateText.gameObject.SetActive(false);
                 break;

@@ -1,12 +1,12 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class BuildingState : StateBase
 {
-  
+    public GraphicRaycaster GR;
     Vector2 touchPosition;
     TileHit currentTileHit;
     TileSlot tileSlotCache;
@@ -17,12 +17,15 @@ public class BuildingState : StateBase
     int amountOfCurrentItem;
 
     public BuildingState() {
-        amountOfCurrentItem = 0;
-     
-        gridManager = GridManager._instance; 
+        ResetParam();
+           gridManager = GridManager._instance; 
     }
 
-
+     void ResetParam() {
+        currentTileHit = null;
+        amountOfCurrentItem = 0;
+        tileSlotCache = null;
+    }
     public override void ButtonA() {
         Debug.Log("BuildingState");
         PressedConfirmBuildingButton();
@@ -38,27 +41,20 @@ public class BuildingState : StateBase
             case TouchPhase.Began:
             case TouchPhase.Moved:
             case TouchPhase.Stationary:
-                if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject() && currentTileHit.tile != null)
+                if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject() || (currentTileHit != null && currentTileHit.tile == null))
                     return;
 
-
-
-
+           
                 touchPosition = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position);
 
 
-
-
-
                 CheckPosition(touchPosition);
-
-
-
-
+                
                 break;
         }
     }
 
+ 
     private void PlaceDummyBlock(bool isCurrentOnFloor) {
         if (Position[1] == Position[0])
             return;
@@ -179,8 +175,8 @@ public class BuildingState : StateBase
     public bool GetIsBuildingAttached => isBuildingAttached;
 
     public void ResetBeforeChangeStates() {
-
-        RemovePreviousTile();
+        ResetParam();
+       RemovePreviousTile();
     }
     public override void MousePos() {
         CheckPosition(CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(Input.mousePosition));
