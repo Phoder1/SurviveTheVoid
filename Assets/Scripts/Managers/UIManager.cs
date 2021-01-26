@@ -39,7 +39,12 @@ public class UIManager : MonoSingleton<UIManager>
         bCancel,
         bRotate,
         stateText,
-        xpBar;
+        xpBar,
+        hideOutline,
+        interactOutline,
+        settingsOutline,
+        inventoryOutline,
+        swapOutline;
     [SerializeField] private TextMeshProUGUI levelNumber;
     [SerializeField] Image blackPanelImage;
     [Header("Survival bar's fill")]
@@ -507,6 +512,8 @@ public class UIManager : MonoSingleton<UIManager>
         }
     }
     public void ButtonPressedDown(bool _isButtonA) {
+        if (_isButtonA)
+            interactOutline.SetActive(true);
         Debug.Log(_isButtonA);
         this.isButtonA = _isButtonA;
         stopHoldingButton = false;
@@ -515,7 +522,7 @@ public class UIManager : MonoSingleton<UIManager>
 
     }
     public void ButtonPressedUp() {
-
+        interactOutline.SetActive(false);
 
         isHoldingButton = false;
         stopHoldingButton = true;
@@ -559,6 +566,7 @@ public class UIManager : MonoSingleton<UIManager>
         if (isBuildModeOn == false && isRemoveModeOn == false) {
             if (isShown == true) {
                 bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
+                hideOutline.SetActive(true);
 
                 if (isQuickAccessSlotsSwapped == true) {
                     SetTools(false);
@@ -575,6 +583,7 @@ public class UIManager : MonoSingleton<UIManager>
             }
             else {
                 bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
+                hideOutline.SetActive(false);
 
                 if (isQuickAccessSlotsSwapped == true) {
                     SetTools(true);
@@ -593,6 +602,7 @@ public class UIManager : MonoSingleton<UIManager>
         else if (isBuildModeOn == true || isRemoveModeOn == true) {
             if (isShownBuildTools == true) {
                 bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
+                hideOutline.SetActive(true);
 
                 bCancel.SetActive(false);
                 bRotate.SetActive(false);
@@ -601,6 +611,7 @@ public class UIManager : MonoSingleton<UIManager>
             }
             else {
                 bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
+                hideOutline.SetActive(false);
 
                 bCancel.SetActive(true);
                 bRotate.SetActive(true);
@@ -613,6 +624,7 @@ public class UIManager : MonoSingleton<UIManager>
     public void ButtonSwap() {
         if (isQuickAccessSlotsSwapped == true) {
             SetTools(false);
+            swapOutline.SetActive(true);
 
             SetQuickAccessSlots(true);
 
@@ -620,6 +632,7 @@ public class UIManager : MonoSingleton<UIManager>
         }
         else {
             SetTools(true);
+            swapOutline.SetActive(false);
 
             SetQuickAccessSlots(false);
 
@@ -629,6 +642,7 @@ public class UIManager : MonoSingleton<UIManager>
 
     public void ButtonInventory() {
         bool UiState = !InventoryUI.activeSelf;
+        inventoryOutline.SetActive(UiState);
         InventoryUI.SetActive(UiState);
         Debug.Log("UI state:" + UiState);
         inventoryManager.GetSetIsUiClosed = UiState;
@@ -661,7 +675,7 @@ public class UIManager : MonoSingleton<UIManager>
     public void ButtonSettings() {
         if (PauseMenuUI.activeSelf == false) {
             PauseMenuUI.SetActive(true);
-
+            settingsOutline.SetActive(true);
             vjMove.SetActive(false);
             viFight.SetActive(false);
             bInteractA.SetActive(false);
@@ -688,6 +702,7 @@ public class UIManager : MonoSingleton<UIManager>
             Time.timeScale = 0f;
         }
         else {
+            settingsOutline.SetActive(false);
             Time.timeScale = 1f;
 
             PauseMenuUI.SetActive(false);

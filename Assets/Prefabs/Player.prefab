@@ -119,11 +119,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f096efc7d48b25449523447f54e4051, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooldownBeforeStart: 20
-  hungerDropAmount: 0.5
-  WaterDropAmount: 0.5
-  airDropAmount: 0.5
-  sleepDropAmount: 0.5
+  cooldownBeforeStart: 30
+  hungerDropAmount: 0.25
+  WaterDropAmount: 0.25
+  airDropAmount: 0.25
+  sleepDropAmount: 0.25
 --- !u!114 &1983083227679667032
 MonoBehaviour:
   m_ObjectHideFlags: 0

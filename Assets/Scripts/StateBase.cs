@@ -15,7 +15,7 @@ public abstract class StateBase
     
     }
 
-
+    public virtual void OnSwitchState() { }
     public virtual void MousePos() { }
 }
 

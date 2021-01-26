@@ -23,6 +23,9 @@ MonoBehaviour:
   stages:
   - expReward: 0
     stageTile: {fileID: 11400000, guid: 67fa51cf16cd2f04a8898004d71c18dd, type: 2}
+    tileWhileGathered: {fileID: 0}
+    particlesWhileGathered: {fileID: 6710886469400569983, guid: 51dc72d9191352c438492d3acf80b213,
+      type: 3}
     isGatherable: 1
     destroyOnGather: 1
     isSolid: 0
@@ -33,6 +36,9 @@ MonoBehaviour:
       maxAmount: 2
   - expReward: 0
     stageTile: {fileID: 11400000, guid: aaf21959ca3c5374fa2db41848c2e68f, type: 2}
+    tileWhileGathered: {fileID: 0}
+    particlesWhileGathered: {fileID: 6710886469400569983, guid: 51dc72d9191352c438492d3acf80b213,
+      type: 3}
     isGatherable: 1
     destroyOnGather: 0
     isSolid: 0
@@ -47,6 +53,9 @@ MonoBehaviour:
       maxAmount: 3
   - expReward: 0
     stageTile: {fileID: 11400000, guid: 3c8bb5f7c6f79fc4daf10a14cf8823e6, type: 2}
+    tileWhileGathered: {fileID: 0}
+    particlesWhileGathered: {fileID: 6710886469400569983, guid: 51dc72d9191352c438492d3acf80b213,
+      type: 3}
     isGatherable: 1
     destroyOnGather: 0
     isSolid: 0
