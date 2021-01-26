@@ -10,18 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce262156a784a4c439534bfe094dfdf6, type: 3}
-  m_Name: ConsumableBubble
+  m_Name: Sweet Cherries
   m_EditorClassIdentifier: 
-  itemID: 3
-  itemName: Oxygen Bubble
+  itemID: 0
+  itemName: Sweet Cherries
   maxStackSize: 20
-  description: Breath an oxygen from a bubble
-  sprite: {fileID: 21300000, guid: 9e2c191c314e3d4438b9e49514820108, type: 3}
+  description: 
+  sprite: {fileID: 21300000, guid: b888c650a3d0c56449580188ca26c94e, type: 3}
   Effects:
-  - effectStatType: 4
+  - effectStatType: 2
     effectType: 0
     inPercentage: 0
     isRelativeToMax: 0
     amount: 5
-    duration: 5
-    tickTime: 5
+    duration: 0
+    tickTime: 0
+  - effectStatType: 3
+    effectType: 0
+    inPercentage: 0
+    isRelativeToMax: 0
+    amount: 5
+    duration: 0
+    tickTime: 0

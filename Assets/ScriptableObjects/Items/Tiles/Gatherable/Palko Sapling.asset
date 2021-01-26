@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30b7874b8e5eab142871768f1d102839, type: 3}
-  m_Name: Sapling
+  m_Name: Palko Sapling
   m_EditorClassIdentifier: 
   itemID: 13
-  itemName: Sapling
+  itemName: Palko Sapling
   maxStackSize: 20
   description: A oak tree sapling
   sprite: {fileID: 21300000, guid: c6ccb43f9cb4f9544b443892957c13ba, type: 3}
@@ -69,6 +69,8 @@ MonoBehaviour:
       maxAmount: 3
   - expReward: 10
     stageTile: {fileID: 11400000, guid: 4c4346b9a20c40c47bea99b56593e34f, type: 2}
+    tileWhileGathered: {fileID: 0}
+    particlesWhileGathered: {fileID: 0}
     isGatherable: 1
     destroyOnGather: 1
     isSolid: 1

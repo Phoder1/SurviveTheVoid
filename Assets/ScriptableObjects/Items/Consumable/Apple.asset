@@ -10,18 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce262156a784a4c439534bfe094dfdf6, type: 3}
-  m_Name: ConsumableWaterBottle
+  m_Name: Apple
   m_EditorClassIdentifier: 
-  itemID: 0
-  itemName: Water Bottle
+  itemID: 2
+  itemName: Apple
   maxStackSize: 20
-  description: 
-  sprite: {fileID: 21300000, guid: a18c3bd1b9669c7459e73fbc4c61c3a7, type: 3}
+  description: The forbidden fruit
+  sprite: {fileID: 21300000, guid: 26a421f4ce5655f418ea61459b709dd3, type: 3}
   Effects:
-  - effectStatType: 3
+  - effectStatType: 2
     effectType: 0
     inPercentage: 0
     isRelativeToMax: 0
     amount: 10
-    duration: 0
-    tickTime: 0.03
+    duration: 5
+    tickTime: 5
+  - effectStatType: 3
+    effectType: 0
+    inPercentage: 0
+    isRelativeToMax: 0
+    amount: 5
+    duration: 5
+    tickTime: 5

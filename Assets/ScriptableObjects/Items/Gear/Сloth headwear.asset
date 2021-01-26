@@ -9,11 +9,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 587b921edc753cd4e956c9bf36faa58d, type: 3}
-  m_Name: GenericUncookedMeat
+  m_Script: {fileID: 11500000, guid: 79e76a88f55714548bb59252d769c07b, type: 3}
+  m_Name: "\u0421loth headwear"
   m_EditorClassIdentifier: 
-  itemID: 8
-  itemName: Uncooked Meat
-  maxStackSize: 20
+  itemID: 0
+  itemName: Cloth headwear
+  maxStackSize: 1
   description: 
-  sprite: {fileID: 21300000, guid: 6a520d5bf34b9e3418aa5b977e318331, type: 3}
+  sprite: {fileID: 0}
+  equipType: 0
+  maxDurability: 100
+  gearTier: 1
+  equipstats:
+  - statType: 10
+    isPercentage: 1
+    amount: 30

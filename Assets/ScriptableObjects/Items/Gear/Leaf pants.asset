@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 79e76a88f55714548bb59252d769c07b, type: 3}
-  m_Name: New Gear Item
+  m_Name: Leaf pants
   m_EditorClassIdentifier: 
-  itemID: 32
-  itemName: Hat
+  itemID: 0
+  itemName: Leaf pants
   maxStackSize: 1
   description: 
-  sprite: {fileID: 21300000, guid: e64a00bbec9e2d749a904e470824d42f, type: 3}
-  equipType: 1
-  maxDurability: 25
+  sprite: {fileID: 0}
+  equipType: 3
+  maxDurability: 0
   gearTier: 0
   equipstats:
-  - statType: 0
-    isPercentage: 0
-    amount: 0
+  - statType: 9
+    isPercentage: 1
+    amount: 40

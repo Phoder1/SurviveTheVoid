@@ -10,25 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce262156a784a4c439534bfe094dfdf6, type: 3}
-  m_Name: ConsumableCookedMeat
+  m_Name: Wood cup with water
   m_EditorClassIdentifier: 
-  itemID: 4
-  itemName: Cooked Meat
+  itemID: 0
+  itemName: Wood cup with water
   maxStackSize: 20
   description: 
-  sprite: {fileID: 21300000, guid: afcd5a9a38ab784498c8b9676c76e9b9, type: 3}
+  sprite: {fileID: 0}
   Effects:
-  - effectStatType: 1
-    effectType: 2
-    inPercentage: 0
-    isRelativeToMax: 0
-    amount: 30
-    duration: 5
-    tickTime: 0.5
-  - effectStatType: 2
+  - effectStatType: 3
     effectType: 0
     inPercentage: 0
     isRelativeToMax: 0
-    amount: 20
-    duration: 5
-    tickTime: 1
+    amount: 60
+    duration: 0
+    tickTime: 0
