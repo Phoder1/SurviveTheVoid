@@ -176,10 +176,6 @@ public class BuildingState : StateBase
 
     public bool GetIsBuildingAttached => isBuildingAttached;
 
-    public void ResetBeforeChangeStates() {
-        ResetParam();
-       RemovePreviousTile();
-    }
     public override void MousePos() {
         CheckPosition(CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(Input.mousePosition));
 
@@ -187,5 +183,13 @@ public class BuildingState : StateBase
             PressedConfirmBuildingButton();
         }
 
+    }
+
+
+
+    public override void OnSwitchState()
+    {
+         ResetParam();
+       RemovePreviousTile();
     }
 }
