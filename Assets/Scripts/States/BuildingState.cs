@@ -51,6 +51,10 @@ public class BuildingState : StateBase
                 touchPosition = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position);
 
                 currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
+
+                if (currentTileHit == null)
+                    return;
+                
                 CheckPosition(touchPosition);
                 
                 break;
@@ -91,7 +95,7 @@ public class BuildingState : StateBase
 
         // there is a block on the floor
         // check if there is no a block above it 
-        if (currentTileHit.tile != null && gridManager.GetHitFromWorldPosition(worldPos, TileMapLayer.Buildings).tile == null) {
+        if (currentTileHit.tile != null && gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) == null) {
 
 
 
@@ -102,7 +106,7 @@ public class BuildingState : StateBase
 
         }
         else if (currentlyPlacedOnFloor) {
-            if (currentTileHit.tile == null && gridManager.GetHitFromWorldPosition(worldPos, TileMapLayer.Buildings).tile == null) {
+            if (currentTileHit.tile == null && gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) == null) {
                 Position[0] = new Vector2Int(currentTileHit.gridPosition.x, currentTileHit.gridPosition.y);
 
                 PlaceDummyBlock(true);
@@ -139,14 +143,9 @@ public class BuildingState : StateBase
 
 
         if (wasFloorLayer) {
-        
-
-
             gridManager.SetTile(tileSlotCache, Position[2], TileMapLayer.Floor, true);
         }
         else {
-        
-
             gridManager.SetTile(tileSlotCache, Position[2], TileMapLayer.Buildings, true);
         }
 
