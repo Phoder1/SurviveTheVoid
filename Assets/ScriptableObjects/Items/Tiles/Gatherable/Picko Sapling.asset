@@ -16,13 +16,13 @@ MonoBehaviour:
   itemName: Picko
   maxStackSize: 20
   description: A oak tree sapling
-  sprite: {fileID: 21300000, guid: c6ccb43f9cb4f9544b443892957c13ba, type: 3}
-  mainTileBase: {fileID: 11400000, guid: 4ea9cd078e7b9d64ca99a8c476addd0a, type: 2}
+  sprite: {fileID: 21300000, guid: 43ab251545320a543b35bb5bc8b3fead, type: 3}
+  mainTileBase: {fileID: 11400000, guid: a6d0dc8a26e981743820b946b60c954a, type: 2}
   isSolid: 1
   isAirSource: 1
   stages:
   - expReward: 0
-    stageTile: {fileID: 11400000, guid: 4ea9cd078e7b9d64ca99a8c476addd0a, type: 2}
+    stageTile: {fileID: 11400000, guid: a6d0dc8a26e981743820b946b60c954a, type: 2}
     tileWhileGathered: {fileID: 0}
     particlesWhileGathered: {fileID: 0}
     isGatherable: 0

@@ -16,13 +16,13 @@ MonoBehaviour:
   itemName: Aca Sapling
   maxStackSize: 20
   description: A oak tree sapling
-  sprite: {fileID: 21300000, guid: f806e097c2aa59e488c23d1f50026444, type: 3}
+  sprite: {fileID: 21300000, guid: 031b90992a6a464438e69e2719e6199a, type: 3}
   mainTileBase: {fileID: 11400000, guid: 4ea9cd078e7b9d64ca99a8c476addd0a, type: 2}
   isSolid: 1
   isAirSource: 1
   stages:
   - expReward: 0
-    stageTile: {fileID: 11400000, guid: c30e754df4a74a748b7ae07c931300cf, type: 2}
+    stageTile: {fileID: 11400000, guid: 7dc3561171445e748987f8b722b07ab8, type: 2}
     tileWhileGathered: {fileID: 0}
     particlesWhileGathered: {fileID: 0}
     isGatherable: 0
@@ -38,7 +38,7 @@ MonoBehaviour:
     isSolid: 0
     drops: []
   - expReward: 10
-    stageTile: {fileID: 11400000, guid: 7dc3561171445e748987f8b722b07ab8, type: 2}
+    stageTile: {fileID: 11400000, guid: c30e754df4a74a748b7ae07c931300cf, type: 2}
     tileWhileGathered: {fileID: 11400000, guid: 44fc4ed4c70ce6c47ada94943a22e488,
       type: 2}
     particlesWhileGathered: {fileID: 3538251123284781239, guid: d858c3010c5eb68429901d807d365733,

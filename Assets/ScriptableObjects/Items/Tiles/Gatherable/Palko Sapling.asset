@@ -16,13 +16,13 @@ MonoBehaviour:
   itemName: Palko Sapling
   maxStackSize: 20
   description: A oak tree sapling
-  sprite: {fileID: 21300000, guid: c6ccb43f9cb4f9544b443892957c13ba, type: 3}
-  mainTileBase: {fileID: 11400000, guid: 4ea9cd078e7b9d64ca99a8c476addd0a, type: 2}
+  sprite: {fileID: 21300000, guid: c6b99f677f0129448aaa976efc96ca4e, type: 3}
+  mainTileBase: {fileID: 11400000, guid: bfd26cd37e1e49e45a7bda53bbe4e821, type: 2}
   isSolid: 1
   isAirSource: 1
   stages:
   - expReward: 0
-    stageTile: {fileID: 11400000, guid: 4ea9cd078e7b9d64ca99a8c476addd0a, type: 2}
+    stageTile: {fileID: 11400000, guid: bfd26cd37e1e49e45a7bda53bbe4e821, type: 2}
     tileWhileGathered: {fileID: 0}
     particlesWhileGathered: {fileID: 0}
     isGatherable: 0
@@ -30,7 +30,7 @@ MonoBehaviour:
     isSolid: 0
     drops: []
   - expReward: 0
-    stageTile: {fileID: 11400000, guid: ea80f8e67af76e44ab21f659941c74b5, type: 2}
+    stageTile: {fileID: 11400000, guid: 1d2938ae4cdb2aa43aa4ef166c0161a6, type: 2}
     tileWhileGathered: {fileID: 0}
     particlesWhileGathered: {fileID: 0}
     isGatherable: 0
@@ -38,9 +38,8 @@ MonoBehaviour:
     isSolid: 0
     drops: []
   - expReward: 10
-    stageTile: {fileID: 11400000, guid: 4c4346b9a20c40c47bea99b56593e34f, type: 2}
-    tileWhileGathered: {fileID: 11400000, guid: 44fc4ed4c70ce6c47ada94943a22e488,
-      type: 2}
+    stageTile: {fileID: 11400000, guid: cb5ffd8248059974a9a9e199a7d5b17c, type: 2}
+    tileWhileGathered: {fileID: 0}
     particlesWhileGathered: {fileID: 3538251123284781239, guid: d858c3010c5eb68429901d807d365733,
       type: 3}
     isGatherable: 1
