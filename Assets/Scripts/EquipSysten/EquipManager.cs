@@ -378,6 +378,13 @@ public class EquipManager
         return 0;
     }
     public int GetGearSlotIndex(GearType equipType) {
+        /// <summary>
+        /// 0 Helmet 
+        /// 1 Chest
+        /// 2 Legging 
+        /// 3 Gloves
+        /// 4 Shoes
+        /// </summary>
         switch (equipType) {
             case GearType.Helmet:
                 return 0;

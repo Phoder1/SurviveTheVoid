@@ -63,21 +63,22 @@ public class GatherableState : ITileState
     public TimeEvent eventInstance;
     public GatherableTileSO tile;
     private GameObject particlesObject;
-    private readonly Vector3 particlesOffset = new Vector3(0, 2, 20);
-    private readonly Quaternion particlesRotation = Quaternion.Euler(-60, 0, 0);
+    //private readonly Vector3 particlesOffset = new Vector3(0, 2, 20);
     public int currentStageIndex = 0;
     public int StagesCount => tile.GetStages.Length;
     private bool isBeingGathered;
     public bool reachedMaxStage => currentStageIndex >= StagesCount - 1;
     public void SetIsBeingGatheredState(bool state, Vector2Int gridPos) {
-        if (isBeingGathered != state && currentStage.GetTileWhileGathered != null) {
+        if (isBeingGathered != state) {
             isBeingGathered = state;
-            GridManager._instance.SetTile(tileSlot, gridPos, TileMapLayer.Buildings);
+            if (currentStage.GetTileWhileGathered != null)
+                GridManager._instance.SetTile(tileSlot, gridPos, TileMapLayer.Buildings);
             if (currentStage.GetParticlesWhileGathered != null) {
                 if (state) {
-                Vector3 position = GridManager._instance.GridToWorldPosition(gridPos, TileMapLayer.Buildings, true) + particlesOffset;
-                particlesObject = Object.Instantiate(currentStage.GetParticlesWhileGathered, position, particlesRotation);
-                }else if(particlesObject != null){
+                    Vector3 position = GridManager._instance.GridToWorldPosition(gridPos, TileMapLayer.Buildings, true);
+                    particlesObject = Object.Instantiate(currentStage.GetParticlesWhileGathered, position, Quaternion.identity);
+                }
+                else if (particlesObject != null) {
                     Object.Destroy(particlesObject);
                     particlesObject = null;
                 }

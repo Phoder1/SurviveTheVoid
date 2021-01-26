@@ -17,6 +17,18 @@ public enum SlotChestType
 public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler, IPointerEnterHandler
 {
     public SlotChestType slotType;
+    [Tooltip("Tools:\n" +
+        "/// 0 Axe\n"+
+        "/// 1 Pickaxe\n"+
+        "/// 2 Hoe\n"+
+        "/// 3 Shovel\n"+
+        "/// 4 Hammer\n" +
+        "Gear:\n" +
+        "/// 0 Helmet\n" +
+        "/// 1 Chest\n" +
+        "/// 2 Leggin\n" +
+        "/// 3 Gloves\n" +
+        "/// 4 Shoes")]
     [Min(0)]
     public int slotPosition;
     [SerializeField] private Image highLightedSprite;
