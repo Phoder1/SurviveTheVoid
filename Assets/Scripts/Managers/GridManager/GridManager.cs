@@ -231,10 +231,10 @@ public partial class GridManager : MonoSingleton<GridManager>
         return new TileHit(null, gridPosition);
 
     }
-    public void SetTile(TileSlot tile, Vector2Int gridPosition, TileMapLayer buildingLayer, bool playerAction = true) {
+    public void SetTile(TileSlot tile, Vector2Int gridPosition, TileMapLayer buildingLayer, bool playerAction = true, Color? color = null) {
 
         Vector2Int chunkPos = GridToChunkCoordinates(gridPosition);
-        SetTileColor(gridPosition, buildingLayer, Color.white);
+        SetTileColor(gridPosition, buildingLayer, (color != null) ? (Color) color : Color.white);
         if (TryGetChunk(chunkPos, out Chunk chunk)) {
             chunk.SetTile(tile, gridPosition, buildingLayer, playerAction, false);
         }
@@ -243,15 +243,16 @@ public partial class GridManager : MonoSingleton<GridManager>
         }
     }
 
-    public void SetDummyTile(TileSlot tile, Vector2Int gridPosition, TileMapLayer buildingLayer, Color color) {
+    public void SetDummyTile(TileSlot tile, Vector2Int gridPosition, TileMapLayer buildingLayer, Color? color = null) {
         Tilemap tilemap = GetTilemap(buildingLayer);
-        if (GetTileFromGrid(gridPosition,buildingLayer) == null) {
+        if (GetTileFromGrid(gridPosition, buildingLayer) == null) {
             if (tile == null) {
                 tilemap.SetTile((Vector3Int)gridPosition, null);
             }
             else {
                 GetTilemap(buildingLayer).SetTile((Vector3Int)gridPosition, tile.GetMainTileBase);
-                SetTileColor(gridPosition, buildingLayer, color);
+                if (color != null)
+                    SetTileColor(gridPosition, buildingLayer, (Color)color);
             }
         }
     }
