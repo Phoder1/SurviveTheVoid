@@ -101,10 +101,10 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         return stat;
     }
     private void AddReactions() {
-        EffectData[] hpRegenEffect = new EffectData[1] { new EffectData(StatType.HP, EffectType.OverTime, 1f, Mathf.Infinity, 1f, false, false) };
+        EffectData[] hpRegenEffect = new EffectData[1] { new EffectData(StatType.HP, EffectType.OverTime, 3f, Mathf.Infinity, 1f, false, false) };
         AddReaction(StatType.Food, new ReactionEffect(true, false, 95, hpRegenEffect));
 
-        EffectData[] hpLoseEffect = new EffectData[1] { new EffectData(StatType.HP, EffectType.OverTime, -1f, Mathf.Infinity, 1f, false, false) };
+        EffectData[] hpLoseEffect = new EffectData[1] { new EffectData(StatType.HP, EffectType.OverTime, -3f, Mathf.Infinity, 1f, false, false) };
 
         AddReaction(StatType.Food, new ReactionEffect(false, true, 0, hpLoseEffect ));
         AddReaction(StatType.Water, new ReactionEffect(false, true, 0,  hpLoseEffect ));
