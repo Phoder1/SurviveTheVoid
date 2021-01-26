@@ -67,36 +67,6 @@ MonoBehaviour:
       Chance: 1
       minAmount: 1
       maxAmount: 3
-  - expReward: 10
-    stageTile: {fileID: 11400000, guid: 4c4346b9a20c40c47bea99b56593e34f, type: 2}
-    isGatherable: 1
-    destroyOnGather: 1
-    isSolid: 1
-    drops:
-    - item: {fileID: 11400000}
-      Chance: 1
-      minAmount: 1
-      maxAmount: 1
-    - item: {fileID: 11400000, guid: 6e3627ca283f52b4499153bb2af26248, type: 2}
-      Chance: 1
-      minAmount: 1
-      maxAmount: 3
-    - item: {fileID: 11400000, guid: 09698c5a98717bc4ea06472bb871ac49, type: 2}
-      Chance: 0.5
-      minAmount: 1
-      maxAmount: 3
-    - item: {fileID: 11400000}
-      Chance: 0.5
-      minAmount: 1
-      maxAmount: 1
-    - item: {fileID: 11400000, guid: 15f6588093b9bde479796bc44fb85fd4, type: 2}
-      Chance: 1
-      minAmount: 1
-      maxAmount: 3
-    - item: {fileID: 11400000, guid: c527a38ed9b15f14ca1e00dabf336bc5, type: 2}
-      Chance: 0.3
-      minAmount: 1
-      maxAmount: 1
   sourceTier: 0
   gatherDurabilityCost: 1
   gatheringSound: 2
