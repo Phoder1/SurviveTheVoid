@@ -43,7 +43,8 @@ public class BuildingState : StateBase
             case TouchPhase.Began:
             case TouchPhase.Moved:
             case TouchPhase.Stationary:
-                if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject() || (currentTileHit != null && currentTileHit.tile == null))
+
+                if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject())//|| (currentTileHit != null && currentTileHit.tile == null)
                     return;
 
            
@@ -92,15 +93,13 @@ public class BuildingState : StateBase
         // check if there is no a block above it 
         if (currentTileHit.tile != null && gridManager.GetHitFromWorldPosition(worldPos, TileMapLayer.Buildings).tile == null) {
 
-            RemovePreviousTile();
+          
             PlaceDummyBlock(false);
 
         }
         else if (currentlyPlacedOnFloor) {
             if (currentTileHit.tile == null && gridManager.GetHitFromWorldPosition(worldPos, TileMapLayer.Buildings).tile == null) {
 
-
-                RemovePreviousTile();
                 PlaceDummyBlock(true);
 
             }
