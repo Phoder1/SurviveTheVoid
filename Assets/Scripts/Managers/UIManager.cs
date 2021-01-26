@@ -99,21 +99,21 @@ public class UIManager : MonoSingleton<UIManager>
     }
 
     IEnumerator ProgressBarFill(float duration) {
-        duration *= 0.85f;
+        //duration *= 0.85f;
         progressBarFillObj.gameObject.SetActive(true);
-        float fillAmount = 0;
-        progressBarFillImage.fillAmount = fillAmount;
-        int stepAmount = Mathf.FloorToInt(duration / progressBarTickTime);
-        float barStepProgress = progressBarTickTime / duration;
+
+        progressBarFillImage.fillAmount = 0;
+        float barStepProgress;
         float startTime = Time.time;
-        float deltaTime;
-        for (int i = 0; i < stepAmount; i++) {
-            deltaTime = Time.time - startTime;
-            yield return new WaitForSeconds(progressBarTickTime - deltaTime);
-            startTime = Time.time;
-            fillAmount += barStepProgress;
-            progressBarFillImage.fillAmount = fillAmount;
+
+        while (startTime + duration > Time.time)
+        {
+            barStepProgress = Time.deltaTime / duration;
+            progressBarFillImage.fillAmount += barStepProgress;
+            yield return Time.deltaTime;
         }
+
+
         progressBarFillObj.gameObject.SetActive(false);
 
     }
