@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce262156a784a4c439534bfe094dfdf6, type: 3}
-  m_Name: Sweet Cherries
+  m_Name: Cinto
   m_EditorClassIdentifier: 
   itemID: 0
-  itemName: Sweet Cherries
+  itemName: Alien Grape
   maxStackSize: 20
   description: 
-  sprite: {fileID: 21300000, guid: b888c650a3d0c56449580188ca26c94e, type: 3}
+  sprite: {fileID: 21300000, guid: 53cc02849a822c74681b8d3a9b43b33a, type: 3}
   Effects:
   - effectStatType: 2
     effectType: 0
@@ -29,6 +29,6 @@ MonoBehaviour:
     effectType: 0
     inPercentage: 0
     isRelativeToMax: 0
-    amount: 5
+    amount: 10
     duration: 0
     tickTime: 0
