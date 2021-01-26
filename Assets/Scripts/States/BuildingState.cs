@@ -1,28 +1,33 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class BuildingState : StateBase
 {
-  
+    public GraphicRaycaster GR;
     Vector2 touchPosition;
     TileHit currentTileHit;
     TileSlot tileSlotCache;
     bool isBuildingAttached, currentlyPlacedOnFloor, wasFloorLayer;
+    Color blueprintColor = new Color(0.5f, 0.5f, 1, 0.55f);
+
 
     Vector2Int[] Position = new Vector2Int[3];
     GridManager gridManager;
     int amountOfCurrentItem;
 
     public BuildingState() {
-        amountOfCurrentItem = 0;
-     
-        gridManager = GridManager._instance; 
+        ResetParam();
+           gridManager = GridManager._instance; 
     }
 
-
+     void ResetParam() {
+        currentTileHit = null;
+        amountOfCurrentItem = 0;
+        tileSlotCache = null;
+    }
     public override void ButtonA() {
         Debug.Log("BuildingState");
         PressedConfirmBuildingButton();
@@ -38,27 +43,20 @@ public class BuildingState : StateBase
             case TouchPhase.Began:
             case TouchPhase.Moved:
             case TouchPhase.Stationary:
-                if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject() && (currentTileHit != null && currentTileHit.tile != null))
+                if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject() || (currentTileHit != null && currentTileHit.tile == null))
                     return;
 
-
-
-
+           
                 touchPosition = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position);
 
 
-
-
-
                 CheckPosition(touchPosition);
-
-
-
-
+                
                 break;
         }
     }
 
+ 
     private void PlaceDummyBlock(bool isCurrentOnFloor) {
         if (Position[1] == Position[0])
             return;
@@ -66,12 +64,12 @@ public class BuildingState : StateBase
         RemovePreviousTile();
         Position[1] = new Vector2Int(Position[0].x, Position[0].y);
         if (isCurrentOnFloor) {
-            gridManager.SetDummyTile(tileSlotCache, Position[1], TileMapLayer.Floor);
+            gridManager.SetDummyTile(tileSlotCache, Position[1], TileMapLayer.Floor, blueprintColor);
             wasFloorLayer = true;
         }
 
         else {
-            gridManager.SetDummyTile(tileSlotCache, Position[1], TileMapLayer.Buildings);
+            gridManager.SetDummyTile(tileSlotCache, Position[1], TileMapLayer.Buildings, blueprintColor);
             wasFloorLayer = false;
         }
 
@@ -120,11 +118,11 @@ public class BuildingState : StateBase
 
 
         if (wasFloorLayer) {
-            gridManager.SetDummyTile(null, Position[2], TileMapLayer.Floor);
+            gridManager.SetDummyTile(null, Position[2], TileMapLayer.Floor, Color.white);
 
         }
         else {
-            gridManager.SetDummyTile(null, Position[2], TileMapLayer.Buildings);
+            gridManager.SetDummyTile(null, Position[2], TileMapLayer.Buildings, Color.white);
         }
 
         Position[2] = Position[0];
@@ -178,10 +176,6 @@ public class BuildingState : StateBase
 
     public bool GetIsBuildingAttached => isBuildingAttached;
 
-    public void ResetBeforeChangeStates() {
-
-        RemovePreviousTile();
-    }
     public override void MousePos() {
         CheckPosition(CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(Input.mousePosition));
 
@@ -189,5 +183,13 @@ public class BuildingState : StateBase
             PressedConfirmBuildingButton();
         }
 
+    }
+
+
+
+    public override void OnSwitchState()
+    {
+         ResetParam();
+       RemovePreviousTile();
     }
 }

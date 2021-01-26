@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce262156a784a4c439534bfe094dfdf6, type: 3}
+  m_Name: Oxygen pills
+  m_EditorClassIdentifier: 
+  itemID: 0
+  itemName: Oxygen pills
+  maxStackSize: 20
+  description: 
+  sprite: {fileID: 0}
+  Effects:
+  - effectStatType: 4
+    effectType: 2
+    inPercentage: 0
+    isRelativeToMax: 0
+    amount: 20
+    duration: 60
+    tickTime: 20

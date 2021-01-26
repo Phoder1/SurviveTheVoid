@@ -9,7 +9,7 @@ public class UIManager : MonoSingleton<UIManager>
     CraftingManager craftingManager;
     InventoryUIManager inventoryManager;
     PlayerStats playerStats;
-
+    
     // UI elements
     [SerializeField]
     private GameObject
@@ -39,9 +39,14 @@ public class UIManager : MonoSingleton<UIManager>
         bCancel,
         bRotate,
         stateText,
-        xpBar;
+        xpBar,
+        hideOutline,
+        interactOutline,
+        settingsOutline,
+        inventoryOutline,
+        swapOutline;
     [SerializeField] private TextMeshProUGUI levelNumber;
-
+    [SerializeField] Image blackPanelImage;
     [Header("Survival bar's fill")]
     [SerializeField]
     private Image
@@ -85,11 +90,10 @@ public class UIManager : MonoSingleton<UIManager>
             ShowCraftingTimer(craftingManager.CurrentProcessTile.ItemsCrafted, craftingManager.CurrentProcessTile.amount, craftingManager.CurrentProcessTile.CraftingTimeRemaining);
             //ShowTimeAndCollectable(craftingManager.CurrentProcessTile.ItemsCrafted, craftingManager.CurrentProcessTile.amount, craftingManager.CurrentProcessTile.CraftingTimeRemaining);
         }
-
     }
 
     public void StartProgressBar(Vector2 screenPosition, float duration) {
-        progressBarCoroutine = StartCoroutine(progressBarFill(duration));
+        progressBarCoroutine = StartCoroutine(ProgressBarFill(duration));
     }
     public void CancelProgressBar() {
         if (progressBarCoroutine != null) {
@@ -99,22 +103,22 @@ public class UIManager : MonoSingleton<UIManager>
         }
     }
 
-    IEnumerator progressBarFill(float duration) {
-        duration *= 0.85f;
+    IEnumerator ProgressBarFill(float duration) {
+        //duration *= 0.85f;
         progressBarFillObj.gameObject.SetActive(true);
-        float fillAmount = 0;
-        progressBarFillImage.fillAmount = fillAmount;
-        int stepAmount = Mathf.FloorToInt(duration / progressBarTickTime);
-        float barStepProgress = progressBarTickTime / duration;
+
+        progressBarFillImage.fillAmount = 0;
+        float barStepProgress;
         float startTime = Time.time;
-        float deltaTime;
-        for (int i = 0; i < stepAmount; i++) {
-            deltaTime = Time.time - startTime;
-            yield return new WaitForSeconds(progressBarTickTime - deltaTime);
-            startTime = Time.time;
-            fillAmount += barStepProgress;
-            progressBarFillImage.fillAmount = fillAmount;
+
+        while (startTime + duration > Time.time)
+        {
+            barStepProgress = Time.deltaTime / duration;
+            progressBarFillImage.fillAmount += barStepProgress;
+            yield return Time.deltaTime;
         }
+
+
         progressBarFillObj.gameObject.SetActive(false);
 
     }
@@ -227,8 +231,37 @@ public class UIManager : MonoSingleton<UIManager>
                 break;
         }
     }
-
-
+    public void BlackPanel(bool start) {
+       
+        if (start)
+        {
+            StartCoroutine(DeathScreen());
+        }
+        else
+        {
+            StopCoroutine(DeathScreen());
+        }
+    
+    }
+   
+    IEnumerator DeathScreen() {
+        float timerOfDeathScreen = 1f;
+        float startingTime = Time.time;
+        float alphaSpeed = 0;
+        while (Time.time< startingTime+timerOfDeathScreen)
+        {
+            alphaSpeed += 2f* Time.deltaTime;
+            blackPanelImage.color = new Color(blackPanelImage.color.r, blackPanelImage.color.g, blackPanelImage.color.b, alphaSpeed); ;
+            yield return null;
+        }
+        startingTime = Time.time;
+        while (Time.time < startingTime + timerOfDeathScreen)
+        {
+            alphaSpeed -= 5f * Time.deltaTime;
+            blackPanelImage.color = new Color(blackPanelImage.color.r, blackPanelImage.color.g, blackPanelImage.color.b, alphaSpeed); ;
+            yield return null;
+        }
+    }
     public void CanCraftState() {
         //update only when need
         CurrentRecipeOutSprite.gameObject.SetActive(false);
@@ -479,6 +512,8 @@ public class UIManager : MonoSingleton<UIManager>
         }
     }
     public void ButtonPressedDown(bool _isButtonA) {
+        if (_isButtonA)
+            interactOutline.SetActive(true);
         Debug.Log(_isButtonA);
         this.isButtonA = _isButtonA;
         stopHoldingButton = false;
@@ -487,7 +522,7 @@ public class UIManager : MonoSingleton<UIManager>
 
     }
     public void ButtonPressedUp() {
-
+        interactOutline.SetActive(false);
 
         isHoldingButton = false;
         stopHoldingButton = true;
@@ -531,6 +566,7 @@ public class UIManager : MonoSingleton<UIManager>
         if (isBuildModeOn == false && isRemoveModeOn == false) {
             if (isShown == true) {
                 bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
+                hideOutline.SetActive(true);
 
                 if (isQuickAccessSlotsSwapped == true) {
                     SetTools(false);
@@ -547,6 +583,7 @@ public class UIManager : MonoSingleton<UIManager>
             }
             else {
                 bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
+                hideOutline.SetActive(false);
 
                 if (isQuickAccessSlotsSwapped == true) {
                     SetTools(true);
@@ -565,6 +602,7 @@ public class UIManager : MonoSingleton<UIManager>
         else if (isBuildModeOn == true || isRemoveModeOn == true) {
             if (isShownBuildTools == true) {
                 bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
+                hideOutline.SetActive(true);
 
                 bCancel.SetActive(false);
                 bRotate.SetActive(false);
@@ -573,6 +611,7 @@ public class UIManager : MonoSingleton<UIManager>
             }
             else {
                 bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
+                hideOutline.SetActive(false);
 
                 bCancel.SetActive(true);
                 bRotate.SetActive(true);
@@ -585,6 +624,7 @@ public class UIManager : MonoSingleton<UIManager>
     public void ButtonSwap() {
         if (isQuickAccessSlotsSwapped == true) {
             SetTools(false);
+            swapOutline.SetActive(true);
 
             SetQuickAccessSlots(true);
 
@@ -592,6 +632,7 @@ public class UIManager : MonoSingleton<UIManager>
         }
         else {
             SetTools(true);
+            swapOutline.SetActive(false);
 
             SetQuickAccessSlots(false);
 
@@ -600,31 +641,15 @@ public class UIManager : MonoSingleton<UIManager>
     }
 
     public void ButtonInventory() {
-        if (InventoryUI.activeSelf == true) {
-            InventoryUI.SetActive(false);
-
-            bInteractA.SetActive(true);
-            bGatherB.SetActive(true);
-
-            if (isBuildModeOn == false) {
-                viFight.SetActive(true);
-            }
-            else {
-                viFight.SetActive(false);
-            }
-
-            isInventoryOpen = false;
-        }
-        else {
-            InventoryUI.SetActive(true);
-
-            viFight.SetActive(false);
-            bInteractA.SetActive(false);
-            bGatherB.SetActive(false);
-
-            inventoryManager.UpdateInventoryToUI();
-            isInventoryOpen = true;
-        }
+        bool UiState = !InventoryUI.activeSelf;
+        inventoryOutline.SetActive(UiState);
+        InventoryUI.SetActive(UiState);
+        Debug.Log("UI state:" + UiState);
+        inventoryManager.GetSetIsUiClosed = UiState;
+        bInteractA.SetActive(!UiState);
+        bGatherB.SetActive(!UiState);
+        isInventoryOpen = UiState;
+        viFight.SetActive(!isBuildModeOn && !UiState);
     }
 
     public void ButtonFightTransition() {
@@ -637,7 +662,7 @@ public class UIManager : MonoSingleton<UIManager>
         isFightModeOn = true;
     }
 
-    public void BottunGatherTransition() {
+    public void ButtonGatherTransition() {
         viFight.transform.GetChild(0).gameObject.SetActive(true);
         viFight.transform.GetChild(1).gameObject.SetActive(false);
 
@@ -650,7 +675,7 @@ public class UIManager : MonoSingleton<UIManager>
     public void ButtonSettings() {
         if (PauseMenuUI.activeSelf == false) {
             PauseMenuUI.SetActive(true);
-
+            settingsOutline.SetActive(true);
             vjMove.SetActive(false);
             viFight.SetActive(false);
             bInteractA.SetActive(false);
@@ -677,6 +702,7 @@ public class UIManager : MonoSingleton<UIManager>
             Time.timeScale = 0f;
         }
         else {
+            settingsOutline.SetActive(false);
             Time.timeScale = 1f;
 
             PauseMenuUI.SetActive(false);
@@ -734,8 +760,8 @@ public class UIManager : MonoSingleton<UIManager>
     }
     public void SetMusicVolume(float volume)
         => SoundManager._instance.SetVolumeGroup(VolumeGroup.Music, volume);
-    
-    public void SetSoundsVolume(float volume) 
+
+    public void SetSoundsVolume(float volume)
         => SoundManager._instance.SetVolumeGroup(VolumeGroup.Sounds, volume);
 
 
@@ -772,7 +798,7 @@ public class UIManager : MonoSingleton<UIManager>
     }
 
     public void ButtonCancel() {
-        if (isBuildModeOn == true) {
+       
             PlayerStateMachine.GetInstance.SwitchState(InputState.DefaultState);
             isBuildModeOn = false;
 
@@ -816,17 +842,9 @@ public class UIManager : MonoSingleton<UIManager>
             }
 
             stateText.SetActive(false);
-        }
-        else if (isRemoveModeOn == true) {
-            isRemoveModeOn = false;
-            isBuildModeOn = true;
 
-            bInteractA.SetActive(true);
-            bInventory.SetActive(true);
-
-
-            PlayerStateMachine.GetInstance.SwitchState(InputState.BuildState);
-        }
+        bInteractA.SetActive(true);
+        bInventory.SetActive(true);
     }
 
     public void ButtonRotate() {
@@ -894,9 +912,27 @@ public class UIManager : MonoSingleton<UIManager>
 
 
     // Monitors logic
-    public void UpdateSurvivalBar(Stat stat, float value) {
-        if (barsDictionary.TryGetValue(stat.statType, out Image image) && stat.GetIsCapped)
-            image.fillAmount = Mathf.Clamp(value / stat.maxStat.GetSetValue, 0, 1);
+    public void UpdateSurvivalBar(Stat stat) {
+        switch (stat.statType) {
+            case StatType.MaxHP:
+                stat = playerStats.GetStat(StatType.HP);
+                break;
+            case StatType.MaxFood:
+                stat = playerStats.GetStat(StatType.Food);
+                break;
+            case StatType.MaxWater:
+                stat = playerStats.GetStat(StatType.Water);
+                break;
+            case StatType.MaxAir:
+                stat = playerStats.GetStat(StatType.Air);
+                break;
+            case StatType.MaxSleep:
+                stat = playerStats.GetStat(StatType.Sleep);
+                break;
+        }
+        StatType statType = stat.statType;
+        if (barsDictionary.TryGetValue(statType, out Image image) && stat.GetIsCapped)
+            image.fillAmount = Mathf.Clamp(stat.GetSetValue / stat.maxStat.GetSetValue, 0, 1);
     }
 
     public void UpdateExpAndLvlBar() {

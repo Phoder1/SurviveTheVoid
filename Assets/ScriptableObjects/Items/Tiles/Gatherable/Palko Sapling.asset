@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30b7874b8e5eab142871768f1d102839, type: 3}
+  m_Name: Palko Sapling
+  m_EditorClassIdentifier: 
+  itemID: 13
+  itemName: Palko Sapling
+  maxStackSize: 20
+  description: A oak tree sapling
+  sprite: {fileID: 21300000, guid: c6ccb43f9cb4f9544b443892957c13ba, type: 3}
+  mainTileBase: {fileID: 11400000, guid: 4ea9cd078e7b9d64ca99a8c476addd0a, type: 2}
+  isSolid: 1
+  isAirSource: 1
+  stages:
+  - expReward: 0
+    stageTile: {fileID: 11400000, guid: 4ea9cd078e7b9d64ca99a8c476addd0a, type: 2}
+    tileWhileGathered: {fileID: 0}
+    particlesWhileGathered: {fileID: 0}
+    isGatherable: 0
+    destroyOnGather: 0
+    isSolid: 0
+    drops: []
+  - expReward: 0
+    stageTile: {fileID: 11400000, guid: ea80f8e67af76e44ab21f659941c74b5, type: 2}
+    tileWhileGathered: {fileID: 0}
+    particlesWhileGathered: {fileID: 0}
+    isGatherable: 0
+    destroyOnGather: 0
+    isSolid: 0
+    drops: []
+  - expReward: 10
+    stageTile: {fileID: 11400000, guid: 4c4346b9a20c40c47bea99b56593e34f, type: 2}
+    tileWhileGathered: {fileID: 11400000, guid: 44fc4ed4c70ce6c47ada94943a22e488,
+      type: 2}
+    particlesWhileGathered: {fileID: 3538251123284781239, guid: d858c3010c5eb68429901d807d365733,
+      type: 3}
+    isGatherable: 1
+    destroyOnGather: 1
+    isSolid: 1
+    drops:
+    - item: {fileID: 11400000}
+      Chance: 1
+      minAmount: 1
+      maxAmount: 1
+    - item: {fileID: 11400000, guid: 6e3627ca283f52b4499153bb2af26248, type: 2}
+      Chance: 1
+      minAmount: 1
+      maxAmount: 3
+    - item: {fileID: 11400000, guid: 09698c5a98717bc4ea06472bb871ac49, type: 2}
+      Chance: 0.5
+      minAmount: 1
+      maxAmount: 3
+    - item: {fileID: 11400000}
+      Chance: 0.5
+      minAmount: 1
+      maxAmount: 1
+    - item: {fileID: 11400000, guid: 15f6588093b9bde479796bc44fb85fd4, type: 2}
+      Chance: 1
+      minAmount: 1
+      maxAmount: 3
+  - stageTile: {fileID: 11400000, guid: c994ea58f41327c4ca92c7d0180311c9, type: 2}
+    isGatherable: 1
+    destroyOnGather: 1
+    drops:
+    - item: {fileID: 11400000}
+      Chance: 1
+      minAmount: 1
+      maxAmount: 1
+    - item: {fileID: 11400000, guid: 6e3627ca283f52b4499153bb2af26248, type: 2}
+      Chance: 1
+      minAmount: 1
+      maxAmount: 3
+    - item: {fileID: 11400000, guid: 09698c5a98717bc4ea06472bb871ac49, type: 2}
+      Chance: 0.5
+      minAmount: 1
+      maxAmount: 3
+    - item: {fileID: 11400000}
+      Chance: 0.5
+      minAmount: 1
+      maxAmount: 1
+    - item: {fileID: 11400000, guid: 15f6588093b9bde479796bc44fb85fd4, type: 2}
+      Chance: 1
+      minAmount: 1
+      maxAmount: 3
+  sourceTier: 0
+  gatherDurabilityCost: 1
+  gatheringSound: 2
+  toolType: 0
+  minGrowTime: 30
+  maxGrowTime: 45
+  gatheringTime: 4

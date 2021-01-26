@@ -5,15 +5,21 @@ using UnityEngine;
 public class Inventory
 {
     private static Inventory _instance;
+
     //Inventory IInventory.GetInstance => GetInstance;
 
     InventoryUIManager inventoryUI;
-    public static Inventory GetInstance
-    {
-        get
-        {
-            if (_instance == null)
-            {
+    public InventoryUIManager GetInventoryUI {
+        get {
+            if (inventoryUI == null) {
+                inventoryUI = InventoryUIManager._instance;
+            }
+            return inventoryUI;
+        }
+    }
+    public static Inventory GetInstance {
+        get {
+            if (_instance == null) {
                 _instance = new Inventory();
                 var x = EquipManager.GetInstance;
             }
@@ -25,7 +31,7 @@ public class Inventory
     bool checkForItem = false;
     int counter = 0;
     int itemAmountCount;
-    int amountOfIDChests; // 0 is the player's inventory
+    int amountOfIDChests;
 
     ItemSlot[] inventoryList;
     //private int nextAddOnAmountForInventory = 5;
@@ -33,21 +39,23 @@ public class Inventory
 
 
     public ItemSlot[] GetInventory { get => inventoryList; }
+
     private ItemSlot[] inventoryCache;
 
-
     Dictionary<int, ItemSlot[]> inventoryDict;
-    // 0 = > player's inventory
-    //1  = > Hot Keys
-    //2+ = > Equips
-    //3? = > tools
-    //3+ = > local inventory chests
+    /// <summary>
+    /// 0 = > player's inventory
+    ///1  = > Hot Keys
+    ///2+ = > Equips
+    ///3 = > tools
+    ///4+ = > local inventory chests
+    /// </summary>
 
 
 
 
-    private Inventory()
-    {
+
+    private Inventory() {
         ResetInventoryClass();
     }
 
@@ -55,8 +63,7 @@ public class Inventory
 
 
 
-    public void MakeInventoryBigger(int _newSize, int chestID)
-    {
+    public void MakeInventoryBigger(int _newSize, int chestID) {
         if (_newSize < maxCapacityOfItemsInList || inventoryDict.ContainsKey(chestID))
             return;
         inventoryCache = null;
@@ -65,8 +72,7 @@ public class Inventory
         ItemSlot[] newInventoryList = new ItemSlot[maxCapacityOfItemsInList];
 
         inventoryCache = GetInventoryFromDictionary(chestID);
-        if (inventoryCache != null)
-        {
+        if (inventoryCache != null) {
             Array.Copy(inventoryCache, newInventoryList, inventoryList.Length);
             inventoryCache = newInventoryList;
         }
@@ -76,8 +82,7 @@ public class Inventory
 
     }
 
-    public bool CheckIfEnoughSpaceInInventory(int chestID, ItemSlot item)
-    {
+    public bool CheckIfEnoughSpaceInInventory(int chestID, ItemSlot item) {
         if (item == null || item.item == null)
             return false;
 
@@ -92,18 +97,15 @@ public class Inventory
         checkForItem = false;
 
         counter = 0;
-        if (item.amount <= item.item.getmaxStackSize)
-        {
+        if (item.amount <= item.item.getmaxStackSize) {
             counter = 1;
         }
-        else
-        {
+        else {
 
 
             counter = item.amount / item.item.getmaxStackSize;
 
-            if (item.amount % item.item.getmaxStackSize > 0 && item.amount > item.item.getmaxStackSize)
-            {
+            if (item.amount % item.item.getmaxStackSize > 0 && item.amount > item.item.getmaxStackSize) {
                 counter += 1;
             }
         }
@@ -111,8 +113,7 @@ public class Inventory
 
 
 
-        if (counter <= GetAmountOfItem(chestID, null))
-        {
+        if (counter <= GetAmountOfItem(chestID, null)) {
             checkForItem = true;
         }
 
@@ -120,18 +121,14 @@ public class Inventory
 
         counter = 0;
 
-        if (!checkForItem)
-        {
-            for (int i = 0; i < inventoryCache.Length; i++)
-            {
-                if (item.item.itemID == inventoryCache[i].item.itemID)
-                {
+        if (!checkForItem) {
+            for (int i = 0; i < inventoryCache.Length; i++) {
+                if (item.item.itemID == inventoryCache[i].item.itemID) {
                     counter += inventoryCache[i].item.getmaxStackSize;
                 }
             }
 
-            if (GetAmountOfItem(chestID, item) + item.amount <= counter)
-            {
+            if (GetAmountOfItem(chestID, item) + item.amount <= counter) {
                 checkForItem = true;
             }
         }
@@ -139,8 +136,7 @@ public class Inventory
         return checkForItem;
     }
 
-    void AddAmountOfItem(int chestID, ItemSlot item)
-    {
+    void AddAmountOfItem(int chestID, ItemSlot item) {
 
 
         if (item == null || item.amount <= 0)
@@ -151,15 +147,11 @@ public class Inventory
         if (inventoryCache == null)
             return;
 
-        if (item.item.getmaxStackSize == 1)
-        {
-            if (item.amount <= GetAmountOfItem(chestID, null))
-            {
+        if (item.item.getmaxStackSize == 1) {
+            if (item.amount <= GetAmountOfItem(chestID, null)) {
                 counter = 0;
-                for (int i = 0; i < item.amount; i++)
-                {
-                    if (inventoryCache[i] == null)
-                    {
+                for (int i = 0; i < item.amount; i++) {
+                    if (inventoryCache[i] == null) {
                         counter++;
 
                         inventoryCache[i] = new ItemSlot(item.item, item.amount);
@@ -167,8 +159,7 @@ public class Inventory
                     }
 
 
-                    if (counter >= item.amount)
-                    {
+                    if (counter >= item.amount) {
                         return;
                     }
 
@@ -181,38 +172,34 @@ public class Inventory
 
         int test = item.amount - itemAmountCount;
 
-        for (int i = 0; i < inventoryCache.Length; i++)
-        {
+        for (int i = 0; i < inventoryCache.Length; i++) {
             if (inventoryCache[i] == null)
                 continue;
 
-            if (inventoryCache[i].item.itemID == item.item.itemID)
-            {
+            if (inventoryCache[i].item.itemID == item.item.itemID) {
                 if (inventoryCache[i].amount == inventoryCache[i].item.getmaxStackSize)
                     continue;
 
-                if (test + inventoryCache[i].amount > inventoryCache[i].item.getmaxStackSize)
-                {
+                if (test + inventoryCache[i].amount > inventoryCache[i].item.getmaxStackSize) {
 
                     test = Mathf.Abs(inventoryCache[i].item.getmaxStackSize - (inventoryCache[i].amount + test));
                     inventoryCache[i].amount = inventoryCache[i].item.getmaxStackSize;
                     AddAmountOfItem(chestID, item);
                     break;
                 }
-                else if (test + inventoryCache[i].amount == inventoryCache[i].item.getmaxStackSize)
-                {
+                else if (test + inventoryCache[i].amount == inventoryCache[i].item.getmaxStackSize) {
                     inventoryCache[i].amount = inventoryCache[i].item.getmaxStackSize;
                     return;
                 }
-                else if (test + inventoryCache[i].amount < inventoryCache[i].item.getmaxStackSize)
-                {
+                else if (test + inventoryCache[i].amount < inventoryCache[i].item.getmaxStackSize) {
                     inventoryCache[i].amount += test;
                     return;
                 }
             }
         }
 
-        inventoryCache[GetItemIndexInArray(chestID, null)] = new ItemSlot(item.item, test); ;
+        inventoryCache[GetItemIndexInArray(chestID, null)] = new ItemSlot(item.item, test);
+        ;
 
     }
 
@@ -230,24 +217,21 @@ public class Inventory
 
         inventoryUI = InventoryUIManager._instance;
     }
-    public bool AddToInventory(int chestID, ItemSlot item)
-    {
+    public bool AddToInventory(int chestID, ItemSlot item) {
         if (item == null)
             return false;
         // if i dont have it in the inventory
-        if (CheckIfEnoughSpaceInInventory(chestID, item))
-        {
+        if (CheckIfEnoughSpaceInInventory(chestID, item)) {
             itemAmountCount = 0;
             AddAmountOfItem(chestID, item);
-            inventoryUI.UpdateInventoryToUI();
+            GetInventoryUI?.UpdateInventoryToUI();
             return true;
         }
         Debug.Log("Cant Add The Item");
         return false;
     }
 
-    private bool RemoveObjectFromInventory(int chestID, ItemSlot item)
-    {
+    private bool RemoveObjectFromInventory(int chestID, ItemSlot item) {
         if (item.amount < 0)
             item.amount *= -1;
 
@@ -261,14 +245,10 @@ public class Inventory
             return false;
 
         // if item is not stackable
-        if (item.item.getmaxStackSize == 1)
-        {
-            for (int x = 0; x < item.amount; x++)
-            {
-                for (int i = inventoryList.Length - 1; i >= 0; i--)
-                {
-                    if (inventoryCache[i] != null && inventoryCache[i].item.itemID == item.item.itemID)
-                    {
+        if (item.item.getmaxStackSize == 1) {
+            for (int x = 0; x < item.amount; x++) {
+                for (int i = inventoryList.Length - 1; i >= 0; i--) {
+                    if (inventoryCache[i] != null && inventoryCache[i].item.itemID == item.item.itemID) {
                         inventoryCache[i] = null;
                         break;
                     }
@@ -280,8 +260,7 @@ public class Inventory
 
 
         int amountIHave = GetAmountOfItem(chestID, item);
-        if (itemAmountCount > amountIHave)
-        {
+        if (itemAmountCount > amountIHave) {
             Debug.Log("You are trying To Remove : " + item.amount + " and I Have Only This Amount : " + amountIHave);
             return false;
         }
@@ -290,28 +269,23 @@ public class Inventory
         // if item is istackable
 
         counter = 0;
-        for (int i = inventoryCache.Length - 1; i >= 0; i--)
-        {
+        for (int i = inventoryCache.Length - 1; i >= 0; i--) {
             if (inventoryCache[i] == null)
                 continue;
 
-            if (inventoryCache[i].item.itemID == item.item.itemID)
-            {
+            if (inventoryCache[i].item.itemID == item.item.itemID) {
 
-                if (itemAmountCount - inventoryCache[i].amount > 0)
-                {
+                if (itemAmountCount - inventoryCache[i].amount > 0) {
                     itemAmountCount = itemAmountCount - inventoryCache[i].amount;
                     inventoryCache[i] = null;
                     RemoveObjectFromInventory(chestID, item);
-                    return true ;
+                    return true;
                 }
-                else if (itemAmountCount - inventoryCache[i].amount == 0)
-                {
+                else if (itemAmountCount - inventoryCache[i].amount == 0) {
                     inventoryList[i] = null;
                     break;
                 }
-                else
-                {
+                else {
                     inventoryCache[i].amount -= itemAmountCount;
                     break;
                 }
@@ -322,13 +296,11 @@ public class Inventory
         return true;
     }
 
-    public bool RemoveItemFromInventory(int chestID, ItemSlot item)
-    {
+    public bool RemoveItemFromInventory(int chestID, ItemSlot item) {
         itemAmountCount = item.amount;
-       
-        if (RemoveObjectFromInventory(chestID, item))
-        {
-        inventoryUI.UpdateInventoryToUI();
+
+        if (RemoveObjectFromInventory(chestID, item)) {
+            GetInventoryUI?.UpdateInventoryToUI();
             return true;
         }
 
@@ -336,25 +308,21 @@ public class Inventory
         return false;
     }
 
-    public bool CheckInventoryForItem(int chestID, ItemSlot item)
-    {
+    public bool CheckInventoryForItem(int chestID, ItemSlot item) {
         inventoryCache = GetInventoryFromDictionary(chestID);
         if (inventoryCache == null)
             return false;
 
 
         checkForItem = false;
-        for (int i = 0; i < inventoryCache.Length; i++)
-        {
-            if (item == null && inventoryCache[i] == null)
-            {
+        for (int i = 0; i < inventoryCache.Length; i++) {
+            if (item == null && inventoryCache[i] == null) {
 
                 checkForItem = true;
                 break;
 
             }
-            else if (item.item.itemID == inventoryCache[i].item.itemID)
-            {
+            else if (item.item.itemID == inventoryCache[i].item.itemID) {
                 checkForItem = true;
                 break;
             }
@@ -368,8 +336,7 @@ public class Inventory
         bool haveAllIngridients = true;
 
 
-        foreach (var item in recipe.getitemCostArr)
-        {
+        foreach (var item in recipe.getitemCostArr) {
             haveAllIngridients &= HaveEnoughOfItemFromInventory(0, new ItemSlot(item.item, item.amount * amount));
             if (!haveAllIngridients)
                 return false;
@@ -379,12 +346,9 @@ public class Inventory
         return haveAllIngridients;
     }
 
-    public bool RemoveItemsByRecipe(RecipeSO recipe, int Amount = 1)
-    {
-        if (CheckEnoughItemsForRecipe(recipe, Amount))
-        {
-            for (int i = 0; i < recipe.getitemCostArr.Length; i++)
-            {
+    public bool RemoveItemsByRecipe(RecipeSO recipe, int Amount = 1) {
+        if (CheckEnoughItemsForRecipe(recipe, Amount)) {
+            for (int i = 0; i < recipe.getitemCostArr.Length; i++) {
                 RemoveItemFromInventory(0, new ItemSlot(recipe.getitemCostArr[i].item, recipe.getitemCostArr[i].amount * Amount));
             }
         }
@@ -400,36 +364,30 @@ public class Inventory
         if (inventoryCache == null)
             return;
 
-        if (buttonID<0 || buttonID >= inventoryCache.Length)
+        if (buttonID < 0 || buttonID >= inventoryCache.Length)
             return;
-        
+
 
         inventoryCache[buttonID] = null;
     }
 
-    bool HaveEnoughOfItemFromInventory(int chestID, ItemSlot item)
-    {
+    bool HaveEnoughOfItemFromInventory(int chestID, ItemSlot item) {
         inventoryCache = GetInventoryFromDictionary(chestID);
         if (inventoryCache == null)
             return false;
 
         counter = 0;
-        for (int i = 0; i < inventoryCache.Length; i++)
-        {
-            if (item == null && inventoryCache[i] == null)
-            {
+        for (int i = 0; i < inventoryCache.Length; i++) {
+            if (item == null && inventoryCache[i] == null) {
                 counter += 1;
                 continue;
             }
-            if (inventoryCache[i] == null)
-            {
+            if (inventoryCache[i] == null) {
                 continue;
             }
-            if (inventoryCache[i].item.itemID == item.item.itemID)
-            {
+            if (inventoryCache[i].item.itemID == item.item.itemID) {
                 counter += inventoryList[i].amount;
-                if (counter >= item.amount)
-                {
+                if (counter >= item.amount) {
                     return true;
                 }
             }
@@ -442,11 +400,9 @@ public class Inventory
         return false;
     }
 
-    public int GetAmountOfItem(int chestID, ItemSlot item)
-    {
+    public int GetAmountOfItem(int chestID, ItemSlot item) {
         inventoryCache = GetInventoryFromDictionary(chestID);
-        if (inventoryCache == null)
-        {
+        if (inventoryCache == null) {
             Debug.Log("Couldnt find the inventory");
             return 0;
         }
@@ -455,17 +411,13 @@ public class Inventory
 
 
         int counterCache = 0;
-        for (int i = 0; i < inventoryCache.Length; i++)
-        {
-            if (item == null && inventoryCache[i] == null)
-            {
+        for (int i = 0; i < inventoryCache.Length; i++) {
+            if (item == null && inventoryCache[i] == null) {
                 counterCache++;
                 continue;
             }
-            else if (item != null && inventoryCache[i] != null)
-            {
-                if (item.item.itemID == inventoryCache[i].item.itemID)
-                {
+            else if (item != null && inventoryCache[i] != null) {
+                if (item.item.itemID == inventoryCache[i].item.itemID) {
                     counterCache += inventoryCache[i].amount;
                 }
             }
@@ -473,24 +425,20 @@ public class Inventory
         return counterCache;
 
     }
-    public int GetItemIndexInArray(int chestID, ItemSlot item)
-    {
+    public int GetItemIndexInArray(int chestID, ItemSlot item) {
 
         inventoryCache = GetInventoryFromDictionary(chestID);
         if (inventoryCache == null)
             return 0;
 
 
-        for (int i = 0; i < inventoryCache.Length; i++)
-        {
-            if (item == null)
-            {
+        for (int i = 0; i < inventoryCache.Length; i++) {
+            if (item == null) {
                 if (inventoryCache[i] == null)
                     return i;
             }
             else
-            if (inventoryCache[i] != null && item.item.itemID == inventoryCache[i].item.itemID)
-            {
+            if (inventoryCache[i] != null && item.item.itemID == inventoryCache[i].item.itemID) {
                 return i;
             }
         }
@@ -498,14 +446,12 @@ public class Inventory
         Debug.Log("You Dont Have This Item In Your Inventory");
         return 0;
     }
-    public int GetNewIDForChest(int amountOfCapacity)
-    {
+    public int GetNewIDForChest(int amountOfCapacity) {
         amountOfIDChests++;
-        CreateNewInventory(amountOfIDChests , amountOfCapacity);
+        CreateNewInventory(amountOfIDChests, amountOfCapacity);
         return amountOfIDChests;
     }
-    public ItemSlot[] GetInventoryFromDictionary(int id)
-    {
+    public ItemSlot[] GetInventoryFromDictionary(int id) {
         ItemSlot[] Cache = null;
 
         inventoryDict.TryGetValue(id, out Cache);
@@ -515,67 +461,56 @@ public class Inventory
 
     public void CreateNewInventory(int chestId, int amountOfCapacity) => inventoryDict.Add(chestId, new ItemSlot[amountOfCapacity]);
 
-    public void ChangeBetweenItems(int firstChestID, int secondChestID, int drag, int drop)
-    {
-     
+    public void ChangeBetweenItems(int firstChestID, int secondChestID, int dragSlot, int dropSlot) {
+
         inventoryCache = GetInventoryFromDictionary(firstChestID);
-        if (inventoryCache == null )
+        if (inventoryCache == null)
             return;
-        if (drag < 0 || drag >= inventoryCache.Length)
+        if (dragSlot < 0 || dragSlot >= inventoryCache.Length)
             return;
 
 
-        if (firstChestID != secondChestID)
-        {
+        if (firstChestID != secondChestID) {
             var inventoryCacheTwo = GetInventoryFromDictionary(secondChestID);
             if (inventoryCacheTwo == null)
                 return;
-            if (drop < 0 || drop >= inventoryCacheTwo.Length)
+            if (dropSlot < 0 || dropSlot >= inventoryCacheTwo.Length)
                 return;
 
-            if (inventoryCache[drag] == null && inventoryCacheTwo[drop] == null)
-            {
+            if (inventoryCache[dragSlot] == null && inventoryCacheTwo[dropSlot] == null) {
                 return;
             }
-            else if (inventoryCache[drag] != null && inventoryCacheTwo[drop] != null)
-            {
-                ItemSlot temporaryCache = inventoryCacheTwo[drop];
-                inventoryCacheTwo[drop] = inventoryCache[drag];
-                inventoryCache[drag] = temporaryCache;
+            else if (inventoryCache[dragSlot] != null && inventoryCacheTwo[dropSlot] != null) {
+                ItemSlot temporaryCache = inventoryCacheTwo[dropSlot];
+                inventoryCacheTwo[dropSlot] = inventoryCache[dragSlot];
+                inventoryCache[dragSlot] = temporaryCache;
             }
-            else if (inventoryCache[drag] == null && inventoryCacheTwo[drop] != null)
-            {
-                inventoryCache[drag] = inventoryCacheTwo[drop];
-                inventoryCacheTwo[drop] = null;
+            else if (inventoryCache[dragSlot] == null && inventoryCacheTwo[dropSlot] != null) {
+                inventoryCache[dragSlot] = inventoryCacheTwo[dropSlot];
+                inventoryCacheTwo[dropSlot] = null;
             }
-            else if (inventoryCache[drag] != null && inventoryCacheTwo[drop] == null)
-            {
-                inventoryCacheTwo[drop] = inventoryCache[drag];
-                inventoryCache[drag] = null;
+            else if (inventoryCache[dragSlot] != null && inventoryCacheTwo[dropSlot] == null) {
+                inventoryCacheTwo[dropSlot] = inventoryCache[dragSlot];
+                inventoryCache[dragSlot] = null;
             }
 
         }
-        else
-        {
-            if (inventoryCache[drag] == null && inventoryCache[drop] == null)
-            {
+        else {
+            if (inventoryCache[dragSlot] == null && inventoryCache[dropSlot] == null) {
                 return;
             }
-            else if (inventoryCache[drag] != null && inventoryCache[drop] != null)
-            {
-                ItemSlot temporaryCache = inventoryCache[drop];
-                inventoryCache[drop] = inventoryCache[drag];
-                inventoryCache[drag] = temporaryCache;
+            else if (inventoryCache[dragSlot] != null && inventoryCache[dropSlot] != null) {
+                ItemSlot temporaryCache = inventoryCache[dropSlot];
+                inventoryCache[dropSlot] = inventoryCache[dragSlot];
+                inventoryCache[dragSlot] = temporaryCache;
             }
-            else if (inventoryCache[drag] == null && inventoryCache[drop] != null)
-            {
-                inventoryCache[drag] = inventoryCache[drop];
-                inventoryCache[drop] = null;
+            else if (inventoryCache[dragSlot] == null && inventoryCache[dropSlot] != null) {
+                inventoryCache[dragSlot] = inventoryCache[dropSlot];
+                inventoryCache[dropSlot] = null;
             }
-            else if (inventoryCache[drag] != null && inventoryCache[drop] == null)
-            {
-                inventoryCache[drop] = inventoryCache[drag];
-                inventoryCache[drag] = null;
+            else if (inventoryCache[dragSlot] != null && inventoryCache[dropSlot] == null) {
+                inventoryCache[dropSlot] = inventoryCache[dragSlot];
+                inventoryCache[dragSlot] = null;
             }
 
         }
@@ -583,9 +518,8 @@ public class Inventory
 
     }
 
-    public ItemSlot GetItemFromInventoryButton(int chestId, int buttonId)
-    {
-        inventoryCache = GetInventoryFromDictionary(chestId);
+    public ItemSlot GetItemFromInventoryButton(int chestID, int buttonId) {
+        inventoryCache = GetInventoryFromDictionary(chestID);
         if (inventoryCache == null)
             return null;
 
@@ -595,22 +529,31 @@ public class Inventory
         return inventoryCache[buttonId];
     }
 
-    public void PrintInventory(int chestID)
-    {
+    public void PrintInventory(int chestID) {
         inventoryCache = GetInventoryFromDictionary(chestID);
         if (inventoryCache == null)
             return;
 
-        for (int i = 0; i < inventoryCache.Length; i++)
-        {
-            if (inventoryCache[i] == null)
-            {
+        for (int i = 0; i < inventoryCache.Length; i++) {
+            if (inventoryCache[i] == null) {
                 Debug.Log("Inventory list in spot " + i + "is Null");
             }
             else
                 Debug.Log("Inventory list in spot " + i + " with the amount : " + inventoryCache[i].amount + " of type: " + inventoryCache[i].item.getItemName);
         }
 
+    }
+    public void RemoveItemAtPosition(int chestID, int index) {
+        inventoryCache = GetInventoryFromDictionary(chestID);
+        inventoryCache[index] = null;
+    }
+    public bool TrySetItemAtEmptySlot(ItemSlot item, int chestID, int index) {
+        inventoryCache = GetInventoryFromDictionary(chestID);
+        if (inventoryCache[index] == null) {
+            inventoryCache[index] = item;
+            return true;
+        }
+        return false;
     }
 }
 
@@ -632,18 +575,35 @@ public interface IInventory
     void PrintInventory(int chestID);
     void RemoveItemFromInventory(int chestID, ItemSlot item);
 
-  
+
 }
 [Serializable]
 public class ItemSlot
 {
     public ItemSO item;
     public int amount;
-    public int? durability;
-    public ItemSlot(ItemSO item, int amount, int? durability = null)
-    {
+    private int? durabiltiy = null;
+
+    public int GetSetDurability {
+        set => durabiltiy = value; get {
+
+
+            if (durabiltiy == null) {
+                durabiltiy = 0;
+
+                if (item is GearItemSO)
+                    durabiltiy = (item as GearItemSO).GetMaxDurability;
+
+                else if (item is ToolItemSO)
+                    durabiltiy = (item as ToolItemSO).GetMaxDurability;
+
+
+            }
+            return durabiltiy.GetValueOrDefault();
+        }
+    }
+    public ItemSlot(ItemSO item, int amount) {
         this.item = item;
         this.amount = amount;
-        this.durability = durability;
     }
 }

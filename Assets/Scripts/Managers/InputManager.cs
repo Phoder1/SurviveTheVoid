@@ -8,7 +8,7 @@ public class InputManager : MonoSingleton<InputManager>
     PlayerStateMachine playerStateMachine;
     [SerializeField] VirtualJoystick vJ;
     public static InputState inputState;
-    public Vector2 VJAxis => vJ.inpudDir;
+    public Vector2 VJAxis => vJ.JoystickVector;
 
  
     public override void Init()
@@ -25,7 +25,16 @@ public class InputManager : MonoSingleton<InputManager>
     {
         set
         {
-            currentState = value;
+            if (currentState != value)
+            {
+                if (currentState!= null)
+                {
+                currentState.OnSwitchState();
+
+                }
+                 currentState = value;
+            }
+
             switch (currentState) {
                 case BuildingState buildingState:
                     inputState = InputState.BuildState;
