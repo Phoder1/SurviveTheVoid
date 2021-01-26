@@ -8,7 +8,7 @@ public class MainMenuManager : MonoBehaviour
 {
     [SerializeField]Canvas SettingMenu;
     public void playButton()
-    {
+    { 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
     public void SettingButton()
