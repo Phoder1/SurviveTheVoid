@@ -27,7 +27,11 @@ public class InputManager : MonoSingleton<InputManager>
         {
             if (currentState != value)
             {
+                if (currentState!= null)
+                {
                 currentState.OnSwitchState();
+
+                }
                  currentState = value;
             }
 
