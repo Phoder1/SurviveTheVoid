@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 
 public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
+    private Image background;
     private Image joystickKnob;
     private RectTransform rectTransform;
     [SerializeField] GameObject knobOutline;
@@ -18,6 +19,7 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     [SerializeField] Canvas mainCanvas;
     private void Start()
     {
+        background = GetComponent<Image>();
         joystickKnob = transform.GetChild(0).GetComponent<Image>();
         rectTransform = GetComponent<RectTransform>();
         
@@ -59,6 +61,7 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     public void OnPointerDown(PointerEventData eventData)
     {
         knobOutline.SetActive(true);
+        background.color = new Color(169f/255f, 255f/255f, 158f/255f, 70f/255f);
         OnDrag(eventData);
 
     }
@@ -66,6 +69,7 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     public void OnPointerUp(PointerEventData eventData)
     {
         knobOutline.SetActive(false);
+        background.color = new Color(255f / 255f, 255f / 255f, 255f / 255f, 35f / 255f);
         JoystickVector = Vector2.zero;
         joystickKnob.rectTransform.anchoredPosition = Vector2.zero;
     }
