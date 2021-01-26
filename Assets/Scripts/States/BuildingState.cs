@@ -50,10 +50,7 @@ public class BuildingState : StateBase
            
                 touchPosition = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position);
 
-                currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
-
-                if (currentTileHit == null)
-                    return;
+                
                 
                 CheckPosition(touchPosition);
                 
@@ -86,11 +83,14 @@ public class BuildingState : StateBase
         if (Position[0] == gridManager.GetHitFromWorldPosition(worldPos, TileMapLayer.Floor).gridPosition)
             return;
 
-     
 
-   
 
-          
+
+
+        currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
+
+        if (currentTileHit == null)
+            return;
 
 
         // there is a block on the floor
