@@ -101,12 +101,29 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         return stat;
     }
     private void AddReactions() {
-        EffectData hpRegenEffect = new EffectData(StatType.HP, EffectType.OverTime, 1f, Mathf.Infinity, 1f, false, false);
-        AddReaction(StatType.Food, new ReactionEffect(true, false, 95, new EffectData[1] { hpRegenEffect }));
+        EffectData[] hpRegenEffect = new EffectData[1] { new EffectData(StatType.HP, EffectType.OverTime, 1f, Mathf.Infinity, 1f, false, false) };
+        AddReaction(StatType.Food, new ReactionEffect(true, false, 95, hpRegenEffect));
 
-        EffectData hpLoseEffect = new EffectData(StatType.HP, EffectType.OverTime, -1f, Mathf.Infinity, 1f, false, false);
+        EffectData[] hpLoseEffect = new EffectData[1] { new EffectData(StatType.HP, EffectType.OverTime, -1f, Mathf.Infinity, 1f, false, false) };
 
-        AddReaction(StatType.Food, new ReactionEffect(true, true, 4, new EffectData[1] { hpLoseEffect }));
+        AddReaction(StatType.Food, new ReactionEffect(false, true, 0, hpLoseEffect ));
+        AddReaction(StatType.Water, new ReactionEffect(false, true, 0,  hpLoseEffect ));
+        AddReaction(StatType.Air, new ReactionEffect(false, true, 0,  hpLoseEffect ));
+
+        EffectData[] speedReduction = new EffectData[2]{
+        new EffectData(StatType.MoveSpeed, EffectType.Toggle, 1f, Mathf.Infinity, -20, true, true),
+        new EffectData(StatType.GatheringSpeed, EffectType.Toggle, 1f, Mathf.Infinity, -20, true, true)};
+
+        AddReaction(StatType.Food, new ReactionEffect(true, true, 20, speedReduction));
+        AddReaction(StatType.Water, new ReactionEffect(true, true, 20, speedReduction));
+        AddReaction(StatType.Air, new ReactionEffect(true, true, 20, speedReduction));
+
+        EffectData[] speedBuff = new EffectData[2]{
+        new EffectData(StatType.MoveSpeed, EffectType.Toggle, 1f, Mathf.Infinity, 10, true, true),
+        new EffectData(StatType.GatheringSpeed, EffectType.Toggle, 1f, Mathf.Infinity, 10, true, true)};
+
+        AddReaction(StatType.Air, new ReactionEffect(true, false, 80, speedBuff));
+
 
         void AddReaction(StatType statType, Reaction reaction) => GetStat(statType).AddReaction(reaction);
         AddReaction(StatType.HP, new DeathReaction(false, true, 0));
@@ -251,6 +268,7 @@ public class ReactionEffect : Reaction
 
     protected override void StartReaction() {
         if (!reactionEffectRunning) {
+            Debug.Log("Started reaction: " + this.ToString());
             EffectHandler._instance.BeginAllEffects(effectsData, GetEffectsCont);
             reactionEffectRunning = true;
         }
