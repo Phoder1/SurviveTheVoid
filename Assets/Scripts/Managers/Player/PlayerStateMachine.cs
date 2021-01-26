@@ -11,6 +11,7 @@ public class PlayerStateMachine
         stateBases[2] = new FightState();
         stateBases[3] = new RemovalState();
         SwitchState(InputState.DefaultState);
+        GameManager.DeathEvent += DeathReset;
 
     }
     public static PlayerStateMachine GetInstance {
@@ -21,6 +22,7 @@ public class PlayerStateMachine
             return _instance;
         }
     }
+    private void DeathReset() => SwitchState(InputState.DefaultState);
     public void SwitchState(InputState newState) {
         UnityEngine.Debug.Log(newState);
 
