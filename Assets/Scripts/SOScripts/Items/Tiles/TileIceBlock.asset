@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: TileIceBlock
   m_EditorClassIdentifier: 
   itemID: 0
-  itemName: 
-  maxStackSize: 0
+  itemName: Ice Block
+  maxStackSize: 20
   description: 
   sprite: {fileID: 0}
   mainTileBase: {fileID: 0}
-  isSolid: 0
+  isSolid: 1
   isAirSource: 0

@@ -268,6 +268,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: buildingsGeneration.Array.data[1].chance
+      value: 0.002
+      objectReference: {fileID: 0}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: buildingsGeneration.Array.data[3].chance
+      value: 0.002
+      objectReference: {fileID: 0}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: buildingsGeneration.Array.data[4].chance
+      value: 0.002
+      objectReference: {fileID: 0}
+    - target: {fileID: 41707134889584068, guid: 8f0d45ae4df922940b20a49049c2d1e0,
+        type: 3}
+      propertyPath: buildingsGeneration.Array.data[1].distance
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 4043660047941272735, guid: 8f0d45ae4df922940b20a49049c2d1e0,
         type: 3}
       propertyPath: vJ
