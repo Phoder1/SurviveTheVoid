@@ -18,9 +18,45 @@ MonoBehaviour:
   description: Yes You  Can Wear Pizza On Your Face
   sprite: {fileID: 21300000, guid: ead409d627207cf499a086a2af310146, type: 3}
   equipType: 0
-  maxDurability: 20
+  maxDurability: 10000
   gearTier: 1
   equipstats:
-  - statType: 7
+  - statType: 1
     isPercentage: 0
-    amount: 50
+    amount: 10000
+  - statType: 8
+    isPercentage: 0
+    amount: 10000
+  - statType: 2
+    isPercentage: 0
+    amount: 10000
+  - statType: 8
+    isPercentage: 0
+    amount: 10000
+  - statType: 3
+    isPercentage: 0
+    amount: 10000
+  - statType: 9
+    isPercentage: 0
+    amount: 10000
+  - statType: 4
+    isPercentage: 0
+    amount: 10000
+  - statType: 10
+    isPercentage: 0
+    amount: 10000
+  - statType: 5
+    isPercentage: 0
+    amount: 10000
+  - statType: 11
+    isPercentage: 0
+    amount: 10000
+  - statType: 12
+    isPercentage: 0
+    amount: 100000
+  - statType: 17
+    isPercentage: 1
+    amount: 10000
+  - statType: 16
+    isPercentage: 0
+    amount: 10000
