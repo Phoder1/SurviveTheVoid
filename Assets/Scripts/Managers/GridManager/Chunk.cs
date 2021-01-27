@@ -14,6 +14,7 @@ public partial class GridManager
         private bool wasEdited;
         public Chunk(Vector2Int startPos) {
             chunkStartPos = startPos;
+            GenerateIslands();
         }
         public TileSlot GetTile(Vector2Int gridPosition, TileMapLayer buildingLayer) {
             switch (buildingLayer) {

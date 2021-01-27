@@ -53,7 +53,6 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     public void OnPointerUp(PointerEventData eventData) {
         Disable();
     }
-
     private void Disable() {
         knobOutline.SetActive(false);
         background.color = new Color(255f / 255f, 255f / 255f, 255f / 255f, 35f / 255f);

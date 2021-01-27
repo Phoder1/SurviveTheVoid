@@ -9,22 +9,22 @@ public partial class GridManager : MonoSingleton<GridManager>
     #region Debug
 
 
-    private void OnDrawGizmos() {
-        foreach (Chunk chunk in chunksDict.Values) {
-            Vector2Int minCorner = chunk.chunkStartPos;
-            Vector2Int maxCorner = minCorner + Vector2Int.one * CHUNK_SIZE;
-            Vector3 leftCorner = GridToWorldPosition(Vector2Int.RoundToInt(new Vector2(minCorner.x, maxCorner.y)), TileMapLayer.Floor, false);
-            Vector3 rightCorner = GridToWorldPosition(Vector2Int.RoundToInt(new Vector2(maxCorner.x, minCorner.y)), TileMapLayer.Floor, false);
-            Vector3 topCorner = GridToWorldPosition(maxCorner, TileMapLayer.Floor, false);
-            Vector3 bottomCorner = GridToWorldPosition(minCorner, TileMapLayer.Floor, false);
+    //private void OnDrawGizmos() {
+    //    foreach (Chunk chunk in chunksDict.Values) {
+    //        Vector2Int minCorner = chunk.chunkStartPos;
+    //        Vector2Int maxCorner = minCorner + Vector2Int.one * CHUNK_SIZE;
+    //        Vector3 leftCorner = GridToWorldPosition(Vector2Int.RoundToInt(new Vector2(minCorner.x, maxCorner.y)), TileMapLayer.Floor, false);
+    //        Vector3 rightCorner = GridToWorldPosition(Vector2Int.RoundToInt(new Vector2(maxCorner.x, minCorner.y)), TileMapLayer.Floor, false);
+    //        Vector3 topCorner = GridToWorldPosition(maxCorner, TileMapLayer.Floor, false);
+    //        Vector3 bottomCorner = GridToWorldPosition(minCorner, TileMapLayer.Floor, false);
 
-            //Debug.Log("Origin: Min:" + chunkStartCorner + ", Max:" + maxCorner + ", Real: Bottom:" + bottomCorner + ", Top:" + topCorner + "Left:" + leftCorner + ", Right:" + rightCorner);
-            Gizmos.DrawLine(bottomCorner, leftCorner);
-            Gizmos.DrawLine(bottomCorner, rightCorner);
-            Gizmos.DrawLine(leftCorner, topCorner);
-            Gizmos.DrawLine(rightCorner, topCorner);
-        }
-    }
+    //        //Debug.Log("Origin: Min:" + chunkStartCorner + ", Max:" + maxCorner + ", Real: Bottom:" + bottomCorner + ", Top:" + topCorner + "Left:" + leftCorner + ", Right:" + rightCorner);
+    //        Gizmos.DrawLine(bottomCorner, leftCorner);
+    //        Gizmos.DrawLine(bottomCorner, rightCorner);
+    //        Gizmos.DrawLine(leftCorner, topCorner);
+    //        Gizmos.DrawLine(rightCorner, topCorner);
+    //    }
+    //}
     #endregion
 
     [SerializeField] private Grid grid;
@@ -66,11 +66,12 @@ public partial class GridManager : MonoSingleton<GridManager>
     private const int CHUNK_SIZE = 16, COLLISION_SENSITIVITY = 10;
     private const float BUILDING_LAYER_POSITION_OFFSET = 0.5f, TOP_FACE_HEIGHT = 0.7f;
 
-
     public override void Init() {
         islandsNoise.GenerateSeed();
         buildingsRandom.GenerateSeed();
-        CameraController._instance.UpdateView();
+        
+    }
+    public void GenerateStartingArea() {
         SetTile(new TileSlot(craftingTable1), new Vector2Int(-7, 0), TileMapLayer.Buildings, true);
         SetTile(new TileSlot(craftingTable2), new Vector2Int(-6, 0), TileMapLayer.Buildings, true);
         TileSlot tree = new TileSlot(buildingsGeneration[0].tile);
@@ -79,6 +80,7 @@ public partial class GridManager : MonoSingleton<GridManager>
     }
 
     public void UpdateView(Rect view) {
+        
         Vector2Int bottomLeft = WorldToGridPosition(new Vector2(Mathf.Min(view.min.x, view.max.x), Mathf.Min(view.min.y, view.max.y)), TileMapLayer.Floor);
         Vector2Int topRight = WorldToGridPosition(new Vector2(Mathf.Max(view.min.x, view.max.x), Mathf.Max(view.min.y, view.max.y)), TileMapLayer.Floor);
         Vector2Int topLeft = WorldToGridPosition(new Vector2(Mathf.Min(view.min.x, view.max.x), Mathf.Max(view.min.y, view.max.y)), TileMapLayer.Floor);
@@ -93,7 +95,7 @@ public partial class GridManager : MonoSingleton<GridManager>
                     Vector2Int currentPos = new Vector2Int(loopX, loopY);
 
                     if (!TryGetChunk(currentPos, out _)) {
-                        CreateChunk(currentPos).GenerateIslands();
+                        CreateChunk(currentPos);
                     }
                 }
             }
@@ -147,7 +149,7 @@ public partial class GridManager : MonoSingleton<GridManager>
                 for (int loopY = from.y; loopY < to.y; loopY += CHUNK_SIZE) {
                     Vector2Int currentPos = new Vector2Int(loopX, loopY);
                     if (!TryGetChunk(currentPos, out _)) {
-                        CreateChunk(currentPos).GenerateIslands();
+                        CreateChunk(currentPos);
                     }
                 }
             }
