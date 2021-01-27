@@ -337,7 +337,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6766787053438732860}
-  - component: {fileID: 5877039086714958099}
   - component: {fileID: 3861464505800012850}
   m_Layer: 0
   m_Name: CamerasObject
@@ -364,23 +363,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5877039086714958099
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8215528117881478404}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70cc078e40c1d3f4c968790d6fa56770, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  starsParallax:
-  - gameobject: {fileID: 7919751254988767645}
-    speed: 0.015
-  - gameobject: {fileID: 129597889015354156}
-    speed: 0.0075
 --- !u!114 &3861464505800012850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -395,3 +377,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   zoomedOutCameraObj: {fileID: 5139194155019264017}
   zoomedInCameraObj: {fileID: 3036392248350334405}
+  starsParallax:
+  - gameobject: {fileID: 7919751254988767645}
+    speed: 0.075
+  - gameobject: {fileID: 129597889015354156}
+    speed: 0.015
