@@ -51,6 +51,9 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
     private Inventory inventory;
     InventoryUIManager inventoryUI;
+    [SerializeField]
+    private TextMeshProUGUI OutComeDescription;
+
 
     private static EffectData expEffect = new EffectData(StatType.EXP, EffectType.OverTime, 10f, 1, 0.03f);
 
@@ -322,7 +325,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
             }
 
-
+            OutComeDescription.text = selectedRecipe.getoutcomeItem.item.getDescription;
             UIManager._instance.craftingTimer.text = (selectedRecipe.GetCraftingTime * UIManager._instance.getCraftingAmount).ToString();
         }
 
@@ -346,7 +349,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     ItemSO[] Costitemso;
     int[] CostAmount;
     ItemSlot[] TempArr;
-
+    
 
     public void UpdateMatsAmount()
     {
@@ -562,6 +565,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
         OutComeShowImage.gameObject.SetActive(false);
         OutComeShowImage.sprite = null;
         OutComeAmountText.text = "";
+        OutComeDescription.text = "";
     }
 
 

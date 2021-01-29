@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0385232e857e8e446aa3c8cacfcbfb44, type: 3}
-  m_Name: RecipieIceCubes
+  m_Name: RecipePalkoPlank
   m_EditorClassIdentifier: 
   ItemCostArr:
-  - item: {fileID: 11400000, guid: aa20fa708bbce4c4b9867d11c545b7dc, type: 2}
-    amount: 4
-  outcomeItem:
-    item: {fileID: 11400000, guid: d1d4c6710f8dacd47bf2ef29c1319e18, type: 2}
+  - item: {fileID: 11400000, guid: 6e3627ca283f52b4499153bb2af26248, type: 2}
     amount: 1
+  outcomeItem:
+    item: {fileID: 11400000, guid: b2946eca908c10044bdec5a340b41991, type: 2}
+    amount: 2
   tier: 0
-  section: 0
+  section: 6
   isUnlocked: 1
-  processorType: 1
-  CraftingTime: 10
-  expReward: 20
+  processorType: 0
+  CraftingTime: 5
+  expReward: 10
