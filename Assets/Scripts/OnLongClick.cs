@@ -4,7 +4,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler, IPointerEnterHandler
+public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public int ChestId;
     public int Slot;
@@ -92,16 +92,5 @@ public class OnLongClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         IsDragged = false;
     }
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
-       
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-       
-
-
-    }
 }
 

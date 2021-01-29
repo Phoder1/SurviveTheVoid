@@ -64,13 +64,23 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     }
 
     public void OnPointerEnter(PointerEventData eventData) {
-        if (inventoryUI.takingFrom != SlotChestType.none && (inventoryUI.takingFromIndex != slotPosition || inventoryUI.takingFrom != slotType)) {
+
+        Debug.Log("taking from: " + slotType.ToString());
+
+   
             inventoryUI.DroppingAt(slotType, slotPosition);
             HighLightSlot();
-        }
+           
+        
+
+
+
     }
 
     public void OnPointerExit(PointerEventData eventData) {
+        Debug.Log("Leaving Item Slot: " + slotType.ToString());
+        
+        
         //if taking anything
         if (inventoryUI.takingFrom != SlotChestType.none) {
             leftFrame = true;
