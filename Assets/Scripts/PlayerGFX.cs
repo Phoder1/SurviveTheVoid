@@ -63,4 +63,6 @@ public class PlayerGFX : MonoBehaviour
     public void Reborn() {
         _anim.SetTrigger("Reborn");
     }
+
+    
 }

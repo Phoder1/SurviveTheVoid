@@ -413,7 +413,7 @@ public class UIManager : MonoSingleton<UIManager>
             if (craftingManager.selectedRecipe != null) {
                 amountText.text = "Craft: " + craftingAmount + " Gain: " + (craftingManager.selectedRecipe.getoutcomeItem.amount * craftingAmount).ToString();
                 craftingManager.ShowOutCome();
-                TimeToCraftText.text = "Time to craft: " + craftingManager.selectedRecipe.GetCraftingTime * craftingAmount + " Seconds";
+                TimeToCraftText.text = "Craft Time: " + craftingManager.selectedRecipe.GetCraftingTime * craftingAmount; // + " Seconds"
                 craftingManager.ShowRecipe(CraftingManager._instance.selectedRecipe);
                 craftingTimer.text = (craftingManager.selectedRecipe.GetCraftingTime * craftingAmount).ToString();
             }
