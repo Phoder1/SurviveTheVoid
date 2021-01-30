@@ -268,6 +268,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2614183752298034605, guid: ee73434160860324a921a0989281f1ff,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5830525296113187285, guid: ee73434160860324a921a0989281f1ff,
         type: 3}
       propertyPath: m_Name
@@ -337,21 +342,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1984184962438110045, guid: c8860e0a5e02fdb4db5d7466e47bbad9,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3708468762797823407, guid: c8860e0a5e02fdb4db5d7466e47bbad9,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5126349190088311518, guid: c8860e0a5e02fdb4db5d7466e47bbad9,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5555784261260431829, guid: c8860e0a5e02fdb4db5d7466e47bbad9,
         type: 3}
       propertyPath: m_RootOrder
@@ -411,11 +401,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: 'UImanager '
-      objectReference: {fileID: 0}
-    - target: {fileID: 7527229658820432843, guid: c8860e0a5e02fdb4db5d7466e47bbad9,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c8860e0a5e02fdb4db5d7466e47bbad9, type: 3}
