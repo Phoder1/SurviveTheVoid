@@ -24,6 +24,49 @@ MonoBehaviour:
   - expReward: 0
     stageTile: {fileID: 11400000, guid: ead1fc20ca39aa74bb881362eea33fb5, type: 2}
     tileWhileGathered: {fileID: 0}
+    particlesWhileGathered: {fileID: 2005953686570698299, guid: d6b95897bed39d94284a3692cba6b349,
+      type: 3}
+    isGatherable: 1
+    destroyOnGather: 1
+    isSolid: 1
+    drops:
+    - item: {fileID: 11400000, guid: f89a2a83765e2a147a87ce718623f51f, type: 2}
+      Chance: 1
+      minAmount: 1
+      maxAmount: 2
+    - item: {fileID: 11400000}
+      Chance: 0.5
+      minAmount: 1
+      maxAmount: 1
+  - expReward: 0
+    stageTile: {fileID: 11400000, guid: c47e9ad424d2732418ca6d2dd0a120e8, type: 2}
+    tileWhileGathered: {fileID: 0}
+    particlesWhileGathered: {fileID: 2005953686570698299, guid: d6b95897bed39d94284a3692cba6b349,
+      type: 3}
+    isGatherable: 1
+    destroyOnGather: 0
+    isSolid: 1
+    drops:
+    - item: {fileID: 11400000, guid: f89a2a83765e2a147a87ce718623f51f, type: 2}
+      Chance: 1
+      minAmount: 1
+      maxAmount: 3
+  - expReward: 0
+    stageTile: {fileID: 11400000, guid: 214c0c7f35da58740a1bb20b7f98602f, type: 2}
+    tileWhileGathered: {fileID: 0}
+    particlesWhileGathered: {fileID: 2005953686570698299, guid: d6b95897bed39d94284a3692cba6b349,
+      type: 3}
+    isGatherable: 1
+    destroyOnGather: 0
+    isSolid: 1
+    drops:
+    - item: {fileID: 11400000, guid: f89a2a83765e2a147a87ce718623f51f, type: 2}
+      Chance: 1
+      minAmount: 2
+      maxAmount: 4
+  - expReward: 0
+    stageTile: {fileID: 11400000, guid: ead1fc20ca39aa74bb881362eea33fb5, type: 2}
+    tileWhileGathered: {fileID: 0}
     isGatherable: 1
     destroyOnGather: 1
     isSolid: 1
