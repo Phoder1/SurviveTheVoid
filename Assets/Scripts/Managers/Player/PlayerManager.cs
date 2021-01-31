@@ -26,6 +26,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
 
     private bool gatherWasPressed;
     private bool specialWasPressed;
+
     private Stat moveSpeed;
     private Stat gatheringSpeed;
     Coroutine gatherCoroutine = null;
