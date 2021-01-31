@@ -40,7 +40,7 @@ public class CheatMenu : MonoBehaviour
         }
     }
 
-    void ToggleCheatMenuUI()
+    public void ToggleCheatMenuUI()
     {
         CheatMenuBackGround.SetActive(!CheatMenuBackGround.activeInHierarchy);
         //if (CheatMenuBackGround.activeInHierarchy)
