@@ -66,9 +66,13 @@ MonoBehaviour:
       Chance: 1
       minAmount: 1
       maxAmount: 3
-  - stageTile: {fileID: 11400000, guid: c994ea58f41327c4ca92c7d0180311c9, type: 2}
+  - expReward: 0
+    stageTile: {fileID: 11400000, guid: cb5ffd8248059974a9a9e199a7d5b17c, type: 2}
+    tileWhileGathered: {fileID: 0}
+    particlesWhileGathered: {fileID: 0}
     isGatherable: 1
     destroyOnGather: 1
+    isSolid: 0
     drops:
     - item: {fileID: 11400000}
       Chance: 1
