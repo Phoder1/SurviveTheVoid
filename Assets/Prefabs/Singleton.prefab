@@ -984,7 +984,6 @@ GameObject:
   - component: {fileID: 41707134889584068}
   - component: {fileID: 4672845829821667805}
   - component: {fileID: 7023665812336723065}
-  - component: {fileID: 552607234}
   m_Layer: 0
   m_Name: Singleton
   m_TagString: Untagged
@@ -1082,49 +1081,54 @@ MonoBehaviour:
     noise: {fileID: 11400000, guid: 590e0a2ecc5c88d4fb75db0217f0a49f, type: 2}
   buildingsRandom:
     seed: 0
-  loadDistance: 0
+  loadDistance: 1
   floorOffSet: 0
   buildingsOffSet: 0.2
   floorBlocksTiers:
-  - tile: {fileID: 11400000, guid: f2e8c9f82eba2dc489797a21f686fbb5, type: 2}
+  - tile: {fileID: 11400000, guid: 43ffbefb0d9ed6447b4842d45a68cd6b, type: 2}
     distance: 0
     overlapStart: 0
-  - tile: {fileID: 11400000, guid: 013be4b7ab0cd214389b787359a2cbfd, type: 2}
-    distance: 1000
+  - tile: {fileID: 11400000, guid: f2e8c9f82eba2dc489797a21f686fbb5, type: 2}
+    distance: 120
     overlapStart: 0
   - tile: {fileID: 11400000, guid: 013be4b7ab0cd214389b787359a2cbfd, type: 2}
-    distance: 2000
-    overlapStart: 1000
+    distance: 235
+    overlapStart: 97
   - tile: {fileID: 11400000, guid: 73236a474193ae74fb0fa5a3fa9cb38f, type: 2}
-    distance: 3000
-    overlapStart: 1500
+    distance: 365
+    overlapStart: 209
   buildingsGeneration:
   - tile: {fileID: 11400000, guid: 7e65aa60f26158b4b996e206110fc114, type: 2}
-    chance: 0.01
-    distance: 0
-    spread: 0
-    global: 1
+    chance: 0.015
+    distance: 70
+    spread: 100
+    global: 0
+  - tile: {fileID: 11400000, guid: 103294827e96e454990991cb480828b3, type: 2}
+    chance: 0.015
+    distance: 177.5
+    spread: 115
+    global: 0
+  - tile: {fileID: 11400000, guid: da24b7e1540df714da86996609669355, type: 2}
+    chance: 0.015
+    distance: 300
+    spread: 130
+    global: 0
+  - tile: {fileID: 11400000, guid: 921b3109ef57ac34280ecaa184b59944, type: 2}
+    chance: 0.015
+    distance: 440
+    spread: 150
+    global: 0
   - tile: {fileID: 11400000, guid: cc01397123cb8d848999e88d4a7801c1, type: 2}
-    chance: 0.01
-    distance: 0
-    spread: 0
-    global: 1
+    chance: 0.015
+    distance: 123.75
+    spread: 115
+    global: 0
   - tile: {fileID: 11400000, guid: 8e98db741a88b584991dbf067aca19b6, type: 2}
-    chance: 0.001
-    distance: 0
-    spread: 0
-    global: 1
+    chance: 0.015
+    distance: 238.75
+    spread: 130
+    global: 0
   - tile: {fileID: 11400000, guid: 4beb4737faec12442bb67d0b68f3f4c8, type: 2}
-    chance: 0.001
-    distance: 0
-    spread: 0
-    global: 1
-  - tile: {fileID: 11400000, guid: 86404689dc27d044ea3fe5654d15f743, type: 2}
-    chance: 0.001
-    distance: 0
-    spread: 0
-    global: 1
-  - tile: {fileID: 11400000, guid: cc01397123cb8d848999e88d4a7801c1, type: 2}
     chance: 0.01
     distance: 0
     spread: 0
@@ -1151,18 +1155,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ed0b35700e08e4d4c9cd772fe21b78b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &552607234
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6828253403587073456}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b162c87898b09044b1e528e77df52f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8073199305539349011
@@ -1228,22 +1220,22 @@ Tilemap:
       e11: 0
       e12: 0
       e13: NaN
-      e20: -1.2762458e-11
+      e20: -2403808
       e21: 0
-      e22: -1.2893685e-14
-      e23: -6.934747e+21
-      e30: 6.53e-43
+      e22: -5.2094383e-33
+      e23: 1.8789135e-21
+      e30: 5.91e-43
       e31: 0
-      e32: 6.53e-43
-      e33: 4.5904e-41
+      e32: 5.93e-43
+      e33: 4.5905e-41
   m_TileColorArray:
   - m_RefCount: 0
-    m_Data: {r: -7.088608, g: -7.088608, b: -7.088608, a: -7.088608}
+    m_Data: {r: 0.000000002530662, g: 0.000000002530662, b: 0.000000002530662, a: 0.000000002530662}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Origin: {x: -4, y: -15, z: 0}
-  m_Size: {x: 28, y: 47, z: 1}
+  m_Origin: {x: -5, y: -15, z: 0}
+  m_Size: {x: 29, y: 47, z: 1}
   m_TileAnchor: {x: 0, y: 0, z: 2}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
@@ -1426,17 +1418,18 @@ Tilemap:
       e11: 0
       e12: 0
       e13: NaN
-      e20: -1.2762458e-11
+      e20: 0
       e21: 0
-      e22: -1.2893685e-14
-      e23: -6.934747e+21
-      e30: 6.53e-43
+      e22: 0
+      e23: 0
+      e30: 0
       e31: 0
-      e32: 6.53e-43
-      e33: 4.5904e-41
+      e32: 0
+      e33: 0
   m_TileColorArray:
   - m_RefCount: 0
-    m_Data: {r: -5.062393, g: -5.062393, b: -5.062393, a: -5.062393}
+    m_Data: {r: 0.0000000025435511, g: 0.0000000025435511, b: 0.0000000025435511,
+      a: 0.0000000025435511}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}

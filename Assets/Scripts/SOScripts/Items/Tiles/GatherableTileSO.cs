@@ -14,6 +14,8 @@ public class GatherableTileSO : TileAbstSO
     [SerializeField] private float minGrowTime;
     [SerializeField] private float maxGrowTime;
     [SerializeField] private float gatheringTime;
+    [SerializeField] private GameObject particlesWhileGathered;
+    [SerializeField] private Color particlesColor;
 
 
     public GrowthStage[] GetStages => stages;
@@ -24,6 +26,8 @@ public class GatherableTileSO : TileAbstSO
     public float GetGatheringTime => gatheringTime;
     public int GetSourceTier => sourceTier;
     public int GetGatherDurabilityCost => gatherDurabilityCost;
+    public GameObject GetParticlesWhileGathered => particlesWhileGathered;
+    public Color GetParticlesColor => particlesColor;
 }
 [System.Serializable]
 public class GrowthStage
@@ -31,12 +35,10 @@ public class GrowthStage
     [SerializeField] private float expReward;
     [SerializeField] private TileBase stageTile;
     [SerializeField] private TileBase tileWhileGathered;
-    [SerializeField] private GameObject particlesWhileGathered;
     [SerializeField] private bool isGatherable, destroyOnGather, isSolid;
     [SerializeField] private Drop[] drops;
 
     public TileBase GetStageTile => stageTile;
-    public GameObject GetParticlesWhileGathered => particlesWhileGathered;
     public TileBase GetTileWhileGathered => tileWhileGathered;
     public bool GetIsGatherable => isGatherable;
     public bool GetIsSolid => isSolid;
@@ -73,10 +75,12 @@ public class GatherableState : ITileState
             isBeingGathered = state;
             if (currentStage.GetTileWhileGathered != null)
                 GridManager._instance.SetTile(tileSlot, gridPos, TileMapLayer.Buildings);
-            if (currentStage.GetParticlesWhileGathered != null) {
+            if (tile.GetParticlesWhileGathered != null) {
                 if (state) {
                     Vector3 position = GridManager._instance.GridToWorldPosition(gridPos, TileMapLayer.Buildings, true);
-                    particlesObject = Object.Instantiate(currentStage.GetParticlesWhileGathered, position, Quaternion.identity);
+                    particlesObject = Object.Instantiate(tile.GetParticlesWhileGathered, position, Quaternion.identity);
+                    var main = particlesObject.GetComponent<ParticleSystem>().main;
+                    main.startColor = tile.GetParticlesColor;
                 }
                 else if (particlesObject != null) {
                     Object.Destroy(particlesObject);
