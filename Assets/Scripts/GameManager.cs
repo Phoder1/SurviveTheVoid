@@ -11,6 +11,7 @@ public class GameManager : MonoSingleton<GameManager>
     // The original start that controls all other Inits
     void Start()
     {
+        Debug.Log("Gamemanager Start!");
         Init();
 
     }
