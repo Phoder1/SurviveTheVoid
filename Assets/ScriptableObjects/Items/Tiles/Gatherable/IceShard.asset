@@ -48,7 +48,7 @@ MonoBehaviour:
       minAmount: 1
       maxAmount: 3
   - expReward: 40
-    stageTile: {fileID: 11400000, guid: 97fd2b02d4ac5f547b701515ace87c77, type: 2}
+    stageTile: {fileID: 0}
     tileWhileGathered: {fileID: 0}
     isGatherable: 1
     destroyOnGather: 0
@@ -61,7 +61,7 @@ MonoBehaviour:
   sourceTier: 1
   gatherDurabilityCost: 1
   gatheringSound: 3
-  toolType: 4
+  toolType: 1
   minGrowTime: 30
   maxGrowTime: 90
   gatheringTime: 3
