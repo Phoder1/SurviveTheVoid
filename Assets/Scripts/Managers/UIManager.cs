@@ -636,6 +636,14 @@ public class UIManager : MonoSingleton<UIManager>
     }
 
     public void ButtonInventory() {
+
+        if (inventoryManager.ChestGO.activeInHierarchy)
+        {
+            inventoryManager.ChestGO.SetActive(false);
+            PlayerManager._instance.MenuClosed();
+            inventoryManager.OpenedchestId = -1;
+        }
+
         bool UiState = !InventoryUI.activeSelf;
         inventoryOutline.SetActive(UiState);
         InventoryUI.SetActive(UiState);
@@ -645,7 +653,23 @@ public class UIManager : MonoSingleton<UIManager>
         bGatherB.SetActive(!UiState);
         isInventoryOpen = UiState;
         viFight.SetActive(!isBuildModeOn && !UiState);
+
     }
+
+    public void OpenChest(int ChestID)
+    {
+        inventoryOutline.SetActive(true);
+        InventoryUI.SetActive(true);
+        Debug.Log("UI state:" + true);
+        inventoryManager.GetSetIsUiClosed = true;
+        bInteractA.SetActive(false);
+        bGatherB.SetActive(false);
+        isInventoryOpen = true;
+        viFight.SetActive(!isBuildModeOn);
+        inventoryManager.GetChestInfo(ChestID);
+    }
+
+
 
     public void ButtonFightTransition() {
         viFight.transform.GetChild(0).gameObject.SetActive(false);
