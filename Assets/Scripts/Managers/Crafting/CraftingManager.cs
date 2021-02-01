@@ -60,11 +60,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
     private void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-
-        }
-
+       
 
 
 
@@ -236,6 +232,8 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
 
     private Section GetSection(SectionEnum _section)
     {
+       
+
 
         for (int j = 0; j < sections.Length; j++)
         {
