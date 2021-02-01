@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -67,10 +68,15 @@ public partial class GridManager : MonoSingleton<GridManager>
     private const float BUILDING_LAYER_POSITION_OFFSET = 0.5f, TOP_FACE_HEIGHT = 0.7f;
 
     public override void Init() {
+        ClearChunks();
         islandsNoise.GenerateSeed();
         buildingsRandom.GenerateSeed();
-        
     }
+
+    private void ClearChunks() {
+        chunksDict.Clear();
+    }
+
     public void GenerateStartingArea() {
         SetTile(new TileSlot(craftingTable1), new Vector2Int(-7, 0), TileMapLayer.Buildings, true);
         SetTile(new TileSlot(craftingTable2), new Vector2Int(-6, 0), TileMapLayer.Buildings, true);
