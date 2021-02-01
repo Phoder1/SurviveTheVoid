@@ -317,8 +317,6 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
     #endregion
 
-
-
     #region Tools related
     ItemSlot[] toolsInventory;
     public InventorySlot[] toolsSlots;
@@ -338,8 +336,41 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
     #endregion
 
+    #region Chests
+    ItemSlot[] ChestItems;
+    [SerializeField]
+    private InventorySlot[] ChestSlots;
 
-    public void RemoveItemViaTrashCan()
+    public void GetChestInfo(int ChestId)
+    {
+        ChestItems = inventory.GetInventoryFromDictionary(ChestId);
+        UpdateChestUI();
+    }
+
+    void UpdateChestUI()
+    {
+        for (int i = 0; i < ChestItems.Length; i++)
+        {
+            if (ChestItems[i] != null)
+            {
+                ChestSlots[i].UpdateSlot(ChestItems[i]);
+            }
+            else
+            {
+                ChestSlots[i].EmptySlot();
+            }
+            ChestSlots[i].DeHighLightSlot();
+        }
+    }
+
+
+
+	#endregion
+
+
+
+
+	public void RemoveItemViaTrashCan()
     {
         int ChestId = (int)takingFrom - 1;
         inventory.RemoveItemFromButton(takingFromIndex,ChestId);
