@@ -46,10 +46,11 @@ public class BuildingState : StateBase
 
                 if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject() || UIRaycastDetector.GetInstance.RayCastCheck(touch))//|| (currentTileHit != null && currentTileHit.tile == null)
                     return;
-              //  localTouchPos = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position) - PlayerManager._instance.transform.position;
+                lastTouchPosition = touch.position;
+                // localTouchPos = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position) - PlayerManager._instance.transform.position;
                 touchPosition = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position);
 
-                CheckPosition(touchPosition);
+                CheckPosition(touchPosition); ;
 
 
 
@@ -57,12 +58,10 @@ public class BuildingState : StateBase
                 break;
         }
     }
-
-    public void BuildWithVJ() {
-
-        //    touchPosition= (Vector2)PlayerManager._instance.GetPlayerVector;
-        Debug.Log(localTouchPos + (Vector2)PlayerManager._instance.transform.position);
-        CheckPosition(localTouchPos + (Vector2)PlayerManager._instance.transform.position);
+    Vector2 lastTouchPosition;
+    public void BuildWithVJ(Vector2 playerMovement) {
+        playerMovement = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(playerMovement + lastTouchPosition);
+        CheckPosition(playerMovement);
        
     }
 
@@ -95,7 +94,7 @@ public class BuildingState : StateBase
 
 
 
-        currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
+        currentTileHit = gridManager.GetHitFromWorldPosition(worldPos, TileMapLayer.Floor);
 
         if (currentTileHit == null)
             return;

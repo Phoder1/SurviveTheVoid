@@ -12,14 +12,13 @@ public partial class PlayerManager
     [Min(0.1f)]
     [SerializeField] float animationSpeedMultiplier;
     Vector2 totalSpeed;
-    Vector2 lastPos;
-    public Vector3 GetPlayerVector => lastPos;
-    //bool moved;
+  
+
     public void Move(Vector2 moveVector) {
         
         movementPlayerVector = Vector3.zero;
-      
-        gridMoveVector = UnityToGridVector(moveVector);
+        
+          gridMoveVector = UnityToGridVector(moveVector);
         currentGridPos = gridManager.WorldToGridPosition((Vector2)transform.position, TileMapLayer.Floor);
         if (Input.GetKey(KeyCode.LeftShift)) {
      
@@ -37,8 +36,7 @@ public partial class PlayerManager
 
         }
 
-            lastPos = movementPlayerVector;
-    
+ 
     }
 
     private void MoveOnY() {
@@ -70,6 +68,7 @@ public partial class PlayerManager
             //    transform.position = (Vector3)GridToUnityVector(nextGridPos) + Vector3.forward * transform.position.z;
             //}
         }
+
     }
     private void MoveOnX() {
         Vector2 UnityVectorOnGridX = GridToUnityVector(new Vector2(gridMoveVector.x, 0));
@@ -99,6 +98,8 @@ public partial class PlayerManager
             //    transform.position = (Vector3)GridToUnityVector(nextGridPos) + Vector3.forward * transform.position.z;
             //}
         }
+
+
     }
 
  
@@ -123,5 +124,8 @@ public partial class PlayerManager
     private Vector2 tileRightCorner(Vector2 pos, float colliderSize) => pos + Vector2.right * 0.5f * colliderSize;
     private Vector2 tileLeftCorner(Vector2 pos, float colliderSize) => pos + Vector2.left * 0.5f * colliderSize;
     private void UpdateView() => cameraController.UpdateView();
+
+
+   
 }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices.ComTypes;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class InputManager : MonoSingleton<InputManager>
 {
@@ -52,14 +53,16 @@ public class InputManager : MonoSingleton<InputManager>
     private void AssignTouch()
     {
         ResetBoolArray();
-
+        if (0 == Input.touchCount)
+            return ;
         for (int i = 0; i < touch.Length; i++)
         {
-            
-            if (i >= Input.touchCount)
-                break;
 
-            touch[i] = Input.GetTouch(i);
+            if (i < Input.touchCount)
+                touch[i] = Input.GetTouch(i);
+
+            
+            
 
             if (vJ.GetVJActivity && !IsAlreadyAcitve()) { 
                 touchNumberIsVJ[i] = true;
@@ -70,7 +73,8 @@ public class InputManager : MonoSingleton<InputManager>
 
 
     }
-
+    bool isMovingWithJoystick;
+    
 
     public static StateBase SetInputState
     {
@@ -126,19 +130,16 @@ public class InputManager : MonoSingleton<InputManager>
 
 
                 if (vjIndex != null && i == vjIndex) {
-
+               
                     if (Input.touchCount == 1 && currentState is BuildingState)
-                    {
-                        (currentState as BuildingState).BuildWithVJ();
-                    }
+                        (currentState as BuildingState).BuildWithVJ(PlayerManager.GetGridMovement);
+                       
+                    
 
                 
                     continue;
                 }
 
-
-
-                //  if (touch[i].position == new Vector2(vJ.gameObject.transform.position.x, vJ.gameObject.transform.position.y) || new Vector2(Input.mousePosition.x, Input.mousePosition.y) == new Vector2(vJ.gameObject.transform.position.x, vJ.gameObject.transform.position.y))
 
 
                 if ((touch[i] == null))
@@ -244,20 +245,7 @@ public class InputManager : MonoSingleton<InputManager>
         OnTouch();
     }
 
-    private void LateUpdate()
-    {
-        if (Input.touchCount >= 1 && currentState is BuildingState)
-        {
-            if (vJ.GetVJActivity)
-            {
 
-            }
-            else
-            {
-
-            }
-        }
-    }
     public void DeathReset() => playerStateMachine.SwitchState(InputState.DefaultState);
 
 }
