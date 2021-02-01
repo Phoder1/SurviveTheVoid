@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4a002a5cfe591141af7835f8c9845bc, type: 3}
   m_Name: WoodPickaxe
   m_EditorClassIdentifier: 
-  itemID: 0
+  itemID: 4
   itemName: Wood Pickaxe
   maxStackSize: 1
-  description: 
+  description: used to gain metals or stone
   sprite: {fileID: 21300000, guid: 1b889fab1581fde4fb17205479ae7d70, type: 3}
   toolType: 1
   maxDurability: 25
   toolTier: 1
+  Tier: 0
   speedPrecentage: 10

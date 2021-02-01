@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4a002a5cfe591141af7835f8c9845bc, type: 3}
   m_Name: StoneHammer
   m_EditorClassIdentifier: 
-  itemID: 19
+  itemID: 7
   itemName: Stone Hammer
   maxStackSize: 1
-  description: 
+  description: used to gain ice
   sprite: {fileID: 21300000, guid: cb50178969f1bb847bff71a65be40a60, type: 3}
   toolType: 4
   maxDurability: 50
   toolTier: 2
+  Tier: 0
   speedPrecentage: 20

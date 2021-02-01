@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4a002a5cfe591141af7835f8c9845bc, type: 3}
   m_Name: UranHammer
   m_EditorClassIdentifier: 
-  itemID: 24
+  itemID: 12
   itemName: Uran Hammer
   maxStackSize: 1
-  description: 
+  description: used to gain ice
   sprite: {fileID: 21300000, guid: 4f3ce5995c78a0d4497a397ab2cce24f, type: 3}
   toolType: 4
   maxDurability: 75
   toolTier: 3
+  Tier: 0
   speedPrecentage: 30

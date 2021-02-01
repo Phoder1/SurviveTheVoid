@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4a002a5cfe591141af7835f8c9845bc, type: 3}
   m_Name: UranPickaxe
   m_EditorClassIdentifier: 
-  itemID: 26
+  itemID: 14
   itemName: Uran Pickaxe
   maxStackSize: 1
-  description: 
+  description: used to gain metal or stone
   sprite: {fileID: 21300000, guid: 884b8ce2c0474dd41b06979a39ce2f80, type: 3}
   toolType: 1
   maxDurability: 75
   toolTier: 3
+  Tier: 0
   speedPrecentage: 30

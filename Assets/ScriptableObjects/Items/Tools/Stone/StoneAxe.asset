@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4a002a5cfe591141af7835f8c9845bc, type: 3}
   m_Name: StoneAxe
   m_EditorClassIdentifier: 
-  itemID: 0
+  itemID: 6
   itemName: Stone Axe
   maxStackSize: 1
-  description: 
+  description: used to gain wood
   sprite: {fileID: 21300000, guid: d212a99bb1546a84d8f4331ed6198f13, type: 3}
   toolType: 0
   maxDurability: 50
   toolTier: 2
+  Tier: 0
   speedPrecentage: 20

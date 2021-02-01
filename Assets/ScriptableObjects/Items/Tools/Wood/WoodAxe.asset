@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4a002a5cfe591141af7835f8c9845bc, type: 3}
   m_Name: WoodAxe
   m_EditorClassIdentifier: 
-  itemID: 0
+  itemID: 1
   itemName: Wood Axe
   maxStackSize: 1
-  description: 
+  description: Used to gather trees
   sprite: {fileID: 21300000, guid: 115cc8f8daad3ff4f99bca2da8959fb6, type: 3}
   toolType: 0
   maxDurability: 25
   toolTier: 1
+  Tier: 0
   speedPrecentage: 10
