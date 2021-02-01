@@ -2,9 +2,6 @@
 public enum SectionEnum
 {
     Blocks,
-    Furnitures,
-    Plants,
-    Weapons,
     Tools,
     Food,
     Generic,

@@ -10,19 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0385232e857e8e446aa3c8cacfcbfb44, type: 3}
-  m_Name: RecipieBalloonWithAir
+  m_Name: RecipieAirCylinder
   m_EditorClassIdentifier: 
   ItemCostArr:
+  - item: {fileID: 11400000, guid: b33aa4bb17fe9c0469b1d323403cbf71, type: 2}
+    amount: 1
   - item: {fileID: 11400000, guid: 7ef8f8ae7a922374895b3e0c0235acf5, type: 2}
     amount: 2
   - item: {fileID: 11400000, guid: d1d145c2b40a1b34ba1fe549b7b4deec, type: 2}
-    amount: 1
+    amount: 2
+  - item: {fileID: 11400000, guid: 902a1f67f56f8774e9116b4510942ad9, type: 2}
+    amount: 2
   outcomeItem:
-    item: {fileID: 11400000, guid: 7b68955822829544cb2f5786ddc3c985, type: 2}
-    amount: 5
-  tier: 1
-  section: 5
+    item: {fileID: 11400000, guid: 532cd89d3f57c7d47b00ec0339583582, type: 2}
+    amount: 7
+  tier: 0
+  section: 4
   isUnlocked: 1
   processorType: 0
   CraftingTime: 10
-  expReward: 20
+  expReward: 100
