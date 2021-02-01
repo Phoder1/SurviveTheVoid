@@ -11,14 +11,15 @@ public class GameManager : MonoSingleton<GameManager>
     // The original start that controls all other Inits
     void Start()
     {
+        Debug.Log("Gamemanager Start!");
         Init();
 
     }
     public override void Init()
     {
         singletons = new ISingleton[12] {
-            CameraController._instance,  // alon
              GridManager._instance, // alon
+            CameraController._instance,  // alon
              UIManager._instance, // -----
              PlayerStats._instance, // alon
              InputManager._instance, // rei - V

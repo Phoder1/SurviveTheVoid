@@ -324,7 +324,7 @@ public class EquipManager
             case 2:
                 return ToolType.Hoe;
             case 3:
-                return ToolType.Shovel;
+                return ToolType.Scissor;
             case 4:
                 return ToolType.Hammer;
             default:
@@ -347,7 +347,7 @@ public class EquipManager
                 return 1;
             case ToolType.Hoe:
                 return 2;
-            case ToolType.Shovel:
+            case ToolType.Scissor:
                 return 3;
             case ToolType.Hammer:
                 return 4;
@@ -368,7 +368,7 @@ public class EquipManager
             case ToolType.Hoe:
                 return 2;
 
-            case ToolType.Shovel:
+            case ToolType.Scissor:
                 return 3;
 
             case ToolType.Hammer:

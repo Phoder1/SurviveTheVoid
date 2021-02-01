@@ -57,6 +57,9 @@ public class UIManager : MonoSingleton<UIManager>
         sleepFill,
         xpFill,
         screenOutline;
+    [SerializeField]
+    Sprite upArrow,
+        downArrow;
     private Dictionary<StatType, Image> barsDictionary;
     [SerializeField] RectTransform progressBarFillObj;
     [SerializeField] float progressBarTickTime;
@@ -174,36 +177,31 @@ public class UIManager : MonoSingleton<UIManager>
 
                 SectionBackGroundImage[0].sprite = sectionBackGroundSprite[1];
             }
-            else if (_section == "Furnitures") {
+            else if (_section == "Tools") {
                 if (i != 1)
                     SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
 
                 SectionBackGroundImage[1].sprite = sectionBackGroundSprite[1];
             }
-            else if (_section == "Plants") {
+            else if (_section == "Food") {
                 if (i != 2)
                     SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
 
                 SectionBackGroundImage[2].sprite = sectionBackGroundSprite[1];
             }
-            else if (_section == "Weapons") {
+            else if (_section == "Generic") {
                 if (i != 3)
                     SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
 
                 SectionBackGroundImage[3].sprite = sectionBackGroundSprite[1];
             }
-            else if (_section == "Tools") {
+            else if (_section == "Gear") {
                 if (i != 4)
                     SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
 
                 SectionBackGroundImage[4].sprite = sectionBackGroundSprite[1];
             }
-            else if (_section == "Food") {
-                if (i != 5)
-                    SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
-
-                SectionBackGroundImage[5].sprite = sectionBackGroundSprite[1];
-            }
+        
         }
 
     }
@@ -565,7 +563,7 @@ public class UIManager : MonoSingleton<UIManager>
     public void ButtonHide() {
         if (isBuildModeOn == false && isRemoveModeOn == false) {
             if (isShown == true) {
-                bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
+                bHide.GetComponentInChildren<Image>().sprite = upArrow;
                 hideOutline.SetActive(true);
 
                 if (isQuickAccessSlotsSwapped == true) {
@@ -582,7 +580,7 @@ public class UIManager : MonoSingleton<UIManager>
                 isShown = false;
             }
             else {
-                bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
+                bHide.GetComponentInChildren<Image>().sprite = downArrow;
                 hideOutline.SetActive(false);
 
                 if (isQuickAccessSlotsSwapped == true) {
@@ -641,6 +639,14 @@ public class UIManager : MonoSingleton<UIManager>
     }
 
     public void ButtonInventory() {
+
+        if (inventoryManager.ChestGO.activeInHierarchy)
+        {
+            inventoryManager.ChestGO.SetActive(false);
+            PlayerManager._instance.MenuClosed();
+            inventoryManager.OpenedchestId = -1;
+        }
+
         bool UiState = !InventoryUI.activeSelf;
         inventoryOutline.SetActive(UiState);
         InventoryUI.SetActive(UiState);
@@ -650,7 +656,23 @@ public class UIManager : MonoSingleton<UIManager>
         bGatherB.SetActive(!UiState);
         isInventoryOpen = UiState;
         viFight.SetActive(!isBuildModeOn && !UiState);
+
     }
+
+    public void OpenChest(int ChestID)
+    {
+        inventoryOutline.SetActive(true);
+        InventoryUI.SetActive(true);
+        Debug.Log("UI state:" + true);
+        inventoryManager.GetSetIsUiClosed = true;
+        bInteractA.SetActive(false);
+        bGatherB.SetActive(false);
+        isInventoryOpen = true;
+        viFight.SetActive(!isBuildModeOn);
+        inventoryManager.GetChestInfo(ChestID);
+    }
+
+
 
     public void ButtonFightTransition() {
         viFight.transform.GetChild(0).gameObject.SetActive(false);

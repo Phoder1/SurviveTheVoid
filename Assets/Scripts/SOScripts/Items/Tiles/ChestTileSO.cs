@@ -1,26 +1,29 @@
 ﻿using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[CreateAssetMenu(fileName = "New Block Tile", menuName = "SO/" + "Tiles/" + "Block", order = 0)]
+[CreateAssetMenu(fileName = "New Block Tile", menuName = "SO/" + "Tiles/" + "Chest", order = 0)]
 public class ChestTileSO : TileAbstSO
 {
-    public ChestTileSlot GetNewSlot => new ChestTileSlot(this);
+    public ChestTileState GetNewSlot => new ChestTileState(this);
 }
-public class ChestTileSlot : ITileState
+public class ChestTileState : ITileState
 {
     public ChestTileSO tile;
+    public int chestId;
 
-    public ChestTileSlot(ChestTileSO tile) {
+    public ChestTileState(ChestTileSO tile) {
         this.tile = tile;
+        chestId = Inventory.GetInstance.GetNewIDForChest(12);
+        Debug.Log("Creating new Chest. The ID is: " + chestId);
     }
     public bool isSpecialInteraction => tile.isSpecialInteraction;
-    public TileBase GetMainTileBase => throw new System.NotImplementedException();
+    public TileBase GetMainTileBase => tile.GetMainTileBase;
 
     public ToolType GetInteractionType => throw new System.NotImplementedException();
 
-    public TileType GetTileType => throw new System.NotImplementedException();
+    public TileType GetTileType => tile.GetTileType;
 
-    public bool GetIsSolid => throw new System.NotImplementedException();
+    public bool GetIsSolid => tile.GetIsSolid;
 
     public TileAbstSO GetTileAbst => tile;
 
@@ -29,12 +32,15 @@ public class ChestTileSlot : ITileState
     }
 
     public void CancelEvent(Vector2Int gridPosition, TileMapLayer tilemapLayer) {
-        throw new System.NotImplementedException();
+        
     }
 
     public void SpecialInteraction(Vector2Int gridPosition, TileMapLayer buildingLayer) {
-        throw new System.NotImplementedException();
+        UIManager._instance.OpenChest(chestId);
     }
 
-    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool playerAction = true) { }
+    public void Init(Vector2Int gridPosition, TileMapLayer tilemapLayer, bool playerAction = true) 
+    {
+
+    }
 }

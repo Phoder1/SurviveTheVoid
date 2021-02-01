@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public enum ToolType { Axe, Pickaxe, Hoe, Shovel, Hammer }
+public enum ToolType { Axe, Pickaxe, Hoe, Scissor, Hammer }
 
 [CreateAssetMenu(fileName = "New Item Tool", menuName = "Items/" + "Tool")]
 public class ToolItemSO : ItemSO

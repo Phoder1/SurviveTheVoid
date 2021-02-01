@@ -41,14 +41,14 @@ MonoBehaviour:
     tileWhileGathered: {fileID: 0}
     isGatherable: 1
     destroyOnGather: 0
-    isSolid: 0
+    isSolid: 1
     drops:
     - item: {fileID: 11400000, guid: aa20fa708bbce4c4b9867d11c545b7dc, type: 2}
       Chance: 1
       minAmount: 1
       maxAmount: 3
   - expReward: 40
-    stageTile: {fileID: 11400000, guid: 97fd2b02d4ac5f547b701515ace87c77, type: 2}
+    stageTile: {fileID: 0}
     tileWhileGathered: {fileID: 0}
     isGatherable: 1
     destroyOnGather: 0
@@ -61,10 +61,10 @@ MonoBehaviour:
   sourceTier: 1
   gatherDurabilityCost: 1
   gatheringSound: 3
-  toolType: 4
+  toolType: 1
   minGrowTime: 30
   maxGrowTime: 90
   gatheringTime: 3
   particlesWhileGathered: {fileID: 1734594009432028733, guid: b3f4d5f40ced75b44b28f3c2e2959845,
     type: 3}
-  particlesColor: {r: 1, g: 1, b: 1, a: 0}
+  particlesColor: {r: 1, g: 1, b: 1, a: 0.9019608}

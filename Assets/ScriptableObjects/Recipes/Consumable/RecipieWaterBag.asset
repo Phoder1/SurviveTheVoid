@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0385232e857e8e446aa3c8cacfcbfb44, type: 3}
+  m_Name: RecipieWaterBag
+  m_EditorClassIdentifier: 
+  ItemCostArr:
+  - item: {fileID: 11400000, guid: aa20fa708bbce4c4b9867d11c545b7dc, type: 2}
+    amount: 6
+  - item: {fileID: 11400000, guid: 7ef8f8ae7a922374895b3e0c0235acf5, type: 2}
+    amount: 4
+  outcomeItem:
+    item: {fileID: 11400000, guid: 389161c3dcc42d6489683ad9aa061544, type: 2}
+    amount: 5
+  tier: 1
+  section: 2
+  isUnlocked: 1
+  processorType: 1
+  CraftingTime: 10
+  expReward: 20
