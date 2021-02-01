@@ -10912,8 +10912,8 @@ MonoBehaviour:
   EquipSlots:
   - {fileID: 4379253514545380893}
   - {fileID: 8243992650267956968}
-  - {fileID: 2240902900885940318}
   - {fileID: 5152006765580940790}
+  - {fileID: 2240902900885940318}
   - {fileID: 7838319326769960419}
   ConsumableHotKey:
   - {fileID: 4602376761060348645}
@@ -23723,7 +23723,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7527229659039181543
 RectTransform:
   m_ObjectHideFlags: 0
@@ -28462,6 +28462,11 @@ PrefabInstance:
       propertyPath: mainCanvas
       value: 
       objectReference: {fileID: 5555784261414328034}
+    - target: {fileID: 5511137277644627819, guid: e349bdc1b66048a4398200842c1d61a2,
+        type: 3}
+      propertyPath: slotPosition
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 6121962562746309816, guid: e349bdc1b66048a4398200842c1d61a2,
         type: 3}
       propertyPath: dragParent
