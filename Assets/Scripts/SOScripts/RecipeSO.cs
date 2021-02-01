@@ -7,8 +7,8 @@ public enum SectionEnum
     Weapons,
     Tools,
     Food,
-    //Generic,
-    //Gear
+    Generic,
+    Gear
 }
 
 public enum ProcessorType
