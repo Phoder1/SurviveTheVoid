@@ -6,20 +6,23 @@ public partial class PlayerManager
     [Range(0.1f, 1f)]
     [SerializeField] float playerColliderSize;
     CameraController cameraController;
-
+     Vector3 movementPlayerVector;
     Vector2Int currentGridPos;
     Vector2 gridMoveVector;
     [Min(0.1f)]
     [SerializeField] float animationSpeedMultiplier;
     Vector2 totalSpeed;
-
-    bool moved;
+    Vector2 lastPos;
+    public Vector3 GetPlayerVector => lastPos;
+    //bool moved;
     public void Move(Vector2 moveVector) {
-        moved = false;
+        
+        movementPlayerVector = Vector3.zero;
+      
         gridMoveVector = UnityToGridVector(moveVector);
         currentGridPos = gridManager.WorldToGridPosition((Vector2)transform.position, TileMapLayer.Floor);
         if (Input.GetKey(KeyCode.LeftShift)) {
-            moved = true;
+     
             transform.Translate(moveVector);
         }
         else {
@@ -28,8 +31,14 @@ public partial class PlayerManager
             MoveOnX();
             totalSpeed.y *= 2;
         }
-        if (moved)
+        if (movementPlayerVector != Vector3.zero) {
+           transform.position +=movementPlayerVector;
             UpdateView();
+
+        }
+
+            lastPos = movementPlayerVector;
+    
     }
 
     private void MoveOnY() {
@@ -40,7 +49,7 @@ public partial class PlayerManager
         if (gridMoveVector.y > 0) {
             if (CheckTilesOnPos(tileLeftCorner(transform.position, playerColliderSize) + UnityVectorOnGridY) && CheckTilesOnPos(tileTopCorner(transform.position, playerColliderSize) + UnityVectorOnGridY)) {
                 totalSpeed += UnityVectorOnGridY;
-                ApplyMove(UnityVectorOnGridY);
+                SaveMove(UnityVectorOnGridY);
             }
             //else {
             //    Vector2 nextTilePos = gridManager.GridToWorldPosition(currentGridPos + Vector2Int.up, TileMapLayer.Floor, true);
@@ -53,7 +62,7 @@ public partial class PlayerManager
         else {
             if (CheckTilesOnPos(tileBottomCorner(transform.position, playerColliderSize) + UnityVectorOnGridY) && CheckTilesOnPos(tileRightCorner(transform.position, playerColliderSize) + UnityVectorOnGridY)) {
                 totalSpeed += UnityVectorOnGridY;
-                ApplyMove(UnityVectorOnGridY);
+                SaveMove(UnityVectorOnGridY);
             }
             //else {
             //    Vector2 nextGridPos = UnityToGridVector(transform.position + (Vector3)UnityVectorOnGridY);
@@ -70,7 +79,7 @@ public partial class PlayerManager
         if (gridMoveVector.x > 0) {
             if (CheckTilesOnPos(tileRightCorner(transform.position, playerColliderSize) + UnityVectorOnGridX) && CheckTilesOnPos(tileTopCorner(transform.position, playerColliderSize) + UnityVectorOnGridX)) {
                 totalSpeed += UnityVectorOnGridX;
-                ApplyMove(UnityVectorOnGridX);
+                SaveMove(UnityVectorOnGridX);
             }
             //else {
             //    Vector2 nextGridPos = UnityToGridVector(transform.position + (Vector3)UnityVectorOnGridX);
@@ -82,7 +91,7 @@ public partial class PlayerManager
         else {
             if (CheckTilesOnPos(tileBottomCorner(transform.position, playerColliderSize) + UnityVectorOnGridX) && CheckTilesOnPos(tileLeftCorner(transform.position, playerColliderSize) + UnityVectorOnGridX)) {
                 totalSpeed += UnityVectorOnGridX;
-                ApplyMove(UnityVectorOnGridX);
+                SaveMove(UnityVectorOnGridX);
             }
             //else {
             //    Vector2 nextGridPos = UnityToGridVector(transform.position + (Vector3)UnityVectorOnGridX);
@@ -91,10 +100,12 @@ public partial class PlayerManager
             //}
         }
     }
-    private void ApplyMove(Vector2 vector) => ApplyMove((Vector3)vector);
+
+ 
+    private void SaveMove(Vector2 vector)=> ApplyMove((Vector3)vector);
     private void ApplyMove(Vector3 vector) {
-        transform.position += vector;
-        moved = true;
+        movementPlayerVector += vector;
+       
     }
 
     private Vector2 UnityToGridVector(Vector2 vector) => new Vector2(2 * vector.x + vector.y, -2 * vector.x + vector.y);

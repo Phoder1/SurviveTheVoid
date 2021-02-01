@@ -17,6 +17,11 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     private Vector2 JoystickPosition => transform.position;
     private Vector2 JoystickSize => rectTransform.sizeDelta * rectTransform.localScale * mainCanvas.scaleFactor;
     [SerializeField] Canvas mainCanvas;
+
+
+    bool isVJActive = false;
+
+    public bool GetVJActivity => isVJActive;
     private void Start()
     {
         background = GetComponent<Image>();
@@ -42,6 +47,7 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHan
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        isVJActive = true;
         knobOutline.SetActive(true);
         background.color = new Color(169f/255f, 255f/255f, 158f/255f, 70f/255f);
         OnDrag(eventData);
@@ -54,6 +60,7 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         Disable();
     }
     private void Disable() {
+        isVJActive = false;
         knobOutline.SetActive(false);
         background.color = new Color(255f / 255f, 255f / 255f, 255f / 255f, 35f / 255f);
         JoystickVector = Vector2.zero;

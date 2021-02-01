@@ -265,9 +265,4 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     public class SpecialInterractionScanChecker : IChecker { public bool CheckTile(TileSlot tile) => tile.isSpecialInteraction; }
     public class AirSourcesScanChecker : IChecker { public bool CheckTile(TileSlot tile) => tile.GetIsAirSource; }
 
-    [System.Serializable]
-    public class PlayerMovementHandler
-    {
-
-    }
 }

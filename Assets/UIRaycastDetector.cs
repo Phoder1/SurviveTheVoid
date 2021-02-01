@@ -6,19 +6,27 @@ using UnityEngine.UI;
 
 public class UIRaycastDetector : MonoBehaviour
 {
-
+    static UIRaycastDetector _instance;
+    public static UIRaycastDetector GetInstance => _instance;
 
    static GraphicRaycaster graphicRaycaster;
-    static EventSystem eventSystem;
+  [SerializeField] EventSystem eventSystem;
     static  PointerEventData pointerEventData;
-
-  
-    public static bool RayCastCheck() {
+    private void Start()
+    {
+        graphicRaycaster = GetComponent<GraphicRaycaster>();
+     
+    }
+    private void Awake()
+    {
+        _instance = this;
+    }
+    public bool RayCastCheck(Touch touch) {
 
         //Set up the new Pointer Event
         pointerEventData = new PointerEventData(eventSystem);
         //Set the Pointer Event Position to that of the mouse position
-        pointerEventData.position = Input.mousePosition;
+        pointerEventData.position = touch.position;
 
         //Create a list of Raycast Results
         List<RaycastResult> results = new List<RaycastResult>();
@@ -27,10 +35,10 @@ public class UIRaycastDetector : MonoBehaviour
         graphicRaycaster.Raycast(pointerEventData, results);
 
         //For every result returned, output the name of the GameObject on the Canvas hit by the Ray
-        foreach (RaycastResult result in results)
-        {
-            Debug.Log("Hit " + result.gameObject.name);
-        }
+
+        if (results.Count > 0)
+            return true;
+        
 
 
         return false;

@@ -12,7 +12,7 @@ public class BuildingState : StateBase
     TileSlot tileSlotCache;
     bool isBuildingAttached, currentlyPlacedOnFloor, wasFloorLayer;
     Color blueprintColor = new Color(0.5f, 0.5f, 1, 0.55f);
-
+    Vector2 localTouchPos;
 
     Vector2Int[] Position = new Vector2Int[3];
     GridManager gridManager;
@@ -44,18 +44,26 @@ public class BuildingState : StateBase
             case TouchPhase.Moved:
             case TouchPhase.Stationary:
 
-                if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject())//|| (currentTileHit != null && currentTileHit.tile == null)
+                if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject() || UIRaycastDetector.GetInstance.RayCastCheck(touch))//|| (currentTileHit != null && currentTileHit.tile == null)
                     return;
-
-           
+              //  localTouchPos = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position) - PlayerManager._instance.transform.position;
                 touchPosition = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position);
 
-                
-                
                 CheckPosition(touchPosition);
-                
+
+
+
+
                 break;
         }
+    }
+
+    public void BuildWithVJ() {
+
+        //    touchPosition= (Vector2)PlayerManager._instance.GetPlayerVector;
+        Debug.Log(localTouchPos + (Vector2)PlayerManager._instance.transform.position);
+        CheckPosition(localTouchPos + (Vector2)PlayerManager._instance.transform.position);
+       
     }
 
  

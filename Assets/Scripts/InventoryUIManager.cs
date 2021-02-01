@@ -274,6 +274,16 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
         ItemSlot draggedItem = inventory.GetItemFromInventoryButton(GetInventoryID(takingFrom), takingFromIndex);
         ItemSlot occupyingTile = inventory.GetItemFromInventoryButton(GetInventoryID(droppingAt), droppingAtIndex);
 
+        /// check if the items are the same type if so mix them
+
+
+
+
+
+
+
+
+
         bool swapable = CanPlaceOnSlot(draggedItem, droppingAt, droppingAtIndex) && CanPlaceOnSlot(occupyingTile, takingFrom, takingFromIndex);
         if (swapable) {
             if (takingFrom == SlotChestType.Gear || takingFrom == SlotChestType.Tools) {
