@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30b7874b8e5eab142871768f1d102839, type: 3}
   m_Name: CheatingIceShard
   m_EditorClassIdentifier: 
-  itemID: 7
+  itemID: 77
   itemName: Ice Shard
   maxStackSize: 20
   description: you actually can grow ice?!
-  sprite: {fileID: 21300000, guid: f77071c0396bc944eafeb964bdf2c8a7, type: 3}
+  sprite: {fileID: 21300000, guid: f073763229b31a9469e098c05a021d13, type: 3}
   mainTileBase: {fileID: 0}
   isSolid: 1
   isAirSource: 0
@@ -48,7 +48,7 @@ MonoBehaviour:
       minAmount: 1
       maxAmount: 3
   - expReward: 40
-    stageTile: {fileID: 11400000, guid: 97fd2b02d4ac5f547b701515ace87c77, type: 2}
+    stageTile: {fileID: 0}
     tileWhileGathered: {fileID: 0}
     isGatherable: 1
     destroyOnGather: 0

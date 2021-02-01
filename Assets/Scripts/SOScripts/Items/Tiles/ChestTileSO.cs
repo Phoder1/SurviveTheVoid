@@ -1,5 +1,4 @@
-﻿using UnityEditor.PackageManager.Requests;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Tilemaps;
 
 [CreateAssetMenu(fileName = "New Block Tile", menuName = "SO/" + "Tiles/" + "Chest", order = 0)]
