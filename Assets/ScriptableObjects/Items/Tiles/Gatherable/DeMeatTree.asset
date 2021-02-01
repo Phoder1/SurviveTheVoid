@@ -37,9 +37,10 @@ MonoBehaviour:
     drops: []
   - expReward: 30
     stageTile: {fileID: 11400000, guid: 1ff8a424ea0798245a8ffe78f27944d9, type: 2}
-    tileWhileGathered: {fileID: 0}
+    tileWhileGathered: {fileID: 11400000, guid: 7b36c852772280f4698dea0d972464a5,
+      type: 2}
     isGatherable: 1
-    destroyOnGather: 0
+    destroyOnGather: 1
     isSolid: 1
     drops:
     - item: {fileID: 11400000, guid: b5504b3b3f6cef540b7a82dfcea5739a, type: 2}
@@ -50,9 +51,9 @@ MonoBehaviour:
       Chance: 0.5
       minAmount: 1
       maxAmount: 1
-  sourceTier: 0
+  sourceTier: 1
   gatherDurabilityCost: 1
-  gatheringSound: 0
+  gatheringSound: 2
   toolType: 0
   minGrowTime: 30
   maxGrowTime: 90

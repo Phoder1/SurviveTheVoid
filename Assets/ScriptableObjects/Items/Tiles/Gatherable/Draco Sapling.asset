@@ -37,7 +37,8 @@ MonoBehaviour:
     drops: []
   - expReward: 10
     stageTile: {fileID: 11400000, guid: 0c72180e59664164598665ea291f7cb0, type: 2}
-    tileWhileGathered: {fileID: 0}
+    tileWhileGathered: {fileID: 11400000, guid: ef898844d965ed74c995728c3ead85f8,
+      type: 2}
     isGatherable: 1
     destroyOnGather: 1
     isSolid: 1
