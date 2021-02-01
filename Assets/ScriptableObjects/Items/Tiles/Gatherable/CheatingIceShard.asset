@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30b7874b8e5eab142871768f1d102839, type: 3}
-  m_Name: IceShard
+  m_Name: CheatingIceShard
   m_EditorClassIdentifier: 
   itemID: 7
   itemName: Ice Shard
   maxStackSize: 20
   description: you actually can grow ice?!
-  sprite: {fileID: 21300000, guid: b4a54deaa468677499459b2862c191f1, type: 3}
+  sprite: {fileID: 21300000, guid: f77071c0396bc944eafeb964bdf2c8a7, type: 3}
   mainTileBase: {fileID: 0}
   isSolid: 1
   isAirSource: 0
@@ -62,8 +62,8 @@ MonoBehaviour:
   gatherDurabilityCost: 1
   gatheringSound: 3
   toolType: 4
-  minGrowTime: 30
-  maxGrowTime: 90
+  minGrowTime: 5
+  maxGrowTime: 5
   gatheringTime: 3
   particlesWhileGathered: {fileID: 1734594009432028733, guid: b3f4d5f40ced75b44b28f3c2e2959845,
     type: 3}

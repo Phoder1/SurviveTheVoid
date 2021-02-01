@@ -73,7 +73,9 @@ public class GatherableState : ITileState
     public void SetIsBeingGatheredState(bool state, Vector2Int gridPos) {
         if (isBeingGathered != state) {
             isBeingGathered = state;
-            if (currentStage.GetTileWhileGathered != null)
+            if (!isBeingGathered || currentStage.GetTileWhileGathered != null)
+
+                //GridManager._instance.GetTilemap( TileMapLayer.Buildings).SetTile((Vector3Int)gridPos, GetMainTileBase);
                 GridManager._instance.SetTile(tileSlot, gridPos, TileMapLayer.Buildings);
             if (tile.GetParticlesWhileGathered != null) {
                 if (state) {
@@ -100,7 +102,7 @@ public class GatherableState : ITileState
     public TileBase GetMainTileBase {
         get {
             if (tile.GetStages != null)
-                return (isBeingGathered ? currentStage.GetTileWhileGathered : currentStage.GetStageTile);
+                return (isBeingGathered && currentStage.GetTileWhileGathered != null ? currentStage.GetTileWhileGathered : currentStage.GetStageTile);
             return tile.GetMainTileBase;
         }
 
