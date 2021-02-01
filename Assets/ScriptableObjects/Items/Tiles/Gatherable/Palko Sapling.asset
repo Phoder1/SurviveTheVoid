@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30b7874b8e5eab142871768f1d102839, type: 3}
   m_Name: Palko Sapling
   m_EditorClassIdentifier: 
-  itemID: 60
+  itemID: 59
   itemName: Palko Sapling
   maxStackSize: 20
   description: A oak tree sapling
@@ -37,7 +37,8 @@ MonoBehaviour:
     drops: []
   - expReward: 10
     stageTile: {fileID: 11400000, guid: cb5ffd8248059974a9a9e199a7d5b17c, type: 2}
-    tileWhileGathered: {fileID: 0}
+    tileWhileGathered: {fileID: 11400000, guid: 974b56d1e6f2d984ba3cd49d633b175e,
+      type: 2}
     isGatherable: 1
     destroyOnGather: 1
     isSolid: 1
