@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MainMenuCamera : MonoBehaviour
@@ -9,19 +8,26 @@ public class MainMenuCamera : MonoBehaviour
     [SerializeField] float circularSpeed;
     [Min(0.001f)]
     [SerializeField] float offsetSpeed;
+    [SerializeField] float delay;
     float zPos;
     CameraController cameraController;
     float offset;
+    bool moving = false;
+    float startTime;
     private void Start() {
         cameraController = CameraController._instance;
         zPos = transform.position.z;
+        cameraController.UpdateView();
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        transform.position = new Vector3(Mathf.Sin(Time.time * circularSpeed) * (distanceFromCenter/2 + offset), (Mathf.Cos(Time.time  * circularSpeed) * (distanceFromCenter/2 + offset)) , zPos);
-        cameraController.UpdateView();
-        offset = - Mathf.Cos(Time.time * offsetSpeed) * distanceFromCenter/2;
+    void Update() {
+        if (Time.time > delay) {
+            float time = Time.time - delay;
+            Debug.Log(time);
+            transform.position = new Vector3(Mathf.Sin(time * circularSpeed) * (distanceFromCenter / 2 + offset), (Mathf.Cos(time * circularSpeed) * (distanceFromCenter / 2 + offset)), zPos);
+            cameraController.UpdateView();
+            offset = -Mathf.Cos(time * offsetSpeed) * distanceFromCenter / 2;
+        }
     }
 }

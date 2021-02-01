@@ -168,6 +168,7 @@ MonoBehaviour:
   distanceFromCenter: 180
   circularSpeed: 0.02
   offsetSpeed: 0.08
+  delay: 2
 --- !u!1 &1541358587
 GameObject:
   m_ObjectHideFlags: 0
@@ -513,11 +514,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6814987971639292367, guid: 0ac0a51d18554ea438a998f98eb8baf5,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6854150845735931105, guid: 0ac0a51d18554ea438a998f98eb8baf5,
         type: 3}
       propertyPath: m_RootOrder
