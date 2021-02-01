@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class InventoryUIManager : MonoSingleton<InventoryUIManager>
@@ -365,19 +366,36 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
 
 
-	#endregion
+    #endregion
 
 
-
-
-	public void RemoveItemViaTrashCan()
+    [SerializeField]
+    private Image ThrowImage;
+    [SerializeField]
+    private GameObject ConfirmThrowGO;
+    public int ItemSlotIndex;
+    public int InventoryIndex;
+	public void AttemptToRemoveItem()
     {
-        int ChestId = (int)takingFrom - 1;
-        inventory.RemoveItemFromButton(takingFromIndex,ChestId);
-        RemoveTrashHighLight();
-        UpdatePlayerInventory();
+        ItemSlotIndex = takingFromIndex;
+        InventoryIndex = (int)takingFrom - 1;
+        ConfirmThrowGO.SetActive(true);
+        var checkIfSlotIsItem = inventory.GetItemFromInventoryButton(GetInventoryID(takingFrom), takingFromIndex);
+        ThrowImage.sprite = checkIfSlotIsItem.item.getsprite;
     }
 
+    public void ThrowItem()
+    {
+        inventory.RemoveItemFromButton(ItemSlotIndex, InventoryIndex);
+        //RemoveTrashHighLight();
+        UpdatePlayerInventory();
+        dontThrowItem();
+    }
 
-
+    public void dontThrowItem()
+    {
+        ConfirmThrowGO.SetActive(false);
+        ItemSlotIndex = -1;
+        InventoryIndex = -1;
+    }
 }

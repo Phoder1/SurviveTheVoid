@@ -174,36 +174,31 @@ public class UIManager : MonoSingleton<UIManager>
 
                 SectionBackGroundImage[0].sprite = sectionBackGroundSprite[1];
             }
-            else if (_section == "Furnitures") {
+            else if (_section == "Tools") {
                 if (i != 1)
                     SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
 
                 SectionBackGroundImage[1].sprite = sectionBackGroundSprite[1];
             }
-            else if (_section == "Plants") {
+            else if (_section == "Food") {
                 if (i != 2)
                     SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
 
                 SectionBackGroundImage[2].sprite = sectionBackGroundSprite[1];
             }
-            else if (_section == "Weapons") {
+            else if (_section == "Generic") {
                 if (i != 3)
                     SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
 
                 SectionBackGroundImage[3].sprite = sectionBackGroundSprite[1];
             }
-            else if (_section == "Tools") {
+            else if (_section == "Gear") {
                 if (i != 4)
                     SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
 
                 SectionBackGroundImage[4].sprite = sectionBackGroundSprite[1];
             }
-            else if (_section == "Food") {
-                if (i != 5)
-                    SectionBackGroundImage[i].sprite = sectionBackGroundSprite[0];
-
-                SectionBackGroundImage[5].sprite = sectionBackGroundSprite[1];
-            }
+        
         }
 
     }
