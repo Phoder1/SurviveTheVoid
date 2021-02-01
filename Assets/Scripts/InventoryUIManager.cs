@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class InventoryUIManager : MonoSingleton<InventoryUIManager>
@@ -317,8 +318,6 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
     #endregion
 
-
-
     #region Tools related
     ItemSlot[] toolsInventory;
     public InventorySlot[] toolsSlots;
@@ -338,15 +337,65 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
 
     #endregion
 
+    #region Chests
+    ItemSlot[] ChestItems;
+    [SerializeField]
+    private InventorySlot[] ChestSlots;
 
-    public void RemoveItemViaTrashCan()
+    public void GetChestInfo(int ChestId)
     {
-        int ChestId = (int)takingFrom - 1;
-        inventory.RemoveItemFromButton(takingFromIndex,ChestId);
-        RemoveTrashHighLight();
-        UpdatePlayerInventory();
+        ChestItems = inventory.GetInventoryFromDictionary(ChestId);
+        UpdateChestUI();
+    }
+
+    void UpdateChestUI()
+    {
+        for (int i = 0; i < ChestItems.Length; i++)
+        {
+            if (ChestItems[i] != null)
+            {
+                ChestSlots[i].UpdateSlot(ChestItems[i]);
+            }
+            else
+            {
+                ChestSlots[i].EmptySlot();
+            }
+            ChestSlots[i].DeHighLightSlot();
+        }
     }
 
 
 
+    #endregion
+
+
+    [SerializeField]
+    private Image ThrowImage;
+    [SerializeField]
+    private GameObject ConfirmThrowGO;
+    public int ItemSlotIndex;
+    public int InventoryIndex;
+	public void AttemptToRemoveItem()
+    {
+        ItemSlotIndex = takingFromIndex;
+        InventoryIndex = (int)takingFrom - 1;
+        ConfirmThrowGO.SetActive(true);
+        var checkIfSlotIsItem = inventory.GetItemFromInventoryButton(GetInventoryID(takingFrom), takingFromIndex);
+        ThrowImage.sprite = checkIfSlotIsItem.item.getsprite;
+    }
+
+    public void ThrowItem()
+    {
+        inventory.RemoveItemFromButton(ItemSlotIndex, InventoryIndex);
+        //RemoveTrashHighLight();
+        UpdatePlayerInventory();
+        dontThrowItem();
+    }
+
+    public void dontThrowItem()
+    {
+        ConfirmThrowGO.SetActive(false);
+        ItemSlotIndex = -1;
+        InventoryIndex = -1;
+    }
 }
