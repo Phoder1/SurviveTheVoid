@@ -38,24 +38,6 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         joystickKnob.rectTransform.position = JoystickPosition + tempVector;
         tempVector = tempVector / (size.x / 2);
         JoystickVector = tempVector;
-
-        //float joystickBGx = joystickBG.rectTransform.sizeDelta.x;
-        //float joystickBGy = joystickBG.rectTransform.sizeDelta.y;
-
-        //Vector2 pos;
-        //if (RectTransformUtility.ScreenPointToLocalPointInRectangle(joystickBG.rectTransform, eventData.position, eventData.pressEventCamera, out pos)) {
-        //    //pos.x /= joystickBGx;
-        //    //pos.y /= joystickBGy;
-        //    inpudDir = new Vector2(pos.x, pos.y);
-
-        //    if (inpudDir.magnitude > 1) {
-        //        inpudDir = inpudDir.normalized;
-        //    }
-
-        //    joystickKnob.rectTransform.anchoredPosition = new Vector2(inpudDir.x * joystickBGx / joystickOffset, inpudDir.y * joystickBGy / joystickOffset);
-
-
-        //}
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -65,14 +47,16 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         OnDrag(eventData);
 
     }
-
-    public void OnPointerUp(PointerEventData eventData)
-    {
+    private void OnDisable() {
+        Disable();
+    }
+    public void OnPointerUp(PointerEventData eventData) {
+        Disable();
+    }
+    private void Disable() {
         knobOutline.SetActive(false);
         background.color = new Color(255f / 255f, 255f / 255f, 255f / 255f, 35f / 255f);
         JoystickVector = Vector2.zero;
         joystickKnob.rectTransform.anchoredPosition = Vector2.zero;
     }
-
-
 }

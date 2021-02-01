@@ -128,6 +128,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4319710080351378522, guid: ee73434160860324a921a0989281f1ff,
+        type: 3}
+      propertyPath: starsParallax.Array.size
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5830525296113187285, guid: ee73434160860324a921a0989281f1ff,
         type: 3}
       propertyPath: m_Name
