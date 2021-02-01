@@ -65,7 +65,7 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
     public void OnPointerEnter(PointerEventData eventData) {
 
-        Debug.Log("Entering Item Slot: " + slotType.ToString());
+
         if (inventoryUI.takingFrom != SlotChestType.none && (inventoryUI.takingFromIndex != slotPosition || inventoryUI.takingFrom != slotType))
         {
             inventoryUI.DroppingAt(slotType, slotPosition);
@@ -74,8 +74,7 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     }
 
     public void OnPointerExit(PointerEventData eventData) {
-        Debug.Log("Leaving Item Slot: " + slotType.ToString());
-        
+
         
         //if taking anything
         if (inventoryUI.takingFrom != SlotChestType.none) {

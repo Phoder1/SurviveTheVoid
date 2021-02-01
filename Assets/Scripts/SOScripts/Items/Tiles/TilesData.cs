@@ -45,6 +45,8 @@ public abstract class TileAbstSO : ItemSO
                     return TileType.ProcessingTable;
                 case LightSourceTileSO lightSource:
                     return TileType.LightSource;
+                case ChestTileSO chest:
+                    return TileType.Chest;
                 default:
                     throw new System.NotImplementedException();
             }
@@ -85,6 +87,9 @@ public class TileSlot : ITileState
                 break;
             case LightSourceTileSO lightSource:
                 tileState = new LightSourceTileState(lightSource);
+                break;
+            case ChestTileSO chest:
+                tileState = new ChestTileState(chest);
                 break;
             default:
                 throw new System.NotImplementedException();
