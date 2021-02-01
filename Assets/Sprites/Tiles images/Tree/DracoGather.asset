@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
   m_Name: DracoGather
   m_EditorClassIdentifier: 
-  m_AnimatedSprites: []
-  m_MinSpeed: 1
-  m_MaxSpeed: 1
+  m_AnimatedSprites:
+  - {fileID: 21300000, guid: 174048905ec9c1342af9f5c397bec26a, type: 3}
+  - {fileID: 21300000, guid: 4ac05c8ccab53bc44b3b3b552d25de98, type: 3}
+  - {fileID: 21300000, guid: 174048905ec9c1342af9f5c397bec26a, type: 3}
+  - {fileID: 21300000, guid: 5c6b55a8a6af3664caeae1c5a21a6e62, type: 3}
+  m_MinSpeed: 2
+  m_MaxSpeed: 3
   m_AnimationStartTime: 0
   m_AnimationStartFrame: 0
   m_TileColliderType: 0
