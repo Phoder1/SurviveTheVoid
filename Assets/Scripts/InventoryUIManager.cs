@@ -305,7 +305,7 @@ public class InventoryUIManager : MonoSingleton<InventoryUIManager>
             return true;
         switch (toChest) {
             case SlotChestType.HotKey:
-                return (dragged.item.GetItemType == ItemType.Consumable);
+                return (dragged.item.GetItemType == ItemType.Consumable) || (dragged.item.GetItemType == ItemType.Building);
             case SlotChestType.Gear:
             case SlotChestType.Tools:
                 return EquipManager.GetInstance.CheckEquip(dragged, toChest, DropInvSlot);
