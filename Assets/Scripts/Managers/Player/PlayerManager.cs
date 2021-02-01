@@ -1,9 +1,74 @@
 ﻿using Assets.Scan;
+using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public partial class PlayerManager : MonoSingleton<PlayerManager>
 {
+    [SerializeField]
+    Sprite defaultGatherableSprite;
+    [SerializeField]
+    Sprite defaultSpecialSprite;
+    [System.Serializable]
+    private class ToolsTier
+    {
+        public Sprite axeSprite;
+        public Sprite pickaxeSprite;
+    }
+    private Sprite GetToolSprite(int tier, ToolType toolType) {
+        switch (toolType) {
+            case ToolType.Axe:
+                return toolsTiers[tier].axeSprite;
+            case ToolType.Pickaxe:
+                return toolsTiers[tier].pickaxeSprite;
+            default:
+                return defaultGatherableSprite;
+
+        }
+    }
+    [SerializeField] ToolsTier[] toolsTiers;
+    [SerializeField] Image gatheringButtonIcon;
+    [SerializeField] Image specialButtonIcon;
+    private TileHit currentClosestGatherable;
+    private TileHit GetSetCurrentClosestGatherable {
+        get => currentClosestGatherable;
+        set {
+            if (currentClosestGatherable != value) {
+                if (currentClosestGatherable != null) {
+                    gridManager.SetTileColor(currentClosestGatherable.gridPosition, TileMapLayer.Buildings, Color.white);
+                }
+                currentClosestGatherable = value;
+                if (currentClosestGatherable != null) {
+                    gridManager.SetTileColor(currentClosestGatherable.gridPosition, TileMapLayer.Buildings, new Color32(249, 255, 146, 190));
+                    GatherableTileSO gatherable = (GatherableTileSO)currentClosestGatherable.tile.GetTileAbst;
+                    gatheringButtonIcon.sprite = GetToolSprite(gatherable.GetSourceTier, gatherable.GetToolType);
+                }
+                else {
+                    gatheringButtonIcon.sprite = defaultGatherableSprite;
+                }
+            }
+        }
+    }
+    private TileHit currentClosestSpecial;
+    private TileHit GetSetCurrentClosestSpecial {
+        get => currentClosestSpecial;
+        set {
+            if (currentClosestSpecial != value) {
+                if (currentClosestSpecial != null)
+                    gridManager.SetTileColor(currentClosestSpecial.gridPosition, TileMapLayer.Buildings, Color.white);
+                currentClosestSpecial = value;
+                if (currentClosestSpecial != null) {
+                    gridManager.SetTileColor(currentClosestSpecial.gridPosition, TileMapLayer.Buildings, new Color32(249, 255, 146, 190));
+                    specialButtonIcon.sprite = currentClosestSpecial.tile.GetTileAbst.getsprite;
+                }
+                else {
+                    specialButtonIcon.sprite = defaultSpecialSprite;
+                }
+
+            }
+        }
+    }
     private PlayerStats playerStats;
 
     private InputManager inputManager;
@@ -32,7 +97,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     Coroutine gatherCoroutine = null;
     private Vector2Int lastCheckPosition = new Vector2Int(int.MaxValue, int.MaxValue);
     private float lastTreeCheckTime = 0;
- 
+
     private const float treeCheckInterval = 0.5f;
     private Vector2Int currentPosOnGrid;
     private Vector3 startPositionOfPlayer;
@@ -43,15 +108,13 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     private DirectionEnum gridMovementDirection;
     public PlayerGFX GetPlayerGFX {
 
-        get
-        {
-            if (_playerGFX == null)
-            {
+        get {
+            if (_playerGFX == null) {
                 _playerGFX = GetComponent<PlayerGFX>();
             }
             return _playerGFX;
         }
-    
+
     }
 
     public DirectionEnum GetMovementDirection => gridMovementDirection;
@@ -73,6 +136,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         startPositionOfPlayer = base.transform.position;
         GameManager.DeathEvent += DeathReset;
         GameManager.RespawnEvent += RespawnReset;
+        UpdateToolsIcons();
     }
     private void Update() {
         if (!playerIsDead) {
@@ -90,7 +154,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
                 Move(movementVector);
 
                 _playerGFX.Walk(true, totalSpeed);
-
+                UpdateToolsIcons();
             }
             else {
                 _playerGFX.Walk(false, null);
@@ -99,6 +163,18 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
 
     }
 
+    private void UpdateToolsIcons() {
+        UpdateGatheringTool();
+        UpdateSpecialTile();
+    }
+
+    private void UpdateSpecialTile() {
+        GetSetCurrentClosestSpecial = Scan(new SpecialInterractionScanChecker());
+    }
+
+    private void UpdateGatheringTool() {
+        GetSetCurrentClosestGatherable = Scan(new GatheringScanChecker());
+    }
 
     private void LateUpdate() {
         if (!playerIsDead) {
@@ -200,8 +276,8 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
             yield return new WaitForSeconds(gatheringTime);
 
             tileHit.tile.GatherInteraction(tileHit.gridPosition, TileMapLayer.Buildings);
-       
-            if (( equipManager.GetToolDurability(gatherable.GetToolType)) != null )
+
+            if ((equipManager.GetToolDurability(gatherable.GetToolType)) != null)
                 equipManager.LowerAmountOfToolDurability(gatherable.GetToolType, gatherable.GetGatherDurabilityCost);
             SoundManager._instance.DisableLooping(gatherable.getGatheringSound);
             Debug.Log("TileHarvested");
@@ -244,7 +320,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
         airRegenCont?.Stop();
         _playerGFX.Death();
     }
-  
+
     private void RespawnReset() {
         _playerGFX.Reborn();
         //  Debug.Log("Player Reborn");
