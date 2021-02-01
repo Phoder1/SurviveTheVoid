@@ -5,9 +5,9 @@ using UnityEngine;
 public class MainMenuCamera : MonoBehaviour
 {
     [SerializeField] float distanceFromCenter;
-    [Min(0.1f)]
+    [Min(0.001f)]
     [SerializeField] float circularSpeed;
-    [Min(0.1f)]
+    [Min(0.001f)]
     [SerializeField] float offsetSpeed;
     float zPos;
     CameraController cameraController;
@@ -20,8 +20,8 @@ public class MainMenuCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(Mathf.Sin(Time.time/circularSpeed) * (distanceFromCenter/2 + offset), (Mathf.Cos(Time.time  / circularSpeed) * (distanceFromCenter/2 + offset)) , zPos);
+        transform.position = new Vector3(Mathf.Sin(Time.time * circularSpeed) * (distanceFromCenter/2 + offset), (Mathf.Cos(Time.time  * circularSpeed) * (distanceFromCenter/2 + offset)) , zPos);
         cameraController.UpdateView();
-        offset = - Mathf.Cos(Time.time / offsetSpeed) * distanceFromCenter/2;
+        offset = - Mathf.Cos(Time.time * offsetSpeed) * distanceFromCenter/2;
     }
 }

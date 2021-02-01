@@ -165,9 +165,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 432f272b8b3f5ae4980722f298c3ff6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceFromCenter: 200
-  circularSpeed: 20
-  offsetSpeed: 8
+  distanceFromCenter: 440
+  circularSpeed: 0.002
+  offsetSpeed: 0.03
 --- !u!1 &129597888330129728
 GameObject:
   m_ObjectHideFlags: 0
@@ -352,9 +352,9 @@ MonoBehaviour:
   zoomedInCameraObj: {fileID: 3036392249031372713}
   starsParallax:
   - gameobject: {fileID: 7919751255623676913}
-    speed: 0.01
+    speed: 0.005
   - gameobject: {fileID: 129597888330129728}
-    speed: 0.03
+    speed: 0.0025
 --- !u!81 &5139194154358116988
 AudioListener:
   m_ObjectHideFlags: 0
