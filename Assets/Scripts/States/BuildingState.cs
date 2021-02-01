@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class BuildingState : StateBase
 {
-    public GraphicRaycaster GR;
+    public UIRaycastDetector GR;
     Vector2 touchPosition;
     TileHit currentTileHit;
     TileSlot tileSlotCache;

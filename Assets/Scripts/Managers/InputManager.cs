@@ -66,7 +66,7 @@ public class InputManager : MonoSingleton<InputManager>
 
             Touch[] touch = new Touch[3];
 
-
+            UIRaycastDetector.RayCastCheck();
 
             for (int i = 0; i < Input.touchCount; i++)
             {
