@@ -57,6 +57,9 @@ public class UIManager : MonoSingleton<UIManager>
         sleepFill,
         xpFill,
         screenOutline;
+    [SerializeField]
+    Sprite upArrow,
+        downArrow;
     private Dictionary<StatType, Image> barsDictionary;
     [SerializeField] RectTransform progressBarFillObj;
     [SerializeField] float progressBarTickTime;
@@ -560,7 +563,7 @@ public class UIManager : MonoSingleton<UIManager>
     public void ButtonHide() {
         if (isBuildModeOn == false && isRemoveModeOn == false) {
             if (isShown == true) {
-                bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
+                bHide.GetComponentInChildren<Image>().sprite = upArrow;
                 hideOutline.SetActive(true);
 
                 if (isQuickAccessSlotsSwapped == true) {
@@ -577,7 +580,7 @@ public class UIManager : MonoSingleton<UIManager>
                 isShown = false;
             }
             else {
-                bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
+                bHide.GetComponentInChildren<Image>().sprite = downArrow;
                 hideOutline.SetActive(false);
 
                 if (isQuickAccessSlotsSwapped == true) {
