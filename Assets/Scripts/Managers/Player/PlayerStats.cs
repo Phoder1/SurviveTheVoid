@@ -210,7 +210,7 @@ public class ExpStat : Stat
             if (this.value >= XPtoLevel) {
                 playerStats.GetStat(StatType.Level).GetSetValue += 1;
                 //Needs to be recursive
-                playerStats.GetStat(StatType.EXPtoNextLevel).GetSetValue *= 1.5f;
+                playerStats.GetStat(StatType.EXPtoNextLevel).GetSetValue *= 1.2f;
                 GetSetValue -= XPtoLevel;
             }
             else {
