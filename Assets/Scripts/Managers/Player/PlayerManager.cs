@@ -31,22 +31,24 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     [SerializeField] Image gatheringButtonIcon;
     [SerializeField] Image specialButtonIcon;
     private TileHit currentClosestGatherable;
-    private TileHit GetSetCurrentClosestGatherable {
-        get => currentClosestGatherable;
-        set {
-            if (currentClosestGatherable != value) {
-                if (currentClosestGatherable != null) {
-                    gridManager.SetTileColor(currentClosestGatherable.gridPosition, TileMapLayer.Buildings, Color.white);
-                }
-                currentClosestGatherable = value;
-                if (currentClosestGatherable != null) {
-                    gridManager.SetTileColor(currentClosestGatherable.gridPosition, TileMapLayer.Buildings, new Color32(249, 255, 146, 190));
-                    GatherableTileSO gatherable = (GatherableTileSO)currentClosestGatherable.tile.GetTileAbst;
-                    gatheringButtonIcon.sprite = GetToolSprite(gatherable.GetSourceTier, gatherable.GetToolType);
-                }
-                else {
-                    gatheringButtonIcon.sprite = defaultGatherableSprite;
-                }
+
+    private TileHit GetGetSetCurrentClosestGatherable() {
+        return currentClosestGatherable;
+    }
+
+    private void SetGetSetCurrentClosestGatherable(TileHit value) {
+        if (currentClosestGatherable != value) {
+            if (currentClosestGatherable != null) {
+                gridManager.SetTileColor(currentClosestGatherable.gridPosition, TileMapLayer.Buildings, Color.white);
+            }
+            currentClosestGatherable = value;
+            if (currentClosestGatherable != null) {
+                gridManager.SetTileColor(currentClosestGatherable.gridPosition, TileMapLayer.Buildings, new Color32(249, 255, 146, 190));
+                GatherableTileSO gatherable = (GatherableTileSO)currentClosestGatherable.tile.GetTileAbst;
+                gatheringButtonIcon.sprite = GetToolSprite(gatherable.GetSourceTier, gatherable.GetToolType);
+            }
+            else {
+                gatheringButtonIcon.sprite = defaultGatherableSprite;
             }
         }
     }
@@ -91,7 +93,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
 
     private bool gatherWasPressed;
     private bool specialWasPressed;
-    
+
     private Stat moveSpeed;
     private Stat gatheringSpeed;
     Coroutine gatherCoroutine = null;
@@ -99,11 +101,8 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     private float lastTreeCheckTime = 0;
 
     private const float treeCheckInterval = 0.5f;
-     static Vector2 gridMovement;
-    public static Vector2 GetGridMovement => gridMovement;
     private Vector2Int currentPosOnGrid;
     private Vector3 startPositionOfPlayer;
-
     public Vector2Int GetCurrentPosOnGrid => currentPosOnGrid;
     private EffectController airRegenCont;
     private EffectData airRegenData;
@@ -162,7 +161,6 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
             else {
                 _playerGFX.Walk(false, null);
             }
-            gridMovement += movementVector;
         }
 
     }
@@ -177,7 +175,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     }
 
     private void UpdateGatheringTool() {
-        GetSetCurrentClosestGatherable = Scan(new GatheringScanChecker());
+        SetGetSetCurrentClosestGatherable(Scan(new GatheringScanChecker()));
     }
 
     private void LateUpdate() {
@@ -248,8 +246,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
             if (distance > InterractionDistance) {
                 Vector3 moveVector = Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue, distance);
                 _playerGFX.Walk(true, moveVector);
-                Move(moveVector); 
-                gridMovement += (Vector2)moveVector;
+                Move(moveVector);
             }
             else {
                 if (SpecialInteract) {
@@ -263,7 +260,6 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
                         gatherCoroutine = StartCoroutine(HarvestTile(closestTile));
                 }
             }
-           
         }
     }
     IEnumerator HarvestTile(TileHit tileHit) {
@@ -347,4 +343,9 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     public class SpecialInterractionScanChecker : IChecker { public bool CheckTile(TileSlot tile) => tile.isSpecialInteraction; }
     public class AirSourcesScanChecker : IChecker { public bool CheckTile(TileSlot tile) => tile.GetIsAirSource; }
 
+    [System.Serializable]
+    public class PlayerMovementHandler
+    {
+
+    }
 }
