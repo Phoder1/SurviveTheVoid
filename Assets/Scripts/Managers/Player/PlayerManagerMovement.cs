@@ -30,6 +30,8 @@ public partial class PlayerManager
         }
         if (moved)
             UpdateView();
+        //Debug.Log("Left corner:"+ gridManager.WorldToGridPosition(tileLeftCorner(transform.position,playerColliderSize),TileMapLayer.Floor)) 
+        //    + " ,Top corner:" + gridManager.WorldToGridPosition(tileLeftCorner(transform.position, playerColliderSize), TileMapLayer.Floor))
     }
 
     private void MoveOnY() {
