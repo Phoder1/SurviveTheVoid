@@ -1,8 +1,6 @@
-﻿
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
+
 
 public class BuildingState : StateBase
 {
@@ -46,14 +44,14 @@ public class BuildingState : StateBase
 
                 if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject() || UIRaycastDetector.GetInstance.RayCastCheck(touch))//|| (currentTileHit != null && currentTileHit.tile == null)
                     return;
-                lastTouchPosition = touch.position;
+                
                 // localTouchPos = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position) - PlayerManager._instance.transform.position;
                 touchPosition = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position);
 
-                CheckPosition(touchPosition); ;
+                CheckPosition(touchPosition); 
 
 
-
+               lastTouchPosition = touch.position;
 
                 break;
         }
@@ -62,7 +60,6 @@ public class BuildingState : StateBase
     public void BuildWithVJ(Vector2 playerMovement) {
         playerMovement = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(playerMovement + lastTouchPosition);
         CheckPosition(playerMovement);
-       
     }
 
  

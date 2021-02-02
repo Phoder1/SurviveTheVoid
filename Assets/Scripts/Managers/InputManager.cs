@@ -1,11 +1,9 @@
-﻿using System;
-using System.Runtime.InteropServices.ComTypes;
-using UnityEngine;
-using UnityEngine.PlayerLoop;
+﻿using UnityEngine;
+
 
 public class InputManager : MonoSingleton<InputManager>
 {
-
+    [SerializeField] bool useMouse = false; 
     GridManager gridManager;
     static StateBase currentState;
     PlayerStateMachine playerStateMachine;
@@ -53,7 +51,7 @@ public class InputManager : MonoSingleton<InputManager>
     private void AssignTouch()
     {
         ResetBoolArray();
-        if (0 == Input.touchCount)
+        if (0 == Input.touchCount || touch==null)
             return ;
         for (int i = 0; i < touch.Length; i++)
         {
@@ -168,6 +166,10 @@ public class InputManager : MonoSingleton<InputManager>
         }
         else
         {
+            if (!useMouse)
+                return; 
+
+
 
             switch (inputState)
             {

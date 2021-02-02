@@ -249,7 +249,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
                 Vector3 moveVector = Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue, distance);
                 _playerGFX.Walk(true, moveVector);
                 Move(moveVector); 
-                gridMovement += (Vector2)moveVector;
+            
             }
             else {
                 if (SpecialInteract) {
