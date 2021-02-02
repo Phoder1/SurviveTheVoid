@@ -1,5 +1,5 @@
 ﻿using Assets.Scan;
-using System;
+
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -245,19 +245,25 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
             Vector3 destination = gridManager.GridToWorldPosition(closestTile.gridPosition, TileMapLayer.Buildings, true);
             destination.z = base.transform.position.z;
             float distance = Vector2.Distance(base.transform.position, destination);
-            if (distance > InterractionDistance) {
+            if (distance > InterractionDistance)
+            {
                 Vector3 moveVector = Vector3.ClampMagnitude((destination - transform.position).normalized * Time.deltaTime * baseSpeed * moveSpeed.GetSetValue, distance);
                 _playerGFX.Walk(true, moveVector);
                 Move(moveVector);
+
             }
-            else {
-                if (SpecialInteract) {
-                    if (!SpecialInterracted) {
+            else
+            {
+                if (SpecialInteract)
+                {
+                    if (!SpecialInterracted)
+                    {
                         closestTile.tile.SpecialInteraction(closestTile.gridPosition, TileMapLayer.Buildings);
                         SpecialInterracted = true;
                     }
                 }
-                else {
+                else
+                {
                     if (gatherCoroutine == null)
                         gatherCoroutine = StartCoroutine(HarvestTile(closestTile));
                 }

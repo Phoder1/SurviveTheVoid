@@ -1,11 +1,9 @@
-﻿using System;
-using System.Runtime.InteropServices.ComTypes;
-using UnityEngine;
-using UnityEngine.PlayerLoop;
+﻿using UnityEngine;
+
 
 public class InputManager : MonoSingleton<InputManager>
 {
-
+    [SerializeField] bool useMouse = false; 
     GridManager gridManager;
     static StateBase currentState;
     PlayerStateMachine playerStateMachine;
@@ -15,7 +13,9 @@ public class InputManager : MonoSingleton<InputManager>
 
 
     Touch?[] touch;
-    bool[] touchNumberIsVJ;
+    bool isVJTouched;
+    bool isMovingWithJoystick;
+
     int? vjIndex;
     public int? GetVJIndex => vjIndex;
     public override void Init()
@@ -23,38 +23,29 @@ public class InputManager : MonoSingleton<InputManager>
         playerStateMachine = PlayerStateMachine.GetInstance;
         gridManager = GridManager._instance;
         touch = new Touch?[3];
-        touchNumberIsVJ = new bool[touch.Length];
+      
         for (int i = 0; i < touch.Length; i++)
-        {
             touch[i] = null;
-            touchNumberIsVJ[i] = false;
-        }
+    
+        
       
         DeathReset();
 
     }
-  public  bool IsAlreadyAcitve() {
 
-        for (int i = 0; i < touchNumberIsVJ.Length; i++)
-        {
-            if (touchNumberIsVJ[i])
-                return true;
-        }
-        return false;
-    
-    }
-    void ResetBoolArray()
-    {
-        for (int i = 0; i < touchNumberIsVJ.Length; i++)
-            if (touchNumberIsVJ[i] == true)  touchNumberIsVJ[i] = false;
-
-        vjIndex = null;
-    }
+   
     private void AssignTouch()
     {
-        ResetBoolArray();
-        if (0 == Input.touchCount)
+        
+
+
+
+        if (0 == Input.touchCount || touch==null)
             return ;
+
+        isVJTouched = false;
+        vjIndex = null;
+
         for (int i = 0; i < touch.Length; i++)
         {
 
@@ -64,16 +55,16 @@ public class InputManager : MonoSingleton<InputManager>
             
             
 
-            if (vJ.GetVJActivity && !IsAlreadyAcitve()) { 
-                touchNumberIsVJ[i] = true;
-                vjIndex = i;
+            if (vJ.GetVJActivity && !isVJTouched) {
+             
+                isVJTouched = true;
+                 vjIndex = i;
             }
 
         }
 
 
     }
-    bool isMovingWithJoystick;
     
 
     public static StateBase SetInputState
@@ -131,7 +122,7 @@ public class InputManager : MonoSingleton<InputManager>
 
                 if (vjIndex != null && i == vjIndex) {
                
-                    if (Input.touchCount == 1 && currentState is BuildingState)
+                    if (Input.touchCount == 1 && currentState is BuildingState && vjIndex == i)
                         (currentState as BuildingState).BuildWithVJ(PlayerManager.GetGridMovement);
                        
                     
@@ -168,6 +159,10 @@ public class InputManager : MonoSingleton<InputManager>
         }
         else
         {
+            if (!useMouse)
+                return; 
+
+
 
             switch (inputState)
             {
