@@ -99,7 +99,8 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
     Coroutine gatherCoroutine = null;
     private Vector2Int lastCheckPosition = new Vector2Int(int.MaxValue, int.MaxValue);
     private float lastTreeCheckTime = 0;
-
+    static Vector2 gridMovement;
+    public static Vector2 GetGridMovement => gridMovement;
     private const float treeCheckInterval = 0.5f;
     private Vector2Int currentPosOnGrid;
     private Vector3 startPositionOfPlayer;
@@ -161,6 +162,7 @@ public partial class PlayerManager : MonoSingleton<PlayerManager>
             else {
                 _playerGFX.Walk(false, null);
             }
+            gridMovement += movementVector;
         }
 
     }
