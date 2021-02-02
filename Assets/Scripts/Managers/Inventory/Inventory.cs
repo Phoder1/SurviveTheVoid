@@ -473,9 +473,6 @@ public class Inventory
         if (firstChestID != secondChestID) {
             var inventoryCacheTwo = GetInventoryFromDictionary(secondChestID);
 
-
-
-
             if (inventoryCacheTwo == null)
                 return;
             if (dropSlot < 0 || dropSlot >= inventoryCacheTwo.Length)
@@ -486,12 +483,13 @@ public class Inventory
             }
 
 
-            if (inventoryCacheTwo[dropSlot].item.GetInstanceID() == inventoryCache[dragSlot].item.GetInstanceID() && CombineItems(inventoryCache, inventoryCacheTwo, dragSlot, dropSlot))
-                return;
+         
 
 
             else if (inventoryCache[dragSlot] != null && inventoryCacheTwo[dropSlot] != null)
             {
+                if (inventoryCacheTwo[dropSlot].item.itemID == inventoryCache[dragSlot].item.itemID && inventoryCache[dragSlot].item.getmaxStackSize != 1 && CombineItems(inventoryCache, inventoryCacheTwo, dragSlot, dropSlot))
+                    return;
                 ItemSlot temporaryCache = inventoryCacheTwo[dropSlot];
                 inventoryCacheTwo[dropSlot] = inventoryCache[dragSlot];
                 inventoryCache[dragSlot] = temporaryCache;
@@ -514,7 +512,7 @@ public class Inventory
 
             if (inventoryCache[dragSlot] != null && inventoryCache[dropSlot] != null)
             {
-                if (inventoryCache[dropSlot].item.GetInstanceID() == inventoryCache[dragSlot].item.GetInstanceID() && CombineItems(inventoryCache, inventoryCache, dragSlot, dropSlot))
+                if (inventoryCache[dropSlot].item.itemID == inventoryCache[dragSlot].item.itemID&&inventoryCache[dragSlot].item.getmaxStackSize != 1 && CombineItems(inventoryCache, inventoryCache, dragSlot, dropSlot))
                     return;
                 ItemSlot temporaryCache = inventoryCache[dropSlot];
                 inventoryCache[dropSlot] = inventoryCache[dragSlot];
