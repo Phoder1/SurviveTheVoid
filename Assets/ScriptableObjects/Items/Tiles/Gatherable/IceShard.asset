@@ -16,7 +16,7 @@ MonoBehaviour:
   itemName: Ice Shard
   maxStackSize: 20
   description: you actually can grow ice?!
-  sprite: {fileID: 21300000, guid: 1dd8af7bfd04a084ba7303bed0fd8d98, type: 3}
+  sprite: {fileID: 21300000, guid: b4a54deaa468677499459b2862c191f1, type: 3}
   mainTileBase: {fileID: 0}
   isSolid: 1
   isAirSource: 0
@@ -56,6 +56,54 @@ MonoBehaviour:
     tileWhileGathered: {fileID: 0}
     particlesWhileGathered: {fileID: 1734594009432028733, guid: b3f4d5f40ced75b44b28f3c2e2959845,
       type: 3}
+    isGatherable: 1
+    destroyOnGather: 0
+    isSolid: 1
+    drops:
+    - item: {fileID: 11400000}
+      Chance: 0.5
+      minAmount: 1
+      maxAmount: 1
+    - item: {fileID: 11400000, guid: aa20fa708bbce4c4b9867d11c545b7dc, type: 2}
+      Chance: 1
+      minAmount: 2
+      maxAmount: 3
+    - item: {fileID: 11400000, guid: aa20fa708bbce4c4b9867d11c545b7dc, type: 2}
+      Chance: 0.8
+      minAmount: 1
+      maxAmount: 3
+  - expReward: 20
+    stageTile: {fileID: 11400000, guid: 131765a78cf4776468e1c72205102cc9, type: 2}
+    tileWhileGathered: {fileID: 0}
+    particlesWhileGathered: {fileID: 0}
+    isGatherable: 1
+    destroyOnGather: 1
+    isSolid: 0
+    drops:
+    - item: {fileID: 11400000, guid: aa20fa708bbce4c4b9867d11c545b7dc, type: 2}
+      Chance: 1
+      minAmount: 1
+      maxAmount: 2
+  - expReward: 30
+    stageTile: {fileID: 11400000, guid: 6c1a6aeb4c9152949b58a665afe8c733, type: 2}
+    tileWhileGathered: {fileID: 0}
+    particlesWhileGathered: {fileID: 0}
+    isGatherable: 1
+    destroyOnGather: 0
+    isSolid: 1
+    drops:
+    - item: {fileID: 11400000, guid: aa20fa708bbce4c4b9867d11c545b7dc, type: 2}
+      Chance: 1
+      minAmount: 1
+      maxAmount: 2
+    - item: {fileID: 11400000, guid: aa20fa708bbce4c4b9867d11c545b7dc, type: 2}
+      Chance: 0.8
+      minAmount: 1
+      maxAmount: 2
+  - expReward: 40
+    stageTile: {fileID: 11400000, guid: 97fd2b02d4ac5f547b701515ace87c77, type: 2}
+    tileWhileGathered: {fileID: 0}
+    particlesWhileGathered: {fileID: 0}
     isGatherable: 1
     destroyOnGather: 0
     isSolid: 1

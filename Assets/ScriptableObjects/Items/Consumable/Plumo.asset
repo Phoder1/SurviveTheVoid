@@ -10,25 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce262156a784a4c439534bfe094dfdf6, type: 3}
-  m_Name: Apple
+  m_Name: Plumo
   m_EditorClassIdentifier: 
-  itemID: 2
-  itemName: Apple
+  itemID: 0
+  itemName: Plumo
   maxStackSize: 20
-  description: The forbidden fruit
-  sprite: {fileID: 21300000, guid: 26a421f4ce5655f418ea61459b709dd3, type: 3}
+  description: 
+  sprite: {fileID: 21300000, guid: 599881fd512a810489bb6e1a439192fc, type: 3}
   Effects:
   - effectStatType: 2
     effectType: 0
     inPercentage: 0
     isRelativeToMax: 0
-    amount: 10
-    duration: 5
-    tickTime: 5
+    amount: 5
+    duration: 0
+    tickTime: 0
   - effectStatType: 3
     effectType: 0
     inPercentage: 0
     isRelativeToMax: 0
     amount: 5
-    duration: 5
-    tickTime: 5
+    duration: 0
+    tickTime: 0

@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ad4fb29703af1ac4e92edd55a5b9b4f5, type: 3}
-  m_Name: TileIceBlock
+  m_Name: UranBlock
   m_EditorClassIdentifier: 
   itemID: 0
-  itemName: Ice Block
+  itemName: Uran Block
   maxStackSize: 20
   description: 
-  sprite: {fileID: 0}
-  mainTileBase: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 16e3665a49dac3147bf4f3c59c5344b4, type: 3}
+  mainTileBase: {fileID: 11400000, guid: b7b340ce812600e41bed5ecefc27494a, type: 2}
   isSolid: 1
   isAirSource: 0
