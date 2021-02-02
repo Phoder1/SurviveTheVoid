@@ -22,7 +22,7 @@ MonoBehaviour:
   isAirSource: 0
   stages:
   - expReward: 20
-    stageTile: {fileID: 11400000, guid: 131765a78cf4776468e1c72205102cc9, type: 2}
+    stageTile: {fileID: 11400000, guid: b5622a57f7ea351478725eedd414f0b7, type: 2}
     tileWhileGathered: {fileID: 0}
     isGatherable: 1
     destroyOnGather: 1
@@ -48,7 +48,7 @@ MonoBehaviour:
       minAmount: 1
       maxAmount: 3
   - expReward: 40
-    stageTile: {fileID: 0}
+    stageTile: {fileID: 11400000, guid: 97fd2b02d4ac5f547b701515ace87c77, type: 2}
     tileWhileGathered: {fileID: 0}
     isGatherable: 1
     destroyOnGather: 0
