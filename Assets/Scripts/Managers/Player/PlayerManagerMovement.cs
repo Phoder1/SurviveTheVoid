@@ -30,8 +30,11 @@ public partial class PlayerManager
         }
         if (moved)
             UpdateView();
-        Debug.Log("Left corner:" + gridManager.WorldToGridPosition(tileLeftCorner(transform.position, playerColliderSize), TileMapLayer.Floor))
-            + " ,Top corner:" + gridManager.WorldToGridPosition(tileLeftCorner(transform.position, playerColliderSize), TileMapLayer.Floor))
+        Debug.Log("Left corner:" + gridManager.WorldToGridPosition(tileLeftCorner(transform.position, playerColliderSize), TileMapLayer.Floor)
+            + " ,Top corner:" + gridManager.WorldToGridPosition(tileLeftCorner(transform.position, playerColliderSize), TileMapLayer.Floor)
+            + " ,Right corner:" + gridManager.WorldToGridPosition(tileRightCorner(transform.position, playerColliderSize), TileMapLayer.Floor)
+            + " ,Bottom corner:" + gridManager.WorldToGridPosition(tileBottomCorner(transform.position, playerColliderSize), TileMapLayer.Floor)
+            );
     }
 
     private void MoveOnY() {
