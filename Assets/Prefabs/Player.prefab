@@ -99,6 +99,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a526a7dfbaf78b468386abf267f4174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultGatherableSprite: {fileID: 21300000, guid: ecec9b6467c13034ba53e09eb8cab4fa,
+    type: 3}
+  defaultSpecialSprite: {fileID: 21300000, guid: d1650941ca87e3449b6ce64d2802f458,
+    type: 3}
+  toolsTiers:
+  - axeSprite: {fileID: 21300000, guid: 115cc8f8daad3ff4f99bca2da8959fb6, type: 3}
+    pickaxeSprite: {fileID: 21300000, guid: 1b889fab1581fde4fb17205479ae7d70, type: 3}
+  - axeSprite: {fileID: 21300000, guid: d212a99bb1546a84d8f4331ed6198f13, type: 3}
+    pickaxeSprite: {fileID: 21300000, guid: 7f6293cb8ff86404687674a2218eb34d, type: 3}
+  - axeSprite: {fileID: 21300000, guid: f5ab34d203a14034abfae0084e283b5e, type: 3}
+    pickaxeSprite: {fileID: 21300000, guid: 884b8ce2c0474dd41b06979a39ce2f80, type: 3}
+  gatheringButtonIcon: {fileID: 0}
+  specialButtonIcon: {fileID: 0}
   baseSpeed: 7
   _playerGFX: {fileID: 1983083227683329054}
   interactionLookRange: 5
