@@ -45,7 +45,6 @@ public class BuildingState : StateBase
                 if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject() || UIRaycastDetector.GetInstance.RayCastCheck(touch))//|| (currentTileHit != null && currentTileHit.tile == null)
                     return;
                 
-                // localTouchPos = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position) - PlayerManager._instance.transform.position;
                 touchPosition = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position);
 
                 CheckPosition(touchPosition); 
