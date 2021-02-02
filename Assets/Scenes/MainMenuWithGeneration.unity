@@ -121,6 +121,75 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &7848205
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2308650814532754209, guid: e5a1c521565dd534bb64eeb9589c40f1,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2308650814532754209, guid: e5a1c521565dd534bb64eeb9589c40f1,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.4070518
+      objectReference: {fileID: 0}
+    - target: {fileID: 2308650814532754209, guid: e5a1c521565dd534bb64eeb9589c40f1,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.1988664
+      objectReference: {fileID: 0}
+    - target: {fileID: 2308650814532754209, guid: e5a1c521565dd534bb64eeb9589c40f1,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2.6425781
+      objectReference: {fileID: 0}
+    - target: {fileID: 2308650814532754209, guid: e5a1c521565dd534bb64eeb9589c40f1,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2308650814532754209, guid: e5a1c521565dd534bb64eeb9589c40f1,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2308650814532754209, guid: e5a1c521565dd534bb64eeb9589c40f1,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2308650814532754209, guid: e5a1c521565dd534bb64eeb9589c40f1,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2308650814532754209, guid: e5a1c521565dd534bb64eeb9589c40f1,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2308650814532754209, guid: e5a1c521565dd534bb64eeb9589c40f1,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2308650814532754209, guid: e5a1c521565dd534bb64eeb9589c40f1,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2308650814532754211, guid: e5a1c521565dd534bb64eeb9589c40f1,
+        type: 3}
+      propertyPath: m_Name
+      value: SoundManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e5a1c521565dd534bb64eeb9589c40f1, type: 3}
 --- !u!1 &126181900
 GameObject:
   m_ObjectHideFlags: 0
@@ -699,7 +768,6 @@ MonoBehaviour:
   circularSpeed: 0.02
   offsetSpeed: 0.08
   startDelay: 5
-  delay: 2
 --- !u!1 &1541358587
 GameObject:
   m_ObjectHideFlags: 0
@@ -1121,13 +1189,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Singleton
       objectReference: {fileID: 0}
-    m_RemovedComponents: [{fileID: 1559223242050750087, guid: 0ac0a51d18554ea438a998f98eb8baf5,
-        type: 3}, {fileID: 1887791293315588099, guid: 0ac0a51d18554ea438a998f98eb8baf5,
-        type: 3}, {fileID: 3973317369916146006, guid: 0ac0a51d18554ea438a998f98eb8baf5,
-        type: 3}, {fileID: 5532563235870312033, guid: 0ac0a51d18554ea438a998f98eb8baf5,
-        type: 3}, {fileID: 432826688593024337, guid: 0ac0a51d18554ea438a998f98eb8baf5,
-        type: 3}, {fileID: 7883488075691776965, guid: 0ac0a51d18554ea438a998f98eb8baf5,
-        type: 3}]
+    m_RemovedComponents:
+    - {fileID: 1559223242050750087, guid: 0ac0a51d18554ea438a998f98eb8baf5, type: 3}
+    - {fileID: 1887791293315588099, guid: 0ac0a51d18554ea438a998f98eb8baf5, type: 3}
+    - {fileID: 3973317369916146006, guid: 0ac0a51d18554ea438a998f98eb8baf5, type: 3}
+    - {fileID: 5532563235870312033, guid: 0ac0a51d18554ea438a998f98eb8baf5, type: 3}
+    - {fileID: 432826688593024337, guid: 0ac0a51d18554ea438a998f98eb8baf5, type: 3}
+    - {fileID: 7883488075691776965, guid: 0ac0a51d18554ea438a998f98eb8baf5, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 0ac0a51d18554ea438a998f98eb8baf5, type: 3}
 --- !u!114 &3861464506506233438
 MonoBehaviour:

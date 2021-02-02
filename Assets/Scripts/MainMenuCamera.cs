@@ -11,20 +11,17 @@ public class MainMenuCamera : MonoBehaviour
     [SerializeField] float startDelay;
     float zPos;
     CameraController cameraController;
-    float previousTime;
     float offset;
     bool travel=false;
     private void Start() {
         cameraController = CameraController._instance;
         zPos = transform.position.z;
-        Invoke("EnableTravel", startDelay);
-
+        
+        StartCoroutine(EnableTravel(startDelay));
     }
-
     // Update is called once per frame
     void Update()
     {
-        
         float time = Time.time - startDelay;
         if (travel) {
         offset = - Mathf.Cos(time * offsetSpeed) * distanceFromCenter/2;
@@ -32,9 +29,8 @@ public class MainMenuCamera : MonoBehaviour
         cameraController.UpdateView();
         }
     }
-    public void EnableTravel()
-    {
-
+    private IEnumerator EnableTravel(float startDelay) {
+        yield return new WaitForSeconds(startDelay);
         travel = true;
-    } 
+    }
 }
