@@ -9,6 +9,11 @@ public class SoundManager : MonoSingleton<SoundManager>
     [SerializeField] AudioSourceClass[] audioSources;
     private float musicVolume;
     private float soundsVolume;
+
+    public override void Awake() {
+        base.Awake();
+        DontDestroyOnLoad(gameObject);
+    } 
     public override void Init() {
         //musicVolume = PlayerPrefs.GetFloat("MusicVolume", 1);
         //soundsVolume = PlayerPrefs.GetFloat("SoundsVolume", 1);
@@ -18,6 +23,8 @@ public class SoundManager : MonoSingleton<SoundManager>
             audioSource.defaultVolume = audioSource.audioSource.volume;
         }
         PlaySoundLooped(Sound.BackGround);
+        SetVolumeGroup(VolumeGroup.Music, 0.5f);
+        SetVolumeGroup(VolumeGroup.Sounds, 0.5f);
     }
     private void Update() {
         if (Input.GetKeyDown(KeyCode.O)) {

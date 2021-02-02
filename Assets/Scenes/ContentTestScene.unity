@@ -390,6 +390,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd45da6ad02d1db4d951969373c9b1fe, type: 3}
+--- !u!114 &543868957 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5555784261841539055, guid: c8860e0a5e02fdb4db5d7466e47bbad9,
+    type: 3}
+  m_PrefabInstance: {fileID: 2090017011}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &784351265
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,8 +550,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5830525296113187290, guid: ee73434160860324a921a0989281f1ff,
+        type: 3}
+      propertyPath: specialButtonIcon
+      value: 
+      objectReference: {fileID: 1833363658}
+    - target: {fileID: 5830525296113187290, guid: ee73434160860324a921a0989281f1ff,
+        type: 3}
+      propertyPath: gatheringButtonIcon
+      value: 
+      objectReference: {fileID: 543868957}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee73434160860324a921a0989281f1ff, type: 3}
+--- !u!114 &1833363658 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5555784262743456154, guid: c8860e0a5e02fdb4db5d7466e47bbad9,
+    type: 3}
+  m_PrefabInstance: {fileID: 2090017011}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2090017011
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -547,6 +581,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1984184962438110045, guid: c8860e0a5e02fdb4db5d7466e47bbad9,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5126349190088311518, guid: c8860e0a5e02fdb4db5d7466e47bbad9,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5555784261260431829, guid: c8860e0a5e02fdb4db5d7466e47bbad9,
         type: 3}
       propertyPath: m_RootOrder

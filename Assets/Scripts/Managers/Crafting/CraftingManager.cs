@@ -132,7 +132,7 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
             sections[i] = new Section(sectionTransform.name, sectionTransform.gameObject);
             Transform[] slotsTransform = new Transform[sectionTransform.GetChild(0).childCount];
             ;
-            sections[i].scrollBar = ScrollsHolder.GetChild(i).gameObject;
+            //sections[i].scrollBar = ScrollsHolder.GetChild(i).gameObject;
 
 
 
@@ -310,11 +310,11 @@ public class CraftingManager : MonoSingleton<CraftingManager>, ICraftingManager
                     {
                         recipeMaterialSlots[i].gameObject.SetActive(true);
                     }
-                    TextMeshProUGUI materialNameText = recipeMaterialSlots[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-                    materialNameText.text = Costitemso[i].getItemName;
-                    TextMeshProUGUI materialCostText = recipeMaterialSlots[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+                    //TextMeshProUGUI materialNameText = recipeMaterialSlots[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+                    //materialNameText.text = Costitemso[i].getItemName;
+                    TextMeshProUGUI materialCostText = recipeMaterialSlots[i].transform.GetChild(2).GetComponent<TextMeshProUGUI>();
                     materialCostText.text = inventory.GetAmountOfItem(0, TempArr[i]) + " / " + (TempArr[i].amount * UIManager._instance.getCraftingAmount);
-                    recipeMaterialSlots[i].GetComponent<Image>().sprite = recipe.getitemCostArr[i].item.getsprite;
+                    recipeMaterialSlots[i].transform.GetChild(0).GetComponent<Image>().sprite = recipe.getitemCostArr[i].item.getsprite;
                 }
                 else
                 {
@@ -708,7 +708,7 @@ public class Section
 
 
         }
-        scrollBar.SetActive(state);
+        //scrollBar.SetActive(state);
         section.SetActive(state);
     }
 
