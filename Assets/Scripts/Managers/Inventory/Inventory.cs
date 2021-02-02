@@ -468,10 +468,14 @@ public class Inventory
             return;
         if (dragSlot < 0 || dragSlot >= inventoryCache.Length)
             return;
-
+        
 
         if (firstChestID != secondChestID) {
             var inventoryCacheTwo = GetInventoryFromDictionary(secondChestID);
+
+
+
+
             if (inventoryCacheTwo == null)
                 return;
             if (dropSlot < 0 || dropSlot >= inventoryCacheTwo.Length)
@@ -480,35 +484,49 @@ public class Inventory
             if (inventoryCache[dragSlot] == null && inventoryCacheTwo[dropSlot] == null) {
                 return;
             }
-            else if (inventoryCache[dragSlot] != null && inventoryCacheTwo[dropSlot] != null) {
+
+
+            if (inventoryCacheTwo[dropSlot].item.GetInstanceID() == inventoryCache[dragSlot].item.GetInstanceID() && CombineItems(inventoryCache, inventoryCacheTwo, dragSlot, dropSlot))
+                return;
+
+
+            else if (inventoryCache[dragSlot] != null && inventoryCacheTwo[dropSlot] != null)
+            {
                 ItemSlot temporaryCache = inventoryCacheTwo[dropSlot];
                 inventoryCacheTwo[dropSlot] = inventoryCache[dragSlot];
                 inventoryCache[dragSlot] = temporaryCache;
             }
-            else if (inventoryCache[dragSlot] == null && inventoryCacheTwo[dropSlot] != null) {
+            else if (inventoryCache[dragSlot] == null && inventoryCacheTwo[dropSlot] != null)
+            {
                 inventoryCache[dragSlot] = inventoryCacheTwo[dropSlot];
                 inventoryCacheTwo[dropSlot] = null;
             }
-            else if (inventoryCache[dragSlot] != null && inventoryCacheTwo[dropSlot] == null) {
+            else if (inventoryCache[dragSlot] != null && inventoryCacheTwo[dropSlot] == null)
+            {
                 inventoryCacheTwo[dropSlot] = inventoryCache[dragSlot];
                 inventoryCache[dragSlot] = null;
             }
 
         }
         else {
-            if (inventoryCache[dragSlot] == null && inventoryCache[dropSlot] == null) {
+            if (inventoryCache[dragSlot] == null && inventoryCache[dropSlot] == null) 
                 return;
-            }
-            else if (inventoryCache[dragSlot] != null && inventoryCache[dropSlot] != null) {
+
+            if (inventoryCache[dragSlot] != null && inventoryCache[dropSlot] != null)
+            {
+                if (inventoryCache[dropSlot].item.GetInstanceID() == inventoryCache[dragSlot].item.GetInstanceID() && CombineItems(inventoryCache, inventoryCache, dragSlot, dropSlot))
+                    return;
                 ItemSlot temporaryCache = inventoryCache[dropSlot];
                 inventoryCache[dropSlot] = inventoryCache[dragSlot];
                 inventoryCache[dragSlot] = temporaryCache;
             }
-            else if (inventoryCache[dragSlot] == null && inventoryCache[dropSlot] != null) {
+            else if (inventoryCache[dragSlot] == null && inventoryCache[dropSlot] != null)
+            {
                 inventoryCache[dragSlot] = inventoryCache[dropSlot];
                 inventoryCache[dropSlot] = null;
             }
-            else if (inventoryCache[dragSlot] != null && inventoryCache[dropSlot] == null) {
+            else if (inventoryCache[dragSlot] != null && inventoryCache[dropSlot] == null)
+            {
                 inventoryCache[dropSlot] = inventoryCache[dragSlot];
                 inventoryCache[dragSlot] = null;
             }
@@ -517,7 +535,30 @@ public class Inventory
 
 
     }
+    bool CombineItems(ItemSlot[] firstItem, ItemSlot[] secondItem ,int dragIndex, int dropIndex)
+       
+    {
+        if ((firstItem == null || secondItem == null)
+            || (firstItem[dragIndex].item.GetInstanceID() != secondItem[dropIndex].item.GetInstanceID())
+            || (firstItem[dragIndex].amount == firstItem[dragIndex].item.getmaxStackSize) || (secondItem[dropIndex].amount == secondItem[dropIndex].item.getmaxStackSize))
+        return false;
 
+        int amountAdd = firstItem[dragIndex].item.getmaxStackSize - firstItem[dragIndex].amount;
+
+
+        if (secondItem[dropIndex].amount - amountAdd> 0)
+        {
+            firstItem[dragIndex].amount = firstItem[dragIndex].item.getmaxStackSize;
+            secondItem[dropIndex].amount -= amountAdd;
+        }
+        else 
+        {
+            firstItem[dragIndex].amount += secondItem[dropIndex].amount;
+            secondItem[dropIndex] = null;
+        }
+
+        return true;
+    }
     public ItemSlot GetItemFromInventoryButton(int chestID, int buttonId) {
         inventoryCache = GetInventoryFromDictionary(chestID);
         if (inventoryCache == null)
