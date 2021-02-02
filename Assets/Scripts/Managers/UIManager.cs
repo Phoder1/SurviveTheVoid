@@ -563,7 +563,7 @@ public class UIManager : MonoSingleton<UIManager>
     public void ButtonHide() {
         if (isBuildModeOn == false && isRemoveModeOn == false) {
             if (isShown == true) {
-                bHide.GetComponentInChildren<Image>().sprite = upArrow;
+                bHide.transform.GetChild(1).GetComponent<Image>().sprite = upArrow;
                 hideOutline.SetActive(true);
 
                 if (isQuickAccessSlotsSwapped == true) {
@@ -580,7 +580,7 @@ public class UIManager : MonoSingleton<UIManager>
                 isShown = false;
             }
             else {
-                bHide.GetComponentInChildren<Image>().sprite = downArrow;
+                bHide.transform.GetChild(1).GetComponent<Image>().sprite = downArrow;
                 hideOutline.SetActive(false);
 
                 if (isQuickAccessSlotsSwapped == true) {
@@ -599,7 +599,7 @@ public class UIManager : MonoSingleton<UIManager>
         }
         else if (isBuildModeOn == true || isRemoveModeOn == true) {
             if (isShownBuildTools == true) {
-                bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
+                //bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("SHOW");
                 hideOutline.SetActive(true);
 
                 bCancel.SetActive(false);
@@ -608,7 +608,7 @@ public class UIManager : MonoSingleton<UIManager>
                 isShownBuildTools = false;
             }
             else {
-                bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
+                //bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
                 hideOutline.SetActive(false);
 
                 bCancel.SetActive(true);
