@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Runtime.InteropServices.ComTypes;
+using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class InputManager : MonoSingleton<InputManager>
 {
@@ -10,16 +13,68 @@ public class InputManager : MonoSingleton<InputManager>
     public static InputState inputState;
     public Vector2 VJAxis => vJ.JoystickVector;
 
- 
+
+    Touch?[] touch;
+    bool[] touchNumberIsVJ;
+    int? vjIndex;
+    public int? GetVJIndex => vjIndex;
     public override void Init()
     {
         playerStateMachine = PlayerStateMachine.GetInstance;
         gridManager = GridManager._instance;
+        touch = new Touch?[3];
+        touchNumberIsVJ = new bool[touch.Length];
+        for (int i = 0; i < touch.Length; i++)
+        {
+            touch[i] = null;
+            touchNumberIsVJ[i] = false;
+        }
+      
         DeathReset();
+
     }
+  public  bool IsAlreadyAcitve() {
+
+        for (int i = 0; i < touchNumberIsVJ.Length; i++)
+        {
+            if (touchNumberIsVJ[i])
+                return true;
+        }
+        return false;
+    
+    }
+    void ResetBoolArray()
+    {
+        for (int i = 0; i < touchNumberIsVJ.Length; i++)
+            if (touchNumberIsVJ[i] == true)  touchNumberIsVJ[i] = false;
+
+        vjIndex = null;
+    }
+    private void AssignTouch()
+    {
+        ResetBoolArray();
+        if (0 == Input.touchCount)
+            return ;
+        for (int i = 0; i < touch.Length; i++)
+        {
+
+            if (i < Input.touchCount)
+                touch[i] = Input.GetTouch(i);
+
+            
+            
+
+            if (vJ.GetVJActivity && !IsAlreadyAcitve()) { 
+                touchNumberIsVJ[i] = true;
+                vjIndex = i;
+            }
+
+        }
 
 
-
+    }
+    bool isMovingWithJoystick;
+    
 
     public static StateBase SetInputState
     {
@@ -64,7 +119,7 @@ public class InputManager : MonoSingleton<InputManager>
         if (Input.touchCount > 0)
         {
 
-            Touch[] touch = new Touch[3];
+            AssignTouch();
 
 
 
@@ -73,10 +128,23 @@ public class InputManager : MonoSingleton<InputManager>
                 if (i >= touch.Length)
                     return;
 
-                touch[i] = Input.GetTouch(i);
 
-                if (touch[i].position == new Vector2(vJ.gameObject.transform.position.x, vJ.gameObject.transform.position.y) || new Vector2(Input.mousePosition.x, Input.mousePosition.y) == new Vector2(vJ.gameObject.transform.position.x, vJ.gameObject.transform.position.y))
+                if (vjIndex != null && i == vjIndex) {
+               
+                    if (Input.touchCount == 1 && currentState is BuildingState)
+                        (currentState as BuildingState).BuildWithVJ(PlayerManager.GetGridMovement);
+                       
+                    
+
+                
                     continue;
+                }
+
+
+
+                if ((touch[i] == null))
+                    return;
+                
 
                 switch (inputState)
                 {
@@ -84,14 +152,14 @@ public class InputManager : MonoSingleton<InputManager>
                         // default state
                         break;
                     case InputState.BuildState:
-                        currentState.StateOnTouch(touch[i]);
+                        currentState.StateOnTouch(touch[i].GetValueOrDefault());
                        
                         break;
                     case InputState.FightState:
                         // fightState
                         break;
                     case InputState.RemovalState:
-                        currentState.StateOnTouch(touch[i]);
+                        currentState.StateOnTouch(touch[i].GetValueOrDefault());
                         break;
                     default:
                         break;
@@ -123,6 +191,9 @@ public class InputManager : MonoSingleton<InputManager>
         }
 
     }
+
+  
+
     public void SinglePressedButton(bool isButtonA)
     {
 
@@ -173,6 +244,8 @@ public class InputManager : MonoSingleton<InputManager>
 
         OnTouch();
     }
+
+
     public void DeathReset() => playerStateMachine.SwitchState(InputState.DefaultState);
 
 }

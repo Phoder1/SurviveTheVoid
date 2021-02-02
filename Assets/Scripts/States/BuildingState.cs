@@ -6,13 +6,13 @@ using UnityEngine.UI;
 
 public class BuildingState : StateBase
 {
-    public GraphicRaycaster GR;
+    public UIRaycastDetector GR;
     Vector2 touchPosition;
     TileHit currentTileHit;
     TileSlot tileSlotCache;
     bool isBuildingAttached, currentlyPlacedOnFloor, wasFloorLayer;
     Color blueprintColor = new Color(0.5f, 0.5f, 1, 0.55f);
-
+    Vector2 localTouchPos;
 
     Vector2Int[] Position = new Vector2Int[3];
     GridManager gridManager;
@@ -44,18 +44,25 @@ public class BuildingState : StateBase
             case TouchPhase.Moved:
             case TouchPhase.Stationary:
 
-                if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject())//|| (currentTileHit != null && currentTileHit.tile == null)
+                if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject() || UIRaycastDetector.GetInstance.RayCastCheck(touch))//|| (currentTileHit != null && currentTileHit.tile == null)
                     return;
-
-           
+                lastTouchPosition = touch.position;
+                // localTouchPos = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position) - PlayerManager._instance.transform.position;
                 touchPosition = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position);
 
-                
-                
-                CheckPosition(touchPosition);
-                
+                CheckPosition(touchPosition); ;
+
+
+
+
                 break;
         }
+    }
+    Vector2 lastTouchPosition;
+    public void BuildWithVJ(Vector2 playerMovement) {
+        playerMovement = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(playerMovement + lastTouchPosition);
+        CheckPosition(playerMovement);
+       
     }
 
  
@@ -87,7 +94,7 @@ public class BuildingState : StateBase
 
 
 
-        currentTileHit = gridManager.GetHitFromWorldPosition(touchPosition, TileMapLayer.Floor);
+        currentTileHit = gridManager.GetHitFromWorldPosition(worldPos, TileMapLayer.Floor);
 
         if (currentTileHit == null)
             return;

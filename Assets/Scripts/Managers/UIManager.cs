@@ -790,7 +790,7 @@ public class UIManager : MonoSingleton<UIManager>
     // Build mode logic
     public void BuildModeUI() {
         isBuildModeOn = true;
-        bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
+       // bHide.GetComponentInChildren<TextMeshProUGUI>().SetText("HIDE");
 
         if (isQuickAccessSlotsSwapped == true) {
             SetTools(false);
