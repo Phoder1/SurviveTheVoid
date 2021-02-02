@@ -10,8 +10,8 @@ public class BuildingState : StateBase
     TileSlot tileSlotCache;
     bool isBuildingAttached, currentlyPlacedOnFloor, wasFloorLayer;
     Color blueprintColor = new Color(0.5f, 0.5f, 1, 0.55f);
-    Vector2 localTouchPos;
 
+    Vector2 lastTouchPosition;
     Vector2Int[] Position = new Vector2Int[3];
     GridManager gridManager;
     int amountOfCurrentItem;
@@ -41,24 +41,26 @@ public class BuildingState : StateBase
             case TouchPhase.Began:
             case TouchPhase.Moved:
             case TouchPhase.Stationary:
-
                 if (tileSlotCache == null || EventSystem.current.IsPointerOverGameObject() || UIRaycastDetector.GetInstance.RayCastCheck(touch))//|| (currentTileHit != null && currentTileHit.tile == null)
                     return;
-                
+             lastTouchPosition = touch.position;
+               
                 touchPosition = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(touch.position);
 
                 CheckPosition(touchPosition); 
 
 
-               lastTouchPosition = touch.position;
+              
 
                 break;
         }
     }
-    Vector2 lastTouchPosition;
+
     public void BuildWithVJ(Vector2 playerMovement) {
         playerMovement = CameraController._instance.GetCurrentActiveCamera.ScreenToWorldPoint(playerMovement + lastTouchPosition);
+        Debug.Log(playerMovement);
         CheckPosition(playerMovement);
+
     }
 
  
@@ -98,18 +100,16 @@ public class BuildingState : StateBase
 
         // there is a block on the floor
         // check if there is no a block above it 
-        if (currentTileHit.tile != null && gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) == null) {
-
-
-
+        if (currentTileHit.tile != null && gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) == null)
+        {
             Position[0] = new Vector2Int(currentTileHit.gridPosition.x, currentTileHit.gridPosition.y);
-
 
             PlaceDummyBlock(false);
 
         }
         else if (currentlyPlacedOnFloor) {
-            if (currentTileHit.tile == null && gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) == null) {
+            if (currentTileHit.tile == null && gridManager.GetTileFromGrid(currentTileHit.gridPosition, TileMapLayer.Buildings) == null) 
+            {
                 Position[0] = new Vector2Int(currentTileHit.gridPosition.x, currentTileHit.gridPosition.y);
 
                 PlaceDummyBlock(true);
